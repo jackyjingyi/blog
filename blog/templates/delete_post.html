@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}
+    删除
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <h3>删除 {{ post.title }}</h3>
+        <br><br>
+        <div class="form-group">
+            <form method="post">
+                {% csrf_token %}
+                <strong>确认删除?</strong>
+                <button class="btn btn-secondary">Delete</button>
+            </form>
+        </div>
+    {% else %}
+        请登录
+    {% endif %}
+
+{% endblock %}

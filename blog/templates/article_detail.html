@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    {{ post.title_tag }}
+{% endblock %}
+
+{% block content %}
+    <h1>{{ post.title }}</h1>
+    <small>{{ post.category }}</small>
+    <small> by:{{ post.author }}</small>
+    <small>{{ post.post_date }}</small>
+    {% if user.is_authenticated %}
+        <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
+        <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>
+    {% endif %}
+
+    <br/>
+    <hr>
+    <br/>
+    {{ post.body|safe }}
+    <div id="displayframe" class="col-xl">
+        <iframe class="embed-responsive-item" id="pdf" src="{{ post.post_file.url }}" width="100%" height="1000px">
+        </iframe>
+    </div>
+    <br/>
+    <a href="{% url 'home' %}" class="btn btn-secondary">Back</a>
+
+{% endblock %}
