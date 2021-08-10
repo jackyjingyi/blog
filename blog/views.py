@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Category
+from .models import Post, Category, Source
 from .forms import PostForm, EditForm
 from django.urls import reverse_lazy
 
@@ -12,8 +12,10 @@ class HomeView(ListView):
 
     def get_context_data(self, *args, object_list=None, **kwargs):
         cat_menu = Category.objects.all()
+        source_menu = Source.objects.all()
         context = super(HomeView, self).get_context_data(*args, **kwargs)
         context["cat_menu"] = cat_menu
+        context["source_menu"] = source_menu
         return context
 
 
@@ -33,6 +35,11 @@ class ArticleDetailView(DetailView):
         context = super(ArticleDetailView, self).get_context_data(*args, **kwargs)
         context["cat_menu"] = cat_menu
         return context
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset=queryset)
+        obj.increase_views()
+        return obj
 
 
 class AddPostView(CreateView):

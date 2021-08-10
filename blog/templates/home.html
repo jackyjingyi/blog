@@ -8,8 +8,10 @@
 
             <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
                 - {{ post.author }}
-                <small><a href="{% url 'category' post.category %}">{{ post.category }}</a>></small>
-                <small>{{ post.post_date }}</small>
+                <small>来源：<a href="#">{{ post.source }}</a></small>
+                <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                <small>日期：{{ post.post_date }}</small>
+
                 {% if user.is_authenticated %}
                     <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
                     <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>
@@ -18,6 +20,4 @@
             </li>
         {% endfor %}
     </ul>
-
-
 {% endblock %}

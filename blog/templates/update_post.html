@@ -10,6 +10,7 @@
         <div class="form-group">
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
+                {{ form.media }}
                 {{ form.as_p }}
                 <iframe class="embed-responsive-item" id="pdf" src="{{ post.post_file.url }}" width="100%"
                         height="1000px">
@@ -20,6 +21,4 @@
     {% else %}
         请登录
     {% endif %}
-
-
 {% endblock %}
