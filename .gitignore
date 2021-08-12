@@ -6,6 +6,7 @@
 __pycache__
 db.sqlite3
 media
+./
  
 # Backup files #
 *.bak
@@ -24,7 +25,7 @@ media
 .idea/**/gradle.xml
 .idea/**/libraries
 *.iws /out/
- 
+
 # Python #
 *.py[cod]
 *$py.class
@@ -105,6 +106,3 @@ Control.ca-bundle
 Control.system-ca-bundle
 GitHub.sublime-settings
 
-————————————————
-版权声明：本文为CSDN博主「大江狗」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
-原文链接：https://blog.csdn.net/weixin_42134789/article/details/103708190

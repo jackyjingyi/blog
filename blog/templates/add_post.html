@@ -4,16 +4,25 @@
 {% endblock %}
 
 {% block content %}
+    {{ user.id }}{{ user.username }}
+    {{ publishers }}
+    {% if user.is_authenticated and user.pk in publishers %}
 
-    <h1>Add Post</h1>
-    <br><br>
-    <div class="form-group">
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ form.media }}
-            {{ form.as_p }}
-            <button class="btn btn-secondary">Post</button>
-        </form>
-    </div>
-
+        <h1>Add Post</h1>
+        <br><br>
+        <div class="form-group">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.media }}
+                {{ form.as_p }}
+                <button class="btn btn-secondary">Post</button>
+            </form>
+        </div>
+        <script>
+            var name = "{{ user.pk }}";
+            document.getElementById("pub_id").value = name;
+        </script>
+        {% else %}
+        暂无发布权限
+    {% endif %}
 {% endblock %}

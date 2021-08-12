@@ -9,6 +9,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
     <script src="https://cdn.bootcdn.net/ajax/libs/pdf.js/1.8.510/compatibility.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css">
     <title>
         {% block title %}
             首页
@@ -26,27 +29,30 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <!-- Category Menu Code -->
-            {% if cat_menu %}
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-                        分类
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        {% for item in cat_menu %}
-                        <li><a class="dropdown-item" href="{% url 'category' item %}">{{ item }}</a></li>
-                        {% endfor %}
+                <!-- Category Menu Code -->
+                {% if cat_menu %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            分类
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            {% for item in cat_menu %}
+                                <li><a class="dropdown-item" href="{% url 'category' item %}">{{ item }}</a></li>
+                            {% endfor %}
 
-                    </ul>
-                </li>
-            {% endif %}
+                        </ul>
+                    </li>
+                {% endif %}
                 {% if user.is_authenticated %}
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'add_post' %}">上传</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">审批</a>
+                        <a class="nav-link" href="{% url 'approval_detail' %}">审批</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'author_post' user %}">工作空间</a>
                     </li>
                 {% else %}
                     <li class="nav-item">
@@ -55,8 +61,10 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'register' %}">注册</a>
                     </li>
+
                 {% endif %}
                 <li class="nav-item">
+                    {#                    取消注销功能#}
                     <a class="nav-link" href="{% url 'logout' %}">注销</a>
                 </li>
 
@@ -66,6 +74,9 @@
 </nav>
 <br/>
 <div class="container">
+{% if user %}
+    {{ user.username }}
+{% endif %}
     {% block content %}
     {% endblock %}
 </div>
