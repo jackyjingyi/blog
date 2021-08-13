@@ -37,6 +37,7 @@
                             {% if user.is_authenticated and user.id == post.author.pk %}
                                 <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
                                 <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>
+                                <small><a href="{% url 'submit_post' post.pk %}">提交</a></small>
                             {% endif %}
                             <small>{{ post.status }}</small>
                             {{ post.body|slice:":200"|safe }}
@@ -59,7 +60,8 @@
 
                             {% if user.is_authenticated and user.id == post.author.pk %}
                                 <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
-                                <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>
+                                <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>!!!
+
                             {% endif %}
                             <small>{{ post.status }}</small>
                             {{ post.body|slice:":200"|safe }}
@@ -72,7 +74,7 @@
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
                 <br>
                 {% for post in author_posts %}
-                    {% if post.status_id == 3 %}
+                    {% if post.status_id >= 3 and post.status_id != 9 %}
 
                         <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
                             - <small><a href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
@@ -80,11 +82,31 @@
                             <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
                             <small>日期：{{ post.post_date }}</small>
 
-                            {% if user.is_authenticated and user.id == post.author.pk %}
-                                <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
-                                <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>
+                            {% if post.status_id == 3 %}
+                                <small>一级审批中 {{ post.status }}</small>
+                            {% elif post.status_id == 4 %}
+                                <small>二级审批中 {{ post.status }}</small>
+                            {% elif post.status_id == 5 %}
+                                <small>三级审批中 {{ post.status }}</small>
+                            {% elif post.status_id == 6 %}
+                                <small>一级审批驳回 {{ post.status }}</small>
+                                {% if user.is_authenticated and user.id == post.author.pk %}
+                                    <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
+                                    <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>
+                                {% endif %}
+                            {% elif post.status_id == 7 %}
+                                <small>二级审批驳回 {{ post.status }}</small>
+                                {% if user.is_authenticated and user.id == post.author.pk %}
+                                    <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
+                                    <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>
+                                {% endif %}
+                            {% elif post.status_id == 8 %}
+                                <small>三级审批驳回 {{ post.status }}</small>
+                                {% if user.is_authenticated and user.id == post.author.pk %}
+                                    <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
+                                    <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>
+                                {% endif %}
                             {% endif %}
-                            <small>{{ post.status }}</small>
                             {{ post.body|slice:":200"|safe }}
                         </li>
                         <hr><br>
@@ -97,18 +119,18 @@
     {% else %}
         {% for post in author_posts %}
 
-                <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
-                    - <small><a href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
-                    <small>来源：<a href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
-                    <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
-                    <small>日期：{{ post.post_date }}</small>
-                    {{ user.pl }} {{ post.author.pk }}
-                    {#                        {% if user.is_authenticated and user.id == post.author.pk %}#}
-                    {#                            <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>#}
-                    {#                            <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>#}
-                    {#                        {% endif %}#}
-                    {{ post.body|slice:":200"|safe }}
-                </li>
+            <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
+                - <small><a href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
+                <small>来源：<a href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
+                <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                <small>日期：{{ post.post_date }}</small>
+
+                {#                        {% if user.is_authenticated and user.id == post.author.pk %}#}
+                {#                            <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>#}
+                {#                            <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>#}
+                {#                        {% endif %}#}
+                {{ post.body|slice:":200"|safe }}
+            </li>
 
         {% endfor %}
     {% endif %}

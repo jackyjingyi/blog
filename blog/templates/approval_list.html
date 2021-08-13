@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h3>待审批</h3>
+    {% for post in object_list %}
+        <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
+            - <small><a href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
+            <small>来源：<a href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
+            <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+            <small>日期：{{ post.post_date }}</small>
+            <small><a href="{% url 'approval_success_update' user.username post.pk %}" id="approval">通过</a></small>
+            <small><a href="{% url 'approval_deny_update' user.username post.pk %}">驳回</a> </small>
+            {{ post.body|slice:":200"|safe }}
+        </li>
+    {% endfor %}
+    <h5>待开发流程图</h5>
+    提交人：张三<br>
+    一级审批：由 A 于yyyy-mm--dd hh:mm:ss 审批通过/驳回<br>
+    二级审批：由 B 于yyyy-mm--dd hh:mm:ss 审批通过/驳回<br>
+    三级审批: 由 C 于yyyy-mm--dd hh:mm:ss 审批通过/驳回<br>
+{% endblock %}

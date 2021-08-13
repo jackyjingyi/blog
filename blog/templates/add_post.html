@@ -15,7 +15,9 @@
                 {% csrf_token %}
                 {{ form.media }}
                 {{ form.as_p }}
-                <button class="btn btn-secondary">Post</button>
+                <button class="btn btn-secondary" id = "draft">保存</button>
+
+{#                <button class="btn btn-secondary" id = "submit">Submit</button>#}
             </form>
         </div>
         <script>

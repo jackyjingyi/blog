@@ -14,7 +14,10 @@
                         <small>来源：<a href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
                         <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
                         <small>日期：{{ post.post_date }}</small>
-                        {{ user.pl }} {{ post.author.pk }}
+                       {{ post.status }} {{ post.publish }}
+                        <p>一级审批人：{{ post.lv1_approver }}</p>
+                        <p>二级审批人：{{ post.lv2_approver }}</p>
+                        <p>三级审批人：{{ post.lv3_approver }}</p>
 {#                        {% if user.is_authenticated and user.id == post.author.pk %}#}
 {#                            <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>#}
 {#                            <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>#}

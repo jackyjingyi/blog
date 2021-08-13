@@ -1,6 +1,7 @@
 from django.urls import path
 from .views import HomeView, ArticleDetailView, AddPostView, UpdatePostView, DeletePostView, AddCategoryView, \
-    category_view, author_posts_view, source_posts_view, approval
+    category_view, author_posts_view, source_posts_view, ApprovalPosts, ApprovalSuccessDetailView, \
+    ApprovalDenyDetailView, SubmitPostDetailView
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -14,5 +15,10 @@ urlpatterns = [
                   path('category/<str:cats>/', category_view, name='category'),
                   path('author/<str:author>', author_posts_view, name='author_post'),
                   path('source/<str:source>', source_posts_view, name='source_post'),
-                  path('approvol/', approval, name='approval_detail'),
+                  path('approval/<str:username>', ApprovalPosts.as_view(), name='approval_list'),
+                  path('approval/<str:username>/<int:pk>/success', ApprovalSuccessDetailView.as_view(),
+                       name='approval_success_update'),
+                  path('approval/<str:username>/<int:pk>/deny', ApprovalDenyDetailView.as_view(),
+                       name="approval_deny_update"),
+                  path('submit_post/<int:pk>', SubmitPostDetailView.as_view(), name='submit_post'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
