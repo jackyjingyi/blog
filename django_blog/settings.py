@@ -7,7 +7,7 @@ SECRET_KEY = 'django-insecure-$o)-z_5^_-$_nsn1fmru*irpcn@7b$7tcqmrv-lxnh1*x4g35z
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -103,10 +103,15 @@ USE_I18N = True
 
 USE_L10N = True
 
-STATIC_URL = '/static/'
+
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+STATICFILES_DIRS = [
+    os.path.join(PROJECT_ROOT, 'static'),
+]
+STATIC_URL = '/static/'

@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import HomeView, ArticleDetailView, AddPostView, UpdatePostView, DeletePostView, AddCategoryView, \
     category_view, author_posts_view, source_posts_view, ApprovalPosts, ApprovalSuccessDetailView, \
-    ApprovalDenyDetailView, SubmitPostDetailView
+    ApprovalDenyDetailView, SubmitPostDetailView, SearchPostView
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -21,4 +21,5 @@ urlpatterns = [
                   path('approval/<str:username>/<int:pk>/deny', ApprovalDenyDetailView.as_view(),
                        name="approval_deny_update"),
                   path('submit_post/<int:pk>', SubmitPostDetailView.as_view(), name='submit_post'),
+                  path('search_post/<str:search_item>/results', SearchPostView.as_view(), name='search_items'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

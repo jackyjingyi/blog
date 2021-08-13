@@ -14,14 +14,16 @@ from operator import and_
 class HomeView(ListView):
     model = Post
     template_name = 'home.html'
-    ordering = ['-post_date']
+    ordering = ['-lv3_approval_action_datetime']
 
     def get_context_data(self, *args, object_list=None, **kwargs):
         cat_menu = Category.objects.all()
         source_menu = Source.objects.all()
+        post_group = {i.name:Post.objects.filter(category=i.name,status=2) for i in cat_menu}
         context = super(HomeView, self).get_context_data(*args, **kwargs)
         context["cat_menu"] = cat_menu
         context["source_menu"] = source_menu
+        context["post_group"] = post_group
         return context
 
 
@@ -47,6 +49,26 @@ class ApprovalPosts(ListView):
         else:
             return super().get_queryset()
 
+
+class SearchPostView(ListView):
+    """
+          基于Approver自身的审批等级进行筛选
+            1. 本view对post进行简单展示，并非审批功能view
+        """
+    model = Post
+    template_name = 'search_items.html'
+
+    def get_queryset(self):
+        print(dir(self))
+        print(self.kwargs['search_item'])
+        obj_list = []
+        for obj in Post.objects.filter(status=2):
+            if self.kwargs['search_item'] in obj.body or self.kwargs['search_item'] in obj.title:
+                obj_list.append(obj.pk)
+        if obj_list:
+            return Post.objects.filter(id__in=obj_list)
+        else:
+            return Post.objects.none()
 
 class ApprovalSuccessDetailView(DetailView):
     model = Post
@@ -110,6 +132,7 @@ class ApprovalDenyDetailView(DetailView):
             # TODO:check current post status
             obj.approval_deny(1)
         return obj
+
 
 def category_view(request, *args, **kwargs):
     # query categories from db
@@ -214,3 +237,4 @@ class AddCategoryView(CreateView):
         context = super(AddCategoryView, self).get_context_data(*args, **kwargs)
         context["cat_menu"] = cat_menu
         return context
+

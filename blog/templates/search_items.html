@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <style>
+        img {
+            height: 100px;
+        }
+
+    </style>
+    !!!!
+
+
+    {#搜索栏#}
+
+    <div class="row">
+        <div class="col-6 m-auto">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="摘要搜索"
+                       aria-label="Recipient's username"
+                       aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button">搜索</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br><br>
+    {#搜索栏结束#}
+    <div class="row">
+
+        <ul>
+            {% for post in object_list %}
+
+                <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
+                - <small><a
+                    href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
+                <small>来源：<a
+                        href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
+                <small>标签：<a
+                        href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                <small>日期：{{ post.post_date }}</small>
+                {#                                                                    {{ post.status }} {{ post.publish }}#}
+                {{ post.body|slice:":200"|safe }}#
+            {% endfor %}
+        </ul>
+
+
+    </div>
+
+
+{% endblock %}
