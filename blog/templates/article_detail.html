@@ -8,9 +8,9 @@
     <h1>{{ post.title }}</h1>
     <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
     <small> 作者: {{ post.author }}</small>
-    <small>发布日期：{{ post.post_date|date:"Y-m-d" }}</small>
+    <small>发布日期：{{ post.post_date|date:"Y年n月d日" }}</small>
     <small>阅读量：{{ post.views }}</small>
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and user == post.author and post.status_id == 1 %}
         <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
         <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>
     {% endif %}
@@ -20,10 +20,10 @@
     <h6><strong>摘要：</strong></h6>
     {{ post.body|safe }}
     {% if post.post_file %}
-    <div id="displayframe" class="col-xl">
-        <iframe class="embed-responsive-item" id="pdf" src="{{ post.post_file.url }}" width="100%" height="1000px">
-        </iframe>
-    </div>
+        <div id="displayframe" class="col-xl">
+            <iframe class="embed-responsive-item" id="pdf" src="{{ post.post_file.url }}" width="100%" height="1000px">
+            </iframe>
+        </div>
     {% endif %}
     <br/>
     <a href="{% url 'home' %}" class="btn btn-secondary">Back</a>

@@ -1,129 +1,413 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <style>
 
+        .col-md-half {
+            position: relative;
+            min-height: 1px;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        .form-check {
+            display: block;
+            min-height: 1.5rem;
+            padding-left: 0em;
+            margin-bottom: 0rem;
+            float: left;
+        }
+
+        @media (min-width: 769px) {
+        {#.col-md-half {#}
+        {#    float: left;#}
+
+
+            .col-md-half {
+                width: 3%;
+            }
+
+        }
+    </style>
     <h1>Post</h1>
 
     {% if user.is_authenticated and user == author %}
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button"
-                        role="tab" aria-controls="home" aria-selected="true">草稿
+                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" href="#home" type="button"
+                        role="tab" aria-controls="home" aria-selected="true" data-bs-target="#home">草稿
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button"
-                        role="tab" aria-controls="profile" aria-selected="false">已发布
+                <button class="nav-link" id="profile-tab" data-bs-toggle="tab" href="#profile" type="button"
+                        role="tab" aria-controls="profile" aria-selected="false" data-bs-target="#profile">已发布
                 </button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" data-bs-target="#contact" type="button"
-                        role="tab" aria-controls="contact" aria-selected="false">审核中
+                <button class="nav-link" id="contact-tab" data-bs-toggle="tab" href="#contact" type="button"
+                        role="tab" aria-controls="contact" aria-selected="false" data-bs-target="#contact">审核中
                 </button>
             </li>
         </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                <br>
-                {% for post in author_posts %}
-                    {% if post.status_id == 1 %}
+                {% if draft_page_obj %}
+                    <br>
+                    <small>
+                        共{{ draft_page_obj.count }}篇
+                        <div class="btn-group" role="group">
+                            <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle btn-sm"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                批量操作
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                <li>
 
-                        <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
-                            - <small><a href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
-                            <small>来源：<a href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
-                            <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
-                            <small>日期：{{ post.post_date }}</small>
+                                    <button id="draft_bulk_submit"
+                                            class="list-group-item list-group-item-action btn-sm">
+                                        批量提交
+                                    </button>
+                                </li>
+                                <li>
+                                    <button id="draft_bulk_delete"
+                                            class="list-group-item list-group-item-action btn-sm">
+                                        批量删除
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </small>
+                    <hr style="margin-bottom: 2px; margin-top:5px">
+                    <table class="table table-bordered" style="margin-bottom: 5px">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="col-md-half">
+                                <div class="form-check">
 
-                            {% if user.is_authenticated and user.id == post.author.pk %}
-                                <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
-                                <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>
-                                <small><a href="{% url 'submit_post' post.pk %}">提交</a></small>
+                                    <input class="form-check-input_draft_all" type="checkbox" value=""
+                                           id="flexCheckDefault_select_all_draft">
+                                    <label class="form-check-label" for="flexCheckDefault_select_all_draft">
+                                    </label>
+                                </div>
+                            </th>
+                            <th scope="col" class="col-md-1">ID</th>
+                            <th scope="col" class="col-md-4">文章名称</th>
+                            <th scope="col" class="col-md-1">来源</th>
+                            <th scope="col" class="col-md-1">标签</th>
+                            <th scope="col" class="col-md-2">发布日期</th>
+                            <th scope="col" class="col-md-2">操作</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for post in draft_page_obj %}
+                            {% if post.status_id == 1 %}
+                                <tr>
+                                    <th class="col-md-half">
+
+                                        <div class="form-check">
+                                            <input class="form-check-input1" type="checkbox" value=""
+                                                   id="flexCheckDefault_1">
+                                            <label class="form-check-label" for="flexCheckDefault_1"
+                                                   style="display: none">{{ post.pk }}
+                                            </label>
+                                        </div>
+
+                                    </th>
+                                    <td>
+                                        <small>{{ forloop.counter }}</small>
+                                    </td>
+                                    <td>
+                                        <small><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a></small>
+                                    </td>
+                                    <td>
+                                        <small><a
+                                                href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
+                                    </td>
+                                    <td>
+                                        <small><a
+                                                href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                                    </td>
+                                    <td>
+                                        <small>{{ post.submit_time|date:"Y年n月d日" }}</small>
+                                    </td>
+                                    <td>
+                                        {% if user.is_authenticated and user.id == post.author.pk %}
+                                            <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
+                                            <small><a href="#" class="toDraftDelete">删除</a> </small>
+                                            <small><a href="#" class="toDraftSubmit">提交</a></small>
+                                        {% endif %}
+                                    </td>
+                                </tr>
                             {% endif %}
-                            <small>{{ post.status }}</small>
-                            {{ post.body|slice:":200"|safe }}
-                        </li>
-                        <hr>
-                    {% endif %}
 
-                {% endfor %}
+                        {% endfor %}
+
+                        </tbody>
+                    </table>
+                    <div style="float: right">
+                        {% if is_draft_page_paginated %}
+                            <ul class="pagination pagination-sm">
+                                {% if draft_page_obj.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link"
+                                           href="?page_draft={{ draft_page_obj.previous_page_number }}"
+                                           style="color: cornflowerblue">上一页</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">上一页</span>
+                                    </li>
+                                {% endif %}
+
+                                {% for i in draft_page_range %}
+                                    {% if draft_page_obj.number == i %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ i }}</span>
+                                        </li>
+                                    {% elif i == author_draft_paginator.ELLIPSIS %}
+                                        <li class="page-item"><a class="page-link" href="?page_draft=1">{{ i }}</a></li>
+                                    {% else %}
+                                        <li class="page-item"><a class="page-link"
+                                                                 href="?page_draft={{ i }}">{{ i }}</a>
+                                        </li>
+                                    {% endif %}
+
+                                {% endfor %}
+
+                                {% if draft_page_obj.has_next %}
+                                    <li class="page-item"><a class="page-link"
+                                                             href="?page_draft={{ draft_page_obj.next_page_number }}">Next</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled"><span class="page-link">下一页</span></li>
+                                {% endif %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    暂无
+                {% endif %}
+
             </div>
             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                <br>
-                {% for post in author_posts %}
-                    {% if post.status_id == 2 %}
+                {#            已发布#}
+                {% if pub_page_obj %}
+                    <br>
+                    <small>
+                        共{{ pub_page_obj.count }}篇
+                    </small>
+                    <hr style="margin-bottom: 2px; margin-top:5px">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="col-sm-1">ID</th>
+                            <th scope="col" class="col-lg-4">文章名称</th>
+                            <th scope="col" class="col-md-2">来源</th>
+                            <th scope="col" class="col-md-2">标签</th>
+                            <th scope="col" class="col-md-2">发布日期</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for post in pub_page_obj %}
 
-                        <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
-                            - <small><a href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
-                            <small>来源：<a href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
-                            <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
-                            <small>日期：{{ post.post_date }}</small>
-
-                            {% if user.is_authenticated and user.id == post.author.pk %}
-                                <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
-                                <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>!!!
+                            {% if post.status_id == 2 %}
+                                <tr>
+                                    <th scope="row">
+                                        <small>{{ forloop.counter }}</small>
+                                    </th>
+                                    <td><small><a
+                                            href="{% url 'article_detail' post.pk %}">{{ post.title|slice:"10" }}</a></small>
+                                    </td>
+                                    <td><small><a
+                                            href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                                    </td>
+                                    <td><small><a
+                                            href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                                    </td>
+                                    <td>{{ post.publish_date|date:"Y年n月d日" }}</td>
+                                </tr>
 
                             {% endif %}
-                            <small>{{ post.status }}</small>
-                            {{ post.body|slice:":200"|safe }}
-                        </li>
-                        <hr><br>
-                    {% endif %}
 
-                {% endfor %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    <div style="float: right">
+                        {% if is_pub_paginated %}
+                            <ul class="pagination pagination-sm">
+                                {% if pub_page_obj.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link"
+                                           href="?page_pub={{ pub_page_obj.previous_page_number }}"
+                                           style="color: cornflowerblue">上一页</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link">上一页</span>
+                                    </li>
+                                {% endif %}
+
+                                {% for i in published_page_range %}
+                                    {% if pub_page_obj.number == i %}
+                                        <li class="page-item active">
+                                            <span class="page-link">{{ i }}</span>
+                                        </li>
+                                    {% elif i == author_published_paginator.ELLIPSIS %}
+                                        <li class="page-item"><a class="page-link" href="?page_pub=1">{{ i }}</a></li>
+                                    {% else %}
+                                        <li class="page-item"><a class="page-link"
+                                                                 href="?page_pub={{ i }}">{{ i }}</a>
+                                        </li>
+                                    {% endif %}
+
+                                {% endfor %}
+
+                                {% if pub_page_obj.has_next %}
+                                    <li class="page-item"><a class="page-link"
+                                                             href="?page_pub={{ pub_page_obj.next_page_number }}">下一页</a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled"><span class="page-link">下一页</span></li>
+                                {% endif %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    暂无
+                {% endif %}
             </div>
             <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                <br>
-                {% for post in author_posts %}
-                    {% if post.status_id >= 3 and post.status_id != 9 %}
+                {#            审批#}
+                {% if author_submitted.count > 0 %}
+                    <br>
+                    <small style="margin-top: 10px">
+                        共{{ author_submitted.count }}篇
+                        <div class="btn-group" role="group">
+                            <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle btn-sm"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                批量操作
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                <li>
 
-                        <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
-                            - <small><a href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
-                            <small>来源：<a href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
-                            <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
-                            <small>日期：{{ post.post_date }}</small>
+                                    <button id="approving_bulk_submit"
+                                            class="list-group-item list-group-item-action btn-sm">
+                                        批量转为草稿
+                                    </button>
+                                </li>
+                                <li>
+                                    <button id="approving_bulk_delete"
+                                            class="list-group-item list-group-item-action btn-sm">
+                                        批量删除
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
 
-                            {% if post.status_id == 3 %}
-                                <small>一级审批中 {{ post.status }}</small>
-                            {% elif post.status_id == 4 %}
-                                <small>二级审批中 {{ post.status }}</small>
-                            {% elif post.status_id == 5 %}
-                                <small>三级审批中 {{ post.status }}</small>
-                            {% elif post.status_id == 6 %}
-                                <small>一级审批驳回 {{ post.status }}</small>
-                                {% if user.is_authenticated and user.id == post.author.pk %}
-                                    <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
-                                    <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>
-                                {% endif %}
-                            {% elif post.status_id == 7 %}
-                                <small>二级审批驳回 {{ post.status }}</small>
-                                {% if user.is_authenticated and user.id == post.author.pk %}
-                                    <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
-                                    <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>
-                                {% endif %}
-                            {% elif post.status_id == 8 %}
-                                <small>三级审批驳回 {{ post.status }}</small>
-                                {% if user.is_authenticated and user.id == post.author.pk %}
-                                    <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
-                                    <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>
-                                {% endif %}
+                    </small>
+
+                    <hr style="margin-bottom: 2px; margin-top:5px">
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="col-md-half">
+
+                                <input class="form-check-input_submitted_all" type="checkbox" value=""
+                                       id="flexCheckDefault_select_all_submitted">
+                                <label class="form-check-label" for="flexCheckDefault_select_all_submitted">
+                                </label>
+                            </th>
+                            <th scope="col" class="col-sm-1">ID</th>
+                            <th scope="col" class="col-lg-4">文章名称</th>
+                            <th scope="col" class="col-md-2">来源</th>
+                            <th scope="col" class="col-md-2">最近处理</th>
+                            <th scope="col" class="col-md-2">状态</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for post in author_submitted %}
+
+                            {% if post.status_id >= 3 and post.status_id != 9 %}
+                                <tr>
+                                    <th scope="row">
+                                        <div class="form-check">
+                                            {% if post.status_id == 6 or post.status_id == 7 or post.status_id == 8 %}
+                                                <input class="form-check-input2" type="checkbox" value=""
+                                                       id="flexCheckDefault_2">
+                                                <label class="form-check-label" for="flexCheckDefault_2"
+                                                       style="display: none">{{ post.pk }}
+                                                </label>
+                                            {% else %}
+                                                <input class="form-check-input3" type="checkbox" value=""
+                                                       id="flexCheckDefault_3" disabled>
+                                                <label class="form-check-label" for="flexCheckDefault_3"
+                                                       style="display: none">{{ post.pk }}
+                                                </label>
+                                            {% endif %}
+                                        </div>
+                                    </th>
+                                    <td>
+                                        <small>{{ forloop.counter }}</small>
+                                    </td>
+                                    <td>
+                                        <small><a
+                                                href="{% url 'article_detail' post.pk %}">{{ post.title }}</a></small>
+
+                                    </td>
+                                    <td>
+                                        <small><a
+                                                href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
+                                    </td>
+
+                                    <td>
+                                        <small>{{ post.update_time|date:"Y年n月d日 H:i:s" }}</small>
+                                    </td>
+
+                                    <td>
+                                        {% if post.status_id == 3 or post.status_id == 10 %}
+                                            <small>一级审批中</small>
+                                        {% elif post.status_id == 4 %}
+                                            <small>二级审批中</small>
+                                        {% elif post.status_id == 5 %}
+                                            <small>三级审批中</small>
+                                        {% elif post.status_id > 5 %}
+                                            {% if post.status_id == 6 %}
+                                                <small>一级审批驳回</small>
+                                            {% elif post.status_id == 7 %}
+                                                <small>二级审批驳回</small>
+                                            {% elif post.status_id == 8 %}
+                                                <small>三级审批驳回</small>
+                                            {% endif %}
+                                            {% if user.is_authenticated and user.id == post.author.pk %}
+                                                <small><a href="" class="toDraft">转为草稿</a> </small>
+                                                <small><a href="" class="toAppDelete">删除</a> </small>
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                </tr>
                             {% endif %}
-                            {{ post.body|slice:":200"|safe }}
-                        </li>
-                        <hr><br>
-                    {% endif %}
 
-                {% endfor %}
-                </br>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+
+
+                {% else %}
+                    暂无
+                {% endif %}
             </div>
         </div>
     {% else %}
-        {% for post in author_posts %}
+        {% for post in author_published %}
 
             <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
                 - <small><a href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
                 <small>来源：<a href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
                 <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
-                <small>日期：{{ post.post_date }}</small>
+                <small>日期：{{ post.post_date|date:"Y年n月d日" }}</small>
 
                 {#                        {% if user.is_authenticated and user.id == post.author.pk %}#}
                 {#                            <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>#}
@@ -134,4 +418,174 @@
 
         {% endfor %}
     {% endif %}
+
+    <script>
+
+        {#全选#}
+
+        function select_all(selectall, selectones) {
+            for (let i = 0; i < selectones.length; i++) {
+                selectones[i].checked = selectall.checked
+            }
+
+        }
+
+        function select_one(selectall, selectones) {
+            var isAllChecked = true;
+            for (let i = 0; i < selectones.length; i++) {
+                if (selectones[i].checked === false) {
+                    isAllChecked = false;
+                    break
+                }
+            }
+            selectall.checked = isAllChecked
+        }
+
+        {#多选 | 单选#}
+
+        function simpleActions(obj, action) {
+            console.log(obj)
+            console.log(action)
+            console.log(typeof action)
+            var postPkList = []
+            var postPK = parseInt(obj.parentElement.parentElement.parentElement.firstElementChild.firstElementChild.children[1].textContent.trim())
+            postPkList.push(postPK)
+            console.log(postPK)
+            $.ajax({
+                    type: "POST",
+                    url: "/bulk_submit/",
+                    data: {
+                        checked_list: JSON.stringify(postPkList),
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        bulk_action: JSON.stringify(action)
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        location.reload();
+                        console.log("refreshed")
+
+                    },
+                    error: function (error_data) {
+                        console.log("error")
+                        console.log(error_data)
+                    }
+                }
+            )
+
+
+        }
+
+        function post_function(objs, ids, sub_list, bulk_action) {
+            sub_list = []
+            for (let i = 0; i < objs.length; i++) {
+                if (objs[i].checked) {
+                    sub_list.push(parseInt(ids[i].textContent.trim()));
+                }
+            }
+            $.ajax({
+                type: "POST",
+                url: "/bulk_submit/",
+                data: {
+                    checked_list: JSON.stringify(sub_list),
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    bulk_action: JSON.stringify(bulk_action)
+                },
+                dataType: "json",
+                success: function (data) {
+                    location.reload();
+                    console.log("refreshed")
+
+                },
+                error: function (error_data) {
+                    console.log("error")
+                    console.log(error_data)
+                }
+            })
+        }
+
+        var draft_objs = document.getElementsByClassName('form-check-input1')
+        if (draft_objs.length > 0) {
+            var draft_list = []
+            var draft_ids = draft_objs[0].labels
+            var tick = document.getElementById("draft_bulk_submit")
+            var draft_delete_tick = document.getElementById("draft_bulk_delete")
+            var draftSelectAllCheckBox = document.getElementById("flexCheckDefault_select_all_draft")
+
+            var draftDeleteObjs = document.getElementsByClassName("toDraftDelete")
+            var draftSubmitObjs = document.getElementsByClassName("toDraftSubmit")
+            for (let i = 0; i < draftDeleteObjs.length; i++) {
+                draftDeleteObjs[i].onclick = function () {
+                    simpleActions(draftDeleteObjs[i], 'bulk_delete');
+                }
+            }
+
+            for (let i = 0; i < draftSubmitObjs.length; i++) {
+                draftSubmitObjs[i].onclick = function () {
+                    simpleActions(draftSubmitObjs[i], 'bulk_submit');
+                }
+            }
+            draftSelectAllCheckBox.onclick = function () {
+                select_all(draftSelectAllCheckBox, draft_objs);
+            }
+
+            for (let i = 0; i < draft_objs.length; i++) {
+                draft_objs[i].onclick = function () {
+                    select_one(draftSelectAllCheckBox, draft_objs);
+                }
+
+            }
+            tick.onclick = function () {
+                post_function(draft_objs, draft_ids, draft_list, 'bulk_submit')
+            }
+            draft_delete_tick.onclick = function () {
+                post_function(draft_objs, draft_ids, draft_list, 'bulk_delete')
+            }
+
+
+        }
+
+        {#for approval#}
+        var approving_objs = document.getElementsByClassName('form-check-input2')
+        if (approving_objs.length > 0) {
+            var approving_list = []
+            var approving_ids = approving_objs[0].labels
+            var approving_tick = document.getElementById('approving_bulk_submit')
+            var delete_tick = document.getElementById('approving_bulk_delete')
+            var approvingSelectAllCheckBox = document.getElementById("flexCheckDefault_select_all_submitted")
+            var toDraftObjs = document.getElementsByClassName("toDraft")
+            var deleteObjs = document.getElementsByClassName("toAppDelete")
+
+            approvingSelectAllCheckBox.onclick = function () {
+                select_all(approvingSelectAllCheckBox, approving_objs);
+            }
+            for (let i = 0; i < approving_objs.length; i++) {
+                approving_objs[i].onclick = function () {
+                    select_one(approvingSelectAllCheckBox, approving_objs);
+                }
+            }
+
+            approving_tick.onclick = function () {
+                post_function(approving_objs, approving_ids, approving_list, 'return_to_draft');
+            }
+            delete_tick.onclick = function () {
+                post_function(approving_objs, approving_ids, approving_list, 'bulk_delete');
+            }
+
+            if (toDraftObjs) {
+                for (let i = 0; i < toDraftObjs.length; i++) {
+                    toDraftObjs[i].onclick = function () {
+                        simpleActions(toDraftObjs[i], 'return_to_draft');
+                    }
+                }
+                for (let i = 0; i < deleteObjs; i++) {
+                    deleteObjs[i].onclick = function () {
+                        simpleActions(deleteObjs[i], 'bulk_delete')
+                    }
+                }
+
+            }
+        }
+
+
+    </script>
 {% endblock %}

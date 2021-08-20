@@ -1,21 +1,325 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h3>待审批</h3>
-    {% for post in object_list %}
-        <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
-            - <small><a href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
-            <small>来源：<a href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
-            <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
-            <small>日期：{{ post.post_date }}</small>
-            <small><a href="{% url 'approval_success_update' user.username post.pk %}" id="approval">通过</a></small>
-            <small><a href="{% url 'approval_deny_update' user.username post.pk %}">驳回</a> </small>
-            {{ post.body|slice:":200"|safe }}
+    <style>
+
+        .col-md-half {
+            position: relative;
+            min-height: 1px;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        .form-check {
+            display: block;
+            min-height: 1.5rem;
+            padding-left: 0em;
+            margin-bottom: 0rem;
+            float: right;
+        }
+
+        @media (min-width: 769px) {
+        {#.col-md-half {#}
+        {#    float: left;#}
+
+
+            .col-md-half {
+                width: 3%;
+            }
+
+        }
+    </style>
+    <h3>审批列表</h3>
+    {#    如果该用户已经审批过#}
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="approving-tab" data-bs-toggle="tab" data-bs-target="#approving"
+                    type="button"
+                    role="tab" aria-controls="approving" aria-selected="true">待审批
+            </button>
         </li>
-    {% endfor %}
-    <h5>待开发流程图</h5>
-    提交人：张三<br>
-    一级审批：由 A 于yyyy-mm--dd hh:mm:ss 审批通过/驳回<br>
-    二级审批：由 B 于yyyy-mm--dd hh:mm:ss 审批通过/驳回<br>
-    三级审批: 由 C 于yyyy-mm--dd hh:mm:ss 审批通过/驳回<br>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="approved-tab" data-bs-toggle="tab" data-bs-target="#approved" type="button"
+                    role="tab" aria-controls="approved" aria-selected="false">我审批的
+            </button>
+        </li>
+
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="approving" role="tabpanel" aria-labelledby="approving-tab">
+            {% if object_list %}
+                <br>
+                <small>
+                    共{{ draft_page_obj.count }}篇
+                    <div class="btn-group" role="group">
+                        <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle btn-sm"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            批量操作
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                            <li>
+
+                                <button id="approveALL"
+                                        class="list-group-item list-group-item-action btn-sm">
+                                    批量通过
+                                </button>
+                            </li>
+                            <li>
+                                <button id="denyALL"
+                                        class="list-group-item list-group-item-action btn-sm">
+                                    批量驳回
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </small>
+                <hr style="margin-bottom: 2px; margin-top:5px">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="col-md-half">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value=""
+                                       id="flexCheckDefault_approving">
+                                <label class="form-check-label" for="flexCheckDefault_approving">
+                                </label>
+                            </div>
+                        </th>
+                        <th scope="col" class="col-md-1">ID</th>
+                        <th scope="col" class="col-md-4">文章名称</th>
+                        <th scope="col" class="col-md-1">来源</th>
+                        <th scope="col" class="col-md-1">标签</th>
+                        <th scope="col" class="col-md-1">提交人</th>
+                        <th scope="col" class="col-md-1">提交日期</th>
+                        <th scope="col" class="col-md-1">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for post in object_list %}
+                        <tr>
+                            <td class="col-md-half">
+
+                                <div class="form-check">
+
+                                    <input class="form-check-input-app" type="checkbox" value="{{ post.pk }}"
+                                           id="flexCheckDefault">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                    </label>
+                                </div>
+                            </td>
+                            <td>
+                                <small>{{ forloop.counter }}</small>
+                            </td>
+                            <td>
+                                <small><a
+                                        href="{% url 'article_detail' post.pk %}">{{ post.title|slice:"10" }}</a></small>
+                            </td>
+                            <td>
+                                <small><a
+                                        href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                            </td>
+                            <td><small><a
+                                    href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                            </td>
+                            <td>
+                                <small><a
+                                        href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
+                            </td>
+                            <td>
+                                <small>{{ post.submit_time|date:"Y年n月d日" }}</small>
+                            </td>
+                            <td>
+                                <small><a href="" class="singleApproval">通过</a></small>
+                                <small><a href="" class="singleDeny">驳回</a> </small>
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                暂无
+            {% endif %}
+        </div>
+        <div class="tab-pane fade" id="approved" role="tabpanel" aria-labelledby="approved-tab">
+            {% if approved_list_by_user.count > 0 %}
+                <small>共{{ approved_list_by_user.count }}篇</small>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col" class="col-md-1">ID</th>
+                        <th scope="col" class="col-lg-4">文章名称</th>
+                        <th scope="col" class="col-md-1">来源</th>
+                        <th scope="col" class="col-md-1">标签</th>
+                        <th scope="col" class="col-md-1">提交人</th>
+                        <th scope="col" class="col-md-1">提交日期</th>
+                        {#                        <th scope="col" class="col-md-1">已提交天数</th>#}
+                        <th scope="col" class="col-md-1">当前状态</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for post in approved_list_by_user %}
+                        <tr>
+                            <td>
+                                <small>{{ forloop.counter }}</small>
+                            </td>
+                            <td>
+                                <small><a
+                                        href="{% url 'article_detail' post.pk %}">{{ post.title|slice:"10" }}</a></small>
+                            </td>
+                            <td>
+                                <small><a
+                                        href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                            </td>
+                            <td><small><a
+                                    href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                            </td>
+                            <td>
+                                <small><a
+                                        href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
+                            </td>
+                            <td>
+                                {#                                后面改为submittime#}
+                                <small>{{ post.post_date|date:"Y年n月d日" }}</small>
+                            </td>
+                            <td>
+                                <small>{{ post.get_status_verbose_name }}</small>
+                            </td>
+
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            {% else %}
+                暂无
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+
+        {#全选#}
+
+        function select_all(selectall, selectones) {
+            for (let i = 0; i < selectones.length; i++) {
+                selectones[i].checked = selectall.checked
+            }
+
+        }
+
+        function select_one(selectall, selectones) {
+            var isAllChecked = true;
+            for (let i = 0; i < selectones.length; i++) {
+                if (selectones[i].checked === false) {
+                    isAllChecked = false;
+                    break
+                }
+            }
+            selectall.checked = isAllChecked
+        }
+
+        function simpleActions(obj, action) {
+            // console.log(obj)
+            // console.log(action)
+            // console.log(typeof action)
+            var postPkList = []
+            var postPK = parseInt(obj.parentElement.parentElement.parentElement.firstElementChild.firstElementChild.children[0].value.trim())
+            postPkList.push(postPK)
+            console.log(postPK)
+            $.ajax({
+                    type: "POST",
+                    url: "/bulk_submit/",
+                    data: {
+                        checked_list: JSON.stringify(postPkList),
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        bulk_action: JSON.stringify(action)
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        location.reload();
+                        console.log("refreshed")
+
+                    },
+                    error: function (error_data) {
+                        console.log("error")
+                        console.log(error_data)
+                    }
+                }
+            )
+
+
+        }
+
+        function post_function(objs, sub_list, bulk_action) {
+            sub_list = []
+            for (let i = 0; i < objs.length; i++) {
+                if (objs[i].checked) {
+                    sub_list.push(parseInt(objs[i].value.trim()));
+                }
+            }
+            console.log(sub_list)
+            $.ajax({
+                type: "POST",
+                url: "/bulk_submit/",
+                data: {
+                    checked_list: JSON.stringify(sub_list),
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    bulk_action: JSON.stringify(bulk_action)
+                },
+                dataType: "json",
+                success: function (data) {
+                    location.reload();
+                    console.log("refreshed")
+
+                },
+                error: function (error_data) {
+                    console.log("error")
+                    console.log(error_data)
+                }
+            })
+        }
+
+        {#多选 | 单选#}
+        var approvingObjs = document.getElementsByClassName("form-check-input-app")
+        if (approvingObjs.length > 0) {
+            var appList = []
+            var approvingAllButton = document.getElementById('approveALL')
+            var denyAllButton = document.getElementById('denyALL')
+            var checkAllBox = document.getElementById('flexCheckDefault_approving')
+            var singleApproval = document.getElementsByClassName('singleApproval')
+            var singleDeny = document.getElementsByClassName("singleDeny")
+            checkAllBox.onclick = function () {
+                select_all(checkAllBox, approvingObjs);
+            }
+            for (let i = 0; i < approvingObjs.length; i++) {
+                approvingObjs[i].onclick = function () {
+                    select_one(checkAllBox, approvingObjs);
+                }
+
+            }
+            approvingAllButton.onclick = function () {
+                post_function(approvingObjs, appList, 'bulk_approve');
+            }
+            denyAllButton.onclick = function () {
+                console.log('dada')
+                post_function(approvingObjs, appList, 'bulk_deny');
+            }
+
+            if (singleApproval.length > 0) {
+                for (let i = 0; i < singleApproval.length; i++) {
+                    singleApproval[i].onclick = function () {
+                        simpleActions(singleApproval[i], 'bulk_approve');
+                    }
+                }
+                for (let i = 0; i < singleDeny.length; i++) {
+                    singleDeny[i].onclick = function () {
+                        simpleActions(singleDeny[i], 'bulk_deny')
+                    }
+                }
+            }
+        }
+    </script>
 {% endblock %}

@@ -1,27 +1,23 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
+    1544
     <h1>{{ source }}</h1>
-        <small>总阅读数： {{ cnt }}</small>
+    <small>共{{ amounts }}篇文章</small>&nbsp;
+    <small>总阅读数： {{ cnt }}</small>
     <hr>
-        <ul>
-            {% for post in source_posts %}
+    <ul>
+        {% for post in source_posts %}
 
-                    <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
-                        - <small><a href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
-                        <small>来源：<a href="#">{{ post.source }}</a></small>
-                        <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
-                        <small>日期：{{ post.post_date }}</small>
+            <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
+                - <small><a href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
+                <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                <small>日期：{{ post.post_date|date:"Y-m-d" }}</small>
 
-                        {% if user.is_authenticated %}
-                            <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
-                            <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>
-                        {% endif %}
-                        {{ post.body|slice:":200"|safe }}
-                    </li>
-        </ul>
-        <br>
-        <hr><br>
-    {% endfor %}
+                {{ post.body|slice:":200"|safe }}
+            </li>
+            </ul>
+
+            <hr><br>
+        {% endfor %}
 {% endblock %}

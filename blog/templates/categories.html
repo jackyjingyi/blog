@@ -1,25 +1,25 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {{ cats }}
+    {{ cats }}!!!
 
 {% endblock %}
 
 {% block content %}
+    jack
     {% if category_posts %}
     <h1>{{ cats }}</h1>
     <ul>
         {% for post in category_posts %}
 
             <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
-                - {{ post.author }}
-
-                <small>{{ post.post_date }}</small>
-                {% if user.is_authenticated %}
-                    <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
-                    <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>
-                {% endif %}
-                {{ post.body|slice:":200"|safe }}
+                                            - <small><a
+                                                href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
+                                            <small>来源：<a
+                                                    href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
+                                            <small>标签：<a
+                                                    href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                                            <small>日期：{{ post.post_date|date:"Y-m-d" }}</small>
             </li>
         {% endfor %}
     </ul>
