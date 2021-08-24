@@ -1,6 +1,5 @@
 import logging
-
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from .models import Post, Category, Source, Profile
 from .forms import PostForm, EditForm
@@ -12,7 +11,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.template.loader import render_to_string
 import json
-from django.db.models import Q
+from django.db.models import Q, Max
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils import timezone
 from functools import reduce
@@ -49,12 +48,20 @@ class HomeView(ListView):
     def get_context_data(self, *args, object_list=None, **kwargs):
         cat_menu = Category.objects.all()
         source_menu = Source.objects.all()
-        post_group = {i.name: Post.objects.filter(category=i.name, status=2).order_by('-post_date') for i in cat_menu}
+        post_group = {i.name: Post.objects.filter(category=i.name, status=2).order_by('-post_date') for i in cat_menu if
+                      Post.objects.filter(category=i.name, status=2)}
+        likes_rating = Post.objects.aggregate(Max('likes'))['likes__max']
+        hot_article = Post.objects.get(likes=likes_rating)
+        top_two_topics = sorted(post_group.items(), key=lambda x: x[1].count(), reverse=True)
+        print(top_two_topics)
         context = super(HomeView, self).get_context_data(*args, **kwargs)
         context["cat_menu"] = cat_menu
         context["source_menu"] = source_menu
         context["post_group"] = post_group
         context['role'] = get_user_role(self.request.user)
+        context['hot_article'] = hot_article
+        context['top_two_topics'] = top_two_topics
+        print(hot_article)
         return context
 
 
@@ -293,8 +300,11 @@ class ArticleDetailView(DetailView):
     def get_context_data(self, *args, object_list=None, **kwargs):
         cat_menu = Category.objects.all()
         context = super(ArticleDetailView, self).get_context_data(*args, **kwargs)
+        current_post = get_object_or_404(Post, id=self.kwargs['pk'])
+        likes = current_post.total_liks()
         context["cat_menu"] = cat_menu
         context['role'] = get_user_role(self.request.user)
+        context['total_likes'] = likes
         return context
 
     def get_object(self, queryset=None):
@@ -375,7 +385,7 @@ def bulk_submit(request):
         return JsonResponse({})
     else:
         pass
-    return render(request, 'home.html')
+    return render(request, 'home_old.html')
 
 
 class UpdatePostView(LoginRequiredMixin, UpdateView):
@@ -413,3 +423,10 @@ class AddCategoryView(CreateView):
         context = super(AddCategoryView, self).get_context_data(*args, **kwargs)
         context["cat_menu"] = cat_menu
         return context
+
+
+@login_required
+def like_view(request, pk):
+    post = get_object_or_404(Post, id=request.POST.get('post_id'))
+    post.likes.add(request.user)
+    return HttpResponseRedirect(reverse('article_detail', args=[str(pk)]))

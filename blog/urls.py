@@ -1,7 +1,7 @@
 from django.urls import path
 from .views import HomeView, ArticleDetailView, AddPostView, UpdatePostView, DeletePostView, AddCategoryView, \
     category_view, author_posts_view, source_posts_view, ApprovalPosts, ApprovalSuccessDetailView, \
-    ApprovalDenyDetailView, SubmitPostDetailView, search_item, bulk_submit
+    ApprovalDenyDetailView, SubmitPostDetailView, search_item, bulk_submit,like_view
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -23,4 +23,5 @@ urlpatterns = [
                   path('submit_post/<int:pk>', SubmitPostDetailView.as_view(), name='submit_post'),
                   path('search_post/results', search_item, name='search_items'),
                   path('bulk_submit/', bulk_submit, name='bulk_submit'),
+                  path('like/<int:pk>', like_view, name='like_post'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

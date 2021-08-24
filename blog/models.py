@@ -1,8 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.urls import reverse
-from datetime import datetime, date
-from ckeditor.fields import RichTextField
+from taggit.managers import TaggableManager
+from taggit.models import TaggedItemBase
 from datetime import datetime, date
 import django.utils.timezone as timezone
 import logging
@@ -53,14 +53,13 @@ class Post(models.Model):
     title_tag = models.CharField(max_length=255, default="title tag", verbose_name="标签")
     author = models.ForeignKey(User, on_delete=models.PROTECT)
     body = models.TextField(verbose_name="摘要", blank=True, null=True)
-
     post_date = models.DateTimeField(auto_now_add=True)
     post_file = models.FileField(verbose_name="上传文件")
     category = models.CharField(max_length=255, default='旅游', verbose_name="分类")
     source = models.CharField(max_length=255, default='大数据组', verbose_name="组别")
     views = models.PositiveIntegerField(default=0)
     status = models.ForeignKey(PostStatus, on_delete=models.PROTECT, default=1)
-
+    tags = TaggableManager('标签')
     # timestamp when user hit submit button
     submit_time = models.DateTimeField(null=True, blank=True)
 
@@ -96,6 +95,8 @@ class Post(models.Model):
     # time when oa_status turn to 2
     oa_success_time = models.DateTimeField(null=True, blank=True)
 
+    likes = models.ManyToManyField(User, related_name='blog_posts')
+
     def __str__(self):
         return self.title + " | " + str(self.author)
 
@@ -105,6 +106,9 @@ class Post(models.Model):
     def increase_views(self):
         self.views += 1
         self.save(update_fields=['views'])
+
+    def total_liks(self):
+        return self.likes.count()
 
     def submit(self):
         """
@@ -246,6 +250,9 @@ class Profile(models.Model):
     is_publisher = models.BooleanField(default=False)
     is_visitor = models.BooleanField(default=True)
     role = models.CharField(max_length=25, choices=CHOICE, default='3')
+    bio = models.TextField("个人简介",default="个人简介")
+    profile_img = models.ImageField(null=True, blank=True,upload_to="images/profile/")
+
 
     def set_as_lv1_approver(self):
         self.is_lv1_approver = True

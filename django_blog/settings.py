@@ -21,6 +21,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'ckeditor',
     'corsheaders',
+    'taggit',
+    'taggit_labels',
 ]
 
 MIDDLEWARE = [
@@ -103,15 +105,14 @@ USE_I18N = True
 
 USE_L10N = True
 
-
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'home'
-PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
-STATICFILES_DIRS = [
-    os.path.join(PROJECT_ROOT, 'static'),
-]
+# PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]

@@ -1,31 +1,37 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-    {{ post.title_tag }}
+    {{ post.title }}
 {% endblock %}
 
 {% block content %}
-    <h1>{{ post.title }}</h1>
-    <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
-    <small> 作者: {{ post.author }}</small>
-    <small>发布日期：{{ post.post_date|date:"Y年n月d日" }}</small>
-    <small>阅读量：{{ post.views }}</small>
-    {% if user.is_authenticated and user == post.author and post.status_id == 1 %}
-        <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
-        <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>
-    {% endif %}
-
-    <br/>
+    <h1 class="text-center">{{ post.title }}</h1>
+    <div class="text-center">
+        <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+        <small> 作者: {{ post.author }}</small>
+        <small>发布日期：{{ post.post_date|date:"Y年n月d日" }}</small>
+        <small>阅读量：{{ post.views }}</small>
+        {% if user.is_authenticated and user == post.author and post.status_id == 1 %}
+            <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
+            <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>
+        {% endif %}
+        <small>点赞数：{{ total_likes }}</small>
+    </div>
     <hr>
     <h6><strong>摘要：</strong></h6>
     {{ post.body|safe }}
     {% if post.post_file %}
         <div id="displayframe" class="col-xl">
-            <iframe class="embed-responsive-item" id="pdf" src="{{ post.post_file.url }}" width="100%" height="1000px">
+            <iframe class="embed-responsive-item" id="pdf" src="{{ post.post_file.url }}" width="100%" height="1320px">
             </iframe>
         </div>
     {% endif %}
     <br/>
     <a href="{% url 'home' %}" class="btn btn-secondary">Back</a>
-
+    <br/><br/>
+    <hr>
+    <form action="{% url 'like_post' post.pk %}" method="post">
+        {% csrf_token %}
+        <button type="submit" , name="post_id" value="{{ post.id }}" class="btn btn-primary btn-sm">like</button>
+    </form>
 {% endblock %}
