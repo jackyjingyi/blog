@@ -1,14 +1,16 @@
 from django.urls import path
 from .views import HomeView, ArticleDetailView, AddPostView, UpdatePostView, DeletePostView, AddCategoryView, \
     category_view, author_posts_view, source_posts_view, ApprovalPosts, ApprovalSuccessDetailView, \
-    ApprovalDenyDetailView, SubmitPostDetailView, search_item, bulk_submit,like_view
+    ApprovalDenyDetailView, SubmitPostDetailView, search_item, bulk_submit, like_view, oct_get_endpoint_view, \
+    creat_post, get_subcategory
 from django.conf.urls.static import static
 from django.conf import settings
 
 urlpatterns = [
                   path('', HomeView.as_view(), name='home'),
                   path('article/<int:pk>', ArticleDetailView.as_view(), name='article_detail'),
-                  path('add_post/', AddPostView.as_view(), name='add_post'),
+                  path('add_post/', creat_post, name='add_post'),
+                  path('add_post/get_subcategory/', get_subcategory),
                   path('add_category/', AddCategoryView.as_view(), name='add_category'),
                   path('acticle/update/<int:pk>', UpdatePostView.as_view(), name='update_post'),
                   path('acticle/<int:pk>/remove', DeletePostView.as_view(), name='delete_post'),
@@ -24,4 +26,5 @@ urlpatterns = [
                   path('search_post/results', search_item, name='search_items'),
                   path('bulk_submit/', bulk_submit, name='bulk_submit'),
                   path('like/<int:pk>', like_view, name='like_post'),
+                  path('oct_get_post_list/', oct_get_endpoint_view),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

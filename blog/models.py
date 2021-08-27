@@ -11,12 +11,23 @@ import logging
 class Category(models.Model):
     name = models.CharField(max_length=255)
     chinese_name = models.CharField(max_length=255, default="None")
+    description = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
         return reverse('home')
+
+
+class Subcategory(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+
+    def __str__(self):
+        return "Top Category: {0}, Sub Category: {1}".format(self.category.name, self.name)
+
 
 
 class Source(models.Model):
@@ -56,6 +67,7 @@ class Post(models.Model):
     post_date = models.DateTimeField(auto_now_add=True)
     post_file = models.FileField(verbose_name="上传文件")
     category = models.CharField(max_length=255, default='旅游', verbose_name="分类")
+    subcategory = models.CharField(max_length=255, default='旅游', verbose_name="二级分类")
     source = models.CharField(max_length=255, default='大数据组', verbose_name="组别")
     views = models.PositiveIntegerField(default=0)
     status = models.ForeignKey(PostStatus, on_delete=models.PROTECT, default=1)

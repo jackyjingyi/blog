@@ -3,6 +3,8 @@ from .models import Post, Category
 from taggit.forms import TagField
 from taggit_labels.widgets import LabelWidget
 from django.core.validators import ValidationError
+# from crispy_forms.helper import FormHelper, FormHelpersException
+# from crispy_forms.layout import Submit
 
 choices = [i for i in Category.objects.all().values_list('name', 'name')]
 
@@ -10,17 +12,14 @@ choices = [i for i in Category.objects.all().values_list('name', 'name')]
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title', 'author', 'category', 'tags', 'body', 'post_file', 'is_submit')
+        fields = ('title', 'category', 'tags', 'body', 'post_file', 'is_submit')
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control'}),
+            'title': forms.TextInput(),
             'tags': LabelWidget(),
-            # 'title_tag': forms.TextInput(attrs={'class': 'form-control'}),
-            'author': forms.TextInput(attrs={'class': 'form-control', 'id': 'pub_id', 'value': '', 'type': 'hidden'}),
-            # 'author': forms.Select(attrs={'class': 'form-control'}),
-            'category': forms.Select(choices=choices, attrs={'class': 'form-control'}),
-            'body': forms.Textarea(attrs={'class': 'form-control'}),
+            'category': forms.Select(),
+            'body': forms.Textarea(),
             'is_submit': forms.CheckboxInput(),
-            'post_file': forms.FileInput(attrs={'class': 'form-control', }),
+            'post_file': forms.FileInput(),
 
         }
         help_texts = {
@@ -28,12 +27,12 @@ class PostForm(forms.ModelForm):
             'tags': ('请选择标签，最多选择3个')
         }
 
+
     def clean_tags(self):
         data = self.cleaned_data.get('tags', [])
         if len(data) > 3:
             raise ValidationError('最多选择3个标签', code='invalid')
         return data
-
 
 
 class EditForm(forms.ModelForm):

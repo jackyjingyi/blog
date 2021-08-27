@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'taggit',
     'taggit_labels',
+    'crispy_forms',
 ]
 
 MIDDLEWARE = [

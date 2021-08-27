@@ -1,30 +1,199 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}
     上传新文件
 {% endblock %}
 
 {% block content %}
-    {{ user.id }}{{ user.username }}
-    {{ publishers }}
-    {% if user.is_authenticated and user.pk in publishers %}
-
-        <h1>Add Post</h1>
-        <br><br>
-        <div class="form-group">
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form.media }}
-                {{ form.as_p }}
-                <button class="btn btn-secondary" id = "draft">保存</button>
-
-{#                <button class="btn btn-secondary" id = "submit">Submit</button>#}
-            </form>
+    {{ user.is_authenticated }}
+    {% if user.is_authenticated and user.profile.is_publisher %}
+        <div class="row">
+            <div class="col-4 pt-1"></div>
+            <div class="col-4 text-center"><h2 class="text-center">文件上传</h2></div>
+            <div class="col-4 mb-0 d-flex justify-content-start">
+                <p class="mb-0" style="position: absolute; top:11.2%">
+                    当前组：<a href="#">旅游大数据</a>
+                </p>
+            </div>
         </div>
-        <script>
-            var name = "{{ user.pk }}";
-            document.getElementById("pub_id").value = name;
-        </script>
-        {% else %}
+        <hr>
+
+        <div class="form-group">
+
+            <form enctype="multipart/form-data" id="create_post">
+                {% csrf_token %}
+                <link href="{% static 'taggit_labels/css/taggit_labels.css' %}" type="text/css" media="all"
+                      rel="stylesheet">
+                <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+
+                <script src="{% static 'taggit_labels/js/taggit_labels.js' %}"></script>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="myPDFTitle"
+                               class="form-label d-inline-block mb-2 text-primary"><strong>标题</strong></label>
+                        <input type="text" class="form-control" id="myPDFTitle" placeholder="请输入标题" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="myPDFFile"
+                               class="form-label d-inline-block mb-2 text-primary"><strong>上传PDF文件</strong></label>
+                        <input type="file" class="form-control" id="myPDFFile" required>
+                        <div class="invalid-feedback">非PDF文件</div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="lv1_category"
+                               class="form-label d-inline-block mb-2 text-primary"><strong>分类</strong></label>
+                        <select name="category1" class="form-control" id="lv1_category" required>
+                            {% for lv1cat in lv1_cats %}
+                                <option value="{{ lv1cat.name }}">{{ lv1cat.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="lv2_category"
+                               class="form-label d-inline-block mb-2 text-primary"><strong>二级分类</strong></label>
+                        <select name="category2" class="form-control" id="lv2_category" required>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-md-4">
+                        <label for="tags" class="col-sm-2 col-form-label">标签</label>
+                        <small><span class="help-icon">(请最多选择3个标签)</span></small>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-10">
+                        <ul class="taggit-labels taggit-list" id="tags">
+                            {% for t in tag_items %}
+                                <li data-tag-name="{{ t.name }}" class="taggit-tag">{{ t.name }}</li>
+                            {% endfor %}
+                        </ul>
+                        <input type="hidden" name="tags" value="" id="tags">
+
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <label for="body">摘要</label>
+                    <textarea name="body" cols="40" rows="10" class="form-control" id="body"
+                              placeholder="请输入200字内简短摘要"></textarea>
+                </div>
+                <div class="form-check mb-0">
+                    <input class="form-check-input" type="hidden" value="" id="is_submit">
+                </div>
+                <button class="btn btn-secondary">存为草稿</button>
+                <button class="btn btn-secondary">直接提交</button>
+                <button class="btn btn-secondary" id="saveAsDraft">存为草稿</button>
+            </form>
+
+        </div>
+
+    {% else %}
         暂无发布权限
     {% endif %}
+    <script>
+        $(document).ready()
+        {
+            var options = $('#lv1_category option:selected');
+            var lv1_cat_value = options.val();
+            console.log(lv1_cat_value)
+            $.ajax({
+                url: '/add_post/get_subcategory/',
+                data: {'lv1_cat': lv1_cat_value},
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var content = "";
+                    $.each(data, function (i, item) {
+                        content += '<option value' + item + '>' + item + '</option>'
+                    });
+                    $('#lv2_category').html(content);
+                },
+            });
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        $('#myPDFFile').change(function () {
+            var fileExt = ['pdf']
+            if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExt) == -1) {
+                alert("非PDF");
+                $(this).val("");
+            }
+        })
+
+
+        const csrftoken = getCookie('csrftoken');
+
+        document.getElementById('saveAsDraft').onclick = function (e) {
+            var c = document.getElementById('is_submit')
+            c.checked = true
+            console.log(c.checked)
+            console.log(222)
+            var a = $('#create_post')
+
+            var fd = new FormData;
+            var xhr = new XMLHttpRequest({headers: {'X-CSRFToken': csrftoken}});
+            var x = a.serializeArray().reduce(function (obj, item) {
+                if (item.name !== 'csrfmiddlewaretoken') {
+
+                    obj[item.name] = item.value;
+                }
+                return obj;
+            }, {});
+            for (var key in x) {
+                fd.append(key, x[key]);
+                console.log(key, x[key])
+            }
+            fd.append('title', document.getElementById("myPDFTitle").value)
+            fd.append('post_file', document.getElementById("myPDFFile").files[0])
+            fd.append('is_submit', true)
+            xhr.open('post', '/add_post/', true)
+            xhr.send(fd);
+
+            console.log(fd)
+
+        }
+
+
+        $("#lv1_category").change(function () {
+            var options = $('#lv1_category option:selected');
+            var lv1_cat_value = options.val();
+            console.log(lv1_cat_value)
+            $.ajax({
+                url: '/add_post/get_subcategory/',
+                data: {'lv1_cat': lv1_cat_value},
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var content = "";
+                    $.each(data, function (i, item) {
+                        content += '<option value' + item + '>' + item + '</option>'
+                    });
+                    $('#lv2_category').html(content);
+                },
+            })
+        })
+
+
+    </script>
 {% endblock %}

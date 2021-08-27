@@ -3,57 +3,64 @@
 {% block content %}
 
 
-{#首页的内容#}
+    {#首页的内容#}
     <div class="p-4 p-md-5 mb-4 text-white rounded bg-dark">
         <div class="col-md-6 px-0">
             <h1 class="display-4 fst-italic">{{ hot_article.title }}</h1>
             <p class="lead my-3 fs-6">{{ hot_article.body }}</p>
-            <p class="lead mb-0"><a href="{% url 'article_detail' hot_article.id %}" class="text-white fw-bold">继续阅读</a></p>
+            <p class="lead mb-0"><a href="{% url 'article_detail' hot_article.id %}" class="text-white fw-bold">继续阅读</a>
+            </p>
         </div>
     </div>
 
     <div class="row mb-2">
-        <div class="col-md-6">
-            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                <div class="col p-4 d-flex flex-column position-static">
-                    <strong class="d-inline-block mb-2 text-primary" href="#">{{ top_two_topics.0.0 }}</strong>
-                    <h3 class="mb-0">热度文章1</h3>
-                    <div class="mb-1 text-muted">Nov 12</div>
-                    <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to
-                        additional content.</p>
-                    <a href="#" class="stretched-link">Continue reading</a>
-                </div>
-                <div class="col-auto d-none d-lg-block">
-                    <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg"
-                         role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
-                         focusable="false"><title>Placeholder</title>
-                        <rect width="100%" height="100%" fill="#55595c"/>
-                        <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
-                    </svg>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                <div class="col p-4 d-flex flex-column position-static">
-                    <strong class="d-inline-block mb-2 text-success">旅游</strong>
-                    <h3 class="mb-0">热度文章2</h3>
-                    <div class="mb-1 text-muted">Nov 11</div>
-                    <p class="mb-auto">This is a wider card with supporting text below as a natural lead-in to
-                        additional content.</p>
-                    <a href="#" class="stretched-link">Continue reading</a>
-                </div>
-                <div class="col-auto d-none d-lg-block">
-                    <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg"
-                         role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
-                         focusable="false"><title>Placeholder</title>
-                        <rect width="100%" height="100%" fill="#55595c"/>
-                        <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
-                    </svg>
+        {% if top_two_topics|length > 1 %}
+            <div class="col-md-6">
+                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <strong class="d-inline-block mb-2 text-primary" href="#">{{ top_two_topics.0.0 }}</strong>
+                        <h4 class="mb-0">{{ top_two_topics.0.1.0.title }}</h4>
+                        <div class="mb-1 text-muted">{{ top_two_topics.0.1.0.publish_date|date:"n月" }}</div>
+                        <p class="card-text mb-auto">{{ top_two_topics.0.1.0.body|slice:"50" }}</p>
+                        <a href="{% url 'article_detail' top_two_topics.0.1.0.pk %}" class="stretched-link">继续阅读</a>
+                    </div>
+                    <div class="col-auto d-none d-lg-block">
+                        <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg"
+                             role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
+                             focusable="false"><title>Placeholder</title>
+                            <rect width="100%" height="100%" fill="#55595c"/>
+                            <image xlink:href="{% static 'images/slides01.jpg' %}" x="0" y="0" width="100%"
+                                   height="100%"/>
 
+                            <text x="50%" y="90%" fill="#eceeef" dy=".3em">文字说明</text>
+                        </svg>
+                    </div>
                 </div>
             </div>
-        </div>
+            <div class="col-md-6">
+                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <strong class="d-inline-block mb-2 text-success">{{ top_two_topics.1.0 }}</strong>
+                        <h4 class="mb-0">{{ top_two_topics.1.1.0.title|slice:"15" }}</h4>
+                        <div class="mb-1 text-muted">{{ top_two_topics.1.1.0.publish_date|date:"n月" }}</div>
+                        <p class="mb-auto">{{ top_two_topics.1.1.0.body|slice:"50" }}</p>
+                        <a href="{% url 'article_detail' top_two_topics.1.1.0.pk %}" class="stretched-link">继续阅读</a>
+                    </div>
+                    <div class="col-auto d-none d-lg-block">
+                        <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg"
+                             role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
+                             focusable="false"><title>Placeholder</title>
+                            <rect width="100%" height="100%" fill="#55595c"/>
+                            <image xlink:href="{% static 'images/slides02.jpg' %}" x="0" y="0" width="100%"
+                                   height="100%"/>
+
+                            <text x="50%" y="90%" fill="#eceeef" dy=".3em">别的文字说明</text>
+                        </svg>
+
+                    </div>
+                </div>
+            </div>
+        {% endif %}
     </div>
 
     <div class="row g-5">
@@ -62,181 +69,71 @@
                 近期发布
             </h3>
 
-            <article class="blog-post">
-
-                <h2 class="blog-post-title">Sample blog post</h2>
-                <p class="blog-post-meta">January 1, 2021 by <a href="#">Mark</a></p>
-
-                <p>This blog post shows a few different types of content that’s supported and styled with Bootstrap.
-                    Basic typography, lists, tables, images, code, and more are all supported as expected.</p>
-                <hr>
-                <p>This is some additional paragraph placeholder content. It has been written to fill the available
-                    space and show how a longer snippet of text affects the surrounding content. We'll repeat it often
-                    to keep the demonstration flowing, so be on the lookout for this exact same string of text.</p>
-                <h2>Blockquotes</h2>
-                <p>This is an example blockquote in action:</p>
-                <blockquote class="blockquote">
-                    <p>Quoted text goes here.</p>
-                </blockquote>
-                <p>This is some additional paragraph placeholder content. It has been written to fill the available
-                    space and show how a longer snippet of text affects the surrounding content. We'll repeat it often
-                    to keep the demonstration flowing, so be on the lookout for this exact same string of text.</p>
-                <h3>Example lists</h3>
-                <p>This is some additional paragraph placeholder content. It's a slightly shorter version of the other
-                    highly repetitive body text used throughout. This is an example unordered list:</p>
-                <ul>
-                    <li>First list item</li>
-                    <li>Second list item with a longer description</li>
-                    <li>Third list item to close it out</li>
-                </ul>
-                <p>And this is an ordered list:</p>
-                <ol>
-                    <li>First list item</li>
-                    <li>Second list item with a longer description</li>
-                    <li>Third list item to close it out</li>
-                </ol>
-                <p>And this is a definiton list:</p>
-                <dl>
-                    <dt>HyperText Markup Language (HTML)</dt>
-                    <dd>The language used to describe and define the content of a Web page</dd>
-                    <dt>Cascading Style Sheets (CSS)</dt>
-                    <dd>Used to describe the appearance of Web content</dd>
-                    <dt>JavaScript (JS)</dt>
-                    <dd>The programming language used to build advanced Web sites and applications</dd>
-                </dl>
-                <h2>Inline HTML elements</h2>
-                <p>HTML defines a long list of available inline tags, a complete list of which can be found on the <a
-                        href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element">Mozilla Developer Network</a>.
-                </p>
-                <ul>
-                    <li><strong>To bold text</strong>, use <code class="language-plaintext highlighter-rouge">&lt;strong&gt;</code>.
-                    </li>
-                    <li><em>To italicize text</em>, use <code
-                            class="language-plaintext highlighter-rouge">&lt;em&gt;</code>.
-                    </li>
-                    <li>Abbreviations, like <abbr title="HyperText Markup Langage">HTML</abbr> should use <code
-                            class="language-plaintext highlighter-rouge">&lt;abbr&gt;</code>, with an optional <code
-                            class="language-plaintext highlighter-rouge">title</code> attribute for the full phrase.
-                    </li>
-                    <li>Citations, like <cite>— Mark Otto</cite>, should use <code
-                            class="language-plaintext highlighter-rouge">&lt;cite&gt;</code>.
-                    </li>
-                    <li>
-                        <del>Deleted</del>
-                        text should use <code class="language-plaintext highlighter-rouge">&lt;del&gt;</code> and
-                        <ins>inserted</ins>
-                        text should use <code class="language-plaintext highlighter-rouge">&lt;ins&gt;</code>.
-                    </li>
-                    <li>Superscript <sup>text</sup> uses <code
-                            class="language-plaintext highlighter-rouge">&lt;sup&gt;</code> and subscript
-                        <sub>text</sub> uses <code class="language-plaintext highlighter-rouge">&lt;sub&gt;</code>.
-                    </li>
-                </ul>
-                <p>Most of these elements are styled by browsers with few modifications on our part.</p>
-                <h2>Heading</h2>
-                <p>This is some additional paragraph placeholder content. It has been written to fill the available
-                    space and show how a longer snippet of text affects the surrounding content. We'll repeat it often
-                    to keep the demonstration flowing, so be on the lookout for this exact same string of text.</p>
-                <h3>Sub-heading</h3>
-                <p>This is some additional paragraph placeholder content. It has been written to fill the available
-                    space and show how a longer snippet of text affects the surrounding content. We'll repeat it often
-                    to keep the demonstration flowing, so be on the lookout for this exact same string of text.</p>
-                <pre><code>Example code block</code></pre>
-                <p>This is some additional paragraph placeholder content. It's a slightly shorter version of the other
-                    highly repetitive body text used throughout.</p>
-            </article>
-
-            <article class="blog-post">
-                <h2 class="blog-post-title">Another blog post</h2>
-                <p class="blog-post-meta">December 23, 2020 by <a href="#">Jacob</a></p>
-
-                <p>This is some additional paragraph placeholder content. It has been written to fill the available
-                    space and show how a longer snippet of text affects the surrounding content. We'll repeat it often
-                    to keep the demonstration flowing, so be on the lookout for this exact same string of text.</p>
-                <blockquote>
-                    <p>Longer quote goes here, maybe with some <strong>emphasized text</strong> in the middle of it.</p>
-                </blockquote>
-                <p>This is some additional paragraph placeholder content. It has been written to fill the available
-                    space and show how a longer snippet of text affects the surrounding content. We'll repeat it often
-                    to keep the demonstration flowing, so be on the lookout for this exact same string of text.</p>
-                <h3>Example table</h3>
-                <p>And don't forget about tables in these posts:</p>
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Upvotes</th>
-                        <th>Downvotes</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>Alice</td>
-                        <td>10</td>
-                        <td>11</td>
-                    </tr>
-                    <tr>
-                        <td>Bob</td>
-                        <td>4</td>
-                        <td>3</td>
-                    </tr>
-                    <tr>
-                        <td>Charlie</td>
-                        <td>7</td>
-                        <td>9</td>
-                    </tr>
-                    </tbody>
-                    <tfoot>
-                    <tr>
-                        <td>Totals</td>
-                        <td>21</td>
-                        <td>23</td>
-                    </tr>
-                    </tfoot>
-                </table>
-
-                <p>This is some additional paragraph placeholder content. It's a slightly shorter version of the other
-                    highly repetitive body text used throughout.</p>
-            </article>
-
-            <article class="blog-post">
-                <h2 class="blog-post-title">New feature</h2>
-                <p class="blog-post-meta">December 14, 2020 by <a href="#">Chris</a></p>
-
-                <p>This is some additional paragraph placeholder content. It has been written to fill the available
-                    space and show how a longer snippet of text affects the surrounding content. We'll repeat it often
-                    to keep the demonstration flowing, so be on the lookout for this exact same string of text.</p>
-                <ul>
-                    <li>First list item</li>
-                    <li>Second list item with a longer description</li>
-                    <li>Third list item to close it out</li>
-                </ul>
-                <p>This is some additional paragraph placeholder content. It's a slightly shorter version of the other
-                    highly repetitive body text used throughout.</p>
-            </article>
-
-            <nav class="blog-pagination" aria-label="Pagination">
-                <a class="btn btn-outline-primary" href="#">Older</a>
-                <a class="btn btn-outline-secondary disabled" href="#" tabindex="-1" aria-disabled="true">Newer</a>
-            </nav>
+{#            <article class="blog-post">#}
+{##}
+{#                <h2 class="blog-post-title">【欢乐指数7月报告】暑期市场一波三折，跨省长线游受重击</h2>#}
+{#                <p class="blog-post-meta">8月5日 <a href="#"> 旅游欢乐指数</a></p>#}
+{##}
+{#                <p>#}
+{#                    中国旅游景区欢乐指数（THI）研究，作为国内首创基于旅游大数据的游客综合体验评价体系，于2020年正式启动，由中国旅游景区协会和华侨城创新研究院联合发布，以大数据挖掘为技术支撑，持续通过月报、年报和专报等形式，跟踪、监测、分析国内旅游景区运行情况和服务品质，向社会各界提供高品质的系列研究成果。目前，华侨城创新研究院已与腾讯云签署战略合作协议，不断强化中国旅游景区欢乐指数THI研究。2021年7月报告新鲜出炉。</p>#}
+{#                <hr>#}
+{#                <p>本次报告发布指数包括“2021中国旅游景区欢乐指数(THI)7月排名TOP100”和中国旅游景区自然景观类、人文景观类、博物馆类、乡村田园类、现代娱乐类等分类欢乐指数（THI）月度排名前20名。</p>#}
+{#                <h3>【景区高质量发展效果显著】</h3>#}
+{##}
+{#                <p class="text-left">#}
+{#                    旅游景区是旅游业发展的核心载体，堪称中国旅游业的“中流砥柱”，经过高速发展后成果显著。从景区数量发展来看，A级旅游景区数量继续稳步提升。据7月初文旅部发布的《2020年文化和旅游发展统计公报》数据显示，2020年末，全国共有A级旅游景区13332个，比上年末增加930个。其中，5A级旅游景区302个，增加22个；4A级旅游景区4030个，增加310个；3A级旅游景区6931个，增加733个。3A级以上景区数量表现出正增长，而1A和2A景区数量较去年减少了135个，从侧面也反映出景区建设和评级向高质量标准靠拢，满足高品质旅游体验的需求，旅游高质量发展是大势所趋。</p>#}
+{##}
+{##}
+{#                <p class="text-decoration-underline">中国旅游景区欢乐指数（THI）月度排名</p>#}
+{#                <table class="table">#}
+{#                    <thead>#}
+{#                    <tr>#}
+{#                        <th>排名</th>#}
+{#                        <th>旅游景区名称</th>#}
+{#                        <th>THI指数</th>#}
+{#                    </tr>#}
+{#                    </thead>#}
+{#                    <tbody>#}
+{#                    <tr>#}
+{#                        <td>1</td>#}
+{#                        <td>上海迪士尼度假区</td>#}
+{#                        <td>184.09</td>#}
+{#                    </tr>#}
+{#                    <tr>#}
+{#                        <td>2</td>#}
+{#                        <td>丽江古城景区</td>#}
+{#                        <td>171.54</td>#}
+{#                    </tr>#}
+{#                    <tr>#}
+{#                        <td>3</td>#}
+{#                        <td>成都大熊猫繁育研究基地</td>#}
+{#                        <td>147.87</td>#}
+{#                    </tr>#}
+{#                    <tr>#}
+{#                        <td>4</td>#}
+{#                        <td>上海东方明珠广播电视塔</td>#}
+{#                        <td>134.70</td>#}
+{#                    </tr>#}
+{#                    </tbody>#}
+{#                </table>#}
+{#            </article>#}
 
         </div>
 
         <div class="col-md-4">
             <div class="position-sticky" style="top: 2rem;">
                 <div class="p-4 mb-3 bg-light rounded">
-                    <h4 class="fst-italic">About</h4>
-                    <p class="mb-0">Customize this section to tell your visitors a little bit about your publication,
-                        writers, content, or something else entirely. Totally up to you.</p>
+                    <h4 class="fst-italic">关于</h4>
+                    <p class="mb-0">创研院文件报送系统使用中如有问题，请及时联系，谢谢支持。</p>
                 </div>
 
                 <div class="p-4">
-                    <h4 class="fst-italic">Archives</h4>
+                    <h4 class="fst-italic">更多文章</h4>
                     <ol class="list-unstyled mb-0">
-                        <li><a href="#">March 2021</a></li>
-                        <li><a href="#">February 2021</a></li>
-                        <li><a href="#">January 2021</a></li>
-                        <li><a href="#">December 2020</a></li>
+                        <li><a href="#">2021 1月</a></li>
+                        <li><a href="#">2021 2月</a></li>
+                        <li><a href="#">2021 3月</a></li>
+                        <li><a href="#">2021 4月</a></li>
                         <li><a href="#">November 2020</a></li>
                         <li><a href="#">October 2020</a></li>
                         <li><a href="#">September 2020</a></li>
@@ -248,14 +145,7 @@
                     </ol>
                 </div>
 
-                <div class="p-4">
-                    <h4 class="fst-italic">Elsewhere</h4>
-                    <ol class="list-unstyled">
-                        <li><a href="#">GitHub</a></li>
-                        <li><a href="#">Twitter</a></li>
-                        <li><a href="#">Facebook</a></li>
-                    </ol>
-                </div>
+
             </div>
         </div>
     </div>

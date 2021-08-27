@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import generic
 from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy,reverse
 from django.contrib.auth.views import LoginView
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
@@ -15,7 +15,7 @@ class UserRegisterView(generic.CreateView):
     success_url = reverse_lazy('login')
 
 
-class UserLogingView(LoginView):
+class UserLoginView(LoginView):
     '''A LoginView with no CSRF protection.'''
 
     @method_decorator(sensitive_post_parameters())

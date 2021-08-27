@@ -5,7 +5,10 @@
 {% endblock %}
 
 {% block content %}
-    <h1 class="text-center">{{ post.title }}</h1>
+    <h3 class="pb-4 mb-4 border-bottom">
+               <h1 class="text-center">{{ post.title }}</h1>
+            </h3>
+
     <div class="text-center">
         <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
         <small> 作者: {{ post.author }}</small>
@@ -30,8 +33,10 @@
     <a href="{% url 'home' %}" class="btn btn-secondary">Back</a>
     <br/><br/>
     <hr>
+    {% if user.is_authenticated %}
     <form action="{% url 'like_post' post.pk %}" method="post">
         {% csrf_token %}
         <button type="submit" , name="post_id" value="{{ post.id }}" class="btn btn-primary btn-sm">like</button>
     </form>
+    {% endif %}
 {% endblock %}

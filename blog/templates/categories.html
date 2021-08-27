@@ -1,30 +1,66 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}
-    {{ cats }}!!!
+    {{ cats }}
 
 {% endblock %}
 
 {% block content %}
-    jack
-    {% if category_posts %}
-    <h1>{{ cats }}</h1>
-    <ul>
-        {% for post in category_posts %}
+    <div class="row g-5">
+        <div class="col-md-8">
+            <h3 class="pb-4 mb-4 fst-italic border-bottom">
+                {{ cats }}
+            </h3>
+            {% if category_posts %}
 
-            <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
-                                            - <small><a
-                                                href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
-                                            <small>来源：<a
-                                                    href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
-                                            <small>标签：<a
-                                                    href="{% url 'category' post.category %}">{{ post.category }}</a></small>
-                                            <small>日期：{{ post.post_date|date:"Y-m-d" }}</small>
-            </li>
-        {% endfor %}
-    </ul>
-    {% else %}
-        暂无文章
-    {% endif %}
+                <ul>
+                    {% for post in category_posts %}
+
+                        <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
+                            - <small><a
+                                    href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
+                            <small>来源：<a
+                                    href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
+                            <small>标签：<a
+                                    href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                            <small>日期：{{ post.post_date|date:"Y-m-d" }}</small>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                暂无文章
+            {% endif %}
+        </div>
+        <div class="col-md-4">
+            <div class="position-sticky" style="top: 2rem;">
+                <div class="p-4 mb-3 bg-light rounded">
+                    <h4 class="fst-italic">关于</h4>
+                    <p class="mb-0">创研院文件报送系统使用中如有问题，请及时联系，谢谢支持。</p>
+                </div>
+
+                <div class="p-4">
+                    <h4 class="fst-italic">更多文章</h4>
+                    <ol class="list-unstyled mb-0">
+
+                        <li><a href="#">2021 1月</a></li>
+                        <li><a href="#">2021 2月</a></li>
+                        <li><a href="#">2021 3月</a></li>
+                        <li><a href="#">2021 4月</a></li>
+                        <li><a href="#">November 2020</a></li>
+                        <li><a href="#">October 2020</a></li>
+                        <li><a href="#">September 2020</a></li>
+                        <li><a href="#">August 2020</a></li>
+                        <li><a href="#">July 2020</a></li>
+                        <li><a href="#">June 2020</a></li>
+                        <li><a href="#">May 2020</a></li>
+                        <li><a href="#">April 2020</a></li>
+                    </ol>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
 
 {% endblock %}

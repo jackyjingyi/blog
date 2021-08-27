@@ -1,7 +1,7 @@
 import logging
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Category, Source, Profile
+from .models import Post, Category, Source, Profile, Subcategory
 from .forms import PostForm, EditForm
 from django.urls import reverse_lazy, reverse
 from django.contrib.auth.models import User, Group, AnonymousUser
@@ -16,6 +16,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils import timezone
 from functools import reduce
 from operator import and_
+from django.core import serializers
 
 
 def get_role_lv(request):
@@ -51,9 +52,8 @@ class HomeView(ListView):
         post_group = {i.name: Post.objects.filter(category=i.name, status=2).order_by('-post_date') for i in cat_menu if
                       Post.objects.filter(category=i.name, status=2)}
         likes_rating = Post.objects.aggregate(Max('likes'))['likes__max']
-        hot_article = Post.objects.get(likes=likes_rating)
+        hot_article = Post.objects.filter(likes=likes_rating).first()
         top_two_topics = sorted(post_group.items(), key=lambda x: x[1].count(), reverse=True)
-        print(top_two_topics)
         context = super(HomeView, self).get_context_data(*args, **kwargs)
         context["cat_menu"] = cat_menu
         context["source_menu"] = source_menu
@@ -61,7 +61,6 @@ class HomeView(ListView):
         context['role'] = get_user_role(self.request.user)
         context['hot_article'] = hot_article
         context['top_two_topics'] = top_two_topics
-        print(hot_article)
         return context
 
 
@@ -189,7 +188,9 @@ def category_view(request, *args, **kwargs):
     cats = kwargs['cats']
     category_posts = Post.objects.filter(category=cats, status=2)
     cat_menu = Category.objects.all()
-    return render(request, 'categories.html', {'cats': cats, 'category_posts': category_posts, 'cat_menu': cat_menu})
+    context = {'cats': cats, 'category_posts': category_posts, 'cat_menu': cat_menu,
+               'role': get_user_role(request.user)}
+    return render(request, 'categories.html', context=context)
 
 
 @login_required
@@ -331,19 +332,64 @@ class AddPostView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         self.object = form.save()
-        if self.object.is_submit:
+        print(self.request.POST)
+        if 'direct-submit' in self.request.POST:
+            # if self.object.is_submit:
+            print(True, self.request.POST)
             self.object.submit()
         # 每个发布者只有一个组
         try:
-
             self.object.source = self.request.user.groups.all()[0].name
         except IndexError:
             # use default
-            logging.warning("bad happends this user doe snot have a team")
+            logging.warning("bad happends this user does not have a team")
 
         self.object.save()
 
         return HttpResponseRedirect(self.get_success_url())
+
+
+@login_required(login_url='/members/login_to/')
+@csrf_exempt
+def creat_post(request):
+    if request.method == 'POST':
+
+        # print(request.POST)
+        data = request.POST
+        file = request.FILES
+        print(data, file)
+        cate1 = data.get('category1')
+        cate2 = data.get('category2')
+        tags = data.get('tags')
+        body = data.get('body')
+        title = data.get('title')
+        post_file = file
+        print(type(cate1), cate1)
+
+        if cate1: print("ok")
+        if file: print("yes")
+
+        return JsonResponse({})
+    else:
+        print(request.user)
+        print(request.user.is_authenticated)
+        cat_menu = Category.objects.all()
+        context = {}
+        context["cat_menu"] = cat_menu
+        context['role'] = get_user_role(request.user)
+        context['tag_items'] = Post.tags.all()
+        context['lv1_cats'] = [i for i in Category.objects.all()]
+
+    return render(request, 'add_post.html', context)
+
+
+def get_subcategory(request):
+    if request.method == 'GET':
+        item = request.GET.get('lv1_cat')
+        lv2_objs = Subcategory.objects.filter(category__name=item)
+        context = [i.name for i in lv2_objs]
+        return JsonResponse(context,safe=False)
+
 
 
 @login_required
@@ -384,7 +430,8 @@ def bulk_submit(request):
                 obj.approval_deny(lv, user.pk)
         return JsonResponse({})
     else:
-        pass
+        print(request.user)
+        print(request.user.is_authenticated)
     return render(request, 'home_old.html')
 
 
@@ -425,8 +472,56 @@ class AddCategoryView(CreateView):
         return context
 
 
-@login_required
+@login_required(login_url='/members/login_to/')
 def like_view(request, pk):
-    post = get_object_or_404(Post, id=request.POST.get('post_id'))
-    post.likes.add(request.user)
-    return HttpResponseRedirect(reverse('article_detail', args=[str(pk)]))
+    if request.method == 'POST':
+        post = get_object_or_404(Post, id=request.POST.get('post_id'))
+        post.likes.add(request.user)
+        return HttpResponseRedirect(reverse('article_detail', args=[str(pk)]))
+    else:
+        post = get_object_or_404(Post, id=request.POST.get('post_id'))
+    return render(request, 'article_detail.html', {'pk': post.id})
+
+
+@login_required(login_url='/members/login_to/')
+@csrf_exempt
+def oct_get_endpoint_view(request, *args, **kwargs):
+    """
+    login_required 确保了是已登录用户，但是未保证用户是集团方的，目前用userid进行限制
+    """
+    if request.method == 'GET':
+        # 检查
+        # if request.user.pk == xx 确认账户
+        # TODO: 根据month和round筛选
+        month = request.GET.get('month')
+        round = request.GET.get('round')
+        posts = Post.objects.filter(oa_status='1')
+        # data = serializers.serialize("json", posts, fields=('title','post_file','category','body'))
+        data = []
+        for item in posts:
+            data.append(
+                {
+                    'pk': item.pk,
+                    'title': item.title,
+                    'category': item.category,
+                    'post_file_name': item.post_file.name,
+                    'post_file_url': item.post_file.url,
+                    'tags': [i['name'] for i in item.tags.values() if item.tags],
+                    'publish_date': item.publish_date,
+                    'send_date': timezone.now(),
+                }
+            )
+
+        results = {
+            'company': '华侨城创新研究院',
+            'article_amount': posts.count(),
+            'datetime': timezone.now(),
+            'month': request.GET.get('month'),
+            'round': request.GET.get('round'),
+            'context': data,
+        }
+
+        return JsonResponse(results, safe=False)
+    else:
+        info = request.POST
+        return JsonResponse({'status': 200}, status=200)
