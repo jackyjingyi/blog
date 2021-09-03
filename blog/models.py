@@ -6,6 +6,12 @@ from taggit.models import TaggedItemBase
 from datetime import datetime, date
 import django.utils.timezone as timezone
 import logging
+import os
+
+
+def get_absolute_upload_path():
+    _datetime = date.today()
+    return os.path.join('media', 'uploadPosts/{}/{}/'.format(_datetime.year, _datetime.month))
 
 
 class Category(models.Model):
@@ -27,7 +33,6 @@ class Subcategory(models.Model):
 
     def __str__(self):
         return "Top Category: {0}, Sub Category: {1}".format(self.category.name, self.name)
-
 
 
 class Source(models.Model):
@@ -59,13 +64,16 @@ class Post(models.Model):
     #
     # ]
     """
-
+    origin_choice = [
+        ('1', 'origin'),
+        ('2', 'reproduction')
+    ]
     title = models.CharField(max_length=255, verbose_name="标题")
     title_tag = models.CharField(max_length=255, default="title tag", verbose_name="标签")
     author = models.ForeignKey(User, on_delete=models.PROTECT)
     body = models.TextField(verbose_name="摘要", blank=True, null=True)
     post_date = models.DateTimeField(auto_now_add=True)
-    post_file = models.FileField(verbose_name="上传文件")
+    post_file = models.FileField(verbose_name="上传文件", upload_to=get_absolute_upload_path())
     category = models.CharField(max_length=255, default='旅游', verbose_name="分类")
     subcategory = models.CharField(max_length=255, default='旅游', verbose_name="二级分类")
     source = models.CharField(max_length=255, default='大数据组', verbose_name="组别")
@@ -74,7 +82,7 @@ class Post(models.Model):
     tags = TaggableManager('标签')
     # timestamp when user hit submit button
     submit_time = models.DateTimeField(null=True, blank=True)
-
+    origin = models.CharField(choices=origin_choice, max_length=50)
     lv1_approval_status = models.CharField(max_length=5, default='0')  # 0:未提交， 1：已提交未审批，2:已提交已审批通过，3:已提交已驳回
     lv1_approval_action_datetime = models.DateTimeField(null=True, blank=True)  # 调用审批写入审批时间
     lv1_approver = models.IntegerField(default=-1)
@@ -262,9 +270,8 @@ class Profile(models.Model):
     is_publisher = models.BooleanField(default=False)
     is_visitor = models.BooleanField(default=True)
     role = models.CharField(max_length=25, choices=CHOICE, default='3')
-    bio = models.TextField("个人简介",default="个人简介")
-    profile_img = models.ImageField(null=True, blank=True,upload_to="images/profile/")
-
+    bio = models.TextField("个人简介", default="个人简介")
+    profile_img = models.ImageField(null=True, blank=True, upload_to="images/profile/")
 
     def set_as_lv1_approver(self):
         self.is_lv1_approver = True
@@ -276,4 +283,4 @@ class Profile(models.Model):
         self.is_lv3_approver = True
 
     def __str__(self):
-        return self.user.username + "| " + str(self.user.pk)
+        return self.user.username + "| " + str(self.user.pk) + "| "+str(self.user.first_name)

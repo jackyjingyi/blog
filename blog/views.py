@@ -1,22 +1,50 @@
+import datetime
+import json
 import logging
-from django.shortcuts import render, get_object_or_404
-from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-from .models import Post, Category, Source, Profile, Subcategory
-from .forms import PostForm, EditForm
-from django.urls import reverse_lazy, reverse
-from django.contrib.auth.models import User, Group, AnonymousUser
+import os
+from collections import defaultdict
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseRedirect, JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.template.loader import render_to_string
-import json
-from django.db.models import Q, Max
+from django.contrib.auth.models import User, Group, AnonymousUser
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q, Max
+from django.http import HttpResponseRedirect, JsonResponse
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy, reverse
 from django.utils import timezone
-from functools import reduce
-from operator import and_
-from django.core import serializers
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+
+from django_blog.settings import MEDIA_ROOT
+from .forms import EditForm, PostFormV2
+from .models import Post, Category, Source, Profile, Subcategory
+
+GROUP_LIST = [Group.objects.get(name=i) for i in
+              ['旅游大数据', '产品管理', '主体公园&新场景', '康旅度假', '文化&品牌', '新商业', '新型城镇化', '华东分院', '统筹管理', '综合管理', '联盟管理'
+               ]]
+
+
+def get_absolute_upload_path():
+    _datetime = datetime.date.today()
+
+    return os.path.join(MEDIA_ROOT, 'uploadPosts/{}/{}/'.format(_datetime.year, _datetime.month))
+
+
+def is_ext_valid(obj, ext_list=None):
+    if not ext_list:
+        ext_list = ['pdf']
+    ext = obj.name.split('.')[-1].lower()
+    if ext not in ext_list:
+        return False
+    else:
+        return True
+
+
+def handle_uploaded_file(f, path):
+    with open(path, 'wb+') as destination:
+        for chunk in f.chunks():
+            destination.write(chunk)
 
 
 def get_role_lv(request):
@@ -61,6 +89,7 @@ class HomeView(ListView):
         context['role'] = get_user_role(self.request.user)
         context['hot_article'] = hot_article
         context['top_two_topics'] = top_two_topics
+        context['group'] = GROUP_LIST
         return context
 
 
@@ -78,12 +107,13 @@ class ApprovalPosts(LoginRequiredMixin, ListView):
         """
         if not self.request.user.is_staff:
             profile_role = Profile.objects.get(user=self.request.user)
+            group = self.request.user.groups.all()[0]
             if profile_role.is_lv1_approver:
-                return Post.objects.filter(lv1_approval_status='1')
+                return Post.objects.filter(lv1_approval_status='1', author__groups=group)
             elif profile_role.is_lv2_approver:
-                return Post.objects.filter(lv2_approval_status='1')
+                return Post.objects.filter(lv2_approval_status='1', )
             elif profile_role.is_lv3_approver:
-                return Post.objects.filter(lv3_approval_status='1')
+                return Post.objects.filter(lv3_approval_status='1', )
 
         else:
             return super().get_queryset()
@@ -108,16 +138,25 @@ class ApprovalPosts(LoginRequiredMixin, ListView):
 
 def search_item(request):
     if request.method == "POST":
-        searched = request.POST['searched']
+        searched = request.POST.get('searched')
         obj_list = []
-        for obj in Post.objects.filter(status=2):
-            if searched in obj.body or searched in obj.title:
-                obj_list.append(obj.pk)
+        target = Post.objects.filter(status=2)
+        try:
+            for obj in target:
+                if searched in obj.body or searched in obj.title:
+                    obj_list.append(obj.pk)
+        except TypeError:
+            logging.info("current published article amount is {}".format(target.count()))
         if obj_list:
             results = Post.objects.filter(id__in=obj_list)
         else:
             results = Post.objects.none()
-        return render(request, 'search_items.html', {'searched_post': results})
+        context = {
+            'searched_post': results,
+            'group': GROUP_LIST,
+            'role': get_user_role(request.user),
+        }
+        return render(request, 'search_items.html', context)
 
 
 class ApprovalSuccessDetailView(DetailView):
@@ -163,7 +202,7 @@ class ApprovalDenyDetailView(DetailView):
 
     def get_object(self, queryset=None):
         obj = super().get_object(queryset=queryset)
-        print(obj)
+        # print(obj)
         user = self.request.user
         profile = Profile.objects.get(user=user)
         # update post
@@ -263,9 +302,73 @@ def author_posts_view(request, author):
                'author_approving_paginator': author_approving_paginator,
                'current': timezone.now(),
                'role': role,
+               'group': GROUP_LIST,
                }
     return render(request, 'author_posts.html',
                   context=context)
+
+
+def group_posts_view(request, group_name):
+    """
+    list all posts for certain group members
+    method: Get
+    """
+    if request.method == 'GET':
+        all_members = User.objects.filter(groups__name=group_name)
+        posts_list = Post.objects.filter(author__groups__name=group_name, status=2).order_by('-publish_date')
+        cat_menu = Category.objects.all()
+        post_group = {i.name: posts_list.filter(category=i.name) for i in cat_menu if
+                      posts_list.filter(category=i.name)}
+        role = get_user_role(request.user)
+        context = {
+            'all_members': all_members,
+            'posts_list': posts_list,
+            'group': GROUP_LIST,
+            'role': role,
+            'selected_group': group_name,
+            'post_group': post_group,
+
+        }
+        return render(request, 'group_statics.html', context=context)
+
+
+def group_author_posts_view(request, group_name, author_name):
+    if request.method == 'GET':
+
+        author = User.objects.get(first_name=author_name)
+        all_members = User.objects.filter(groups__name=group_name)
+        posts_list = Post.objects.filter(author__groups__name=group_name, status=2, author=author).order_by(
+            '-publish_date')
+        cat_menu = Category.objects.all()
+        post_group = {i.name: posts_list.filter(category=i.name) for i in cat_menu if
+                      posts_list.filter(category=i.name)}
+        # print(post_group)
+        author_posts = defaultdict(list)
+        for key, val in post_group.items():
+            # print(key, val)
+            author_posts[key] = [
+                {'title': i.title, 'id': i.id, 'category': i.category, 'subcategory': i.subcategory,
+                 'author': i.author.first_name,
+                 'publish_date': i.publish_date.strftime('%Y年%m月%d日')} for i in val]
+        # print(author_posts)
+
+        context = {
+            'author': author_name,
+            'author_posts': author_posts
+
+        }
+        # print(context)
+        z = "<div class='text-muted'>查看：{}</div>".format(author.first_name)
+
+        for key, val in author_posts.items():
+            _z = "<h4>【<a href='/category/{}/'>{}</a>】</h4> ".format(key, key)
+            _t = '<ul>'
+            for i in val:
+                _t += "<li>【<a href='#'>{0}</a>】<small><a href='/article/{1}'>{2} </a></small><small>日期: {3}</small>".format(
+                    i.get('subcategory'), i.get('id'), i.get('title'), i.get('publish_date'))
+            _t += '</ul>'
+            z += _z + _t
+        return JsonResponse({'html': z}, status=200, safe=False)
 
 
 def source_posts_view(request, source):
@@ -306,6 +409,7 @@ class ArticleDetailView(DetailView):
         context["cat_menu"] = cat_menu
         context['role'] = get_user_role(self.request.user)
         context['total_likes'] = likes
+        context['group'] = GROUP_LIST
         return context
 
     def get_object(self, queryset=None):
@@ -314,72 +418,30 @@ class ArticleDetailView(DetailView):
         return obj
 
 
-class AddPostView(LoginRequiredMixin, CreateView):
-    login_url = '/members/login_to/'
-    model = Post
-    form_class = PostForm
-    template_name = 'add_post.html'
-
-    def get_context_data(self, *args, object_list=None, **kwargs):
-        cat_menu = Category.objects.all()
-        publishers = [p.user_id for p in Profile.objects.filter(is_publisher=True)]
-
-        context = super(AddPostView, self).get_context_data(*args, **kwargs)
-        context["cat_menu"] = cat_menu
-        context['publishers'] = publishers
-        context['role'] = get_user_role(self.request.user)
-        return context
-
-    def form_valid(self, form):
-        self.object = form.save()
-        print(self.request.POST)
-        if 'direct-submit' in self.request.POST:
-            # if self.object.is_submit:
-            print(True, self.request.POST)
-            self.object.submit()
-        # 每个发布者只有一个组
-        try:
-            self.object.source = self.request.user.groups.all()[0].name
-        except IndexError:
-            # use default
-            logging.warning("bad happends this user does not have a team")
-
-        self.object.save()
-
-        return HttpResponseRedirect(self.get_success_url())
-
-
 @login_required(login_url='/members/login_to/')
 @csrf_exempt
 def creat_post(request):
     if request.method == 'POST':
-
-        # print(request.POST)
+        # assign data as submitted form value, file as submitted PDF file object
         data = request.POST
-        file = request.FILES
-        print(data, file)
-        cate1 = data.get('category1')
-        cate2 = data.get('category2')
-        tags = data.get('tags')
-        body = data.get('body')
-        title = data.get('title')
-        post_file = file
-        print(type(cate1), cate1)
-
-        if cate1: print("ok")
-        if file: print("yes")
-
-        return JsonResponse({})
+        user = request.user
+        logging.info("Current dealing with {}, for user : {}".format(data, user))
+        form = PostFormV2(data, request.FILES)
+        if form.is_valid():
+            form.save(user=user)
+        else:
+            return JsonResponse(form.errors, status=500)
+        return JsonResponse({'msg': 'success'}, status=200)
     else:
-        print(request.user)
-        print(request.user.is_authenticated)
         cat_menu = Category.objects.all()
         context = {}
         context["cat_menu"] = cat_menu
         context['role'] = get_user_role(request.user)
         context['tag_items'] = Post.tags.all()
         context['lv1_cats'] = [i for i in Category.objects.all()]
-
+        context['group'] = GROUP_LIST
+        if request.user.groups.all():
+            context['user_group'] = request.user.groups.all()[0].name
     return render(request, 'add_post.html', context)
 
 
@@ -388,8 +450,7 @@ def get_subcategory(request):
         item = request.GET.get('lv1_cat')
         lv2_objs = Subcategory.objects.filter(category__name=item)
         context = [i.name for i in lv2_objs]
-        return JsonResponse(context,safe=False)
-
+        return JsonResponse(context, safe=False)
 
 
 @login_required
@@ -399,22 +460,19 @@ def bulk_submit(request):
         if not len(checked_list) > 0:
             return JsonResponse({})
         bulk_action = json.loads(request.POST.get('bulk_action'))
-        print(bulk_action)
+        # print(bulk_action)
 
         # 1. return to draft
         # 2. bulk_submit
         # 3. bulk_delete
         _action = Post.objects.filter(pk__in=checked_list)
         if bulk_action == 'return_to_draft':
-            print(_action)
             for obj in _action:
                 obj.flush_post()
         elif bulk_action == 'bulk_submit':
-            print(_action)
             for obj in _action:
                 obj.submit()
         elif bulk_action == 'bulk_delete':  # bulk_delete
-            print(_action)
             for obj in _action:
                 obj.delete()
         elif bulk_action == 'bulk_approve':
@@ -425,14 +483,14 @@ def bulk_submit(request):
         elif bulk_action == 'bulk_deny':
             user = request.user
             lv = get_role_lv(request)
-            print(lv)
             for obj in _action:
                 obj.approval_deny(lv, user.pk)
-        return JsonResponse({})
+        return JsonResponse({'msg': 'success'}, status=200)
     else:
-        print(request.user)
-        print(request.user.is_authenticated)
-    return render(request, 'home_old.html')
+        # print(request.user)
+        # print(request.user.is_authenticated)
+        pass
+    return render(request, 'home.html')
 
 
 class UpdatePostView(LoginRequiredMixin, UpdateView):
@@ -504,6 +562,7 @@ def oct_get_endpoint_view(request, *args, **kwargs):
                     'pk': item.pk,
                     'title': item.title,
                     'category': item.category,
+                    'subcategory': item.subcategory,
                     'post_file_name': item.post_file.name,
                     'post_file_url': item.post_file.url,
                     'tags': [i['name'] for i in item.tags.values() if item.tags],
@@ -512,14 +571,14 @@ def oct_get_endpoint_view(request, *args, **kwargs):
                 }
             )
 
-        results = {
-            'company': '华侨城创新研究院',
-            'article_amount': posts.count(),
-            'datetime': timezone.now(),
-            'month': request.GET.get('month'),
-            'round': request.GET.get('round'),
-            'context': data,
-        }
+        results = {'status': 'success',
+                   'company': '华侨城创新研究院',
+                   'articleAmount': posts.count(),
+                   'generateTime': timezone.now(),
+                   'month': request.GET.get('month'),
+                   'round': request.GET.get('round'),
+                   'RECORDS': data
+                   }
 
         return JsonResponse(results, safe=False)
     else:

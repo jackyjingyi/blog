@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.auth.models import User
 from .models import Post, Category
 from taggit.forms import TagField
 from taggit_labels.widgets import LabelWidget
@@ -22,11 +23,6 @@ class PostForm(forms.ModelForm):
             'post_file': forms.FileInput(),
 
         }
-        help_texts = {
-            'is_submit': ('勾选后直接提交并进入审批流程,不勾选则存为草稿'),
-            'tags': ('请选择标签，最多选择3个')
-        }
-
 
     def clean_tags(self):
         data = self.cleaned_data.get('tags', [])
@@ -34,6 +30,57 @@ class PostForm(forms.ModelForm):
             raise ValidationError('最多选择3个标签', code='invalid')
         return data
 
+    def clean_post_file(self):
+        file = self.cleaned_data['post_file']
+        ext = file.name.split('.')[-1].lower()
+        if ext not in ['pdf']:
+            raise forms.ValidationError("Only 'PDF' files are allowed.")
+        return file
+
+
+class PostFormV2(forms.Form):
+    title = forms.CharField(max_length=255)
+    category1 = forms.CharField(max_length=255)
+    category2 = forms.CharField(max_length=255)
+    origin = forms.CharField(max_length=50)
+    body = forms.CharField(required=False)
+    post_file = forms.FileField(max_length=255)
+    is_submit = forms.BooleanField(required=False)
+
+
+    def clean_tags(self):
+        data = self.cleaned_data.get('tags', [])
+        if len(data) > 3:
+            raise ValidationError('Too many tags! Select At most 3 tags！', code='invalid')
+        return data
+
+    def save(self, *args, **kwargs):
+        print(self.fields)
+        print("++++++++++++==================")
+        print(self.cleaned_data)
+        print(type(kwargs.get('user')))
+        user = kwargs.get('user')
+
+        post = Post()
+        post.title = self.cleaned_data.get('title')
+
+        post.author = user
+
+        post.category = self.cleaned_data.get('category1')
+        post.subcategory = self.cleaned_data.get('category2')
+        if self.cleaned_data.get('is_submit'):
+            print(self.cleaned_data.get('is_submit'))
+            post.submit()
+        print(self.cleaned_data.get('body'))
+        post.body = self.cleaned_data.get('body')
+
+        post.is_submit = self.cleaned_data.get('is_submit')
+        post.origin = self.cleaned_data.get('origin')
+        post.post_file.save(self.cleaned_data.get('post_file').name, self.cleaned_data.get('post_file'))
+        print(self.cleaned_data.get('post_file').name)
+        print(type(kwargs.get('user')))
+
+        post.save()
 
 class EditForm(forms.ModelForm):
     class Meta:

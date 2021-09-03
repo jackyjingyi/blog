@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <br>
+
+    <div class="row g-5">
+        <div class="col-md-8">
+            <h3 class="pb-4 mb-4 fst-italic border-bottom">
+                {{ selected_group }}
+                {% if posts_list.count > 0 %}
+                    <small>--共{{ posts_list.count }}篇</small>
+                {% endif %}
+            </h3>
+            {#            filter pane#}
+            <div id="posts_list">
+                {% if post_group %}
+
+                    {% for key,val in post_group.items %}
+                        <h4>【<a href="#" class="link-primary">{{ key }}</a>】</h4>
+
+                        <ul>
+                            {% for post in val %}
+
+                                <li>
+
+                                【<a
+                                    href="#">{{ post.subcategory }}</a>】
+                                {% if post.views > 10 %}
+                                    <small><span class="badge bg-success">推荐</span></small>
+                                {% endif %}
+                                <a href="{% url 'article_detail' post.pk %}">{{ post.title|truncatewords:10 }}</a>
+                                - <small><a
+                                    href="{% url 'author_post' post.author %}">{{ post.author.first_name }}</a></small>
+
+                                <small>日期：{{ post.post_date|date:"Y年n月d日" }}</small>
+
+                            {% endfor %}
+                        </ul>
+                    {% endfor %}
+
+                {% endif %}
+
+            </div>
+            <div id="staticCharts" class="row g-5" style="width: 100%;height: 700px">
+
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="position-sticky" style="top: 2rem;">
+                <div class="p-4 mb-3 bg-light rounded">
+                    <h4 class="fst-italic">关于</h4>
+                    <p class="mb-0">创研院文件报送系统使用中如有问题，请及时联系，谢谢支持。</p>
+                </div>
+                <div class="p-4">
+                    <h4 class="fst-italic">组员</h4>
+                    <ol class="list-unstyled mb-0">
+
+                        {% if all_members %}
+                            {% for member in all_members %}
+                                <li><a href="" class="author">{{ member.first_name }}</a></li>
+                            {% endfor %}
+                        {% endif %}
+                    </ol>
+                </div>
+                <div class="p-4">
+                    <h4 class="fst-italic">更多文章</h4>
+                    <ol class="list-unstyled mb-0">
+                        <li><a href="#">2021 1月</a></li>
+                        <li><a href="#">2021 2月</a></li>
+                        <li><a href="#">2021 3月</a></li>
+                        <li><a href="#">2021 4月</a></li>
+                        <li><a href="#">2021 5月</a></li>
+                        <li><a href="#">2021 6月</a></li>
+                        <li><a href="#">2021 7月</a></li>
+                        <li><a href="#">2021 8月</a></li>
+                        <li><a href="#">2021 9月</a></li>
+                    </ol>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <script>
+        {#import * as echarts from 'echarts';#}
+
+        $(document).ready()
+        {
+
+            $('.author').each(
+                function (i, v) {
+                    v.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        $.ajax({
+                            url: v.text,
+                            type: 'get',
+                            data: JSON.stringify(v.text),
+                            success: function (data) {
+                                console.log("win")
+                                console.log(data)
+                                $('#posts_list').html(data['html'])
+                            },
+                            error: function (error_data) {
+                                console.log("wrong")
+                            }
+                        })
+                    })
+                }
+            )
+            var chartDom = document.getElementById('staticCharts');
+            var myChart = echarts.init(chartDom);
+            var option;
+
+            option = {
+                dataset: [{
+                    dimensions: ['name', 'age', 'profession', 'score', 'date'],
+                    source: [
+                        [' Hannah Krause ', 41, 'Engineer', 314, '2011-02-12'],
+                        ['Zhao Qian ', 20, 'Teacher', 351, '2011-03-01'],
+                        [' Jasmin Krause ', 52, 'Musician', 287, '2011-02-14'],
+                        ['Li Lei', 37, 'Teacher', 219, '2011-02-18'],
+                        [' Karle Neumann ', 25, 'Engineer', 253, '2011-04-02'],
+                        [' Adrian Groß', 19, 'Teacher', null, '2011-01-16'],
+                        ['Mia Neumann', 71, 'Engineer', 165, '2011-03-19'],
+                        [' Böhm Fuchs', 36, 'Musician', 318, '2011-02-24'],
+                        ['Han Meimei ', 67, 'Engineer', 366, '2011-03-12'],
+                    ]
+                }, {
+                    transform: {
+                        type: 'sort',
+                        config: {dimension: 'score', order: 'desc'}
+                    }
+                }],
+                xAxis: {
+                    type: 'category',
+                    axisLabel: {interval: 0, rotate: 30},
+                },
+                yAxis: {},
+                series: {
+                    type: 'bar',
+                    encode: {x: 'name', y: 'score'},
+                    datasetIndex: 1
+                }
+            };
+
+            option && myChart.setOption(option);
+        }
+    </script>
+{% endblock %}

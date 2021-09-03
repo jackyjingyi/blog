@@ -4,41 +4,62 @@
 {% block title %}
     上传新文件
 {% endblock %}
-
+<style>
+    button.disabled,
+    button[disabled] {
+        box-shadow: none;
+        cursor: not-allowed;
+        opacity: 0.5;
+        pointer-events: none;
+    }
+</style>
 {% block content %}
-    {{ user.is_authenticated }}
+
     {% if user.is_authenticated and user.profile.is_publisher %}
-        <div class="row">
+        <div class="row" id="subHeader">
             <div class="col-4 pt-1"></div>
-            <div class="col-4 text-center"><h2 class="text-center">文件上传</h2></div>
-            <div class="col-4 mb-0 d-flex justify-content-start">
-                <p class="mb-0" style="position: absolute; top:11.2%">
-                    当前组：<a href="#">旅游大数据</a>
+            <div class="col-4 text-center"><h2 class="text-center" type="hidden/inherit">文件上传</h2></div>
+            <div class="col-4">
+                <p class="mb-0" style="position: absolute; top:11.2%" type="hidden/inherit">
+                    当前组：
+                    {% if user_group %}
+                        <a href="#">{{ user_group }}</a>
+                    {% endif %}
                 </p>
             </div>
+            <hr>
         </div>
-        <hr>
+
+        <div class="row mb-5" id="afterSuccess" type="hidden">
+            <h2 class="text-md-center">成功!</h2>
+            <hr>
+            <div class="row mb-5">
+                <div class="col-md-6 mb-5 text-center">
+                    <a class="btn btn-primary" href="{% url 'author_post' user %}">查看工作空间</a>
+                </div>
+                <div class="col-md-6 mb-5 text-center">
+                    <a class="btn btn-primary" href="{% url 'add_post' %}">继续上传</a>
+                </div>
+            </div>
+        </div>
 
         <div class="form-group">
 
-            <form enctype="multipart/form-data" id="create_post">
+            <form class="g-3 needs-validation" enctype="multipart/form-data" id="create_post" novalidate>
                 {% csrf_token %}
-                <link href="{% static 'taggit_labels/css/taggit_labels.css' %}" type="text/css" media="all"
-                      rel="stylesheet">
-                <script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
-
-                <script src="{% static 'taggit_labels/js/taggit_labels.js' %}"></script>
 
                 <div class="row mb-3">
                     <div class="col-md-6">
                         <label for="myPDFTitle"
                                class="form-label d-inline-block mb-2 text-primary"><strong>标题</strong></label>
-                        <input type="text" class="form-control" id="myPDFTitle" placeholder="请输入标题" required>
+                        <input name="title" type="text" class="form-control" id="myPDFTitle" maxlength="255"
+                               placeholder="请输入标题"
+                               required>
                     </div>
                     <div class="col-md-6">
                         <label for="myPDFFile"
                                class="form-label d-inline-block mb-2 text-primary"><strong>上传PDF文件</strong></label>
-                        <input type="file" class="form-control" id="myPDFFile" required>
+                        <input name="post_file" type="file" class="form-control" id="myPDFFile" required>
                         <div class="invalid-feedback">非PDF文件</div>
                     </div>
                 </div>
@@ -61,23 +82,19 @@
                         </select>
                     </div>
                 </div>
-                <div class="row mb-2">
-                    <div class="col-md-4">
-                        <label for="tags" class="col-sm-2 col-form-label">标签</label>
-                        <small><span class="help-icon">(请最多选择3个标签)</span></small>
-                    </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="origin">
+                    <label class="form-check-label" for="origin">
+                        原创
+                    </label>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-md-10">
-                        <ul class="taggit-labels taggit-list" id="tags">
-                            {% for t in tag_items %}
-                                <li data-tag-name="{{ t.name }}" class="taggit-tag">{{ t.name }}</li>
-                            {% endfor %}
-                        </ul>
-                        <input type="hidden" name="tags" value="" id="tags">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="reproduction" checked>
+                    <label class="form-check-label" for="reproduction">
+                        转载
+                    </label>
+                </div>
 
-                    </div>
-                </div>
                 <div class="row mb-3">
                     <label for="body">摘要</label>
                     <textarea name="body" cols="40" rows="10" class="form-control" id="body"
@@ -85,12 +102,15 @@
                 </div>
                 <div class="form-check mb-0">
                     <input class="form-check-input" type="hidden" value="" id="is_submit">
-                </div>
-                <button class="btn btn-secondary">存为草稿</button>
-                <button class="btn btn-secondary">直接提交</button>
-                <button class="btn btn-secondary" id="saveAsDraft">存为草稿</button>
-            </form>
 
+                </div>
+                <button class="btn btn-secondary" id="saveAsDraft">存为草稿</button>
+                <button class="btn btn-secondary" id="directSubmit">直接提交</button>
+                <a href="{% url 'author_post' user %}" class="btn btn-secondary">取消</a>
+            </form>
+            {#            <div class="spinner-border" role="status">#}
+            {#                <span class="visually-hidden">Loading...</span>#}
+            {#            </div>#}
         </div>
 
     {% else %}
@@ -99,6 +119,7 @@
     <script>
         $(document).ready()
         {
+            $('#afterSuccess').children().hide()
             var options = $('#lv1_category option:selected');
             var lv1_cat_value = options.val();
             console.log(lv1_cat_value)
@@ -135,7 +156,7 @@
 
         $('#myPDFFile').change(function () {
             var fileExt = ['pdf']
-            if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExt) == -1) {
+            if ($.inArray($(this).val().split('.').pop().toLowerCase(), fileExt) === -1) {
                 alert("非PDF");
                 $(this).val("");
             }
@@ -144,36 +165,155 @@
 
         const csrftoken = getCookie('csrftoken');
 
-        document.getElementById('saveAsDraft').onclick = function (e) {
-            var c = document.getElementById('is_submit')
-            c.checked = true
-            console.log(c.checked)
-            console.log(222)
-            var a = $('#create_post')
-
-            var fd = new FormData;
-            var xhr = new XMLHttpRequest({headers: {'X-CSRFToken': csrftoken}});
-            var x = a.serializeArray().reduce(function (obj, item) {
-                if (item.name !== 'csrfmiddlewaretoken') {
-
-                    obj[item.name] = item.value;
-                }
-                return obj;
-            }, {});
-            for (var key in x) {
-                fd.append(key, x[key]);
-                console.log(key, x[key])
-            }
-            fd.append('title', document.getElementById("myPDFTitle").value)
-            fd.append('post_file', document.getElementById("myPDFFile").files[0])
-            fd.append('is_submit', true)
-            xhr.open('post', '/add_post/', true)
-            xhr.send(fd);
-
-            console.log(fd)
-
+        function csrfSafeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
         }
 
+        $('#saveAsDraft').click(function (e) {
+            e.preventDefault()
+            var forms = $('#create_post')[0]
+
+            if (forms.checkValidity() === false) {
+
+                forms.reportValidity();
+                e.stopPropagation();
+            } else {
+                {#var c = document.getElementById('is_submit')#}
+                {#c.checked = false#}
+                var fd = new FormData;
+                var x = $('#create_post').serializeArray().reduce(function (obj, item) {
+                    if (item.name !== 'csrfmiddlewaretoken') {
+                        if (item.name === 'flexRadioDefault') {
+                            if ($('#origin')[0].checked) {
+                                obj['origin'] = '1'
+                            } else {
+                                obj['origin'] = '2'
+                            }
+
+                        } else {
+                            obj[item.name] = item.value;
+                        }
+
+                    }
+                    return obj;
+                }, {});
+                for (var key in x) {
+
+                    fd.append(key, x[key]);
+                }
+                fd.append('post_file', document.getElementById("myPDFFile").files[0])
+                fd.append('is_submit', false)
+                var btn = $('#directSubmit')[0]
+                var btn1 = $('#saveAsDraft')[0]
+                $.ajax({
+                    url: '/add_post/',
+                    data: fd,
+                    type: 'POST',
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function (xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                            btn.classList.add('disabled');
+                            btn.setAttribute('b4', $(this).textContent);
+                            btn.textContent = '正在提交';
+                            btn1.classList.add('disabled');
+                            btn1.setAttribute('b4', $(this).textContent);
+                            btn1.textContent = '正在提交';
+                        }
+                    },
+                    success: function (data) {
+                        // 保存 跳转 工作空间
+                        $('.form-group').hide()
+                        $('#subHeader').children().hide()
+                        $('#afterSuccess').children().show();
+                        btn.textContent = btn.getAttribute('b4')
+                        btn.removeAttribute('b4')
+                        btn1.textContent = btn.getAttribute('b4')
+                        btn1.removeAttribute('b4')
+
+                    },
+                    error: function (error_data) {
+                        console.log(error_data.responseText)
+
+                    }
+
+                })
+            }
+        })
+
+        $('#directSubmit').click(function (e) {
+            e.preventDefault()
+            console.log("ajax 接管")
+            var forms = $('#create_post')[0]
+
+            if (forms.checkValidity() === false) {
+                console.log("wrong")
+                forms.reportValidity();
+                e.stopPropagation();
+            } else {
+                {#var c = document.getElementById('is_submit')#}
+                {#c.checked = true#}
+                var fd = new FormData;
+                var x = $('#create_post').serializeArray().reduce(function (obj, item) {
+                    if (item.name !== 'csrfmiddlewaretoken') {
+                        if (item.name === 'flexRadioDefault') {
+                            if ($('#origin')[0].checked) {
+                                obj['origin'] = '1'
+                            } else {
+                                obj['origin'] = '2'
+                            }
+                        } else {
+                            obj[item.name] = item.value;
+                        }
+
+                    }
+                    return obj;
+                }, {});
+                for (var key in x) {
+                    console.log(key, x[key])
+                    fd.append(key, x[key]);
+                }
+                fd.append('post_file', document.getElementById("myPDFFile").files[0])
+                fd.append('is_submit', true)
+                var btn = $('#directSubmit')[0]
+                var btn1 = $('#saveAsDraft')[0]
+                $.ajax({
+                    url: '/add_post/',
+                    data: fd,
+                    type: 'POST',
+                    dataType: 'json',
+                    processData: false,
+                    contentType: false,
+                    beforeSend: function (xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                            btn.classList.add('disabled');
+                            btn.setAttribute('b4', $(this).textContent);
+                            btn.textContent = '正在提交';
+                            btn1.classList.add('disabled');
+                            btn1.setAttribute('b4', $(this).textContent);
+                            btn1.textContent = '正在提交';
+                        }
+                    },
+                    success: function (data) {
+                        $('.form-group').hide()
+                        $('#subHeader').children().hide()
+                        $('#afterSuccess').children().show();
+                        btn.textContent = btn.getAttribute('b4')
+                        btn.removeAttribute('b4')
+                        btn1.textContent = btn.getAttribute('b4')
+                        btn1.removeAttribute('b4')
+                    },
+                    error: function (error_data) {
+                        console.log(error_data.responseText)
+
+                    }
+
+                })
+            }
+        })
 
         $("#lv1_category").change(function () {
             var options = $('#lv1_category option:selected');

@@ -42,7 +42,7 @@
                     <div class="col p-4 d-flex flex-column position-static">
                         <strong class="d-inline-block mb-2 text-success">{{ top_two_topics.1.0 }}</strong>
                         <h4 class="mb-0">{{ top_two_topics.1.1.0.title|slice:"15" }}</h4>
-                        <div class="mb-1 text-muted">{{ top_two_topics.1.1.0.publish_date|date:"n月" }}</div>
+                        <div class="mb-1 text-muted ">{{ top_two_topics.1.1.0.publish_date|date:"n月" }}</div>
                         <p class="mb-auto">{{ top_two_topics.1.1.0.body|slice:"50" }}</p>
                         <a href="{% url 'article_detail' top_two_topics.1.1.0.pk %}" class="stretched-link">继续阅读</a>
                     </div>
@@ -68,55 +68,32 @@
             <h3 class="pb-4 mb-4 fst-italic border-bottom">
                 近期发布
             </h3>
+            {% if post_group %}
 
-{#            <article class="blog-post">#}
-{##}
-{#                <h2 class="blog-post-title">【欢乐指数7月报告】暑期市场一波三折，跨省长线游受重击</h2>#}
-{#                <p class="blog-post-meta">8月5日 <a href="#"> 旅游欢乐指数</a></p>#}
-{##}
-{#                <p>#}
-{#                    中国旅游景区欢乐指数（THI）研究，作为国内首创基于旅游大数据的游客综合体验评价体系，于2020年正式启动，由中国旅游景区协会和华侨城创新研究院联合发布，以大数据挖掘为技术支撑，持续通过月报、年报和专报等形式，跟踪、监测、分析国内旅游景区运行情况和服务品质，向社会各界提供高品质的系列研究成果。目前，华侨城创新研究院已与腾讯云签署战略合作协议，不断强化中国旅游景区欢乐指数THI研究。2021年7月报告新鲜出炉。</p>#}
-{#                <hr>#}
-{#                <p>本次报告发布指数包括“2021中国旅游景区欢乐指数(THI)7月排名TOP100”和中国旅游景区自然景观类、人文景观类、博物馆类、乡村田园类、现代娱乐类等分类欢乐指数（THI）月度排名前20名。</p>#}
-{#                <h3>【景区高质量发展效果显著】</h3>#}
-{##}
-{#                <p class="text-left">#}
-{#                    旅游景区是旅游业发展的核心载体，堪称中国旅游业的“中流砥柱”，经过高速发展后成果显著。从景区数量发展来看，A级旅游景区数量继续稳步提升。据7月初文旅部发布的《2020年文化和旅游发展统计公报》数据显示，2020年末，全国共有A级旅游景区13332个，比上年末增加930个。其中，5A级旅游景区302个，增加22个；4A级旅游景区4030个，增加310个；3A级旅游景区6931个，增加733个。3A级以上景区数量表现出正增长，而1A和2A景区数量较去年减少了135个，从侧面也反映出景区建设和评级向高质量标准靠拢，满足高品质旅游体验的需求，旅游高质量发展是大势所趋。</p>#}
-{##}
-{##}
-{#                <p class="text-decoration-underline">中国旅游景区欢乐指数（THI）月度排名</p>#}
-{#                <table class="table">#}
-{#                    <thead>#}
-{#                    <tr>#}
-{#                        <th>排名</th>#}
-{#                        <th>旅游景区名称</th>#}
-{#                        <th>THI指数</th>#}
-{#                    </tr>#}
-{#                    </thead>#}
-{#                    <tbody>#}
-{#                    <tr>#}
-{#                        <td>1</td>#}
-{#                        <td>上海迪士尼度假区</td>#}
-{#                        <td>184.09</td>#}
-{#                    </tr>#}
-{#                    <tr>#}
-{#                        <td>2</td>#}
-{#                        <td>丽江古城景区</td>#}
-{#                        <td>171.54</td>#}
-{#                    </tr>#}
-{#                    <tr>#}
-{#                        <td>3</td>#}
-{#                        <td>成都大熊猫繁育研究基地</td>#}
-{#                        <td>147.87</td>#}
-{#                    </tr>#}
-{#                    <tr>#}
-{#                        <td>4</td>#}
-{#                        <td>上海东方明珠广播电视塔</td>#}
-{#                        <td>134.70</td>#}
-{#                    </tr>#}
-{#                    </tbody>#}
-{#                </table>#}
-{#            </article>#}
+                {% for key,val in post_group.items %}
+                    <h4>【<a href="{% url 'category' key %}" class="link-primary">{{ key }}</a>】</h4>
+
+                    <ul>
+                        {% for post in val %}
+
+                            <li>
+
+                            【<a
+                                href="#">{{ post.subcategory }}</a>】
+                            {% if post.views > 10 %}
+                                <small><span class="badge bg-success">推荐</span></small>
+                            {% endif %}
+                            <a href="{% url 'article_detail' post.pk %}">{{ post.title|truncatewords:10 }}</a>
+                            - <small><a
+                                href="{% url 'author_post' post.author %}">{{ post.author.first_name }}</a></small>
+
+                            <small>日期：{{ post.post_date|date:"Y年n月d日" }}</small>
+
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+
+            {% endif %}
 
         </div>
 
@@ -134,14 +111,11 @@
                         <li><a href="#">2021 2月</a></li>
                         <li><a href="#">2021 3月</a></li>
                         <li><a href="#">2021 4月</a></li>
-                        <li><a href="#">November 2020</a></li>
-                        <li><a href="#">October 2020</a></li>
-                        <li><a href="#">September 2020</a></li>
-                        <li><a href="#">August 2020</a></li>
-                        <li><a href="#">July 2020</a></li>
-                        <li><a href="#">June 2020</a></li>
-                        <li><a href="#">May 2020</a></li>
-                        <li><a href="#">April 2020</a></li>
+                        <li><a href="#">2021 5月</a></li>
+                        <li><a href="#">2021 6月</a></li>
+                        <li><a href="#">2021 7月</a></li>
+                        <li><a href="#">2021 8月</a></li>
+                        <li><a href="#">2021 9月</a></li>
                     </ol>
                 </div>
 
