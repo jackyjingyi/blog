@@ -352,11 +352,11 @@ def group_author_posts_view(request, group_name, author_name):
                  'publish_date': i.publish_date.strftime('%Y年%m月%d日')} for i in val]
         # print(author_posts)
 
-        context = {
-            'author': author_name,
-            'author_posts': author_posts
-
-        }
+        # context = {
+        #     'author': author_name,
+        #     'author_posts': author_posts
+        #
+        # }
         # print(context)
         z = "<div class='text-muted'>查看：{}</div>".format(author.first_name)
 
@@ -369,6 +369,16 @@ def group_author_posts_view(request, group_name, author_name):
             _t += '</ul>'
             z += _z + _t
         return JsonResponse({'html': z}, status=200, safe=False)
+
+
+def statics_and_charts(request):
+    context = {
+        # 'searched_post': results,
+        'group': GROUP_LIST,
+        'role': get_user_role(request.user),
+    }
+
+    return render(request, 'statics_charts.html', context)
 
 
 def source_posts_view(request, source):

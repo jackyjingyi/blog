@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <br><br>
+    <hr>
+    <div class="row">
+        <div class="col-2">
+            hi
+        </div>
+        <div class="col-10 g-5">
+
+            <div class="row mb-3">
+                <button>ooo</button>
+            </div>
+            <hr>
+            <div class="row">
+                <div id="staticCharts" class="col-6" style="width: 100%;height: 1000px"></div>
+                <div class="col-4">lll</div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+        {#import * as echarts from 'echarts';#}
+
+        $(document).ready()
+        {
+
+            $('.author').each(
+                function (i, v) {
+                    v.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        $.ajax({
+                            url: v.text,
+                            type: 'get',
+                            data: JSON.stringify(v.text),
+                            success: function (data) {
+                                console.log("win")
+                                console.log(data)
+                                $('#posts_list').html(data['html'])
+                            },
+                            error: function (error_data) {
+                                console.log("wrong")
+                            }
+                        })
+                    })
+                }
+            )
+            var chartDom = document.getElementById('staticCharts');
+            var myChart = echarts.init(chartDom);
+            var option;
+
+            option = {
+                dataset: [{
+                    dimensions: ['name', 'age', 'profession', 'score', 'pro2', 'score2', 'date'],
+                    source: [
+                        ['旅游大数据', 41, '原创', 314, '转载', 230, '2011-02-12'],
+                        ['产品管理', 20, '原创', 351, '转载', 231, '2011-03-01'],
+                        ['统筹管理', 52, '原创', 287, '转载', 103, '2011-02-14'],
+                        ['联盟管理', 37, '原创', 219, '转载', 223, '2011-02-18'],
+                        ['主体公园&新场景', 25, '原创', 253, '转载', 132, '2011-04-02'],
+                        ['康旅度假', 19, '原创', 15, '转载', 173, '2011-01-16'],
+                        ['文化&品牌', 71, '原创', 165, '转载', 222, '2011-03-19'],
+                        ['新商业', 36, '原创', 318, '转载', 110, '2011-02-24'],
+                        ['华东分院', 67, '原创', 166, '转载', 302, '2011-03-12'],
+                        ['综合管理', 67, '原创', 336, '转载', 322, '2011-03-12'],
+                        ['新型城镇化', 67, '原创', 316, '转载', 163, '2011-03-12'],
+
+                    ]
+                },
+                    {
+                        dimensions: ['category', 'origin', 'reproduction', 'sub1', 'sub2'],
+                        source: [
+                            ['政策', 41, 314, 230, 99],
+                            ['旅游', 20, 351, 231, 20],
+                            ['经济', 52, 153, 287, 103],
+
+                        ]
+                    },
+                    {
+                        transform: {
+                            type: 'sort',
+                            config: {dimension: 'score', order: 'desc'}
+                        }
+                    }],
+                grid: [
+
+                    {left: '5%', right: '50%', top: '10%', bottom: '50%', show: true},
+                    {
+                        left: '50%', right: '5%', top: '10%', bottom: '50%', show: true
+                    },
+                    {
+                        left: '5%', right: '50%', top: '50%', bottom: '10%', show: true,
+                    },
+
+                ],
+                legend: [{
+                    data: ['原创','转载'],
+                    left:'10%'
+                }, {
+                    
+                    right:'10%'
+                }
+                ],
+                xAxis: [{
+                    type: 'category',
+                    axisLabel: {interval: 0, rotate: 30},
+                }, {
+                    gridIndex: 1,
+                    type: 'value',
+                    show: false
+                }, {
+                    type: 'category',
+                    axisLabel: {interval: 0, rotate: 30},
+                    gridIndex: 2
+                }],
+                yAxis: [{gridIndex: 0},
+                    {
+                        gridIndex: 1,
+                        type: 'value',
+                        show: false
+                    }, {gridIndex: 2}],
+                series: [
+                    {
+                        name: '原创',
+                        type: 'bar',
+                        xAxisIndex: 0,
+                        yAxisIndex: 0,
+                        encode: {y: 'score'},
+                        datasetIndex: 0,
+                        tooltip: {},
+                        stack: 'total',
+                        label: {
+                            show: true
+                        }
+                    },
+                    {
+                        name: '转载',
+                        type: 'bar',
+                        xAxisIndex: 0,
+                        yAxisIndex: 0,
+                        encode: {y: 'score2'},
+                        datasetIndex: 0,
+                        tooltip: {},
+                        stack: 'total',
+                        label: {
+                            show: true
+                        }
+
+                    },
+                    {
+                        name: 'sub',
+                        type: 'pie',
+                        radius: [0, '35%'],
+                        xAxisIndex: 1,
+                        yAxisIndex: 1,
+                        center: ['75%', '30%'],
+                        encode: {itemName: 'category', value: 'origin'},
+                        stack: 'total',
+                        datasetIndex: 1,
+                        showEmptyCircle: true,
+                        {#tooltip: {trigger: 'item'},#}
+                        label: {
+                            show: true,
+                            position: 'inner',
+                            formatter: '{b}: {@origin}/\n{d}%',
+                            color: '#fff'
+                        }
+
+                    },
+                ]
+            };
+
+            option && myChart.setOption(option);
+            window.onresize = function () {
+                myChart.resize();
+            }
+        }
+    </script>
+{% endblock %}

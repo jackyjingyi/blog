@@ -77,12 +77,14 @@
                                 <li><a class="dropdown-item" href="{% url 'add_post' %}">上传文章</a></li>
                                 <li><a class="dropdown-item" href="{% url 'author_post' user %}">工作空间</a></li>
                             {% elif role == '2' %}
-                                <li><a class="dropdown-item" href="{% url 'approval_list' user.username %}">审批</a></li>
+                                <li><a class="dropdown-item" href="{% url 'approval_list' user.username %}">我的审批</a></li>
                             {% elif role == '4' or role == '5' %}
-                                <li><a class="dropdown-item" href="{% url 'add_post' %}">上传</a></li>
+                                <li><a class="dropdown-item" href="{% url 'add_post' %}">上传文章</a></li>
                                 <li><a class="dropdown-item" href="{% url 'author_post' user %}">工作空间</a></li>
-                                <li><a class="dropdown-item" href="{% url 'approval_list' user.username %}">审批</a></li>
+                                <li><a class="dropdown-item" href="{% url 'approval_list' user.username %}">我的审批</a></li>
                             {% endif %}
+                            <li><a class="dropdown-item" href="#">我的消息</a></li>
+                            <li><a class="dropdown-item" href="{% url 'statics_and_charts' %}">查看统计</a></li>
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
@@ -123,11 +125,11 @@
     {#    首页的分类链接#}
     <div class="nav-scroller py-1 mb-2">
         {#        #EB8F00#}
-        <nav class="nav d-flex justify-content-between" style="">
+        <nav class="nav d-flex justify-content-between" style="background-color:  #EB8F00">
 
             {% if group %}
                 {% for item in group %}
-                    <a class="p-2 link-secondary" href="{% url 'group_post' item.name %}">{{ item.name }}</a>
+                    <a class="p-3 link-light" href="{% url 'group_post' item.name %}"><strong>{{ item.name }}</strong></a>
                 {% endfor %}
             {% endif %}
         </nav>
