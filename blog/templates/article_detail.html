@@ -22,8 +22,12 @@
         <small>点赞数：{{ total_likes }}</small>
     </div>
     <hr>
-    <h6><strong>摘要：</strong></h6>
-    {{ post.body|safe }}
+    <div class="position-sticky" style="top: 2rem;">
+                <div class="p-4 mb-3 bg-light rounded">
+                    <h4 class="fst-italic">摘要：</h4>
+                    <p class="mb-0">{{ post.body|safe }}</p>
+                </div>
+    </div>
     {% if post.post_file %}
         <div id="displayframe" class="col-xl">
             <iframe class="embed-responsive-item" id="pdf" src="{{ post.post_file.url }}" width="100%" height="1320px">

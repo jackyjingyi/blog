@@ -4,63 +4,13 @@
 
 
     {#首页的内容#}
-    <div class="p-4 p-md-5 mb-4 text-white rounded bg-dark">
-        <div class="col-md-6 px-0">
+    <div class="row m-0 text-white rounded bg-dark" style="background-image: url('../../static/images/front1.png');height: 550px">
+        <div class="col-md-6 p-4 p-md-5" >
             <h1 class="display-4 fst-italic">{{ hot_article.title }}</h1>
             <p class="lead my-3 fs-6">{{ hot_article.body }}</p>
             <p class="lead mb-0"><a href="{% url 'article_detail' hot_article.id %}" class="text-white fw-bold">继续阅读</a>
             </p>
         </div>
-    </div>
-
-    <div class="row mb-2">
-        {% if top_two_topics|length > 1 %}
-            <div class="col-md-6">
-                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                    <div class="col p-4 d-flex flex-column position-static">
-                        <strong class="d-inline-block mb-2 text-primary" href="#">{{ top_two_topics.0.0 }}</strong>
-                        <h4 class="mb-0">{{ top_two_topics.0.1.0.title }}</h4>
-                        <div class="mb-1 text-muted">{{ top_two_topics.0.1.0.publish_date|date:"n月" }}</div>
-                        <p class="card-text mb-auto">{{ top_two_topics.0.1.0.body|slice:"50" }}</p>
-                        <a href="{% url 'article_detail' top_two_topics.0.1.0.pk %}" class="stretched-link">继续阅读</a>
-                    </div>
-                    <div class="col-auto d-none d-lg-block">
-                        <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg"
-                             role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
-                             focusable="false"><title>Placeholder</title>
-                            <rect width="100%" height="100%" fill="#55595c"/>
-                            <image xlink:href="{% static 'images/slides01.jpg' %}" x="0" y="0" width="100%"
-                                   height="100%"/>
-
-                            <text x="50%" y="90%" fill="#eceeef" dy=".3em">文字说明</text>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                    <div class="col p-4 d-flex flex-column position-static">
-                        <strong class="d-inline-block mb-2 text-success">{{ top_two_topics.1.0 }}</strong>
-                        <h4 class="mb-0">{{ top_two_topics.1.1.0.title|slice:"15" }}</h4>
-                        <div class="mb-1 text-muted ">{{ top_two_topics.1.1.0.publish_date|date:"n月" }}</div>
-                        <p class="mb-auto">{{ top_two_topics.1.1.0.body|slice:"50" }}</p>
-                        <a href="{% url 'article_detail' top_two_topics.1.1.0.pk %}" class="stretched-link">继续阅读</a>
-                    </div>
-                    <div class="col-auto d-none d-lg-block">
-                        <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg"
-                             role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice"
-                             focusable="false"><title>Placeholder</title>
-                            <rect width="100%" height="100%" fill="#55595c"/>
-                            <image xlink:href="{% static 'images/slides02.jpg' %}" x="0" y="0" width="100%"
-                                   height="100%"/>
-
-                            <text x="50%" y="90%" fill="#eceeef" dy=".3em">别的文字说明</text>
-                        </svg>
-
-                    </div>
-                </div>
-            </div>
-        {% endif %}
     </div>
 
     <div class="row g-5">

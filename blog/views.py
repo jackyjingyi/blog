@@ -15,14 +15,13 @@ from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
-
 from django_blog.settings import MEDIA_ROOT
 from .forms import EditForm, PostFormV2
 from .models import Post, Category, Source, Profile, Subcategory
 
-GROUP_LIST = [Group.objects.get(name=i) for i in
-              ['旅游大数据', '产品管理', '主体公园&新场景', '康旅度假', '文化&品牌', '新商业', '新型城镇化', '华东分院', '统筹管理', '综合管理', '联盟管理'
-               ]]
+GROUP_NAME = ['旅游大数据', '产品管理', '主题公园&新场景', '康旅度假', '文化&品牌', '新商业', '新型城镇化', '统筹管理', '综合管理', '联盟管理', '华东分院'
+              ]
+GROUP_LIST = [Group.objects.get(name=i) for i in GROUP_NAME]
 
 
 def get_absolute_upload_path():
@@ -58,6 +57,8 @@ def get_role_lv(request):
             lv = 2
         elif profile.is_lv3_approver:
             lv = 3
+        elif profile.is_lv4_approver:
+            lv = 4
     return lv
 
 
@@ -77,8 +78,9 @@ class HomeView(ListView):
     def get_context_data(self, *args, object_list=None, **kwargs):
         cat_menu = Category.objects.all()
         source_menu = Source.objects.all()
-        post_group = {i.name: Post.objects.filter(category=i.name, status=2).order_by('-post_date') for i in cat_menu if
-                      Post.objects.filter(category=i.name, status=2)}
+        post_group = {i.name: Post.objects.filter(category=i.name, publish=True).order_by('-post_date') for i in
+                      cat_menu if
+                      Post.objects.filter(category=i.name, publish=True)}
         likes_rating = Post.objects.aggregate(Max('likes'))['likes__max']
         hot_article = Post.objects.filter(likes=likes_rating).first()
         top_two_topics = sorted(post_group.items(), key=lambda x: x[1].count(), reverse=True)
@@ -107,13 +109,15 @@ class ApprovalPosts(LoginRequiredMixin, ListView):
         """
         if not self.request.user.is_staff:
             profile_role = Profile.objects.get(user=self.request.user)
-            group = self.request.user.groups.all()[0]
+            group = self.request.user.groups.all()
             if profile_role.is_lv1_approver:
-                return Post.objects.filter(lv1_approval_status='1', author__groups=group)
+                return Post.objects.filter(lv1_approval_status='1', author__groups__in=group)
             elif profile_role.is_lv2_approver:
-                return Post.objects.filter(lv2_approval_status='1', )
+                return Post.objects.filter(lv2_approval_status='1', author__groups__in=group)
             elif profile_role.is_lv3_approver:
-                return Post.objects.filter(lv3_approval_status='1', )
+                return Post.objects.filter(lv3_approval_status='1', author__groups__in=group)
+            elif profile_role.is_lv4_approver:
+                return Post.objects.filter(lv4_approval_status='1', author__groups__in=group)
 
         else:
             return super().get_queryset()
@@ -127,12 +131,13 @@ class ApprovalPosts(LoginRequiredMixin, ListView):
         user_id = user.id
         cat_menu = Category.objects.all()
         approved_list_by_user = Post.objects.filter(
-            Q(lv1_approver=user_id) | Q(lv2_approver=user_id) | Q(lv3_approver=user_id))
+            Q(lv1_approver=user_id) | Q(lv2_approver=user_id) | Q(lv3_approver=user_id) | Q(lv4_approver=user_id))
         context = super(ApprovalPosts, self).get_context_data(*args, **kwargs)
         context['approved_list_by_user'] = approved_list_by_user
         context['current'] = timezone.now()
         context['role'] = get_user_role(self.request.user)
         context["cat_menu"] = cat_menu
+        context['group'] = GROUP_LIST
         return context
 
 
@@ -140,7 +145,7 @@ def search_item(request):
     if request.method == "POST":
         searched = request.POST.get('searched')
         obj_list = []
-        target = Post.objects.filter(status=2)
+        target = Post.objects.filter(publish=True)
         try:
             for obj in target:
                 if searched in obj.body or searched in obj.title:
@@ -225,7 +230,7 @@ class ApprovalDenyDetailView(DetailView):
 def category_view(request, *args, **kwargs):
     # query categories from db
     cats = kwargs['cats']
-    category_posts = Post.objects.filter(category=cats, status=2)
+    category_posts = Post.objects.filter(category=cats, publish=True)
     cat_menu = Category.objects.all()
     context = {'cats': cats, 'category_posts': category_posts, 'cat_menu': cat_menu,
                'role': get_user_role(request.user)}
@@ -240,9 +245,8 @@ def author_posts_view(request, author):
     author = User.objects.get(username=author)
     # 草稿
     author_draft = Post.objects.filter(author__username=author, status=1).order_by('-post_date')
-    author_published = Post.objects.filter(author__username=author, status=2).order_by('-publish_date')
-    author_submitted = Post.objects.filter(author__username=author,
-                                           status_id__in=[i for i in [3, 4, 5, 6, 7, 8, 10]]).order_by(
+    author_published = Post.objects.filter(author__username=author, publish=True).order_by('-publish_date')
+    author_submitted = Post.objects.filter(author__username=author, is_submit=1, publish=False).order_by(
         '-submit_time')
     role = get_user_role(request.user)
     # draft pagination
@@ -315,7 +319,7 @@ def group_posts_view(request, group_name):
     """
     if request.method == 'GET':
         all_members = User.objects.filter(groups__name=group_name)
-        posts_list = Post.objects.filter(author__groups__name=group_name, status=2).order_by('-publish_date')
+        posts_list = Post.objects.filter(author__groups__name=group_name, publish=True).order_by('-publish_date')
         cat_menu = Category.objects.all()
         post_group = {i.name: posts_list.filter(category=i.name) for i in cat_menu if
                       posts_list.filter(category=i.name)}
@@ -336,8 +340,7 @@ def group_author_posts_view(request, group_name, author_name):
     if request.method == 'GET':
 
         author = User.objects.get(first_name=author_name)
-        all_members = User.objects.filter(groups__name=group_name)
-        posts_list = Post.objects.filter(author__groups__name=group_name, status=2, author=author).order_by(
+        posts_list = Post.objects.filter(author__groups__name=group_name, publish=True, author=author).order_by(
             '-publish_date')
         cat_menu = Category.objects.all()
         post_group = {i.name: posts_list.filter(category=i.name) for i in cat_menu if
@@ -352,13 +355,7 @@ def group_author_posts_view(request, group_name, author_name):
                  'publish_date': i.publish_date.strftime('%Y年%m月%d日')} for i in val]
         # print(author_posts)
 
-        # context = {
-        #     'author': author_name,
-        #     'author_posts': author_posts
-        #
-        # }
-        # print(context)
-        z = "<div class='text-muted'>查看：{}</div>".format(author.first_name)
+        z = "<div class='text-muted'>查看：{} 共{}篇</div>".format(author.first_name, posts_list.count())
 
         for key, val in author_posts.items():
             _z = "<h4>【<a href='/category/{}/'>{}</a>】</h4> ".format(key, key)
@@ -372,13 +369,99 @@ def group_author_posts_view(request, group_name, author_name):
 
 
 def statics_and_charts(request):
-    context = {
-        # 'searched_post': results,
-        'group': GROUP_LIST,
-        'role': get_user_role(request.user),
-    }
+    if request.method == 'GET':
+        # 初始化
+        context = {
+            # 'searched_post': results,
+            'group': GROUP_LIST,
+            'role': get_user_role(request.user),
 
-    return render(request, 'statics_charts.html', context)
+        }
+        return render(request, 'statics_charts.html', context)
+
+
+def statics_and_charts_get_data(request):
+    if request.method == 'GET':
+        # default data
+        # { 'dimension' : ['group','total','origin','reproduction'],
+        #   'records': [
+        #       ['产品管理', 20, 10, 10],
+        #   ],
+        # }
+        _groups = []
+        for i in GROUP_NAME:
+            _filter_base = Post.objects.filter(author__groups__name__in=[i], publish=True)
+            _name, _nums, _origin, _reproduction = i, _filter_base.count(), _filter_base.filter(
+                origin='1').count(), _filter_base.filter(origin='2').count()
+            _groups.append([_name, _origin, _reproduction, _nums])
+        _subcategories = []
+        _categories = []
+        _filter_base_category = Post.objects.filter(publish=True)
+        for i in Category.objects.all():
+            _category2, _total2, _origin2, _reproduction2, = i.name, _filter_base_category.filter(
+                category=i.name).count(), _filter_base_category.filter(category=i.name,
+                                                                       origin='1').count(), _filter_base_category.filter(
+                category=i.name, origin='2').count()
+            _categories.append([_category2, _origin2, _reproduction2, _total2])
+        for i in Subcategory.objects.all():
+            _category, _subcategory, _total, _corigin, _creproduction = i.category.name, i.name, _filter_base_category.filter(
+                subcategory=i.name, category=i.category.name).count(), _filter_base_category.filter(subcategory=i.name,
+                                                                                                    category=i.category.name,
+                                                                                                    origin='1').count(), _filter_base_category.filter(
+                subcategory=i.name, origin='2', category=i.category.name).count()
+            _subcategories.append([_category, _subcategory, _corigin, _creproduction, _total])
+
+        default_data = {
+            'dataset0': {
+                'dimension': ['group', 'origin', 'reproduction', 'total'],
+                'records': _groups,
+                'thead': ['#', '组名', '原创', '转载', '总数'],
+                'title': '各组文章统计表',
+                'tfoot': ['#', '总数', sum([i[1] for i in _groups]), sum([i[2] for i in _groups]),
+                          sum([i[3] for i in _groups])],
+            },
+            'dataset1': {
+                'dimension': ['category', 'origin', 'reproduction', 'total'],
+                'records': _categories,
+                'legend': [i.name for i in Category.objects.all()],
+                'thead': ['#', '分类', '原创', '转载', '总数'],
+                'title': '一级分类文章统计表',
+                'tfoot': ['#', '总数', sum([i[1] for i in _categories]), sum([i[2] for i in _categories]),
+                          sum([i[3] for i in _categories])]
+            },
+            'dataset2': {
+                'dimension': ['category', 'subcategory', 'origin', 'reproduction', 'total'],
+                'records': _subcategories,
+                'thead': ['#', '一级分类', '二级分类', '原创', '转载', '总数'],
+                'title': '二级分类文章统计表'
+            },
+        }
+
+        return JsonResponse(default_data, safe=False)
+    elif request.method == 'POST':
+        if request.POST.get('group_name'):
+            group_name = request.POST.get('group_name')
+            requested_group = Group.objects.get(name=group_name)
+            all_members = requested_group.user_set.all()
+            group_statics = {
+                'dimension': ['dataType', ]
+            }
+            member_list = []
+            for u in all_members:
+                member_list.append(
+                    {
+                        'pk': u.pk,
+                        'first_name': u.first_name,
+                        'headimg': u.last_name,
+                        'published': Post.objects.filter(author=u, publish=True).count()
+                    }
+                )
+
+            data = {
+                'member_list': member_list
+            }
+
+            return JsonResponse(data, status=200)
 
 
 def source_posts_view(request, source):
@@ -564,7 +647,6 @@ def oct_get_endpoint_view(request, *args, **kwargs):
         month = request.GET.get('month')
         round = request.GET.get('round')
         posts = Post.objects.filter(oa_status='1')
-        # data = serializers.serialize("json", posts, fields=('title','post_file','category','body'))
         data = []
         for item in posts:
             data.append(
@@ -592,5 +674,6 @@ def oct_get_endpoint_view(request, *args, **kwargs):
 
         return JsonResponse(results, safe=False)
     else:
-        info = request.POST
+        body = request.body
+        print(json.loads(body))
         return JsonResponse({'status': 200}, status=200)

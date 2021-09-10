@@ -90,7 +90,7 @@
                         <th scope="col" class="col-md-4">文章名称</th>
                         <th scope="col" class="col-md-1">来源</th>
                         <th scope="col" class="col-md-1">标签</th>
-                        <th scope="col" class="col-md-1">提交人</th>
+                        <th scope="col" class="col-md-1">作者</th>
                         <th scope="col" class="col-md-1">提交日期</th>
                         <th scope="col" class="col-md-1">操作</th>
                     </tr>
@@ -116,8 +116,7 @@
                                         href="{% url 'article_detail' post.pk %}">{{ post.title|slice:"10" }}</a></small>
                             </td>
                             <td>
-                                <small><a
-                                        href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                                <small>{{ post.author.groups.all.0.name }}</small>
                             </td>
                             <td><small><a
                                     href="{% url 'category' post.category %}">{{ post.category }}</a></small>
@@ -151,12 +150,13 @@
                     <tr>
                         <th scope="col" class="col-md-1">ID</th>
                         <th scope="col" class="col-lg-4">文章名称</th>
-                        <th scope="col" class="col-md-1">来源</th>
+                        <th scope="col" class="col-md-1">组</th>
                         <th scope="col" class="col-md-1">标签</th>
                         <th scope="col" class="col-md-1">提交人</th>
                         <th scope="col" class="col-md-1">提交日期</th>
                         {#                        <th scope="col" class="col-md-1">已提交天数</th>#}
                         <th scope="col" class="col-md-1">当前状态</th>
+                        <th scope="col" class="col-md-1">报送状态</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -170,8 +170,7 @@
                                         href="{% url 'article_detail' post.pk %}">{{ post.title|slice:"10" }}</a></small>
                             </td>
                             <td>
-                                <small><a
-                                        href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                                <small>{{ post.author.groups.all.0.name }}</small>
                             </td>
                             <td><small><a
                                     href="{% url 'category' post.category %}">{{ post.category }}</a></small>
@@ -187,7 +186,9 @@
                             <td>
                                 <small>{{ post.get_status_verbose_name }}</small>
                             </td>
-
+                            <td>
+                                <small>{{ post.get_oa_status_verbose_name }}</small>
+                            </td>
                         </tr>
                     {% endfor %}
                     </tbody>

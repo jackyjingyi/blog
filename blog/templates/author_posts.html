@@ -207,17 +207,18 @@
                         <table class="table table-bordered">
                             <thead>
                             <tr>
-                                <th scope="col" class="col-sm-1">ID</th>
-                                <th scope="col" class="col-lg-4">文章名称</th>
-                                <th scope="col" class="col-md-2">来源</th>
-                                <th scope="col" class="col-md-2">标签</th>
-                                <th scope="col" class="col-md-2">发布日期</th>
+                                <th scope="col" class="col-1">ID</th>
+                                <th scope="col" class="col-4">文章名称</th>
+                                <th scope="col" class="col-2">来源</th>
+                                <th scope="col" class="col-2">标签</th>
+                                <th scope="col" class="col-1">报送状态</th>
+                                <th scope="col" class="col-2">发布日期</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for post in pub_page_obj %}
 
-                                {% if post.status_id == 2 %}
+                                {% if post.publish %}
                                     <tr>
                                         <th scope="row">
                                             <small>{{ forloop.counter }}</small>
@@ -231,6 +232,7 @@
                                         <td><small><a
                                                 href="{% url 'category' post.category %}">{{ post.category }}</a></small>
                                         </td>
+                                        <td>{{ post.get_oa_status_verbose_name }}</td>
                                         <td>{{ post.publish_date|date:"Y年n月d日" }}</td>
                                     </tr>
 
@@ -373,20 +375,8 @@
                                         </td>
 
                                         <td>
-                                            {% if post.status_id == 3 or post.status_id == 10 %}
-                                                <small>一级审批中</small>
-                                            {% elif post.status_id == 4 %}
-                                                <small>二级审批中</small>
-                                            {% elif post.status_id == 5 %}
-                                                <small>三级审批中</small>
-                                            {% elif post.status_id > 5 %}
-                                                {% if post.status_id == 6 %}
-                                                    <small>一级审批驳回</small>
-                                                {% elif post.status_id == 7 %}
-                                                    <small>二级审批驳回</small>
-                                                {% elif post.status_id == 8 %}
-                                                    <small>三级审批驳回</small>
-                                                {% endif %}
+                                            {{ post.get_status_verbose_name }}
+                                            {% if post.status_id > 5 and post.status_id != 10 %}
                                                 {% if user.is_authenticated and user.id == post.author.pk %}
                                                     <small><a href="" class="toDraft">转为草稿</a> </small>
                                                     <small><a href="" class="toAppDelete">删除</a> </small>
@@ -399,8 +389,6 @@
                             {% endfor %}
                             </tbody>
                         </table>
-
-
 
                     {% else %}
                         暂无

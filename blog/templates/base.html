@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>
         {% block title %}
-            首页
+            创研院-信息报送平台
         {% endblock %}
     </title>
 
@@ -15,7 +15,7 @@
 
     <script type="text/javascript" src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/echarts.min.js' %}"></script>
-
+    <link rel="shortcut icon" href="{% static 'images/logoiri-icon1.png' %}">
     <style>
 
         .bd-placeholder-img {
@@ -46,7 +46,7 @@
 {#标题栏#}
 <div class="container">
     <header class="blog-header py-0">
-        <div class="row flex-nowrap justify-content-between align-items-center">
+        <div class="row flex-nowrap justify-content-between align-items-center" style="background-color: #ffffff">
             <div class="col-4 pt-1">
                 <div class="dropdown text-start">
                     <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle fs-5" id="dropdownUser1"
@@ -61,7 +61,8 @@
                                 <span>游客</span>
                             {% endif %}
                         {% else %}
-                            <img src="{% static 'bootstrap/icons/person-circle.svg' %}" style="width: 32px; height:32px"
+                            <img src="{% static 'bootstrap/icons/person-circle.svg' %}"
+                                 style="width: 32px; height:32px;"
                                  class="rounded-circle">
                             {% if user.is_authenticated %}
                                 <span>{{ user.first_name }}</span>
@@ -77,11 +78,11 @@
                                 <li><a class="dropdown-item" href="{% url 'add_post' %}">上传文章</a></li>
                                 <li><a class="dropdown-item" href="{% url 'author_post' user %}">工作空间</a></li>
                             {% elif role == '2' %}
-                                <li><a class="dropdown-item" href="{% url 'approval_list' user.username %}">我的审批</a></li>
+                                <li><a class="dropdown-item" href="{% url 'approval_list' user.pk %}">我的审批</a></li>
                             {% elif role == '4' or role == '5' %}
                                 <li><a class="dropdown-item" href="{% url 'add_post' %}">上传文章</a></li>
                                 <li><a class="dropdown-item" href="{% url 'author_post' user %}">工作空间</a></li>
-                                <li><a class="dropdown-item" href="{% url 'approval_list' user.username %}">我的审批</a></li>
+                                <li><a class="dropdown-item" href="{% url 'approval_list' user.pk %}">我的审批</a></li>
                             {% endif %}
                             <li><a class="dropdown-item" href="#">我的消息</a></li>
                             <li><a class="dropdown-item" href="{% url 'statics_and_charts' %}">查看统计</a></li>
@@ -96,9 +97,9 @@
 
                 </div>
             </div>
-            <div class="col-4 text-center">
-                <a class="blog-header-logo text-dark" href="/">
-                    <img src="{% static 'images/logo.jpg' %}" style="height:70px">
+            <div class="col-4 text-center" style="background-color: #ffffff">
+                <a class="blog-header-logo text-dark" href="/" style="background-color: #ffffff">
+                    <img src="{% static 'images/logoiri2.gif' %}" style="height:70px; border: 0"/>
                 </a>
             </div>
             <div class="col-4 d-flex justify-content-end align-items-center">
@@ -122,18 +123,19 @@
         </div>
 
 
-    {#    首页的分类链接#}
-    <div class="nav-scroller py-1 mb-2">
-        {#        #EB8F00#}
-        <nav class="nav d-flex justify-content-between" style="background-color:  #EB8F00">
+        {#    首页的分类链接#}
+        <div class="nav-scroller py-1 mb-2">
+            {#        #EB8F00#}
+            <nav class="nav d-flex justify-content-between" style="background-color:  #EB8F00">
 
-            {% if group %}
-                {% for item in group %}
-                    <a class="p-3 link-light" href="{% url 'group_post' item.name %}"><strong>{{ item.name }}</strong></a>
-                {% endfor %}
-            {% endif %}
-        </nav>
-    </div>
+                {% if group %}
+                    {% for item in group %}
+                        <a class="p-3 link-light"
+                           href="{% url 'group_post' item.name %}"><strong>{{ item.name }}</strong></a>
+                    {% endfor %}
+                {% endif %}
+            </nav>
+        </div>
     </header>
     {#    首页的分类链接 end #}
 </div>

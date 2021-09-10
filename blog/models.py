@@ -8,10 +8,19 @@ import django.utils.timezone as timezone
 import logging
 import os
 
+OA_STATUS_VERBOSE_NAME = {
+    '0': '未报送',
+    '1': '内部报送审批中',
+    '2': '报送审批通过',
+    '3': '报送审批驳回',
+    '4': '集团已接收通过',
+    '5': '集团已发布',
+}
+
 
 def get_absolute_upload_path():
     _datetime = date.today()
-    return os.path.join('media', 'uploadPosts/{}/{}/'.format(_datetime.year, _datetime.month))
+    return os.path.join('', 'uploadPosts/{}/{}/'.format(_datetime.year, _datetime.month))
 
 
 class Category(models.Model):
@@ -87,33 +96,43 @@ class Post(models.Model):
     lv1_approval_action_datetime = models.DateTimeField(null=True, blank=True)  # 调用审批写入审批时间
     lv1_approver = models.IntegerField(default=-1)
 
-    lv2_approval_status = models.CharField(max_length=5, default='0')
-    lv2_approval_action_datetime = models.DateTimeField(null=True, blank=True)  # 调用审批写入审批时间
-    lv2_approver = models.IntegerField(default=-1)
+    lv2_approval_status = models.CharField(max_length=5, default='0', help_text="0:未提交， 1：已提交未审批，2:已提交已审批通过，3:已提交已驳回")
+    lv2_approval_action_datetime = models.DateTimeField(null=True, blank=True, help_text="审批通过节点的时间戳")  # 调用审批写入审批时间
+    lv2_approver = models.IntegerField(default=-1, help_text="审批人ID")
 
-    lv3_approval_status = models.CharField(max_length=5, default='0')
-    lv3_approval_action_datetime = models.DateTimeField(null=True, blank=True)  # 调用审批写入审批时间
-    lv3_approver = models.IntegerField(default=-1)
+    lv3_approval_status = models.CharField(max_length=5, default='0', help_text="0:未提交， 1：已提交未审批，2:已提交已审批通过，3:已提交已驳回")
+    lv3_approval_action_datetime = models.DateTimeField(null=True, blank=True, help_text="审批通过节点的时间戳")  # 调用审批写入审批时间
+    lv3_approver = models.IntegerField(default=-1, help_text="审批人ID")
+
+    lv4_approval_status = models.CharField(max_length=5, default='0',
+                                           help_text="0:未进入报送审批， 1：已提交未审批，2:已提交已审批通过，3:已提交已驳回")
+    lv4_approval_action_datetime = models.DateTimeField(null=True, blank=True, help_text="审批通过节点的时间戳")  # 调用审批写入审批时间
+    lv4_approver = models.IntegerField(default=-1, help_text="审批人ID")
 
     # post published (after three round approval)
-    publish = models.BooleanField(default=False)
-    publish_date = models.DateTimeField(null=True, blank=True)
+    publish = models.BooleanField(default=False, help_text="状态标签，True:内部发布等待报送审批，False：内部审批中")
+    publish_date = models.DateTimeField(null=True, blank=True, help_text="内部发布时间戳")
 
-    is_draft = models.BooleanField(default=True, verbose_name="保存")
-    is_submit = models.BooleanField(default=False, verbose_name="直接提交")
+    is_draft = models.BooleanField(default=True, verbose_name="保存",
+                                   help_text="快捷状态判断，用于复杂SQL限定之先决条件，True: 草稿未提交，False:内部提交，等待内部审批")
+    is_submit = models.BooleanField(default=False, verbose_name="直接提交", help_text="快捷状态判断，直接提交状态标签")
 
     # timestamp when draft was saved or submitted
-    creation_time = models.DateTimeField(verbose_name="创建时间", default=timezone.now)
+    creation_time = models.DateTimeField(verbose_name="创建时间", default=timezone.now, help_text="实例创建时间戳")
     # 1. post was draft 2.remain draft after editing
-    update_time = models.DateTimeField(auto_now=True)
+    update_time = models.DateTimeField(auto_now=True, help_text="更新时间戳")
 
     # send to OA system
-    # 0: not send yet, 1: in oa_pipe table, 2.sent
-    oa_status = models.CharField(max_length=5, default='0')
+    # 0 未报送（内部审批未完成时为该状态） 1（报送审批中，副院长审批）2（审批通过）3（审批驳回） 4：未进入报送流程 5：报送中 6：集团已接收通过 7.集团已发布
+    oa_status = models.CharField(max_length=5, default='0',
+                                 help_text="报送状态，0 未报送（内部审批未完成时为该状态） 1（报送审批中，副院长审批）2（审批通过,报送中）3（审批驳回,未报送）4：集团已接收通过 5.集团已发布")
+
     # time when put into pipe
-    send_submit_time = models.DateTimeField(null=True, blank=True)
+    send_submit_time = models.DateTimeField(null=True, blank=True, help_text="集团发起get请求时间戳")
     # time when oa_status turn to 2
-    oa_success_time = models.DateTimeField(null=True, blank=True)
+    oa_success_time = models.DateTimeField(null=True, blank=True, help_text="集团获取文章并发布时间戳")
+
+    group_article_link = models.CharField(max_length=500, null=True, blank=True, help_text="集团文章link")
 
     likes = models.ManyToManyField(User, related_name='blog_posts')
 
@@ -155,6 +174,9 @@ class Post(models.Model):
         elif lv == 3:
             self.lv3_approval_action_datetime = timezone.now()
             self.save()
+        elif lv == 4:
+            self.lv4_approval_action_datetime = timezone.now()
+            self.save()
         else:
             # error
             raise ValueError
@@ -172,6 +194,9 @@ class Post(models.Model):
                 self.lv1_approver = user_id
                 self.save()
                 self.approval_time(1)
+                # 更改
+                self.approval_positive(lv=2, user_id=1)  # 系统默认审批
+                self.approval_positive(lv=3, user_id=1)  # 系统默认审批
                 # TODO 如果已经被审批
         elif lv == 2:
             if _validate(self.lv2_approval_status):
@@ -190,9 +215,19 @@ class Post(models.Model):
                 self.publish_date = datetime.now()
                 # status change to approving 3
                 self.status = PostStatus.objects.get(pk=2)
+                self.oa_status = '1'
                 self.lv3_approver = user_id
+                self.lv4_approval_status = '1'
                 self.save()
                 self.approval_time(3)
+        elif lv == 4:
+            if _validate(self.lv4_approval_status):
+                self.lv4_approval_status = '2'
+                self.lv4_approver = user_id
+                self.status = PostStatus.objects.get(pk=17)
+                self.oa_status = '2'
+                self.save()
+                self.approval_time(4)
         else:
             raise ValueError
 
@@ -202,15 +237,19 @@ class Post(models.Model):
         self.lv1_approver = -1
         self.lv2_approver = -1
         self.lv3_approver = -1
+        self.lv4_approver = -1
         self.lv1_approval_status = '0'
         self.lv2_approval_status = '0'
         self.lv3_approval_status = '0'
+        self.lv4_approval_status = '0'
         self.status_id = 1
+        self.oa_status = '0'
         self.save()
 
     def revoke_to_draft(self):
         if self.is_submit and not self.publish and any(
-                [self.lv1_approval_status == '3', self.lv2_approval_status == '3', self.lv3_approval_status == '3']):
+                [self.lv1_approval_status == '3', self.lv2_approval_status == '3', self.lv3_approval_status == '3',
+                 self.lv4_approval_status == '3']):
             self.flush_post()
 
     def approval_deny(self, lv, user_id):
@@ -241,17 +280,28 @@ class Post(models.Model):
                 self.lv3_approval_status = '3'
                 # call publish function
                 self.publish = False
-
                 # status change to approving 3
                 self.status = PostStatus.objects.get(pk=8)
                 self.lv3_approver = user_id
                 self.save()
                 self.approval_time(3)
+        elif lv == 4:
+            if _validate(self.lv4_approval_status) and self.publish:
+                self.lv4_approval_status = '3'
+                self.status = PostStatus.objects.get(pk=16)
+                self.lv4_approver = user_id
+                self.oa_status = '3'
+                self.save()
+                self.approval_time(4)
+
         else:
             raise ValueError
 
     def get_status_verbose_name(self):
         return self.status.chinese_name
+
+    def get_oa_status_verbose_name(self):
+        return OA_STATUS_VERBOSE_NAME.get(self.oa_status)
 
 
 class Profile(models.Model):
@@ -267,6 +317,7 @@ class Profile(models.Model):
     is_lv1_approver = models.BooleanField(default=False)
     is_lv2_approver = models.BooleanField(default=False)
     is_lv3_approver = models.BooleanField(default=False)
+    is_lv4_approver = models.BooleanField(default=False)
     is_publisher = models.BooleanField(default=False)
     is_visitor = models.BooleanField(default=True)
     role = models.CharField(max_length=25, choices=CHOICE, default='3')
@@ -283,4 +334,4 @@ class Profile(models.Model):
         self.is_lv3_approver = True
 
     def __str__(self):
-        return self.user.username + "| " + str(self.user.pk) + "| "+str(self.user.first_name)
+        return self.user.username + "| " + str(self.user.pk) + "| " + str(self.user.first_name) + "| " + self.role

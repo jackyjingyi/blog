@@ -2,7 +2,8 @@ from django.urls import path
 from .views import HomeView, ArticleDetailView, UpdatePostView, DeletePostView, AddCategoryView, \
     category_view, author_posts_view, source_posts_view, ApprovalPosts, ApprovalSuccessDetailView, \
     ApprovalDenyDetailView, SubmitPostDetailView, search_item, bulk_submit, like_view, oct_get_endpoint_view, \
-    creat_post, get_subcategory, group_posts_view, group_author_posts_view, statics_and_charts
+    creat_post, get_subcategory, group_posts_view, group_author_posts_view, statics_and_charts, \
+    statics_and_charts_get_data
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -17,7 +18,7 @@ urlpatterns = [
                   path('category/<str:cats>/', category_view, name='category'),
                   path('author/<str:author>', author_posts_view, name='author_post'),
                   path('source/<str:source>', source_posts_view, name='source_post'),
-                  path('approval/<str:username>', ApprovalPosts.as_view(), name='approval_list'),
+                  path('approval/<int:pk>', ApprovalPosts.as_view(), name='approval_list'),
                   path('approval/<str:username>/<int:pk>/success', ApprovalSuccessDetailView.as_view(),
                        name='approval_success_update'),
                   path('approval/<str:username>/<int:pk>/deny', ApprovalDenyDetailView.as_view(),
@@ -30,4 +31,5 @@ urlpatterns = [
                   path('group_posts/<str:group_name>/', group_posts_view, name='group_post'),
                   path('group_posts/<str:group_name>/<str:author_name>/', group_author_posts_view),
                   path('statics_and_charts/', statics_and_charts, name="statics_and_charts"),
+                  path('statics_and_charts_get_data/', statics_and_charts_get_data),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
