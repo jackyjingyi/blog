@@ -1,12 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-
-    <br><br>
+<style>
+.sticky-offset {
+    top: 300px
+}
+</style>
+    <br>
     <hr>
     <div class="row">
-
-        <div class="col-2">
+        <div class="col-2" style="width: 220px">
             <div class="position-sticky" style="top: 2rem;">
                 <div class="p-4 mb-3 bg-light rounded">
                     <h4 class="fst-italic text-dark">查看各组</h4>
@@ -32,6 +35,10 @@
             <h3 class="text-center">统计图表</h3>
             <div class="row" id="user-display" style="background-color: snow"></div>
             <div class="row">
+                <div id="staticCharts" class="col-6" style="width: 100%;height: 1800px"></div>
+            </div>
+            <hr>
+            <div class="row">
                 <h5 id="title0" class="fst-italic bg-light rounded"></h5>
                 <table class="table table-striped table-bordered" id="dataset0">
                     <thead></thead>
@@ -45,10 +52,8 @@
                     <tbody></tbody>
                 </table>
             </div>
-            <hr>
-            <div class="row">
-                <div id="staticCharts" class="col-6" style="width: 100%;height: 1800px"></div>
-            </div>
+
+
         </div>
 
     </div>
@@ -67,6 +72,7 @@
             let userList = $("#user-display")
             // default charts
             let chartFunc = function () {
+
                 let myChart = echarts.init(chartDom)
                 myChart.showLoading()
 
@@ -153,13 +159,13 @@
                             grid: [
 
                                 {
-                                    left: '10%', right: '50%', top: '10%', bottom: '1200px', show: false
+                                    left: '10%', right: '50%', top: '10%', bottom: '70%', show: false
                                 },
                                 {
-                                    left: '50%', right: '5%', top: '10%', bottom: '1200px', show: false
+                                    left: '50%', right: '5%', top: '10%', bottom: '70%', show: false
                                 },
                                 {
-                                    left: '10%', right: '5%', top: '720px', bottom: '10%', show: false,
+                                    left: '10%', right: '5%', top: '40%', bottom: '10%', show: false,
                                 },
 
                             ],
@@ -268,10 +274,10 @@
                                 {
                                     name: '分类',
                                     type: 'pie',
-                                    radius: [0, '30%'],
+                                    radius: [0, '25%'],
                                     xAxisIndex: 1,
                                     yAxisIndex: 1,
-                                    center: ['73.5%', '23.8%'],
+                                    center: ['73.5%', '19.8%'],
                                     encode: {itemName: 'category', value: 'total'},
                                     datasetIndex: 4,
                                     showEmptyCircle: true,
@@ -319,8 +325,8 @@
                 title0[0].textContent = '';
                 title1[0].textContent = '';
                 let name = $(this).val();
-                console.log(name)
                 // get groups data
+                chartDom.style.height = '550px'
                 let myChart = echarts.init(chartDom)
                 myChart.showLoading()
                 $.ajax({
@@ -356,10 +362,100 @@
                         })
 
                         // 更新数据表
+                        let groupStatic = data.groupStatic;
+                        title0[0].textContent = groupStatic.title
+                        $.each(groupStatic.thead, function (idx, elem) {
+                            tableDataset0Th.append("<th scope='col'>" + elem + "</th>");
+                        });
 
-
+                        $.each(groupStatic.records, function (idx, elem) {
+                            idx += 1
+                            var tmp = "<tr><td>" + idx + "</td>"
+                            for (let i = 0; i < elem.length; i++) {
+                                tmp += "<td>" + elem[i] + "</td>"
+                            }
+                            tableDataset0Tb.append(tmp + "</tr>")
+                        })
+                        var z = "<tr>"
+                        $.each(groupStatic.tfoot, function (idx, elem) {
+                            z += "<td>" + elem + "</td>"
+                        });
+                        tableDataset0Tb.append(z + "</tr>");
 
                         // 更新统计图
+                        myChart.hideLoading();
+                        let groupSource = [groupStatic.dimension];
+                        for (let i = 0; i < groupStatic.records.length; i++) {
+                            groupSource.push(groupStatic.records[i]);
+                        }
+
+                        if (groupStatic.tfoot[groupStatic.tfoot.length - 1] !== 0) {
+
+                            let option;
+                            option = {
+                                dataset: {     // #0
+                                    dimensions: groupStatic.dimension,
+                                    source: groupSource,
+                                    sourceHeader: false
+                                },
+                                grid: [
+
+                                    {
+                                        left: '10%', right: '10%', top: '10%', show: false
+                                    },
+
+                                ],
+                                title: [
+                                    {
+                                        show: true,
+                                        text: groupStatic.title,
+                                        textStyle: {
+                                            fontSize: 17,
+                                        },
+                                        left: '10%',
+                                        top: '5%'
+                                    },
+                                ],
+                                legend: {},
+                                xAxis: {
+                                    type: 'category',
+                                    axisLabel: {interval: 0, rotate: 30},
+                                    {#data: groupStatic.dimension.slice(1,groupStatic.dimension.length),#}
+
+                                },
+                                yAxis: {},
+                                tooltip:
+                                    {}
+                                ,
+                                series: [
+                                    {
+                                        name: '原创',
+                                        type: 'bar',
+                                        seriesLayoutBy: 'row',
+                                        label: {
+                                            show: true
+                                        },
+
+                                    },
+                                    {
+                                        name: '转载',
+                                        type: 'bar',
+                                        seriesLayoutBy: 'row',
+                                        label: {
+                                            show: true
+                                        },
+
+                                    },
+                                ]
+                            };
+
+                            option && myChart.setOption(option);
+                            window.onresize = function () {
+                                myChart.resize();
+                            }
+                        } else {
+                            chartDom.style.height = '0px';
+                        }
                     }
                 })
 
@@ -368,6 +464,14 @@
 
             // 返回键
             $("#backButton").click(function () {
+                chartDom.style.height = '1800px'
+                echarts.dispose(chartDom);
+                tableDataset0Th.empty();
+                tableDataset0Tb.empty();
+                tableDataset1Th.empty();
+                tableDataset1Tb.empty();
+                title0[0].textContent = '';
+                title1[0].textContent = '';
                 userList.empty();
                 chartFunc();
             });

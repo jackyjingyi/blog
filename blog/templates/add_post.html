@@ -33,7 +33,7 @@
             <hr>
             <div class="row mb-5">
                 <div class="col-md-6 mb-5 text-center">
-                    <a class="btn btn-primary" href="{% url 'author_post' user %}">查看工作空间</a>
+                    <a class="btn btn-primary" href="{% url 'author_post' user.id %}">查看工作空间</a>
                 </div>
                 <div class="col-md-6 mb-5 text-center">
                     <a class="btn btn-primary" href="{% url 'add_post' %}">继续上传</a>
@@ -104,7 +104,7 @@
                 </div>
                 <button class="btn btn-secondary" id="saveAsDraft">存为草稿</button>
                 <button class="btn btn-secondary" id="directSubmit">直接提交</button>
-                <a href="{% url 'author_post' user %}" class="btn btn-secondary">取消</a>
+                <a href="{% url 'author_post' user.id %}" class="btn btn-secondary" id="cancelButton">取消</a>
             </form>
             {#            <div class="spinner-border" role="status">#}
             {#                <span class="visually-hidden">Loading...</span>#}
@@ -114,6 +114,7 @@
     {% else %}
         暂无发布权限
     {% endif %}
+
     <script>
         $(document).ready()
         {

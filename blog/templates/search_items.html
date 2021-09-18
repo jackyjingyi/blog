@@ -18,14 +18,13 @@
 
                 <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
                 - <small><a
-                    href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
+                    href="{% url 'author_post' post.author.id %}">{{ post.author.first_name }}</a></small>
                 <small>来源：<a
-                        href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
+                        href="{% url 'group_post' post.author.groups.first.name %}">{{ post.author.groups.first.name }}</a></small>
                 <small>标签：<a
                         href="{% url 'category' post.category %}">{{ post.category }}</a></small>
-                <small>日期：{{ post.post_date }}</small>
-                {#                                                                    {{ post.status }} {{ post.publish }}#}
-                {{ post.body|slice:":200"|safe }}#
+                <small>日期：{{ post.publish_date|date:"Y年n月d日" }}</small>
+                {{ post.body|slice:":200"|safe }}
             {% endfor %}
         </ul>
 

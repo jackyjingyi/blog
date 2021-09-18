@@ -1,35 +1,93 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}
-    {{ post.title_tag }}
+    审批结果——{{ post.title }}
 {% endblock %}
 
 {% block content %}
     <h2> 已驳回！</h2>
-    <p>审批人： {{ user.username }}</p>
-    <p>审批时间：{{ post.lv2_approval_action_datetime }}</p>
-    <h1>{{ post.title }}</h1>
-    <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
-    <small> 作者: {{ post.author }}</small>
-    <small>发布日期：{{ post.post_date|date:"Y-m-d" }}</small>
-    <small>阅读量：{{ post.views }}</small>
-    {% if user.is_authenticated %}
-        <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
-        <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>
-    {% endif %}
-
+    <p>审批人： {{ user.first_name }}</p>
+    <p>审批时间：{{ post.lv1_approval_action_datetime|date:"Y年m月d日 G:i:s" }}</p>
+    <div class="row">
+        <h1 class="text-center">{{ post.title }}</h1>
+    </div>
+    <div class="text-center">
+        <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+        <small> 作者: {{ post.author.first_name }}</small>
+        <small>发布日期：{{ post.publish_date|date:"Y年n月d日" }}</small>
+    </div>
     <br/>
     <hr>
     <h6><strong>摘要：</strong></h6>
     {{ post.body|safe }}
     {% if post.post_file %}
-    <div id="displayframe" class="col-xl">
-        <iframe class="embed-responsive-item" id="pdf" src="{{ post.post_file.url }}" width="100%" height="1000px">
-        </iframe>
-    </div>
+        <div id="displayframe" class="col-xl">
+            <iframe class="embed-responsive-item" id="pdf" src="{{ post.post_file.url }}" width="100%" height="1000px">
+            </iframe>
+        </div>
     {% endif %}
     <br/>
 
-    <a href="{% url 'home' %}" class="btn btn-secondary">Back</a>
+    <div class="modal" tabindex="-1" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content" >
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Modal body text goes here.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  Launch static backdrop modal
+</button>
 
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Understood</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <a href="{% url 'approval_list' user.id %}" class="btn btn-secondary" id="redirect">返回</a>
+    <script>
+        {#let modalInfo = "{{ timer_modal }}"#}
+        {#$("#timer").html(modalInfo);#}
+        {#window.setTimeout(function () {#}
+        {#    location.href = document.getElementById('redirect').href;#}
+        {# }, 3000);#}
+        //防止页面后退
+
+        $(document).ready()
+        {
+
+            {#history.pushState(null, null, document.URL);#}
+            {#window.addEventListener('popstate', function () {#}
+            {#    history.pushState(null, null, document.URL);#}
+            {# });#}
+            var myModal =$('#staticBackdrop');
+            myModal.show();
+        }
+
+    </script>
 {% endblock %}

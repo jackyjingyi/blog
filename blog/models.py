@@ -266,6 +266,7 @@ class Post(models.Model):
                 self.save()
                 self.approval_time(1)
                 # TODO 如果已经被审批
+
         elif lv == 2:
             if _validate(self.lv2_approval_status):
                 self.lv2_approval_status = '3'

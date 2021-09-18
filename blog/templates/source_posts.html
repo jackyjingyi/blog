@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    1544
+
     <h1>{{ source }}</h1>
     <small>共{{ amounts }}篇文章</small>&nbsp;
     <small>总阅读数： {{ cnt }}</small>
@@ -10,7 +10,7 @@
         {% for post in source_posts %}
 
             <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
-                - <small><a href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
+                - <small><a href="{% url 'author_post' post.author.pk %}">{{ post.author.first_name }}</a></small>
                 <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
                 <small>日期：{{ post.post_date|date:"Y-m-d" }}</small>
 

@@ -13,148 +13,159 @@
     <link href="{% static 'bootstrap/bootstrap-5.1.0-dist/css/bootstrap.min.css' %}" rel="stylesheet"
           integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
 
-    <script type="text/javascript" src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/echarts.min.js' %}"></script>
+    {#    <link href="{% static 'css/amazeui.min.css' %}" rel="stylesheet">#}
+    <link href="{% static 'css/material-dashboard1.css' %}" rel="stylesheet">
+    {#    <link href="{% static 'css/demo.css' %}" rel="stylesheet">#}
+    {#    <link href="{% static 'css/font-awesome.min.css' %}" rel="stylesheet">#}
     <link rel="shortcut icon" href="{% static 'images/logoiri-icon1.png' %}">
-    <style>
 
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-        }
-
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
-        }
-
-        A {
-            text-decoration: none;
-        }
-
-    </style>
     <!-- Custom styles for this template -->
     <link href="{% static 'css/google.css' %}" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="{% static 'css/blog.css' %}" rel="stylesheet">
+    <script type="text/javascript" src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/echarts.min.js' %}"></script>
+    <style>
+
+    </style>
 </head>
 <body>
 {#标题栏#}
-<div class="container">
-    <header class="blog-header py-0">
-        <div class="row flex-nowrap justify-content-between align-items-center" style="background-color: #ffffff">
-            <div class="col-4 pt-1">
-                <div class="dropdown text-start">
-                    <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle fs-5" id="dropdownUser1"
-                       data-bs-toggle="dropdown" aria-expanded="false">
-
-                        {% if user.last_name %}
-                            <img src="{% static user.last_name %}" style="width: 32px; height:32px"
-                                 class="rounded-circle">
-                            {% if user.is_authenticated %}
-                                <span>{{ user.first_name }}</span>
-                            {% else %}
-                                <span>游客</span>
-                            {% endif %}
-                        {% else %}
-                            <img src="{% static 'bootstrap/icons/person-circle.svg' %}"
-                                 style="width: 32px; height:32px;"
-                                 class="rounded-circle">
-                            {% if user.is_authenticated %}
-                                <span>{{ user.first_name }}</span>
-                            {% else %}
-                                <span>游客</span>
-                            {% endif %}
-                        {% endif %}
-                    </a>
-
-                    <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-                        {% if user.is_authenticated %}
-                            {% if role == '1' %}
-                                <li><a class="dropdown-item" href="{% url 'add_post' %}">上传文章</a></li>
-                                <li><a class="dropdown-item" href="{% url 'author_post' user %}">工作空间</a></li>
-                            {% elif role == '2' %}
-                                <li><a class="dropdown-item" href="{% url 'approval_list' user.pk %}">我的审批</a></li>
-                            {% elif role == '4' or role == '5' %}
-                                <li><a class="dropdown-item" href="{% url 'add_post' %}">上传文章</a></li>
-                                <li><a class="dropdown-item" href="{% url 'author_post' user %}">工作空间</a></li>
-                                <li><a class="dropdown-item" href="{% url 'approval_list' user.pk %}">我的审批</a></li>
-                            {% endif %}
-                            <li><a class="dropdown-item" href="#">我的消息</a></li>
-                            <li><a class="dropdown-item" href="{% url 'statics_and_charts' %}">查看统计</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="{% url 'logout' %}">注销</a></li>
-                        {% else %}
-                            <li><a class="dropdown-item" href="{% url 'login' %}">登录</a></li>
-                        {% endif %}
-                    </ul>
-
-                </div>
-            </div>
-            <div class="col-4 text-center" style="background-color: #ffffff">
-                <a class="blog-header-logo text-dark" href="/" style="background-color: #ffffff">
-                    <img src="{% static 'images/logoiri2.gif' %}" style="height:70px; border: 0"/>
-                </a>
-            </div>
-            <div class="col-4 d-flex justify-content-end align-items-center">
-                <form class="d-flex" method="post" action="{% url 'search_items' %}">
-                    <div class="input-group mb-sm-0">
-                        {#                <form class="d-flex" method="post" action="{% url 'search_items' %}">#}
-                        {% csrf_token %}
-                        <input type="text" class="form-control" placeholder="摘要搜索"
-                               aria-label="Recipient's username"
-                               aria-describedby="basic-addon2" id="search_holder" name="searched">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="submit" id="search_button">
-                                搜索
-                            </button>
-                        </div>
-
-                    </div>
-                </form>
-            </div>
-
+<div class="wrapper">
+    <div class="sidebar off-canvas-sidebar" data-color="purple"
+         style="width: 200px; position: fixed; background-color: rgb(255, 255, 255);">
+        <div class="logo" style="height: 128px;display: block">
+            <a href="/" class="simple-text" style="font-size: 25px;">
+                <img src="{% static 'images/logo.png' %}" style="width: 97px;height: auto">
+            </a>
         </div>
-
-
-        {#    首页的分类链接#}
-        <div class="nav-scroller py-1 mb-2">
-            {#        #EB8F00#}
-            <nav class="nav d-flex justify-content-between" style="background-color:  #EB8F00">
-
+        {#        <hr style="margin-top: 0">#}
+        <div class="sidebar-wrapper" style="margin-left: 20px;width: 200px">
+            <ul class="nav">
                 {% if group %}
                     {% for item in group %}
-                        <a class="p-3 link-light"
-                           href="{% url 'group_post' item.name %}"><strong>{{ item.name }}</strong></a>
+                        <li style="width: 200px">
+                            <a href="{% url 'group_post' item.name %}" style="text-decoration: none">
+                                <i class="material-icons"></i>
+                                <p class="text-dark" style="font-size: 16px;">{{ item.name }}</p>
+                            </a>
+                        </li>
                     {% endfor %}
                 {% endif %}
-            </nav>
+            </ul>
+
         </div>
-    </header>
-    {#    首页的分类链接 end #}
+        {#    首页的分类链接 end #}
+    </div>
+    {#标题栏#}
+    <main class="main-panel"
+          style="position: fixed; left: 200px; top: 0px; right: 0px;background-color: #EEEEEE">
+        <div class="container-fluid sticky-top">
+            <div class="row flex-nowrap justify-content-between align-items-center"
+                 style="background-color: #ffffff;height: 128px;">
+
+                <div class="col-8">
+                    <a href="/" class="simple-text"
+                       style="font-size: 41px;color: rgb(0, 0, 0);font-weight: initial;line-height: 107px;text-decoration: none;margin-left: 30%;">
+                        华侨城创新研究院数字大脑-信息报送平台
+                    </a>
+                </div>
+                <div class="col-2 pt-1 pe-5" style="width: 600px">
+                    <div class="row nowrap">
+                        <div class="col">
+                            <div class="dropdown text-end">
+                                <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle fs-5"
+                                   id="dropdownUser1"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+
+                                    {% if user.last_name %}
+                                        <img src="{% static user.last_name %}" style="width: 40px; height:40px"
+                                             class="rounded-circle">
+                                        {% if user.is_authenticated %}
+                                            <span>{{ user.first_name }}</span>
+                                        {% else %}
+                                            <span>游客</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <img src="{% static 'bootstrap/icons/person-circle.svg' %}"
+                                             style="width: 32px; height:32px;"
+                                             class="rounded-circle">
+                                        {% if user.is_authenticated %}
+                                            <span>{{ user.first_name }}</span>
+                                        {% else %}
+                                            <span>游客</span>
+                                        {% endif %}
+                                    {% endif %}
+                                </a>
+
+                                <ul class="dropdown-menu dropdown-menu-end text-small" aria-labelledby="dropdownUser1">
+                                    {% if user.is_authenticated %}
+                                        {% if role == '1' %}
+                                            <li><a class="dropdown-item" href="{% url 'add_post' %}">上传文章</a></li>
+                                            <li><a class="dropdown-item" href="{% url 'author_post' user.id %}">工作空间</a>
+                                            </li>
+                                        {% elif role == '2' %}
+                                            <li><a class="dropdown-item"
+                                                   href="{% url 'approval_list' user.id %}">我的审批</a>
+                                            </li>
+                                        {% elif role == '4' or role == '5' %}
+                                            <li><a class="dropdown-item" href="{% url 'add_post' %}">上传文章</a></li>
+                                            <li><a class="dropdown-item" href="{% url 'author_post' user.id %}">工作空间</a>
+                                            </li>
+                                            <li><a class="dropdown-item"
+                                                   href="{% url 'approval_list' user.id %}">我的审批</a>
+                                            </li>
+                                        {% endif %}
+                                        <li><a class="dropdown-item disabled" href="#">我的消息<small
+                                                class="text-danger">(开发中)</small></a>
+                                        </li>
+                                        <li><a class="dropdown-item" href="{% url 'statics_and_charts' %}">查看统计<small
+                                                class="text-info">(开发中)</small></a></li>
+                                        <li>
+                                            <hr class="dropdown-divider">
+                                        </li>
+                                        <li><a class="dropdown-item" href="{% url 'logout' %}">注销</a></li>
+                                    {% else %}
+                                        <li><a class="dropdown-item" href="{% url 'login' %}">登录</a></li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col" style="width: 300px">
+                            <form class="d-flex" method="post" action="{% url 'search_items' %}">
+                                <div class="input-group mb-sm-0">
+                                    {#                <form class="d-flex" method="post" action="{% url 'search_items' %}">#}
+                                    {% csrf_token %}
+                                    <input type="text" class="form-control" placeholder="摘要搜索"
+                                           aria-label="Recipient's username"
+                                           aria-describedby="basic-addon2" id="search_holder" name="searched">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="submit" id="search_button">
+                                            搜索
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {#正文栏#}
+        <div class="row">
+            <div class="container">
+
+                <div class="content" style="overflow-x: hidden; overflow-y: hidden;padding: 20px;margin: 30px ">
+
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+
+        </div>
+    </main>
 </div>
-{#标题栏#}
-<main class="container">
-    {#正文栏#}
-    {% block content %}
-    {% endblock %}
-    {#正文栏end #}
-
-</main>
-
-<footer class="blog-footer">
-    <p>一些信息</p>
-    <p>
-        <a href="#">回到顶部</a>
-    </p>
-</footer>
-
 
 </body>
 <script src="{% static 'bootstrap/bootstrap-5.1.0-dist/js/bootstrap.bundle.min.js' %}"

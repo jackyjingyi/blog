@@ -58,7 +58,7 @@
                     {% if draft_page_obj %}
                         <br>
                         <small>
-                            共{{ draft_page_obj.count }}篇
+                            共{{ draft_page_obj.paginator.count }}篇
                             <div class="btn-group" role="group">
                                 <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle btn-sm"
                                         data-bs-toggle="dropdown" aria-expanded="false">
@@ -127,7 +127,7 @@
                                         </td>
                                         <td>
                                             <small><a
-                                                    href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
+                                                    href="{% url 'group_post' post.author.groups.first %}">{{ post.author.groups.first.name }}</a></small>
                                         </td>
                                         <td>
                                             <small><a
@@ -201,7 +201,7 @@
                     {% if pub_page_obj %}
                         <br>
                         <small>
-                            共{{ pub_page_obj.count }}篇
+                            共{{ pub_page_obj.paginator.count }}篇
                         </small>
                         <hr style="margin-bottom: 2px; margin-top:5px">
                         <table class="table table-bordered">
@@ -230,7 +230,7 @@
                                                 href="{% url 'category' post.category %}">{{ post.category }}</a></small>
                                         </td>
                                         <td><small><a
-                                                href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                                                href="{% url 'category' post.category %}">{{ post.subcategory }}</a></small>
                                         </td>
                                         <td>{{ post.get_oa_status_verbose_name }}</td>
                                         <td>{{ post.publish_date|date:"Y年n月d日" }}</td>
@@ -367,7 +367,7 @@
                                         </td>
                                         <td>
                                             <small><a
-                                                    href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
+                                                    href="{% url 'group_post' post.author.groups.first %}">{{ post.author.groups.first.name }}</a></small>
                                         </td>
 
                                         <td>
@@ -399,8 +399,9 @@
             {% for post in author_published %}
 
                 <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
-                    - <small><a href="{% url 'author_post' post.author %}">{{ post.author }}</a></small>
-                    <small>来源：<a href="{% url 'source_post' post.source %}">{{ post.source }}</a></small>
+                    - <small><a href="{% url 'author_post' post.author.pk %}">{{ post.author.first_name }}</a></small>
+                    <small>来源：<a
+                            href="{% url 'group_post' post.author.groups.first %}">{{ post.author.groups.first.name }}</a></small>
                     <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
                     <small>日期：{{ post.post_date|date:"Y年n月d日" }}</small>
 

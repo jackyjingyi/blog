@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    审批-{{ post.title }}
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <link href="{% static 'blog/css/blog-loader.css' %}" rel="stylesheet">
+
+        <br>
+        <h1 class="text-center">{{ post.title }}</h1>
+        <div class="text-center">
+            <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+            <small> {{ post.submit_time|date:"Y年n月d日 G:i:s" }}</small>
+            <small>由</small>
+            <small class="text-info">{{ post.author.first_name }}</small>
+            <small>提交</small>
+            <small>状态：{{ post.get_status_verbose_name }}</small>
+        </div>
+        <hr>
+        <div style="top: 2rem;">
+            <div class="p-4 mb-3 bg-light rounded">
+                <h4 class="fst-italic">摘要：</h4>
+                <p class="mb-0">{{ post.body|safe }}</p>
+            </div>
+        </div>
+        {% if post.post_file %}
+            <div id="displayframe" class="col-xl">
+                <iframe class="embed-responsive-item" id="pdf" src="{{ post.post_file.url }}" width="100%"
+                        height="1320px">
+                </iframe>
+            </div>
+        {% endif %}
+        <br/>
+
+        <button class="answer btn btn-secondary" id="approve" value="pass">通过</button>
+        <button class="answer btn btn-secondary" id="deny" value="deny">驳回</button>
+        <a href="{% url 'approval_list' user.id %}" class="btn btn-secondary">返回</a>
+        <br/><br/>
+        <hr>
+    </div>
+
+        <div class="loader" style="height: 2000px">
+            <div class="loaderInfo text-light text-center"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+        </div>
+
+    <script>
+        $(document).ready()
+        {
+            let loader = $('.loader')
+            loader.hide();
+
+            let answers = $(".answer")
+            $.each(answers, function (idx, item) {
+                item.onclick = function () {
+                    let val = item.value;
+                    let itemList = [];
+                    let bulk_action = "";
+                    let loaderInfoText = ""
+                    if (val === "pass") {
+                        bulk_action = "bulk_approve"
+                        loaderInfoText = "审批通过，跳转中……"
+                    } else if (val === "deny") {
+                        bulk_action = "bulk_deny"
+                        loaderInfoText = "已驳回，跳转中……"
+                    }
+                    itemList.push('{{ post.pk }}')
+                    console.log(val)
+                    console.log(itemList)
+                    $.ajax({
+                        url: '',
+                        type: 'post',
+                        data: {
+                            checked_list: JSON.stringify(itemList),
+                            csrfmiddlewaretoken: '{{ csrf_token }}',
+                            bulk_action: JSON.stringify(bulk_action),
+                        },
+                        async: false,
+                        beforeSend: function () {
+
+                            $(".loaderInfo")[0].textContent = loaderInfoText;
+                            loader.show();
+                        },
+                        success: function (data) {
+
+                            setTimeout(function () {
+                                loader.hide();
+                                window.location.replace("/approval/" + '{{ user.pk }}');
+                            }, 2000)
+                        }
+                    })
+                }
+            })
+        }
+    </script>
+{% endblock %}

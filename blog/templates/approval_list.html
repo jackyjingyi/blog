@@ -51,7 +51,7 @@
             {% if object_list %}
                 <br>
                 <small>
-                    共{{ draft_page_obj.count }}篇
+                    共{{ object_list.count }}篇
                     <div class="btn-group" role="group">
                         <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle btn-sm"
                                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -113,7 +113,7 @@
                             </td>
                             <td>
                                 <small><a
-                                        href="{% url 'article_detail' post.pk %}">{{ post.title|slice:"10" }}</a></small>
+                                        href="{% url 'approval_articel_detail' user.id post.pk %}">{{ post.title }}</a></small>
                             </td>
                             <td>
                                 <small>{{ post.author.groups.all.0.name }}</small>
@@ -123,7 +123,7 @@
                             </td>
                             <td>
                                 <small><a
-                                        href="{% url 'author_post' post.author %}">{{ post.author.first_name }}</a></small>
+                                        href="{% url 'author_post' post.author.id %}">{{ post.author.first_name }}</a></small>
                             </td>
                             <td>
                                 <small>{{ post.submit_time|date:"Y年n月d日" }}</small>
@@ -167,7 +167,7 @@
                             </td>
                             <td>
                                 <small><a
-                                        href="{% url 'article_detail' post.pk %}">{{ post.title|slice:"10" }}</a></small>
+                                        href="{% url 'article_detail' post.pk %}">{{ post.title }}</a></small>
                             </td>
                             <td>
                                 <small>{{ post.author.groups.all.0.name }}</small>
@@ -177,7 +177,7 @@
                             </td>
                             <td>
                                 <small><a
-                                        href="{% url 'author_post' post.author %}">{{ post.author.first_name }}</a></small>
+                                        href="{% url 'author_post' post.author.id %}">{{ post.author.first_name }}</a></small>
                             </td>
                             <td>
                                 {#                                后面改为submittime#}

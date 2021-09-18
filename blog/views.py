@@ -2,6 +2,7 @@ import datetime
 import json
 import logging
 import os
+from datetime import datetime
 from collections import defaultdict
 
 from django.contrib.auth.decorators import login_required
@@ -10,17 +11,25 @@ from django.contrib.auth.models import User, Group, AnonymousUser
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q, Max
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, Http404
 from django.urls import reverse_lazy, reverse
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django_blog.settings import MEDIA_ROOT
+from django.db.models.functions import TruncMonth
+from django.db.models import Count
+
+from django.core.serializers.json import DjangoJSONEncoder
+
 from .forms import EditForm, PostFormV2
 from .models import Post, Category, Source, Profile, Subcategory
 
 GROUP_NAME = ['旅游大数据', '产品管理', '主题公园&新场景', '康旅度假', '文化&品牌', '新商业', '新型城镇化', '统筹管理', '综合管理', '联盟管理', '华东分院'
               ]
+MONTH = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
+         ]
+
 GROUP_LIST = [Group.objects.get(name=i) for i in GROUP_NAME]
 
 
@@ -78,18 +87,19 @@ class HomeView(ListView):
     def get_context_data(self, *args, object_list=None, **kwargs):
         cat_menu = Category.objects.all()
         source_menu = Source.objects.all()
-        post_group = {i.name: Post.objects.filter(category=i.name, publish=True).order_by('-post_date') for i in
+        post_group = {i.name: Post.objects.filter(category=i.name, publish=True).order_by('-publish_date') for i in
                       cat_menu if
                       Post.objects.filter(category=i.name, publish=True)}
-        likes_rating = Post.objects.aggregate(Max('likes'))['likes__max']
-        hot_article = Post.objects.filter(likes=likes_rating).first()
+
+        # hot_article = Post.objects.filter(publish=True).annotate(likes_count=Count('likes')).order_by(
+        #     '-likes_count').first()
         top_two_topics = sorted(post_group.items(), key=lambda x: x[1].count(), reverse=True)
         context = super(HomeView, self).get_context_data(*args, **kwargs)
         context["cat_menu"] = cat_menu
         context["source_menu"] = source_menu
         context["post_group"] = post_group
         context['role'] = get_user_role(self.request.user)
-        context['hot_article'] = hot_article
+        # context['hot_article'] = hot_article
         context['top_two_topics'] = top_two_topics
         context['group'] = GROUP_LIST
         return context
@@ -111,13 +121,13 @@ class ApprovalPosts(LoginRequiredMixin, ListView):
             profile_role = Profile.objects.get(user=self.request.user)
             group = self.request.user.groups.all()
             if profile_role.is_lv1_approver:
-                return Post.objects.filter(lv1_approval_status='1', author__groups__in=group)
+                return Post.objects.filter(lv1_approval_status='1', author__groups__in=group).order_by('-submit_time')
             elif profile_role.is_lv2_approver:
-                return Post.objects.filter(lv2_approval_status='1', author__groups__in=group)
+                return Post.objects.filter(lv2_approval_status='1', author__groups__in=group).order_by('-submit_time')
             elif profile_role.is_lv3_approver:
-                return Post.objects.filter(lv3_approval_status='1', author__groups__in=group)
+                return Post.objects.filter(lv3_approval_status='1', author__groups__in=group).order_by('-submit_time')
             elif profile_role.is_lv4_approver:
-                return Post.objects.filter(lv4_approval_status='1', author__groups__in=group)
+                return Post.objects.filter(lv4_approval_status='1', author__groups__in=group).order_by('-submit_time')
 
         else:
             return super().get_queryset()
@@ -131,7 +141,8 @@ class ApprovalPosts(LoginRequiredMixin, ListView):
         user_id = user.id
         cat_menu = Category.objects.all()
         approved_list_by_user = Post.objects.filter(
-            Q(lv1_approver=user_id) | Q(lv2_approver=user_id) | Q(lv3_approver=user_id) | Q(lv4_approver=user_id))
+            Q(lv1_approver=user_id) | Q(lv2_approver=user_id) | Q(lv3_approver=user_id) | Q(
+                lv4_approver=user_id)).order_by('-publish_date')
         context = super(ApprovalPosts, self).get_context_data(*args, **kwargs)
         context['approved_list_by_user'] = approved_list_by_user
         context['current'] = timezone.now()
@@ -144,14 +155,21 @@ class ApprovalPosts(LoginRequiredMixin, ListView):
 def search_item(request):
     if request.method == "POST":
         searched = request.POST.get('searched')
-        obj_list = []
+        obj_list = set()
         target = Post.objects.filter(publish=True)
-        try:
-            for obj in target:
-                if searched in obj.body or searched in obj.title:
-                    obj_list.append(obj.pk)
-        except TypeError:
-            logging.info("current published article amount is {}".format(target.count()))
+        # print([i.pk for i in target])
+        for obj in target:
+            # print("testing target {} with {}-{}".format(searched, obj.pk, obj.title))
+            try:
+                if searched in obj.title:
+                    # print("find target {} with {}-{}".format(searched, obj.pk, obj.title))
+                    obj_list.add(obj.pk)
+                if searched in obj.body:
+                    # print("find target {} with {}-{}".format(searched, obj.pk, obj.title))
+                    obj_list.add(obj.pk)
+            except TypeError:
+                continue
+
         if obj_list:
             results = Post.objects.filter(id__in=obj_list)
         else:
@@ -187,6 +205,8 @@ class ApprovalSuccessDetailView(DetailView):
                 obj.approval_positive(2, user.pk)
             elif profile.is_lv3_approver:
                 obj.approval_positive(3, user.pk)
+            elif profile.is_lv4_approver:
+                obj.approval_positive(4, user.pk)
             else:
                 raise ValueError
         else:
@@ -203,6 +223,14 @@ class ApprovalDenyDetailView(DetailView):
         cat_menu = Category.objects.all()
         context = super(ApprovalDenyDetailView, self).get_context_data(*args, **kwargs)
         context["cat_menu"] = cat_menu
+        context[
+            'timer_modal'] = "<div class='modal' tabindex='-1'>" + "<div class='modal-dialog'>" + "<div class='modal-content'>" + \
+                             "<div class='modal-header'>" + \
+                             "<h5 class='modal-title'>Modal title</h5>" + \
+                             "<button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button></div>" + \
+                             "</div><div class='modal-body'><p>Modal body text goes here.</p></div><div class='modal-footer'>" + \
+                             "<button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Close</button>" + \
+                             "<button type='button' class='btn btn-primary'>Save changes</button></div></div></div></div>"
         return context
 
     def get_object(self, queryset=None):
@@ -219,6 +247,8 @@ class ApprovalDenyDetailView(DetailView):
                 obj.approval_deny(2, user.pk)
             elif profile.is_lv3_approver:
                 obj.approval_deny(3, user.pk)
+            elif profile.is_lv4_approver:
+                obj.approval_deny(4, user.pk)
             else:
                 raise ValueError
         else:
@@ -233,20 +263,22 @@ def category_view(request, *args, **kwargs):
     category_posts = Post.objects.filter(category=cats, publish=True)
     cat_menu = Category.objects.all()
     context = {'cats': cats, 'category_posts': category_posts, 'cat_menu': cat_menu,
-               'role': get_user_role(request.user)}
+               'role': get_user_role(request.user),
+               'group': GROUP_LIST,
+               }
     return render(request, 'categories.html', context=context)
 
 
-@login_required
+@login_required(login_url='/members/login_to/')
 def author_posts_view(request, author):
     # 基于上传者统计
     # author_posts = Post.objects.filter(author__username=author)
 
-    author = User.objects.get(username=author)
+    author = User.objects.get(id=author)
     # 草稿
-    author_draft = Post.objects.filter(author__username=author, status=1).order_by('-post_date')
-    author_published = Post.objects.filter(author__username=author, publish=True).order_by('-publish_date')
-    author_submitted = Post.objects.filter(author__username=author, is_submit=1, publish=False).order_by(
+    author_draft = Post.objects.filter(author=author, status=1).order_by('-post_date')
+    author_published = Post.objects.filter(author=author, publish=True).order_by('-publish_date')
+    author_submitted = Post.objects.filter(author=author, is_submit=1, publish=False).order_by(
         '-submit_time')
     role = get_user_role(request.user)
     # draft pagination
@@ -318,7 +350,8 @@ def group_posts_view(request, group_name):
     method: Get
     """
     if request.method == 'GET':
-        all_members = User.objects.filter(groups__name=group_name)
+        all_members = User.objects.filter(groups__name=group_name, profile__is_publisher=True)
+
         posts_list = Post.objects.filter(author__groups__name=group_name, publish=True).order_by('-publish_date')
         cat_menu = Category.objects.all()
         post_group = {i.name: posts_list.filter(category=i.name) for i in cat_menu if
@@ -442,10 +475,48 @@ def statics_and_charts_get_data(request):
         if request.POST.get('group_name'):
             group_name = request.POST.get('group_name')
             requested_group = Group.objects.get(name=group_name)
-            all_members = requested_group.user_set.all()
+            all_members = requested_group.user_set.all().filter(profile__is_publisher=True)
+            month_data_origin = Post.objects.filter(author__in=all_members, publish=True, origin='1').annotate(
+                month=TruncMonth('publish_date')).values('month').annotate(c=Count('id')).values('month', 'c')
+            month_data_rep = Post.objects.filter(author__in=all_members, publish=True, origin='2').annotate(
+                month=TruncMonth('publish_date')).values('month').annotate(c=Count('id')).values('month', 'c')
+            month_set = set()
+
+            _date_origin = defaultdict(int)
+            for i in month_data_origin:
+                _i_month = i.get('month').strftime('%Y-%m')
+                _date_origin[_i_month] = i.get('c')
+                month_set.add(_i_month)
+            _date_rep = defaultdict(int)
+            for i in month_data_rep:
+                _i_month = i.get('month').strftime('%Y-%m')
+                _date_rep[_i_month] = i.get('c')
+                month_set.add(_i_month)
+            month_list = sorted(list(month_set))
+
+            _origin_list = ['原创'] + [0] * len(month_list)
+            _rep_list = ['转载'] + [0] * len(month_list)
+            for idx, val in enumerate(month_list):
+                if _date_origin.get(val):
+                    _origin_list[idx + 1] = _date_origin.get(val)
+                if _date_rep.get(val):
+                    _rep_list[idx + 1] = _date_rep.get(val)
+            _origin_list += [sum(_origin_list[1:])]
+            _rep_list += [sum(_rep_list[1:])]
             group_statics = {
-                'dimension': ['dataType', ]
+                'dimension': ['dataType'] + month_list + ['总数'],
+                'records': [
+                    # ['dataType'] + month_list + ['总数'],
+                    _origin_list,
+                    _rep_list
+                ],
+                'thead': ['#', '分类'] + month_list + ['总数'],
+                'titile': '月度统计表',
+                'tfoot': ['#', '总数', ] + [sum([i[j] for i in [_origin_list, _rep_list]])
+                                          for j in range(1, len(_origin_list))],
+
             }
+            print(group_statics)
             member_list = []
             for u in all_members:
                 member_list.append(
@@ -453,25 +524,27 @@ def statics_and_charts_get_data(request):
                         'pk': u.pk,
                         'first_name': u.first_name,
                         'headimg': u.last_name,
-                        'published': Post.objects.filter(author=u, publish=True).count()
+                        'published': Post.objects.filter(author=u, publish=True).count(),
+
                     }
                 )
 
             data = {
-                'member_list': member_list
+                'member_list': member_list,
+                'groupStatic': group_statics,
             }
 
             return JsonResponse(data, status=200)
 
 
 def source_posts_view(request, source):
-    source_posts = Post.objects.filter(source=source, status=2)
+    source_posts = Post.objects.filter(source=source, publish=True)
     cnt = 0
     amounts = len(source_posts)
     for i in source_posts:
         cnt += i.views
     return render(request, 'source_posts.html',
-                  {'source_posts': source_posts, 'source': source, 'amounts': amounts, 'cnt': cnt})
+                  {'source_posts': source_posts, 'source': source, 'amounts': amounts, 'cnt': cnt, 'group': GROUP_LIST})
 
 
 class SubmitPostDetailView(DetailView):
@@ -527,7 +600,7 @@ def creat_post(request):
         return JsonResponse({'msg': 'success'}, status=200)
     else:
         cat_menu = Category.objects.all()
-        context = {}
+        context = dict()
         context["cat_menu"] = cat_menu
         context['role'] = get_user_role(request.user)
         context['tag_items'] = Post.tags.all()
@@ -596,6 +669,7 @@ class UpdatePostView(LoginRequiredMixin, UpdateView):
         context = super(UpdatePostView, self).get_context_data(*args, **kwargs)
         context["cat_menu"] = cat_menu
         context['role'] = get_user_role(self.request.user)
+        context['group'] = GROUP_LIST
         return context
 
 
@@ -677,3 +751,45 @@ def oct_get_endpoint_view(request, *args, **kwargs):
         body = request.body
         print(json.loads(body))
         return JsonResponse({'status': 200}, status=200)
+
+
+@login_required(login_url='/members/login_to/')
+def approval_article_detail(request, approver, pk):
+    if request.method == 'GET':
+        approver = User.objects.get(pk=approver)
+        role = get_user_role(request.user)
+        if role != '2':
+            # not approver
+            return render(request, 'errors/Error404.html',
+                          {'group': GROUP_LIST, 'msg': '非审批者权限', 'role': role})
+        try:
+            current_post = get_object_or_404(Post, id=pk)
+            # raise 404 if post is published in inner approval process
+            # tour => 404
+            # lv 1-3 with published article => 404
+            # publisher with published article => 404
+            if current_post.publish and get_role_lv(request) != 4:
+                # TODO 错误类型汇总
+                msg = '已发布，内部审批已完成，待副院长审批'
+                raise Http404
+            if not current_post.publish and current_post.lv1_approval_status != '1':
+                msg = '已审批'
+                raise Http404
+        except Http404:
+            return render(request, 'errors/Error404.html',
+                          {'group': GROUP_LIST, 'msg': msg, 'role': role})
+        # user need to be authorised
+        if request.user == approver and request.user in current_post.author.groups.first().user_set.all():
+            context = dict()
+            context['role'] = get_user_role(request.user)
+            context['group'] = GROUP_LIST
+            context['post'] = current_post
+            return render(request, 'approval_article_detail.html', context)
+        else:
+            return render(request, 'errors/Error404.html',
+                          {'group': GROUP_LIST, 'msg': '非授权用户', 'role': role})
+    else:
+        return bulk_submit(request)
+
+def approval_action(user, ):
+    pass
