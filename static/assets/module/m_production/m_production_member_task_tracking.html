@@ -1,0 +1,82 @@
+<form class="task-list-box">
+    {{if dataInfo!=null && dataInfo.length>0}}
+    {{each dataInfo as p i}}
+    <div class="panel panel-default no-border" data-id="{{p.id}}" data-i="{{i}}">
+        <div class="panel-heading border border-v1-grey">
+            <div class="row">
+                <div class="col-sm-6 p-l-none">
+                    <a href="javascript:void(0);" data-action="expander"><span class="ic-open vertical-text-bottom m-l-sm m-r-sm"></span></a>
+                    <span>{{p.user.userName}}</span>
+                </div>
+                <div class="col-sm-6">
+                </div>
+
+            </div>
+        </div>
+        <div class="panel-body no-padding no-borders of-auto">
+            <table class="tree table table-bordered m-b-none">
+                <thead>
+                <tr>
+                    <th width="3%" class="b-r-none">
+                        <div class="list-check-box">
+                            <label class="i-checks fw-normal m-b-none">
+                                <input name="taskAllCk" type="checkbox"  />
+                                <span class="i-checks-span"></span>
+                            </label>
+                        </div>
+                    </th>
+                    <th width="3%" class="b-r-none b-l-none">
+                        <div class="list-action-box">
+                            <div class="btn-group batchOperation" id="batchAllOperation">
+                                <button type="button" class="btn btn-default btn-xs dropdown-toggle action-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="批量操作">
+                                    <span class="ic-operation-batch"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a href="javascript:void(0);" class="" data-action="batchDelTask" data-canbedelete="">批量删除</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </th>
+                    <th width="25%" class="b-l-none">
+                        <span>生产任务</span>
+                    </th>
+                    <th width="" class="w-100">任务状态</th>
+                    <th width="25%" >处理人</th>
+                    <th width="" class="w-100">开始时间</th>
+                    <th width="" class="w-100">结束时间</th>
+                    <th width="" >完成时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{if p.taskList!=null && p.taskList.length>0}}
+                {{each p.taskList as t ti}}
+                {{#_include('m_production/m_production_member_task_tracking_row',{t:t,tIndex:ti,projectId:projectId,projectNameCode:projectNameCode,currentCompanyUserId:currentCompanyUserId,dataCompanyId:dataCompanyId})}}
+                {{/each}}
+                {{else}}
+                <tr class="no-data-tr">
+                    <td colspan="8" class="text-center ">
+                        <div>
+                            <img src="{{_url('/img/default/without_data.png')}}">
+                            <span class="fc-dark-blue dp-block">没有相关任务</span>
+                        </div>
+                    </td>
+                </tr>
+                {{/if}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{/each}}
+    {{else}}
+    <div class="row no-data-tr">
+        <div class="text-center col-md-12">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">暂无相关数据</span>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+</form>

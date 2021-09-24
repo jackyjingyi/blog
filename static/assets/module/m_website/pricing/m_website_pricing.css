@@ -1,0 +1,62 @@
+
+.m-website-pricing .p-w-35-5{
+    padding-right: 5px;
+    padding-left: 35px;
+}
+.m-website-pricing .question-box{
+    padding: 30px 30px 10px 30px;
+    border-bottom: solid 1px #ccc;
+    margin-bottom: 5px;
+}
+.m-website-pricing .question-box.expand{
+    border: solid 1px #ccc;
+}
+.m-website-pricing .pricing-box{
+    border: solid 2px #c1cde4;
+    border-radius: 5px;
+    width: 100%;
+    margin-top: -66px;
+    background: #fff;
+}
+.m-website-pricing .pricing-box.active{
+    /*transform: scale(1.1);*/
+    border-color: #337b8e;
+    margin-top: -80px;
+}
+.m-website-pricing .pricing-box.active .title-box{
+    height: 134px;
+    padding-top: 40px;
+    background: url("../img/website/pricing/bg_pricing_selected.png");
+    background-size: cover;
+    background-color: #337b8e;
+}
+.pricing-box .title-box{
+    width: 100%;
+    height: 106px;
+    padding-top: 15px;
+    background: url("../img/website/pricing/bg_pricing.png");
+    background-size: cover;
+    background-color: #c1cde4;
+}
+.pricing-box .content-box{
+    padding: 15px 30px 50px;
+}
+.m-website-pricing .pricing-box .row .col-xs-10{
+    height: 50px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    line-height: 16px;
+}
+@media (max-width: 768px){
+
+    .m-website-pricing section:first-child .row.p-b-100{
+        padding-bottom: 0;
+    }
+    .m-website-pricing .pricing-box,
+    .m-website-pricing .pricing-box.active {
+        margin-top: 25px;
+    }
+}

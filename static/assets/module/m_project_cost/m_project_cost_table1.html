@@ -1,0 +1,41 @@
+<div class="m-project-cost">
+    <form role="form" class="form-horizontal">
+        <div class="row" id="filterBox">
+            <div class="col-md-12">
+                <div class="">
+                    <label  class="inline">分管院长：</label>
+                    <select class="from-control inline" name="deanName"></select>
+                </div>
+            </div>
+            <div class="col-md-12 m-t-xs">
+                <div class="">
+                    <label  class="inline">所属公司：</label>
+                    <select class="from-control inline" name="orgId"></select>
+                </div>
+            </div>
+            <div class="col-md-12" id="timeSelect">
+
+            </div>
+            <div class="col-md-12">
+                <div class="border-bottom p-b-sm">
+                    <button class="btn btn-primary" data-action="search">查询</button>
+                    <button class="btn btn-default" data-action="refreshBtn">重置条件</button>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-xs p-t-sm">
+            <div class="col-md-9 filter-result-col">
+                <span>筛选条件： 共 <span id="totalBySearch">0</span> 项 &nbsp;</span>
+            </div>
+            <div class="col-md-3 text-right">
+                <button class="btn btn-white roleControl" data-action="exportDetails">导出</button>
+            </div>
+        </div>
+    </form>
+    <div class="data-list-box m-t-sm">
+        <div class="data-list-container of-auto"></div>
+        <div class="p-w-xs">
+            <div id="data-pagination-container" class="m-pagination pull-right "></div>
+        </div>
+    </div>
+</div>

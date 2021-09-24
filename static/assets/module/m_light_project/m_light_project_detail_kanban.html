@@ -1,0 +1,124 @@
+{{if dataInfo.groupList}}
+{{each dataInfo.groupList as p i}}
+<div class="panel panel-default panel-kanban" id="panel-{{p.group.id}}" data-group-id="{{p.group.id}}" data-i="{{i}}">
+    <div class="panel-heading">
+        <!--<span class="f-s-md fw-bold">{{p.group.name}}</span>-->
+        {{if kanbanType==1}}
+            <a class="task-group-name show-span dp-inline-block-1 vertical-top m-t-xxs curp text-ellipsis" data-action="editTaskGroup" data-value="{{p.group.name}}"
+               data-key="groupName"  data-placeholder="请输入版块名称" data-type="1" data-valid="1" data-max-length="100">
+                {{p.group.name}}
+            </a>
+        {{else}}
+            <span class="task-group-name dp-inline-block-1 vertical-top m-t-xxs text-ellipsis">
+                {{p.group.name}}
+            </span>
+        {{/if}}
+
+        <span class="list-count fc-v1-grey">·<i>{{p.detailList.length}}</i></span>
+        {{if kanbanType==1}}
+        <div class="btn-group pull-right">
+            <button data-toggle="dropdown" class="btn btn-link no-padding dropdown-toggle" data-action="dropdownToggle" aria-expanded="false"><i class="fa fa-ellipsis-v"></i></button>
+            <ul class="dropdown-menu pt-relative hide">
+                <li><a href="javascript:;" data-action="editGroupName" data-id="{{p.group.id}}">修改版块标题</a></li>
+                <li><a href="javascript:;" data-action="delGroup" data-id="{{p.group.id}}">删除版块</a></li>
+            </ul>
+        </div>
+        {{/if}}
+    </div>
+    <div class="panel-body no-padding">
+        <ul class="list-group no-shadow" id="list-group-{{p.group.id}}">
+            {{if p.detailList && p.detailList.length>0}}
+            {{each p.detailList as d di}}
+            <li class="list-group-item p-sm" data-id="{{d.id}}" data-original-group="{{p.group.id}}" data-i="{{di}}">
+                <div>
+                    <label class="i-checks i-checks-label fw-normal">
+                        {{if !_isNullOrBlank(d.completeDate)}}
+                        <input name="taskItem" type="checkbox" checked value=""/>
+                        {{else}}
+                        <input name="taskItem" type="checkbox" value=""/>
+                        {{/if}}
+                        <span class="i-checks-span"></span>
+                    </label>
+                    <span class="task-name dp-inline-block vertical-top m-t-xxs curp {{!_isNullOrBlank(d.completeDate)?'todo-completed':''}}" data-action="taskDetail">{{d.taskName}}</span>
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle" data-action="dropdownToggle" aria-expanded="false">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu pt-relative hide">
+                                {{if doType==1 && fromType!=2}}
+                                <li><a href="javascript:;" data-action="moveTask" data-type="2" data-id="{{d.id}}">移动</a></li>
+                                <li><a href="javascript:;" data-action="copyTask" data-type="1" data-id="{{d.id}}">复制</a></li>
+                                {{/if}}
+                                <li><a href="javascript:;" data-action="delTask" data-id="{{d.id}}">删除</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                {{if d.severity}}
+                <div class="p-l-l">
+                    {{if d.severity=='1'}}
+                        <label class="label label-danger" data-value="{{d.severity}}"><span>高</span></label>
+                    {{else if d.severity=='2'}}
+                        <label class="label label-success" data-value="{{d.severity}}"><span>中</span></label>
+                    {{else if d.severity=='3'}}
+                        <label class="label label-warning" data-value="{{d.severity}}"><span>低</span></label>
+                    {{/if}}
+                </div>
+                {{/if}}
+                {{if !_isNullOrBlank(d.startDate) || !_isNullOrBlank(d.endDate)}}
+                <div class="m-t-xs p-l-l">
+                    <span class="glyphicon glyphicon-time dp-inline-block"></span>
+                    <span>{{_momentFormat(d.startDate,'YYYY/MM/DD')}} - {{_momentFormat(d.endDate,'YYYY/MM/DD')}}</span>
+                </div>
+                {{/if}}
+                {{if d.principalUser || (d.checkItemSize && d.checkItemSize>0) || (kanbanType==2)}}
+                <div class="m-t-xs p-l-l">
+                    <div class="pull-left">
+                        {{if d.checkItemSize && d.checkItemSize>0}}
+                        <span class="icon iconfont icon-renwudiaodu dp-inline-block"></span>
+                        <span>{{d.completeCheckItemSize}}/{{d.checkItemSize}}</span>
+                        {{/if}}
+                    </div>
+                    {{if kanbanType==1}}
+                        {{if doType==1 && fromType!=2 && d.principalUser}}
+                        <span class="label label-info label-circle dp-inline-block-1 pull-right" title="{{d.principalUser.userName}}">{{_interceptName(d.principalUser.userName,2)}}</span>
+                        {{/if}}
+                    {{else}}
+                        <span class="label label-info dp-inline-block-1 pull-right text-ellipsis width-60"  data-toggle="tooltip"
+                              data-container="body" data-original-title="{{d.groupName}}">{{d.groupName}}</span>
+                    {{/if}}
+                    <div class="clearfix"></div>
+                </div>
+                {{/if}}
+            </li>
+            {{/each}}
+            {{/if}}
+        </ul>
+    </div>
+    <div class="panel-footer {{p.detailList && p.detailList.length>0?'':'b-t-none'}}">
+        <a href="javascript:void(0)" data-action="addTask">
+            <i class="icon iconfont icon-tianjia1 f-s-md"></i>
+            <span class="">&nbsp;添加新工作项...</span>
+        </a>
+    </div>
+</div>
+{{/each}}
+{{/if}}
+{{if kanbanType==1}}
+<div class="panel panel-default panel-kanban">
+    <div class="panel-heading row-hover task-group-add">
+        <a href="javascript:void(0)" data-action="addTaskGroup" data-key="groupName" data-type="1" data-valid="1">
+            <i class="icon iconfont icon-tianjia1 f-s-md"></i>
+            <span class="hide">&nbsp;添加新板块...</span>
+        </a>
+    </div>
+</div>
+{{/if}}
+<!--<script>
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-blue',
+        radioClass: 'iradio_square-blue'
+    });
+</script>-->

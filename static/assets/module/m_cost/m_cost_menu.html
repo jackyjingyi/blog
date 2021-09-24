@@ -1,0 +1,27 @@
+<div class="ibox">
+    <div class="ibox-title secondary-menu-outbox">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- 面包屑 -->
+                <div class="pull-left" id="breadcrumb"></div>
+                <div class="pull-right">
+                    <ul class="secondary-menu-ul">
+                        {{if projectOperator && projectOperator.receiveModule==1}}
+                        <li class="active"  id="collectionPlan">
+                            <a href="#/project/cost?type=collectionPlan&id={{id}}&projectName={{projectNameCode}}&dataCompanyId={{dataCompanyId}}&businessType={{businessType}}">收款计划</a>
+                        </li>
+                        {{/if}}
+                        {{if projectOperator && projectOperator.payModule==1}}
+                        <li   id="paymentPlan" >
+                            <a href="#/project/cost?type=paymentPlan&id={{id}}&projectName={{projectNameCode}}&dataCompanyId={{dataCompanyId}}&businessType={{businessType}}">付款计划</a>
+                        </li>
+                        {{/if}}
+                    </ul>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="ibox-content" id="content-box">
+    </div>
+</div>

@@ -4,9 +4,9 @@
 
     <br>
 
-    <div class="row g-5">
+    <div class="row" style="margin:10px;">
         <div class="col-md-8">
-            <h3 class="pb-4 mb-4 fst-italic border-bottom">
+            <h3 class="fst-italic border-bottom">
                 {{ selected_group }}
                 {% if posts_list.count > 0 %}
                     <small>--共{{ posts_list.count }}篇</small>
@@ -19,10 +19,10 @@
                     {% for key,val in post_group.items %}
                         <h4>【<a href="{% url 'category' key %}" class="link-primary">{{ key }}</a>】</h4>
 
-                        <ul>
+                        <ul style="list-style: none">
                             {% for post in val %}
 
-                                <li>
+                                <li style="padding-left: 10px">
 
                                 【<a
                                     href="#">{{ post.subcategory }}</a>】
@@ -30,7 +30,7 @@
                                     <small><span class="badge bg-success">推荐</span></small>
                                 {% endif %}
                                 <a href="{% url 'article_detail' post.pk %}">{{ post.title|truncatewords:10 }}</a>
-                                 <small>作者：{{ post.author.first_name }}</small>
+                                <small>作者：{{ post.author.first_name }}</small>
 
                                 <small>日期：{{ post.post_date|date:"Y年n月d日" }}</small>
 
@@ -84,6 +84,9 @@
 
         $(document).ready()
         {
+            $('#secondaryMenu').append(
+                "<li class='fa fa-angle-right'>" + "分组浏览" + "</li>" + "<li class='fa fa-angle-right active fw-bold'>" + "{{ selected_group }}" + "</li>"
+            )
 
             $('.author').each(
                 function (i, v) {

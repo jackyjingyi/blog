@@ -1,0 +1,28 @@
+<table class="table table-bordered no-borders m-b-none">
+    <thead>
+    <tr>
+        <th width="50%" class="b-l-none">
+            <span>项目/子项</span>
+        </th>
+        <th width="18%" >开始时间</th>
+        <th width="18%" >结束时间</th>
+        <th width="14%" >任务状态</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if p.childList!=null && p.childList.length>0}}
+    {{each p.childList as t ti}}
+    {{#_include('m_project/m_project_details_content_row',{t:t,tIndex:ti,tLength:p.childList.length,p:p,projectId:projectId,projectNameCode:projectNameCode,doType:doType,dataCompanyId:dataCompanyId})}}
+    {{/each}}
+    {{else}}
+    <tr class="no-data-tr">
+        <td colspan="4" class="text-center ">
+            <div>
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关项目/子项</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

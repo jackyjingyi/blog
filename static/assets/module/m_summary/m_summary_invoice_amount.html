@@ -1,0 +1,6 @@
+<div class="pt-absolute m-t-sm" id="totalAmount">
+    &nbsp;&nbsp;总申请金额：<span>{{_expNumberFilter(totalInvoiceAmount)}}</span>元
+    &nbsp;&nbsp;总开票金额：<span>{{_expNumberFilter(totalMakeOutInvoiceAmount)}}</span>元
+    &nbsp;&nbsp;待开票金额：<span>{{_expNumberFilter(totalNotMakeOutInvoiceAmount)}}</span>元
+    &nbsp;&nbsp;累计作废发票金额：<span class="color-red">{{_expNumberFilter(totalCancellationInvoiceAmount)}}</span>元
+</div>

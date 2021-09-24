@@ -1,0 +1,28 @@
+.m-project-cost .i-checks.i-checks-label{
+    width: 158px;
+}
+.m-project-cost .i-checks.i-checks-label .i-checks-span{
+    display: inline-block;
+    width: 135px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -webkit-text-overflow: ellipsis;
+    -moz-text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.m-project-cost .i-checks.i-checks-label.width-160{
+    width: 160px;
+}
+.m-project-cost .m-l-162{
+    margin-left: 162px;
+}
+.m-project-cost .dataTables_wrapper{
+    padding-bottom: 10px;
+}
+.m-project-cost .table1-div{
+    width: 16%;
+    padding: 10px;
+    height: 39px;
+
+}

@@ -1,0 +1,61 @@
+    <table class="tree table table-bordered m-b-none task-list-box">
+        <thead>
+        <tr>
+            <th   class="b-l-none">
+                <span>待办内容</span>
+            </th>
+            <th  class="b-l-none">
+                <span>所在项目</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if p.childList!=null && p.childList.length>0}}
+        {{each p.childList as t ti}}
+
+        <tr class="m-production-content-row {{t.completeDate==null?'':'complete-date-tr'}} "
+            data-id="{{t.id}}"
+            data-pid="{{t.taskPid}}"
+            data-project-id="{{t.projectId}}"
+            data-project-name="{{t.projectName}}"
+            data-business-type="{{t.businessType}}"
+            data-task-type="{{t.taskType}}"
+            data-i="{{tIndex}}"
+            data-path="{{t.taskPath}}">
+
+            <td class="tree-td pt-relative p-r-none b-l-none" >
+                <a href="javascript:void(0);" class="show-span  pt-relative " data-string="{{t.taskName}}">
+                    {{t.taskName}}
+                </a>
+            </td>
+
+            {{if (ti>=0 &&(ti+1)<(p.childList.length) && p.childList[ti+1].projectName==t.projectName)}}
+            <td class="tree-td pt-relative p-r-none b-l-none b-t-none" style="border-bottom: 1px #00000000 solid !important;">
+                {{if !(ti-1>=0 && p.childList[ti-1].projectName==t.projectName)}}
+                {{t.projectName}}
+                {{/if}}
+            </td>
+            {{else}}
+            <td class="tree-td pt-relative p-r-none b-l-none b-t-none"  >
+                {{if !(ti-1>=0 && p.childList[ti-1].projectName==t.projectName)}}
+                {{t.projectName}}
+                {{/if}}
+            </td>
+            {{/if}}
+
+        </tr>
+
+        {{/each}}
+        {{else}}
+        <tr class="no-data-tr">
+            <td colspan="2" class="text-center ">
+                <div>
+                    <img src="{{_url('/img/default/without_data.png')}}">
+                    <span class="fc-dark-blue dp-block">没有待办事项</span>
+                </div>
+            </td>
+        </tr>
+        {{/if}}
+        </tbody>
+    </table>
+

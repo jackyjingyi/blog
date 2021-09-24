@@ -1,0 +1,22 @@
+{{if dataList && dataList.length>0}}
+    {{each dataList as p i}}
+        {{if p.formList && p.formList.length>0}}
+            <h4 class="title-line">{{p.groupName}}</h4>
+            <div class="p-xxs m-b-sm {{i<dataList.length-1?'border-bottom':''}}">
+                {{if p.formList && p.formList.length>0}}
+                {{each p.formList as c ci }}
+                <div class="grid-item" data-id="{{c.id}}" data-pid="{{p.id}}" data-form-id="{{p.formId}}">
+                    <span class="icon-circle vertical-middle {{_getIconColor(c.iconKey?c.iconKey:'icon-zidingyibankuai')}}">
+                        <i class="icon iconfont {{c.iconKey?c.iconKey:'icon-zidingyibankuai'}}" ></i>
+                    </span>
+                    <a class="btn btn-link p-l-xs p-r-none text-ellipsis" title="{{c.name}}" data-action="preview" data-form-id="{{c.formId}}" data-issystem="{{c.isSystem}}">{{c.name}}</a>
+                    <a class="btn btn-link p-l-xs p-r-none f-s-xs" data-action="setProcess"  data-form-id="{{c.formId}}" data-type="{{c.type}}">流程设置</a>
+
+                </div>
+                {{/each}}
+                {{/if}}
+                <div class="clearfix"></div>
+            </div>
+        {{/if}}
+    {{/each}}
+{{/if}}

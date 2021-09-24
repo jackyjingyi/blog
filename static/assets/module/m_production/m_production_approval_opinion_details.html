@@ -1,0 +1,171 @@
+<div class="ibox no-margins">
+    <div class="ibox-title secondary-menu-outbox">
+        <div class="row">
+            <!-- 面包屑 -->
+            <div class="col-md-6" id="breadcrumb"></div>
+            <div class="col-md-6 text-right" style="padding: 9px 15px;">
+
+            </div>
+        </div>
+    </div>
+    <div class="ibox-content no-padding">
+        <div class="row p-l p-t-sm p-b-sm">
+            <div class="col-md-8">
+                <!-- 返回生产详情 -->
+                <a href="#/project/production/details?&id={{query.id}}&projectName={{query.projectName}}&dataCompanyId={{query.dataCompanyId}}&taskId={{query.taskId}}" class="btn btn-default">返回</a>
+                <button class="btn btn-danger" data-action="deleteItem">删除</button>
+            </div>
+        </div>
+        <div class="border-bottom no-margin"></div>
+        <div class="">
+            <div class="col-md-9 border-right" id="leftBox">
+                <div class="m-t-sm">
+                    <span class="font-bold">
+                    {{dataInfo.approvalOpinion.auditName}}
+                    </span>
+                        <span class="m-l-lg">
+                        校审状态：
+                        <button class="btn btn-white btn-rounded btn-status no-hover selected" data-action="" data-end-status="">
+                            {{dataInfo.approvalOpinion.statusName}}
+                        </button>
+                    </span>
+                </div>
+                <div class="tabs-container m-t">
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="false">详细信息</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">变更历史</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="tab-1" class="tab-pane active">
+                            <div class="panel-body">
+                                <form class="form-horizontal details-edit">
+                                    <div class="form-group ">
+                                        <label class="col-sm-12">
+                                            描      述：
+                                            <a href="javascript:void(0);" data-action="xeditable" data-type="11" data-key="auditDesc" data-target-ele="#audit-desc-edit" data-is-picture="1" style="visibility: hidden;">
+                                                <i class="icon iconfont icon-bianji"></i>
+                                            </a>
+                                        </label>
+                                        <div class="col-sm-12">
+                                            <div class="show-span">{{#dataInfo.approvalOpinion.auditDesc}}</div>
+                                            <div id="audit-desc-edit"></div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div id="tab-2" class="tab-pane" data-type="changeHistory">
+                            <div class="panel-body">
+                                <div class="data-list-box">
+                                    <div class="data-list-container"></div>
+                                    <div class="p-w-sm">
+                                        <div id="data-pagination-container" class="m-pagination pull-right "></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="title-line m-t pull-left">附件&nbsp;&nbsp;</h4>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-12 m-t-xs m-b-sm">
+                                <span id="showFileLoading"></span>
+                            </div>
+                            <div class="col-md-12 m-b-sm">
+                                <span class="uploadmgrContainer"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h4 class="title-line m-t pull-left">评论&nbsp;&nbsp;</h4>
+                    </div>
+                    {{if dataInfo.commentList!=null && dataInfo.commentList.length>0}}
+                    {{each dataInfo.commentList as c ci}}
+                    <div class="col-md-12 comment-box">
+                        {{if c.commentUser && !_isNullOrBlank(c.commentUser.fileFullPath)}}
+                        <img alt="image" class="img-circle m-t-n-xs" src="{{c.commentUser.fileFullPath}}" width="30" height="30">
+                        {{else}}
+                        <img alt="image" class="img-circle m-t-n-xs" src="{{_url('/img/head_default.png')}}" width="30" height="30">
+                        {{/if}}
+                        <span class="fc-v1-grey m-l-sm">{{c.commentUser.userName}} &nbsp; {{_momentFormat(c.createDate,'YYYY/MM/DD HH:mm')}}</span>
+                        {{if c.commentUser && currentCompanyUserId==c.commentUser.companyUserId}}
+                        <a href="javascript:void(0);" class="btn btn-link no-padding hide" data-action="delComment" data-id="{{c.id}}">删除</a>
+                        {{/if}}
+                        <p class="p-w-xl">{{c.comment}}</p>
+                    </div>
+                    {{/each}}
+                    {{/if}}
+                </div>
+                <div class="row">
+                    <form class="form-horizontal m-r-lg" id="commentForm">
+                        <div class="col-md-12 m-b-sm f-s-lg">下一状态</div>
+                        <div class="col-md-12">
+                            {{each dataInfo.nodeList as t i}}
+                            <button class="btn btn-white btn-rounded btn-status {{i==0?'selected':'fc-v1-grey'}}" data-node-type="1" data-status="{{t.nodeValue}}">
+                                {{if i==0}}
+                                    {{dataInfo.approvalOpinion.status==t.nodeValue?'保持为':''}}{{t.nodeName}}
+                                {{else}}
+                                    {{t.nodeName}}
+                                {{/if}}
+                            </button>
+                            {{/each}}
+                        </div>
+                        <div class="col-xs-12 bg-v2-grey p-m m">
+                            <div class="form-group">
+                                <label class="col-24-xs-3 fw-normal fc-v2-grey p-t-xs">处理人：</label>
+                                <div class="col-24-xs-21">
+                                    <select class="form-control" name="handler"></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-24-xs-3 fw-normal fc-v2-grey p-t-xs">评论：</label>
+                                <div class="col-24-xs-21">
+                                    <textarea placeholder="请输入评论" class="form-control" type="text" name="comment" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                            <div class="form-group">
+                                <div class="col-24-xs-21">
+                                    <button class="btn btn-primary btn-w-m" data-action="submitComment">流转</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-3" id="rightBox">
+                <h4 class="title-line m-t-sm">基本信息</h4>
+                <div class="row m-b-sm">
+                    <div class="col-sm-4 p-r-none">关联任务：</div>
+                    <div class="col-sm-8 p-l-none">{{dataInfo.approvalOpinion.taskName}}</div>
+                </div>
+                <div class="row m-b-sm">
+                    <div class="col-sm-4 p-r-none">关联图纸：</div>
+                    <div class="col-sm-8 p-l-none">{{dataInfo.approvalOpinion.fileNames}}</div>
+                </div>
+                <div class="row m-b-sm">
+                    <div class="col-sm-4 p-r-none">处理人：</div>
+                    <div class="col-sm-8 p-l-none">{{dataInfo.approvalOpinion.handlerNames}}</div>
+                </div>
+                <div class="row m-b-sm">
+                    <div class="col-sm-4 p-r-none">创建人：</div>
+                    <div class="col-sm-8 p-l-none">{{dataInfo.approvalOpinion.createUserName}}</div>
+                </div>
+                <div class="row m-b-sm">
+                    <div class="col-sm-4 p-r-none">创建时间：</div>
+                    <div class="col-sm-8 p-l-none">{{_momentFormat(dataInfo.approvalOpinion.createDate,'YYYY/MM/DD HH:mm')}}</div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+

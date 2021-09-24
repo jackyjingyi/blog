@@ -1,0 +1,84 @@
+<nav class="navbar navbar-no-bg m-website-header m-b-none" role="navigation">
+    <div class="container ">
+        <div class="navbar-header">
+            <a href="{{_serverUrl('/')}}" class="navbar-brand">
+                <img src="{{_url('/img/logo_white.png')}}" width="50" alt="">
+            </a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="top-navbar-1">
+            <ul class="nav navbar-nav navbar-right ">
+                <li data-type="products">
+                    <a class="nav-link nav-link-bar f-s-md" href="javascript:void(0);">产品</a>
+                    <div class="menu-bar">
+                        <div class="container">
+                            <a class="nav-link no-padding" data-type="pricing" href="#/pricing">产品价格</a>
+                            <a class="nav-link no-padding" data-type="products" href="#/products">产品介绍</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="" data-type="service">
+                    <a class="nav-link nav-link-bar f-s-md" href="javascript:void(0);">服务</a>
+                    <div class="menu-bar">
+                        <div class="container">
+                            <!--<a class="nav-link no-padding" data-type="tutorial" href="#/tutorial">教程</a>-->
+                            <a class="nav-link no-padding" data-type="faq" href="#/faq">帮助中心</a>
+                            <a class="nav-link no-padding" data-type="faq" href="#/updateLog">更新日志</a>
+                        </div>
+                    </div>
+                </li>
+                <li class="m-r-xxl" data-type="maoDingYun">
+                    <a class="nav-link nav-link-bar f-s-md" href="javascript:void(0);">云系统</a>
+                    <div class="menu-bar">
+                        <div class="container">
+                            <!--<a class="nav-link no-padding" data-type="tutorial" href="#/tutorial">教程</a>-->
+                            <a class="nav-link no-padding" href="javascript:;" data-action="downLoadMaoDingYun">下载</a>
+                        </div>
+                    </div>
+                </li>
+                {{if userInfo }}
+                    <li class="li-user-info">
+                        <a class="fc-v2-grey nav-link f-s-md no-padding" href="{{_serverUrl('/iWork/home/workbench')}}">
+                            {{if userInfo && !_isNullOrBlank(userInfo.imgUrl)}}
+                            <img alt="image" class="img-circle m-t-n-xs" src="{{userInfo.imgUrl}}" onerror=javascript:this.src="{{_url('/img/head_default.png')}}" width="40" height="40">
+                            {{else}}
+                            <img alt="image" class="img-circle m-t-n-xs" src="{{_url('/img/head_default.png')}}" width="40" height="40">
+                            {{/if}}
+                            <span>{{userInfo.userName}}</span>
+                        </a>
+                    </li>
+                {{else}}
+                    {{if !(rootPath.indexOf('www.imaoding.net')>-1)}}
+                    <li class="m-r-xs">
+                        <a class="nav-link btn-register " href="#/register">注册</a>
+                    </li>
+                    {{/if}}
+                    <li class="pt-relative">
+                        <a class="nav-link btn-login" href="javascript:void(0);" data-action="showLoginBox">登录</a>
+                        <div class="login-box" style="display: none;">
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-12">
+                                    <div class="" id="loginBox">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                {{/if}}
+            </ul>
+        </div>
+
+        <div class="small-nav">
+            <a href="javascript:void(0);" data-action="showSmallNav"><i class="fa fa-bars"></i></a>
+            <ul class="list-group small-nav-menu" style="display: none;">
+                <li class="list-group-item no-borders text-center"><a href="#/products" class="fc-dark-grey f-s-md">产品介绍</a></li>
+                <li class="list-group-item no-borders text-center"><a href="#/pricing" class="fc-dark-grey f-s-md">产品价格</a></li>
+                <li class="list-group-item no-borders text-center"><a href="#/faq" class="fc-dark-grey f-s-md">帮助中心</a></li>
+                <li class="list-group-item no-borders text-center"><a href="#/updateLog" class="fc-dark-grey f-s-md">更新日志</a></li>
+            </ul>
+        </div>
+    </div>
+
+</nav>
+

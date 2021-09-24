@@ -1,0 +1,126 @@
+<form class="task-list-box">
+    {{if taskIssueList!=null && taskIssueList.length>0}}
+    {{each taskIssueList as p i}}
+    <div class="panel panel-default" data-id="{{p.id}}" data-i="{{i}}" data-company-id="{{p.companyId}}"   data-designtaskid="{{p.designTaskId}}">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-24-sm-7 p-l-4 p-r-none">
+                    <a href="javascript:void(0);" data-action="expander"><span class="ic-open vertical-middle m-l-7 m-r-sm"></span></a>
+                    <span class="p-task-name">
+                        <span class="show-span pt-relative font-bold text-ellipsis" data-container="body" data-toggle="tooltip" data-original-title="{{p.taskName}}">
+                            {{p.taskName}}
+                        </span>
+                        {{if p.role && p.role.edit==1}}
+                        <a href="javascript:void(0);" data-action="xeditableTaskName" data-value="{{p.taskName}}" data-key="taskName"  data-placeholder="请输入任务名称" data-type="2" data-valid="1" data-max-length="50" style="visibility: hidden;">
+                            <i class="icon iconfont icon-bianji"></i>
+                        </a>
+                        {{/if}}
+                    </span>
+                </div>
+                <div class="col-24-sm-4 no-padding">
+                    <span class="xeditable-hover">
+                        <span class="l-h-28">子项状态：</span>
+                        <span class="text-bold l-h-28">
+                            <!-- 1:进行中，2：已经完成，3：已暂停，4：已终止 -->
+                            {{if p.endStatus == 3}}
+                            <span class="show-span text-danger">已暂停</span>
+                            {{else if p.endStatus == 2}}
+                            <span class="show-span text-success">已完成</span>
+                            {{else if p.endStatus == 4}}
+                            <span class="show-span text-danger">已终止</span>
+                            {{else}}
+                            <span class="show-span text-navy">进行中</span>
+                            {{/if}}
+                            {{if updateProjectStatus==1}} <!--p.role.changeStatus 原权限判断，当前取了项目状态变更权限-->
+                            <a href="javascript:void(0);" data-action="xeditable-status" data-key="endStatus" data-value="{{p.endStatus}}" data-type="5" data-container-class="select-sm" data-id="{{p.id}}" style="visibility: hidden;">
+                                <i class="icon iconfont icon-bianji"></i>
+                            </a>
+                            {{/if}}
+                        </span>
+                    </span>
+                </div>
+                <div class="col-24-sm-10 text-right">
+                    <span class="xeditable-hover">
+                        <span class="l-h-28">所属年度：</span>
+                        <span class="show-span">
+                            {{if _isNullOrBlank(p.year)}}
+                                <span class="fc-v1-grey">未设置</span>
+                            {{else}}
+                                {{p.year}}
+                            {{/if}}
+                        </span>
+                        {{if p.role && p.role.edit==1}}
+                        <a href="javascript:void(0);" data-action="xeditableTime" id="pYearTime{{p.id}}" data-value="{{p.year}}" data-type="10" data-key="year"
+                           data-init-show="1" data-onpicked-save="1" style="visibility: hidden;">
+                            <i class="icon iconfont icon-bianji"></i>
+                        </a>
+                        {{/if}}
+                    </span>
+                    <span class="p-time-show">
+                        开始时间：
+                        {{if !_isNullOrBlank(p.startTime)}}
+                            {{_momentFormat(p.startTime,'YYYY/MM/DD')}}
+                        {{else}}
+                            {{if p.role && p.role.edit==1}}
+                                <span class="fc-v1-grey">未设置</span>
+                            {{else}}
+                                --
+                            {{/if}}
+                        {{/if}}
+                        {{if p.role && p.role.edit==1}}
+                        <a href="javascript:void(0);" data-action="xeditableTime" id="pStartTime{{p.id}}" data-value="{{p.startTime}}" data-type="10" data-key="startTime" data-max-date="{{p.endTime}}"
+                           data-init-show="1" data-onpicked-save="1" style="visibility: hidden;">
+                            <i class="icon iconfont icon-bianji"></i>
+                        </a>
+                        {{/if}}
+                    </span>
+                    &nbsp;&nbsp;
+                    <span class="p-time-show">
+                        结束时间：
+                        {{if !_isNullOrBlank(p.endTime)}}
+                            {{_momentFormat(p.endTime,'YYYY/MM/DD')}}
+                        {{else}}
+                            {{if p.role && p.role.edit==1}}
+                                <span class="fc-v1-grey">未设置</span>
+                            {{else}}
+                                --
+                            {{/if}}
+                        {{/if}}
+                        {{if p.role && p.role.edit==1}}
+                        <a href="javascript:void(0);" data-action="xeditableTime" id="pEndTime{{p.id}}" data-value="{{p.endTime}}" data-type="10" data-key="endTime" data-min-date="{{p.startTime}}"
+                           data-init-show="1" data-onpicked-save="1" style="visibility: hidden;">
+                            <i class="icon iconfont icon-bianji"></i>
+                        </a>
+                        {{/if}}
+                    </span>
+                </div>
+                <div class="col-24-sm-3 text-right">
+
+                    {{if p.role && p.role.delete==1}}
+
+                    <a href="javascript:void(0)" class="btn btn-default btn-sm m-r-none m-t-n-xs fc-red" data-toggle="tooltip" data-placement="top"
+                       data-action="delChildItem"   title="{{delTitle}}"><span>
+                         删除
+                        </span>
+                    </a>
+                    {{/if}}
+                </div>
+
+                </div>
+        </div>
+        <div class="panel-body no-padding">
+
+        </div>
+    </div>
+    {{/each}}
+    {{else}}
+    <div class="row no-data-tr">
+        <div class="text-center col-md-12">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">您还没有相关工作内容</span>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+</form>

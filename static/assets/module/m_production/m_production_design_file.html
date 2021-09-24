@@ -1,0 +1,116 @@
+<div class="task-list-box">
+    <table class="table table-striped {{doType==4?'table-bordered':''}}">
+        <thead>
+        <tr>
+            <th width="7%">
+                <label class="i-checks fw-normal m-b-none dp-inline-block">
+                    <input name="taskFileCk" type="checkbox" value="" />
+                    <span class="i-checks-span"></span>
+                </label>
+                <div class="btn-group batchOperation dp-inline-block vertical-bottom">
+                    <button type="button" class="btn btn-default btn-xs dropdown-toggle action-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="批量操作">
+                        <span class="ic-operation-batch"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="javascript:void(0);" class="" data-action="batchStateFlow" data-canbedelete="">批量流转</a>
+                            <a href="javascript:void(0);" class="" data-action="batchDel" data-canbedelete="">批量删除</a>
+                            <a href="javascript:void(0);" class="" data-action="batchDownload" data-canbedelete="">批量下载</a>
+                        </li>
+                    </ul>
+                </div>
+            </th>
+            <th width="7%">序号</th>
+            <th width="30%">名称</th>
+            {{if doType==4}}
+            <th>关联任务</th>
+            {{/if}}
+            <th>状态</th>
+            <th>处理人</th>
+            <th>创建人</th>
+            <th>创建时间</th>
+            <th>修改时间</th>
+            <th>大小</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if dataInfo.attachList!=null && dataInfo.attachList.length>0}}
+        {{each dataInfo.attachList as a ai}}
+        <tr class="{{a.isComplete == 1?'complete-date-tr':''}}" data-id="{{a.id}}">
+            <td class="">
+                <label class="i-checks fw-normal m-b-none dp-inline-block">
+                    <input name="taskFileCk" type="checkbox" value="{{a.id}}" data-status="{{a.fileStatus}}" data-is-del="{{baBieUserId == a.creator?'1':'0'}}"/>
+                    <span class="i-checks-span"></span>
+                </label>
+                <div class="list-action-box dp-inline-block vertical-bottom">
+                    <div class="btn-group singleOperation" style="display: none;">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle action-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <span class="ic-operation"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            {{if baBieUserId == a.creator}}
+                            <li><a href="javascript:void(0);" data-action="deleteItem">删除</a></li>
+                            {{/if}}
+                            <li><a href="javascript:void(0);" data-action="fileDownload">下载</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </td>
+            <td>{{ai+1+pageIndex*10}}</td>
+            <td><a href="javascript:void(0);" data-action="filePreview" class="btn btn-link fc-dark-blue no-padding">{{a.fileName}}</a></td>
+            {{if doType==4}}
+            <td class="max-width-v1">
+                <div class="text-ellipsis-2 text-wrap" data-toggle="tooltip" data-container="body" data-original-title="{{a.taskName}}">
+                    {{a.taskName}}
+                </div>
+            </td>
+            {{/if}}
+            <td>
+            <span class="show-span">
+                {{if !_isNullOrBlank(a.fileStatusName)}}
+                    <button class="btn btn-white btn-rounded btn-status no-hover selected">{{a.fileStatusName}}</button>
+                {{else}}
+                    <span class="fc-v1-grey">未设置</span>
+                {{/if}}
+            </span>
+                <a href="javascript:void(0);" class="btn-edit"  data-action="xeditableByDesignClick" data-key="fileStatus" data-value="{{a.fileStatus}}" data-type="5" style="visibility: hidden;">
+                    <i class="icon iconfont icon-bianji"></i>
+                </a>
+            </td>
+            <td>
+                <span class="show-span">
+                {{if a.handlerUser && a.handlerUser.userList && a.handlerUser.userList.length>0}}
+                    {{each a.handlerUser.userList as u ui}}
+                        {{if ui < a.handlerUser.userList.length-1}}
+                            {{u.userName}},
+                        {{else}}
+                            {{u.userName}}
+                        {{/if}}
+                    {{/each}}
+                {{else}}
+                    <span class="fc-v1-grey">未设置</span>
+                {{/if}}
+                </span>
+                <a href="javascript:void(0);" class="btn-edit"  data-action="xeditableUserByDesign" data-key="handler" style="visibility: hidden;">
+                    <i class="icon iconfont icon-bianji"></i>
+                </a>
+            </td>
+            <td>{{a.creatorName}}</td>
+            <td>{{_momentFormat(a.createTime,'YYYY/MM/DD HH:ss')}}</td>
+            <td>{{_momentFormat(a.updateDate,'YYYY/MM/DD HH:ss')}}</td>
+            <td>{{_fileSizeFormat(a.fileSize)}}</td>
+        </tr>
+        {{/each}}
+        {{else}}
+        <tr class="no-data">
+            <td colspan="10" class="text-center v-middle">
+                <div class="m-b-xl m-t-md">
+                    <img src="{{_url('/img/default/without_data.png')}}">
+                    <span class="fc-dark-blue dp-block">暂无相关数据</span>
+                </div>
+            </td>
+        </tr>
+        {{/if}}
+        </tbody>
+    </table>
+</div>

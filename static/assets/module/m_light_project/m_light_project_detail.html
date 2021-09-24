@@ -1,0 +1,47 @@
+{{if doType==2}}
+    <div class="m-light-project-detail">
+        <div id="projectContent"></div>
+    </div>
+{{else}}
+    <div class="ibox  m-light-project-detail m-b-none">
+        <div class="ibox-title secondary-menu-outbox">
+            {{if fromType==2}}
+            <div class="row p-t-sm">
+                <div class="col-sm-6">
+                    <span>模板名称：<span class="project-name">{{projectName?projectName:''}}</span></span>
+                    <a data-action="editProject"><i class="icon iconfont icon-bianji"></i>编辑</a>
+                </div>
+                <div class="col-sm-6 p-r-sm text-right">
+                    <a class="fc-v3-grey" href="javascript:;" data-action="closeDialog"><i class="icon iconfont icon-quxiao"></i></a>
+                </div>
+            </div>
+            {{else}}
+                <div class="row">
+                    <div class="col-sm-6" id="secondary-menu">
+                        <!-- 面包屑 -->
+                        <div class="pull-left" id="breadcrumb"></div>
+                    </div>
+                    <div class="col-sm-6 p-t-7 p-r-sm text-right">
+                        {{if doType==1 && fromType==null}}
+                        <button class="btn btn-primary" data-action="switchProjectByView" data-type="1" title="标准看板"><i class="fa fa-trello"></i></button>
+                        <button class="btn btn-primary btn-outline" data-action="switchProjectByView" data-type="2" title="成员看板"><i class="fa fa-user" ></i></button>
+                        <button class="btn btn-primary btn-outline" data-action="switchProjectByView" data-type="3" title="表格看板"><i class="fa fa-table" ></i></button>
+                        {{/if}}
+                        {{if fromType==1}}
+                        <button class="btn btn-default" onclick="javascript:window.location.href='#/myTask/light?status=1'">返回</button>
+                        {{/if}}
+                        {{if doType==1}}
+                        <button class="btn btn-danger" data-action="delProject">删除</button>
+                        <button class="btn btn-primary" data-action="editProject">编辑</button>
+                        <button class="btn btn-primary" data-action="addProjectMember"><i class="fa fa-plus f-s-m" ></i>&nbsp;人员</button>
+                        {{/if}}
+                    </div>
+                </div>
+            {{/if}}
+
+        </div>
+        <div class="ibox-content" id="projectContent">
+
+        </div>
+    </div>
+{{/if}}

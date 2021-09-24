@@ -1,0 +1,30 @@
+.m-select-field-by-check .dp-box .col-md-6{
+    width: 49%;
+}
+.m-select-field-by-check .dp-box .col-space{
+    width: 2%;
+}
+.m-select-field-by-check .field-content .col-md-6{
+    min-height: 400px;max-height: 500px;
+}
+.m-select-field-by-check .list-group-item{
+    border: none;
+    padding: 0px;
+}
+.m-select-field-by-check .item-span{
+    border-radius: 4px;
+    display: inline-block;
+    padding: 3px 8px;
+}
+.m-select-field-by-check .i-checks-span.text-ellipsis{
+    width: auto;
+    max-width: 100px;
+    vertical-align: text-top;
+}
+.m-select-field-by-check #customItemBox .i-checks-span{
+    margin-top: -2px;
+}
+.m-select-field-by-check .field-name.text-ellipsis{
+    line-height: 12px;
+    width: 146px;
+}

@@ -1,0 +1,38 @@
+<div class="ibox">
+    {{if fromType==1}}
+    <div class="ibox-title secondary-menu-outbox">
+        <div class="row">
+            <!-- 面包屑 -->
+            <div class="col-md-12" id="breadcrumb"></div>
+        </div>
+    </div>
+    {{/if}}
+    <div class="ibox-content {{fromType==1?'':'no-borders no-padding'}}">
+        <h4 class="font-normal">
+            {{if processInfo && processInfo.id}}
+            编辑工作流
+            {{else}}
+            创建工作流
+            {{/if}}
+        </h4>
+        <form class="form-horizontal m-t">
+            <div class="form-group p-l">
+                <label class="pull-left control-label f-s-m-v1">工作流名称<span class="fc-red">*</span>：</label>
+                <div class="pull-left">
+                    <input type="text" class="form-control width-600" name="processName" placeholder="请输入工作流名称" value="{{processInfo?processInfo.processName:''}}">
+                </div>
+            </div>
+            <div id="processNodeList">
+
+            </div>
+            <div class="form-group p-l">
+                <button class="btn btn-primary" data-action="save">保存&下一步</button>
+                <button class="btn btn-default" data-action="cancel">取消</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+

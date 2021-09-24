@@ -1,0 +1,61 @@
+<table class="table table-bordered no-borders m-b-none table-layout-fix" >
+    <thead>
+    <tr>
+        <th width="3%" class="b-r-none">
+            <div class="list-check-box vertical-text-bottom">
+                <label class="i-checks fw-normal m-b-none">
+                    <input name="taskAllCk" type="checkbox"  />
+                    <span class="i-checks-span"></span>
+                </label>
+            </div>
+        </th>
+        <th width="3%" class="b-l-none">
+            <div class="list-action-box">
+                <div class="btn-group batchOperation" id="batchAllOperation">
+                    <button type="button" class="btn btn-default btn-xs dropdown-toggle action-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="批量操作">
+                        <span class="ic-operation-batch"></span>
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="javascript:void(0);" data-action="batchPublishTask" class="">批量发布</a>
+                        </li>
+                        <li>
+                            <a href="javascript:void(0);" class="" data-action="batchDelTask" data-canbedelete="">批量删除</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </th>
+        <th width="20%" class="b-l-none">
+            <span>工作内容</span>
+            {{if p.role && p.role.add==1}}
+                <button class="btn btn-link" data-action="addSubTask" title="添加工作内容"><i class="fa fa-plus"></i></button>
+            {{/if}}
+        </th>
+        <th width="8%">工作占比</th>
+        <th width="9%" >任务状态</th>
+        <th width="12%" >团队</th>
+        <th width="9%">分管院长</th>
+        <th width="9%">任务负责人</th>
+        <th width="9%" >开始时间</th>
+        <th width="9%" >结束时间</th>
+        <th width="9%" >完成时间</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if p.childList!=null && p.childList.length>0}}
+    {{each p.childList as t ti}}
+    {{#_include('m_task_issue/m_task_issue_content_row',{t:t,tIndex:ti,tLength:p.childList.length,p:p,projectId:projectId,projectNameCode:projectNameCode,doType:doType,dataCompanyId:dataCompanyId,currentCompanyId:currentCompanyId,currentCompanyUserId:currentCompanyUserId,managerInfo:managerInfo,businessType:businessType})}}
+    {{/each}}
+    {{else}}
+    <tr class="no-data-tr">
+        <td colspan="11" class="text-center ">
+            <div>
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关工作内容</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

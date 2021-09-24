@@ -1,0 +1,28 @@
+<style>
+    .service-type-box .service-type .i-checks-span-default.text-ellipsis{width:120px;}
+</style>
+<div class="service-type-box">
+    <div class="input-group dp-block">
+        {{each serverTypeList}}
+        <div class="service-type pull-left m-r-xs m-b-xs ">
+            <label class="i-checks i-checks-label checkbox-inline fw-normal" title="{{$value.name}}">
+                <input name="serverType" id="serverType-{{$value.id}}" value="{{$value.id}}" data-name="{{$value.name}}" type="checkbox">
+                <span class="i-checks-span-default text-ellipsis" for="serverType-{{$value.id}}">{{$value.name }}</span>
+            </label>
+        </div>
+        {{/each}}
+    </div>
+    <div class="clearfix"></div>
+    <div class="input-group dp-block " id="customServerTypeBox">
+
+    </div>
+    <div class="clearfix"></div>
+    <button class="btn btn-link no-padding" data-action="addServerType" title="添加自定义经营范围"><i class="fa fa-plus"></i>自定义</button>
+</div>
+<!--
+<script type="text/javascript">
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-blue',
+        radioClass: 'iradio_square-blue'
+    });
+</script>-->

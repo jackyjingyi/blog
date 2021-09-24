@@ -1,0 +1,64 @@
+<div class="ibox m-task-issue">
+    <div class="ibox-title secondary-menu-outbox">
+        <div class="row">
+            <!-- 面包屑 -->
+            <div class="col-md-9" id="breadcrumb"></div>
+            <div class="col-md-3 text-right" style="padding: 15px 15px 0;">
+                <span id="designManagerBox">
+
+                </span>
+                <span class="icon-separation-line"></span>
+                <a href="javascript:void(0);" data-action="viewProjectInfo">
+                    {{businessType==1?'项目基本信息':'课题基本信息'}}   &nbsp;<i class="icon iconfont icon-jibenxinxi"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="row">
+                    <div class="col-md-4">
+                        <a href="javascript:void(0)" data-action="toProjectDetails" class="f-s-lg l-h-28 fw-bold">{{projectName}}</a>
+                    </div>
+                    <div class="col-md-2 no-padding">
+                        <span class="xeditable-hover">
+                            <span class="l-h-28"> {{businessType==1?'项目状态':'课题状态'}} ：</span>
+                            <span class="text-bold l-h-28 editable-status">
+                                {{if projectStatus == 1}}
+                                <span class="show-span text-danger">已暂停</span>
+                                {{else if projectStatus == 2}}
+                                <span class="show-span text-success">已完成</span>
+                                {{else if projectStatus == 3}}
+                                <span class="show-span text-danger">已终止</span>
+                                {{else}}
+                                <span class="show-span text-navy">进行中</span>
+                                {{/if}}
+                                {{if updateProjectStatus == 1}}
+                                <a href="javascript:void(0);" data-action="xeditable-status" data-key="status" data-type="5" style="visibility: hidden;">
+                                    <i class="icon iconfont icon-bianji"></i>
+                                </a>
+                                {{/if}}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="col-md-3 no-padding">
+
+                    </div>
+                    <div class="col-md-3 text-right">
+                        {{if addRootTask==1}}
+                            <a href="javascript:void(0);" class="btn btn-primary" data-action="addTaskIssue">{{businessType==1?'添加项目/子项':'添加课题/子项'}} </a>
+                            <a href="javascript:void(0);" class="btn btn-primary" data-action="distributionRatio">分配工作内容占比</a>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div id="dataList" class="list-box">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

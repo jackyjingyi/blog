@@ -3,7 +3,7 @@ from .views import HomeView, ArticleDetailView, UpdatePostView, DeletePostView, 
     category_view, author_posts_view, source_posts_view, ApprovalPosts, ApprovalSuccessDetailView, \
     ApprovalDenyDetailView, SubmitPostDetailView, search_item, bulk_submit, like_view, oct_get_endpoint_view, \
     creat_post, get_subcategory, group_posts_view, group_author_posts_view, statics_and_charts, \
-    statics_and_charts_get_data, approval_article_detail
+    statics_and_charts_get_data, approval_article_detail, my_tasks
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -34,4 +34,5 @@ urlpatterns = [
                   path('statics_and_charts_get_data/', statics_and_charts_get_data),
                   path('approval_article_detail/<int:approver>/<int:pk>/', approval_article_detail,
                        name='approval_articel_detail'),
+                  path('mytasks/', my_tasks),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

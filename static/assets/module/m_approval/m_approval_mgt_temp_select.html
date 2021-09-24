@@ -1,0 +1,67 @@
+<form class="form-horizontal m m-approval-mgt-temp-select">
+    <div class="row m-l-n-xs m-t-sm">
+        <div class="col-sm-3 temp-title-box">
+            <ul class="list-group no-shadow">
+                <li class="list-group-item no-borders curp" data-id="1">
+                    <i class="fa fa-codepen m-r-sm"></i>空白模板
+                    <span class="pull-right fc-v1-grey">1</span>
+                </li>
+                {{if dataList && dataList.length>0}}
+                <li class="list-group-item no-borders fc-dark-gray">复制已有模板</li>
+                {{each dataList as p i}}
+                <li class="list-group-item no-borders curp" data-id="{{p.id}}">
+                    <!--<i class="icon iconfont {{_getProjectTempIcon(p.groupName)}} m-r-sm"></i>-->{{p.groupName}}
+                    <span class="pull-right fc-v1-grey">{{p.formList.length}}</span>
+                </li>
+                {{if dataList[i].companyId!=null && dataList[i+1].companyId==null}}
+                <li class="list-group-item no-borders fc-dark-gray">系统模板</li>
+                {{/if}}
+                {{/each}}
+                {{/if}}
+            </ul>
+        </div>
+        <div class="col-sm-9 temp-list-box">
+            <h3 class="fw-normal m-b-xs m-t-sm temp-name" data-id="1">空白模板</h3>
+            <div class="row p-l-sm ">
+                <div class="approval-temp-box border" data-action="addForm" data-id="" data-form-id="">
+                    <span class="pull-left icon-circle {{_getIconColor('icon-zidingyibankuai')}}">
+                        <i class="icon iconfont icon-zidingyibankuai" ></i>
+                    </span>
+                    <div class="pt-absolute full-width p-l-xl m-l-xs">
+                        <a class="btn btn-link text-ellipsis full-width p-b-xs text-left m-t-sm" >新的审批表单</a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+            {{if dataList && dataList.length>0}}
+            <h3 class="title-line title-v2 bg-v1">企业模板</h3>
+            {{each dataList as p i}}
+            <h3 class="fw-normal title-v1 temp-name" data-id="{{p.id}}">
+                {{p.groupName}}
+            </h3>
+            <div class="row p-l-sm">
+                {{if p.formList && p.formList.length>0}}
+                {{each p.formList as c}}
+                <div class="approval-temp-box border" data-action="addForm" data-id="{{c.id}}" data-form-id="{{c.formId}}">
+                    <span class="pull-left icon-circle {{_getIconColor(c.iconKey?c.iconKey:'icon-zidingyibankuai')}}">
+                        <i class="icon iconfont {{c.iconKey?c.iconKey:'icon-zidingyibankuai'}}" ></i>
+                    </span>
+                    <div class="pt-absolute full-width p-l-xl m-l-xs">
+                        <a class="btn btn-link text-ellipsis full-width p-b-xs text-left {{_isNullOrBlank(c.documentation)?'m-t-sm':''}}" title="{{c.name}}">{{c.name}}</a>
+                        {{if !_isNullOrBlank(c.documentation)}}
+                        <span class="text-ellipsis-2 fc-v3-grey full-width p-l p-r-sm f-s-xxs" title="{{c.documentation}}">{{c.documentation}}</span>
+                        {{/if}}
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                {{/each}}
+                {{/if}}
+            </div>
+            {{if dataList[i].companyId!=null && dataList[i+1].companyId==null}}
+            <h3 class="title-line title-v2 bg-v1">系统模板</h3>
+            {{/if}}
+            {{/each}}
+            {{/if}}
+        </div>
+    </div>
+</form>

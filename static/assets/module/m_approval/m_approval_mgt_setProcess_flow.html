@@ -1,0 +1,36 @@
+{{each flowTaskGroupList as f i}}
+<div class="panel panel-default" data-type="3" data-i="{{i}}">
+    <div class="panel-heading">
+       {{f.title}}
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-24-xs-3 col-xl-1 p-t-md p-l-sm p-r-none text-center">
+                审批人设置：
+            </div>
+            <div class="col-24-xs-21 col-xl-11 p-l-none panel-item" >
+                <div class="approver-box text-center">
+                    <a class="btn btn-default btn-circle " type="button" data-action="addApprover">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                    <div class="m-t-xs">添加</div>
+                </div>
+            </div>
+        </div>
+        <div class="row border-top p-t">
+            <div class="col-24-xs-3 col-xl-1 p-t-md p-l-sm p-r-none text-center">
+                抄送人设置：
+            </div>
+            <div class="col-24-xs-21 col-xl-11 p-l-none panel-item">
+
+                <div class="approver-box text-center">
+                    <a class="btn btn-default btn-circle" type="button" data-action="addCcUser">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                    <div class="m-t-xs">添加</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{/each}}

@@ -1,0 +1,58 @@
+<nav class="navbar-default navbar-content border m-website-faq-menu {{isPhone && isShowContent?'hide':''}}" role="navigation" >
+    <div class="sidebar-collapse">
+        <ul class="nav">
+            {{each menuList as m i}}
+            <li class="{{i>0?'border-t-dashed':''}}" data-id="{{m.id}}">
+                <a class="nav-first-level"  href="javascript:void(0);">
+
+                    {{if m.id=='faq/update'}}
+                        <img class="products-icon pull-left" src="{{_url('/img/website/help/versionUpdate.png')}}" width="28"/>
+                    {{else if m.id=='faq/org'}}
+                        <img class="products-icon pull-left" src="{{_url('/img/website/help/organization_small.png')}}" width="28"/>
+                    {{else if m.id=='faq/project'}}
+                        <img class="products-icon pull-left" src="{{_url('/img/website/help/project_small.png')}}" width="28"/>
+                    {{else if m.id=='faq/financial'}}
+                        <img class="products-icon pull-left" src="{{_url('/img/website/help/money_small.png')}}" width="28"/>
+                    {{else if m.id=='faq/version'}}
+                        <img class="products-icon pull-left" src="{{_url('/img/website/help/version.png')}}" width="28"/>
+                    {{/if}}
+
+                    <span class="nav-label pull-left">{{m.name}}</span>
+                    <span class="fa arrow"></span>
+                    <div class="clearfix"></div>
+                </a>
+                {{if m.children}}
+                <ul class="nav nav-second-level collapse" >
+                    {{each m.children as c ci}}
+                    <li class="" data-id="{{c.id}}">
+                        <a href="#/{{c.id}}">
+                            {{c.name}}
+                            <i class="fa fa-angle-right pull-right"></i>
+                        </a>
+                    </li>
+                    {{/each}}
+                </ul>
+                {{/if}}
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+</nav>
+<div class="phone-navbar-default {{isPhone && isShowContent?'':'hide'}}" data-type="{{isShowContent}}">
+    <a href="#/faq">帮助中心</a>
+    <span class="fa fa-angle-right"></span>
+    <span class="fc-v2-grey">
+        {{if activeId && activeId.indexOf('faq/update')>-1}}
+            版本更新内容V3.0
+        {{else if activeId && activeId.indexOf('faq/org')>-1}}
+            组织管理
+        {{else if activeId && activeId.indexOf('faq/project')>-1}}
+            项目管理
+        {{else if activeId && activeId.indexOf('faq/financial')>-1}}
+            财务管理
+        {{else if activeId && activeId.indexOf('faq/version')>-1}}
+            版本及空间购买
+        {{/if}}
+    </span>
+</div>
+<div class="clearfix"></div>

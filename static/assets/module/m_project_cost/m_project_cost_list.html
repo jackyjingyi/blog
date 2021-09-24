@@ -1,0 +1,113 @@
+<table class="table table-bordered table-responsive">
+    <thead>
+    <tr>
+        <th width="5%" rowspan="2" class="text-center v-middle">立项时间</th>
+        <th width="15%" rowspan="2" class="text-center v-middle">项目名称</th>
+        <th rowspan="2" class="text-center v-middle">项目状态</th>
+        <th colspan="2">合同回款</th>
+        <th colspan="2">合作设计费</th>
+        <th colspan="2">技术审查费</th>
+        <th colspan="2">其他收入</th>
+        <th colspan="2">合作设计费</th>
+        <th colspan="2">技术审查费</th>
+        <th colspan="2">其他支出</th>
+    </tr>
+    <tr>
+        <th>计划金额</th>
+        <th>到账金额</th>
+        <th>计划金额</th>
+        <th>到账金额</th>
+        <th>计划金额</th>
+        <th>到账金额</th>
+        <th>计划金额</th>
+        <th>到账金额</th>
+
+        <th>计划金额</th>
+        <th>付款金额</th>
+        <th>计划金额</th>
+        <th>付款金额</th>
+        <th>计划金额</th>
+        <th>付款金额</th>
+    </tr>
+    </thead>
+    <tbody>
+        {{if dataList!=null && dataList.length>0}}
+        {{each dataList as d i}}
+        <tr>
+            <td >{{_momentFormat(d.projectCreateDate,'YYYY/MM/DD')}}</td>
+            <td>
+                {{d.projectName}}
+            </td>
+            <td >
+                {{if d.status == 0}}
+                进行中
+                {{else if d.status == 1 }}
+                已暂停
+                {{else if d.status == 2 }}
+                已完成
+                {{else if d.status == 3}}
+                已终止
+                {{else}}
+                --
+                {{/if}}
+            </td>
+
+            <td>
+                {{_expNumberFilter(d.contract)}}
+            </td>
+            <td class="fc-v2-green">
+                {{_expNumberFilter(d.contractReal)}}
+            </td>
+            <td>
+                {{_expNumberFilter(d.technical)}}
+            </td>
+            <td class="fc-v2-green">
+                {{_expNumberFilter(d.technicalReal)}}
+            </td>
+            <td>
+                {{_expNumberFilter(d.cooperateGain)}}
+            </td>
+            <td class="fc-v2-green">
+                {{_expNumberFilter(d.cooperateGainReal)}}
+            </td>
+            <td>
+                {{_expNumberFilter(d.otherGain)}}
+            </td>
+            <td class="fc-v2-green">
+                {{_expNumberFilter(d.otherGainReal)}}
+            </td>
+
+            <td>
+                {{_expNumberFilter(d.technicalPay)}}
+            </td>
+            <td class="fc-v1-red">
+                {{_expNumberFilter(d.technicalPayReal)}}
+            </td>
+            <td>
+                {{_expNumberFilter(d.cooperatePay)}}
+            </td>
+            <td class="fc-v1-red">
+                {{_expNumberFilter(d.cooperateGainReal)}}
+            </td>
+
+            <td>
+                {{_expNumberFilter(d.otherPay)}}
+            </td>
+
+            <td class="fc-v1-red">
+                {{_expNumberFilter(d.otherPayReal)}}
+            </td>
+        </tr>
+        {{/each}}
+        {{else}}
+        <tr class="no-data">
+            <td colspan="17" class="text-center v-middle">
+                <div class="m-b-xl m-t-md">
+                    <img src="{{_url('/img/default/without_data.png')}}">
+                    <span class="fc-dark-blue dp-block">没有相关数据</span>
+                </div>
+            </td>
+        </tr>
+        {{/if}}
+    </tbody>
+</table>

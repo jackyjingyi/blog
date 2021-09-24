@@ -1,0 +1,29 @@
+<table class="tree table table-bordered m-b-none">
+    <thead>
+    <tr>
+        <th>姓名</th>
+        <th>参与项目数</th>
+        <th>产值金额</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList!=null && dataList.length>0}}
+    {{each dataList as p i}}
+        <tr class="curp" data-id="{{p.id}}">
+            <td>{{p.userName}}</td>
+            <td>{{p.projectCount}}</td>
+            <td>{{_expNumberFilter(p.outPutValue)}}</td>
+        </tr>
+    {{/each}}
+    {{else}}
+    <tr class="no-data-tr">
+        <td colspan="3" class="text-center ">
+            <div>
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

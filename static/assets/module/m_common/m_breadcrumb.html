@@ -1,0 +1,14 @@
+<!--面包屑-->
+<div class="no-margins p-h-sm breadcrumb-box" >
+    <ol class="breadcrumb">
+        {{each dataList as p i}}
+        <li class="{{i>0?'fa fa-angle-right':''}} {{i+1==dataList.length?'active fw-bold':''}}">
+            {{if p.url}}
+                <a href="{{p.url}}">{{p.name}}</a>
+            {{else}}
+                {{p.name}}
+            {{/if}}
+        </li>
+        {{/each}}
+    </ol>
+</div>

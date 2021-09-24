@@ -1,0 +1,40 @@
+<table class="table table-bordered table-hover table-responsive text-nowrap">
+    <thead>
+    <tr>
+        <th></th>
+        <th>收入</th>
+        <th>其他业务收入</th>
+        <th>支出</th>
+        <th>房屋物业费用</th>
+        <th>行政费用</th>
+        <th>经营费用</th>
+        <th>软件、不动产购置</th>
+        <th>合计</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{each dataList as d i}}
+    <tr data-id="{{d.id}}" data-i="{{i}}" class="curp">
+        <td> {{d.projectName}} </td>
+        <td>{{_expNumberFilterPoint2(d.mainIncome)}}</td>
+        <td>{{_expNumberFilterPoint2(d.otherIncome)}}</td>
+        <td>{{_expNumberFilterPoint2(d.directProjectCost)}}</td>
+        <td>{{_expNumberFilterPoint2(d.propertyManagementFee)}}</td>
+        <td>{{_expNumberFilterPoint2(d.administrativeCost)}}</td>
+        <td>{{_expNumberFilterPoint2(d.manageFee)}}</td>
+        <td>{{_expNumberFilterPoint2(d.realEstateFee)}}</td>
+        <td>{{_expNumberFilterPoint2(d.total)}}</td>
+    </tr>
+    {{/each}}
+    {{if !(dataList && dataList.length>0)}}
+    <tr class="no-data">
+        <td colspan="9" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

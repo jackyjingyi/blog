@@ -1,0 +1,22 @@
+{{each dataList as p}}
+<div class="vertical-timeline-block" data-id="{{p.id}}">
+    <div class="vertical-timeline-icon navy-bg">
+        <i class="fa fa-comments"></i>
+    </div>
+    <div class="vertical-timeline-content">
+        <h4 data-value="{{p.noticeTitle}}">
+            {{p.noticeTitle}}
+            <a href="javascript:void(0);" class="pull-right roleControl" roleCode="10000604" flag="2"  data-action="editProjectNotice" title="编辑项目动态" style="display: none;">
+                <i class="fa fa-pencil"></i>
+            </a>
+            <a href="javascript:void(0);" class="pull-right m-r-xs roleControl" roleCode="10000604" flag="2" data-action="delProjectNotice" title="删除项目动态" style="display: none;">
+                <i class="fa fa-times"></i>
+            </a>
+        </h4>
+        <p class="noticeContent">
+            {{p.noticeContent}}
+        </p>
+        <p class="noticePublishdate" data-value="{{p.noticePublishdate}}">{{_dateSpecShortFormat(p.noticePublishdate)}}</p>
+    </div>
+</div>
+{{/each}}

@@ -1,0 +1,25 @@
+<form class="m-editable">
+    {{if title}}
+    <h3 class="popover-title">{{title}}</h3>
+    {{/if}}
+    <div class="m-editable-content {{contentClass}}">
+
+        <div class="m-editable-control pt-relative dp-inline-block {{(isShowOkBtn || isShowCancelBtn)?'show-btn':''}}" style="{{editableControlStyle}}">
+            {{#content}}
+        </div>
+        {{if isShowOkBtn || isShowCancelBtn}}
+        <div class="m-editable-buttons {{btnRight?'dp-block text-right':'dp-inline-block'}}">
+            {{if isShowOkBtn}}
+            <button type="submit" class="btn btn-primary btn-sm m-editable-submit">
+                <i class="glyphicon glyphicon-ok"></i>
+            </button>
+            {{/if}}
+            {{if isShowCancelBtn}}
+            <button type="button" class="btn btn-default btn-sm m-editable-cancel">
+                <i class="glyphicon glyphicon-remove"></i>
+            </button>
+            {{/if}}
+        </div>
+        {{/if}}
+    </div>
+</form>

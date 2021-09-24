@@ -1,0 +1,20 @@
+{{each dataList as p}}
+<div class="row">
+    <div class="col-sm-12 notice-list-content m-t">
+        <div class="feed-element">
+            <div class="media-body ">
+                <div class="col-24-md-2 no-padding" >
+                    <span class="label label-info label-circle pull-left" title="{{p.commentUser.userName}}">{{_interceptName(p.commentUser.userName,2)}}</span>
+                </div>
+                <div class="col-24-md-19 no-padding" >
+                    <span class="dp-block l-h-20">{{p.commentUser.userName}}</span>
+                    <span class="dp-block span-company">{{#p.comment}}</span>
+                </div>
+                <div class="col-24-md-3 text-right m-t" >
+                    {{_momentFormat(p.createDate,'YYYY/MM/DD')}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{/each}}

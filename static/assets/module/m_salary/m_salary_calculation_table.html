@@ -1,0 +1,24 @@
+<div class="m m-salary m-salary-calculation-table">
+    <form role="form" class="form-inline m-b-sm">
+        <div class="form-group z-index-1">
+            <label  class="">当前组织：</label>
+            <div class="btn-group" id="selectOrg">
+
+            </div>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary btn-sm" data-action="exportDetails">导出表格</button>
+            <a href="javascript:void(0);" class="btn btn-primary btn-sm web-uploader" data-action="importDetails">导入表格</a>
+        </div>
+        <div class="form-group pull-right">
+            <button class="btn btn-link btn-sm" data-action="generateReport">生成综合报表</button>
+            <button class="btn btn-primary btn-sm" data-action="saveReport">保存综合报表</button>
+        </div>
+    </form>
+    <div class="data-list-box">
+        <div class="data-list-container"></div>
+        <div class="p-w-sm">
+            <div id="data-pagination-container" class="m-pagination pull-right "></div>
+        </div>
+    </div>
+</div>

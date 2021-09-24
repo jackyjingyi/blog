@@ -1,0 +1,140 @@
+<form class="form-horizontal m-attendance-time-add">
+    <div class="p-m">
+        {{if ruleType==1}}
+        <div class="form-group">
+            <label class="col-sm-2 control-label p-l-none p-r-none">工作日<span class="fc-red">*</span>：</label>
+            <div class="col-sm-10">
+                <div class="row p-t-7 p-l">
+                    <div class="col-24-xs-3 no-padding ">
+                        <label class="i-checks i-checks-label fw-normal dp-block">
+                            <input type="checkbox" name="workDays" value="1"/>
+                            <span class="i-checks-span">星期一</span>
+                        </label>
+                    </div>
+                    <div class="col-24-xs-3 no-padding ">
+                        <label class="i-checks i-checks-label fw-normal dp-block">
+                            <input type="checkbox" name="workDays" value="2"/>
+                            <span class="i-checks-span">星期二</span>
+                        </label>
+                    </div>
+                    <div class="col-24-xs-3 no-padding ">
+                        <label class="i-checks i-checks-label fw-normal dp-block">
+                            <input type="checkbox" name="workDays" value="3"/>
+                            <span class="i-checks-span">星期三</span>
+                        </label>
+                    </div>
+                    <div class="col-24-xs-3 no-padding ">
+                        <label class="i-checks i-checks-label fw-normal dp-block">
+                            <input type="checkbox" name="workDays" value="4"/>
+                            <span class="i-checks-span">星期四</span>
+                        </label>
+                    </div>
+                    <div class="col-24-xs-3 no-padding ">
+                        <label class="i-checks i-checks-label fw-normal dp-block">
+                            <input type="checkbox" name="workDays" value="5"/>
+                            <span class="i-checks-span">星期五</span>
+                        </label>
+                    </div>
+                    <div class="col-24-xs-3 no-padding ">
+                        <label class="i-checks i-checks-label fw-normal dp-block">
+                            <input type="checkbox" name="workDays" value="6"/>
+                            <span class="i-checks-span">星期六</span>
+                        </label>
+                    </div>
+                    <div class="col-24-xs-3 no-padding ">
+                        <label class="i-checks i-checks-label fw-normal dp-block">
+                            <input type="checkbox" name="workDays" value="7"/>
+                            <span class="i-checks-span">星期日</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{else if ruleType==2}}
+        <div class="form-group">
+            <label class="col-sm-2 control-label p-l-none p-r-none">班次名称<span class="fc-red">*</span>：</label>
+            <div class="col-sm-10">
+                <input placeholder="请输入班次名称" class="form-control" type="text" name="classesName" value="{{dataInfo?dataInfo.classesName:''}}">
+            </div>
+        </div>
+        {{/if}}
+        <div class="form-group attendance-time-box">
+            <label class="col-sm-2 control-label p-l-none p-r-none">打卡时间<span class="fc-red">*</span>：</label>
+            <div class="col-sm-10">
+                <div class="row time-list-row">
+                    <div class="col-sm-7 ">
+                        <span>上班</span>
+                        <div class="border out-hh-mm">
+                            <span class="hh-mm"><select class="form-control input-sm" name="selectStaHH"></select></span>
+                            <span>:</span>
+                            <span class="hh-mm"><select class="form-control input-sm" name="selectStaMM" ></select></span>
+                        </div>
+                        <span> - 下班</span>
+                        <span class="border out-hh-mm">
+                            <span class="hh-mm"><select class="form-control input-sm" name="selectEndHH" ></select></span>
+                            <span>:</span>
+                            <span class="hh-mm"><select class="form-control input-sm" name="selectEndMM" ></select></span>
+                        </span>
+                    </div>
+                    <div class="col-sm-5 no-padding">
+                        <button class="btn btn-link hide p-l-none" data-action="delTimeField">删除</button>
+                        <button class="btn btn-link p-l-none" data-action="addTimeField">新增字段</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-2"><button class="btn btn-link" data-action="advancedSettings" >高级设置</button></div>
+        </div>
+        <div class="form-group hide" data-type="advancedSettings">
+            <label class="col-sm-2 control-label p-l-none p-r-none">弹性时间：</label>
+            <div class="col-sm-10">
+                <div class="row">
+                    <div class="col-24-xs-7">
+                        <select class="form-control select-control width-150" name="elasticTime">
+                            <option value="0">0分钟</option>
+                            <option value="5">5分钟</option>
+                            <option value="10">10分钟</option>
+                            <option value="20">20分钟</option>
+                            <option value="30">30分钟</option>
+                            <option value="40">40分钟</option>
+                            <option value="50">50分钟</option>
+                            <option value="60">60分钟</option>
+                        </select>
+                    </div>
+                    <div class="col-24-xs-17 p-t-7">
+                        <span class="fc-v1-grey">允许迟到、早退的分钟数</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group hide" data-type="advancedSettings">
+            <label class="col-sm-2 control-label p-l-none p-r-none">打卡时间限制：</label>
+            <div class="col-sm-10">
+                <div class="row">
+                    <div class="col-24-xs-7">
+                        <select class="form-control select-control width-150" name="limitClock">
+                            <option value="1">凌晨4点以后</option>
+                            <option value="2">上班前3小时内</option>
+                            <option value="3">上班前2小时内</option>
+                            <option value="4">上班前1小时内</option>
+                            <option value="5">上班前30分钟内</option>
+                            <option value="6">上班前15分钟内</option>
+                        </select>
+                    </div>
+                    <div class="col-24-xs-17">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group hide" data-type="advancedSettings">
+            <label class="col-sm-2 control-label p-l-none p-r-none">下班：</label>
+            <div class="col-sm-10 p-t-7">
+                <label class="i-checks i-checks-label fw-normal dp-block">
+                    <input type="checkbox" name="isNotClockOff" value="1"/>
+                    <span class="i-checks-span">下班不需要打卡</span>
+                </label>
+            </div>
+        </div>
+    </div>
+</form>

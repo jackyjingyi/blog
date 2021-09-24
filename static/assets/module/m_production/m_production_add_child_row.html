@@ -1,0 +1,29 @@
+<tr class="task-add-row content-row-edit" data-pid="{{taskId}}">
+    <td colspan="{{colspan?colspan:'12'}}">
+        <form>
+            <div class="pull-left row-edit-item p-r-xs">
+                <textarea placeholder="请输入子任务名称" class="form-control" type="text" name="taskName" style="width: 88%;display: inline-block;"></textarea>
+                <span><span class="wordCount">0</span>/<span>50</span></span>
+            </div>
+            <div class="pull-left row-edit-item p-r-xs" >
+                <div class="input-group">
+                    <input type="text" class="form-control timeInput startTime" id="ipt_startTime" name="startTime" placeholder="开始日期" readonly
+                           onFocus="startTimeFun(this)" data-appointmentStartTime = "" value="{{appointmentStartTime}}">
+                    <span class="input-group-addon" onclick="javascript:$(this).prev().focus();"> <i class="icon-append fa fa-calendar"></i> </span>
+                </div>
+            </div>
+            <div class="pull-left row-edit-item p-r-xs">
+                <div class="input-group">
+                    <input type="text" class="form-control timeInput endTime" id="ipt_endTime" name="endTime" placeholder="结束日期" readonly
+                           onFocus="endTimeFun(this)" data-appointmentEndTime = "" value="{{appointmentEndTime}}">
+                    <span class="input-group-addon" onclick="javascript:$(this).prev().focus();"> <i class="icon-append fa fa-calendar"></i> </span>
+                </div>
+            </div>
+            <div class="pull-left row-edit-item">
+                <button class="btn btn-primary" data-action="submit">创建</button>
+                <button class="btn btn-default" data-action="cancel">取消</button>
+            </div>
+        </form>
+    </td>
+</tr>
+

@@ -1,0 +1,18 @@
+<ul class="todo-list m-t small-list">
+    {{each dataList as p}}
+    <li class="bg-none">
+        <div class="timeline-item timeline-item-new">
+            <div class="row">
+                <div class="col-xs-4 date p-l-none">
+                    <i class="fa fa-circle"></i>
+                    {{_dateSpecFormat(p.createDate)}}
+                </div>
+                <div class="col-xs-6 content b-t-none">
+                    {{p.userName}} 设置 “{{p.fieldNameDesc}}” 为：{{if _isNullOrBlank(p.newValue)}}'空'{{else}}{{#p.newValue}}{{/if}}
+                </div>
+                <div class="col-xs-2"></div>
+            </div>
+        </div>
+    </li>
+    {{/each}}
+</ul>

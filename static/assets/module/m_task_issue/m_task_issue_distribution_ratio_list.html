@@ -1,0 +1,41 @@
+<table class="table table-bordered table-hover table-responsive">
+    <thead>
+    <tr>
+        <th>工作内容</th>
+        <th>占比</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList!=null && dataList.length>0}}
+        {{each dataList as d i}}
+        <tr data-id="{{d.id}}" data-i="{{i}}">
+            <td>{{d.taskName}}</td>
+            <td>
+                <form class="ratio-form">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm" name="ratio" placeholder="请输入占比" value="{{d.ratio}}">
+                        <span class="input-group-addon">
+                            %
+                        </span>
+                    </div>
+                </form>
+            </td>
+        </tr>
+        {{/each}}
+        <tr>
+            <td>合计</td>
+            <td ><span id="ratioTotal">0</span>%</td>
+        </tr>
+    {{else}}
+    <tr class="no-data">
+        <td colspan="2" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>
+

@@ -1,0 +1,487 @@
+<div class="panel-body popover-box no-borders no-padding pt-relative m-cost-item">
+    {{if !_isNullOrBlank(mainId)}}
+    <div class="mask-layer"></div>
+    <div class="mask-layer mask-layer-content">
+        <h2 class="fc-dark-grey m-b-md">审批中</h2>
+        <p class="f-s-md">
+            {{pageText.title}}的收款计划正在审批中，查看审批情况请点击
+            【<a class="fc-dark-blue" data-action="approvalDetails" data-id="{{mainId}}">审批详情</a>】
+        </p>
+    </div>
+    {{/if}}
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th colspan="10" class="">
+                <div class="row">
+                    <div class="col-24-sm-2 p-r-none" id="costTitle">
+                        {{pageText.title}}
+                    </div>
+                    <div class="col-24-sm-3 no-padding">
+                        <span class=" contract text-ellipsis" >合同编号：</span>
+                        <span class="text-navy contract text-ellipsis" data-toggle="tooltip" data-placement="top" title="{{contractNo==null||contractNo==''?'--':contractNo}}">
+                            {{if editFlag==1 && projectCostRole.paymentProjectFeeSet==1 && operateCompanyId==dataCompanyId }}
+                                <a href="javascript:void(0);" class="totalContract editable-click"
+                                   data-action="editCostInfo" data-placeholder="请输入合同编号"
+                                   data-key="contractNo" data-type="1" data-valid="2" data-value="{{contractNo}}">
+                                    {{contractNo==null||contractNo==''?'--':contractNo}}
+                                    </a>
+                            {{else}}
+                                   {{contractNo==null||contractNo==''?'--':contractNo}}
+                            {{/if}}
+                        </span>
+                    </div>
+                    <div class="col-24-sm-4 no-padding">
+                        计划收款金额：
+                        <span class="text-navy contract text-ellipsis" >
+                            {{if editFlag==1 && projectCostRole.receiveProjectFeeSet==1  && operateCompanyId==dataCompanyId}}
+                                <a href="javascript:void(0);" class="editable-click" data-action="editCostInfo" data-placeholder="合同总金额不能为空"
+                                   data-key="fee" data-type="1" data-valid="2" data-value="{{totalCost-0}}" data-limit-min="{{total.fee-0}}">
+                                    {{totalCost!=null && totalCost-0>0?_expNumberFilter(totalCost):'0'}}
+                                </a>
+                            {{else}}
+                                {{totalCost==null||totalCost-0==0?'0':_expNumberFilter(totalCost)}}
+                            {{/if}}
+                            &nbsp;{{_isNullOrBlank(totalCost==null)?'':'元'}}
+                        </span>
+                    </div>
+                    <div class="col-24-sm-4 no-padding" style="margin-top: 2px;">
+                        <span class=" contract text-ellipsis" >合同名称：</span>
+                        <span class="text-navy contract text-ellipsis"   data-toggle="tooltip" data-placement="top" title="{{contractName==null||contractName==''?'--':contractName}}">
+                            {{if editFlag==1 && projectCostRole.paymentProjectFeeSet==1 && operateCompanyId==dataCompanyId }}
+                                <a href="javascript:void(0);" class="totalContract editable-click"
+                                   data-action="editCostInfo" data-placeholder="请输入合同名称"
+                                   data-key="contractName" data-type="1" data-valid="2" data-value="{{contractName}}">
+                                    {{contractName==null||contractName==''?'--':contractName}}
+                                    </a>
+                            {{else}}
+                                   {{contractName==null||contractName==''?'--':contractName}}
+                            {{/if}}
+                        </span>
+                    </div>
+                    <div class="col-24-sm-3 no-padding">
+                        <span>合同日期：</span>
+                        <span class="text-navy " data-toggle="tooltip" data-placement="top" title="{{contractDate==null||contractDate==''?'--':  _momentFormat(contractDate,'YYYY/MM/DD')}}">
+                            {{if editFlag==1 && projectCostRole.paymentProjectFeeSet==1 && operateCompanyId==dataCompanyId }}
+                                <a href="javascript:void(0);" class="totalContract editable-click"
+                                   data-action="editCostInfo" data-placeholder="请选择合同日期"
+                                   data-key="contractDate" data-type="1" data-valid="2" data-value="{{contractDate}}" >
+                                       {{contractDate==null||contractDate==''?'--':  _momentFormat(contractDate,'YYYY/MM/DD')}}
+                                    </a>
+                            {{else}}
+                         {{contractDate==null||contractDate==''?'--':  _momentFormat(contractDate,'YYYY/MM/DD')}}
+                            {{/if}}
+                        </span>
+                    </div>
+           <!--         <div class="col-24-sm-4 no-padding">
+                        <span class="col-24-sm-6 text-right no-padding">合同附件：</span>
+                        <div class="col-24-sm-18 no-padding m-t-n-xs">
+                            {{if attachList!=null && attachList.length>0}}
+                                {{each attachList as a}}
+                                    <span class="contract bg-v1-grey text-ellipsis m-r-xs m-t-xxs p-xxs" data-toggle="tooltip" data-container="body" data-original-title="{{a.fileName}}">
+                                        <a href="{{a.fileFullPath}}" target="_blank" >{{a.fileName}}</a>
+                                        {{if editFlag==1 }}
+                                        <a class="curp pt-absolute right-5" href="javascript:void(0)" data-id="{{a.id}}" data-action="delAttach">
+                                            <i class="fa fa-times fc-red"></i>
+                                        </a>
+                                        {{/if}}
+                                    </span>
+                                {{/each}}
+                            {{else}}
+                                <span class="dp-inline-block m-r-xs m-t-xs">暂无上传文件</span>
+                            {{/if}}
+                            {{if editFlag==1 && projectCostRole.receiveProjectFeeSet==1  && operateCompanyId==dataCompanyId}}
+                            <a href="javascript:void(0)" id="filePicker" data-action="recordAttach" class="upload-icon vertical-top m-t-xxs dp-inline-block" title="请上传PDF文件"></a>
+                            {{/if}}
+                            <div class="clearfix"></div>
+                        </div>
+
+                    </div>-->
+                    <div class="col-24-sm-4 no-padding"style="margin-top: 2px">
+                        <span class="contract text-ellipsis" >付款方：</span>
+                        {{if editFlag==1 && projectCostRole.receiveProjectFeeSet==1 && operateCompanyId==dataCompanyId}}
+                            <a href="javascript:void(0);" class="editable-click" data-action="editCostInfo"  >
+                                {{if _isNullOrBlank(companyName)}}
+                                    <span class="fc-v1-grey">未设置</span>
+                                {{else}}
+                                <span class="contract text-ellipsis" data-toggle="tooltip" data-placement="top" title="{{companyName}}">{{companyName}}</span>
+                                {{/if}}
+                            </a>
+                        {{else}}
+                            {{if _isNullOrBlank(companyName)}}
+                                <span class="fc-v1-grey">未设置</span>
+                            {{else}}
+                                 <span class="contract text-ellipsis" data-toggle="tooltip" data-placement="top" title="{{companyName}}">{{companyName}}</span>
+                        {{/if}}
+                        {{/if}}
+                    </div>
+                    <div class="col-24-sm-2 no-padding">
+                        {{if status!='4'}}
+                            <a href="javascript:void(0);" class="editable-click" data-action="xeditable" data-value="{{status}}" data-key="status" data-type="5" data-container-class="select-sm">
+                                {{if status=='3'}}
+                                    <span>修改中</span>
+                                {{else if status=='0'}}
+                                    <span>进行中</span>
+                                {{else if status=='6'}}
+                                    <span>已终止</span>
+                                {{else if status=='2'}}
+                                    <span>已暂停</span>
+                                {{else if status=='7'}}
+                                    <span>已完成</span>
+                                {{else}}
+                                    <span class="fc-v1-grey">未设置</span>
+                                {{/if}}
+                            </a>
+                        {{else}}
+                                {{if status=='3'}}
+                                    <span>修改中</span>
+                                {{else if status=='0'}}
+                                    <span>进行中</span>
+                                {{else if status=='6'}}
+                                    <span>已终止</span>
+                                {{else if status=='2'}}
+                                    <span>已暂停</span>
+                                {{else if status=='7'}}
+                                    <span>已完成</span>
+                                {{else}}
+                                    <span class="fc-v1-grey">未设置</span>
+                                {{/if}}
+                        {{/if}}
+                    </div>
+                    <div class="col-24-sm-2 p-l-none text-right">
+                        {{if status==3}}
+                        <span class="f-s-xxs fc-red m-r-sm">该计划在变更中</span>
+                        {{/if}}
+                        <div class="btn-group btn-operate dp-inline-block">
+                            <button data-toggle="dropdown" class="btn btn-default btn-xs dropdown-toggle"><span class="caret"></span></button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+
+                                {{if auditHistoryFlag==1}}
+                                <li>
+                                    <a href="javascript:void(0);" data-action="approvalRecord" data-id="{{costId}}">审批记录</a>
+                                </li>
+                                {{/if}}
+                                {{if (status==0 || status==2) &&  projectCostRole.receiveProjectFeeSet==1  && operateCompanyId==dataCompanyId}}
+                                <li>
+                                    <a href="javascript:void(0);" data-action="suspendProjectCost" data-status="{{status}}">{{status==0?'终止收款计划':'启动收款计划'}}</a>
+                                </li>
+                                {{/if}}
+                                {{if (status==0 || status==2) &&  projectCostRole.receiveProjectFeeSet==1  && operateCompanyId==dataCompanyId  && isAllowEditFlag==1}}
+                                <li>
+                                    <a href="javascript:void(0);" data-action="modifyPlan" data-status="3" data-id="{{costId}}">修改计划</a>
+                                </li>
+                                {{/if}}
+                                {{if projectCostRole.receiveProjectFeeSet==1  && operateCompanyId==dataCompanyId  && repealEditFlag==1}}
+                                <li>
+                                    <a href="javascript:void(0);" data-action="modifyPlan" data-status="0" data-id="{{costId}}">撤销修改</a>
+                                </li>
+                                {{/if}}
+                                <!--<li><a href="#">终止收款计划</a></li>-->
+                                {{if deleteFlag==1 && projectCostRole.receiveProjectFeeSet==1  && operateCompanyId==dataCompanyId}}
+                                <li><a href="javascript:;" data-action="delCost" data-id="{{costId}}">删除收款计划</a></li>
+                                {{/if}}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </th>
+        </tr>
+        <tr>
+            <th colspan="3" class="text-center v-middle">收款节点信息</th>
+            <th colspan="3" class="text-center v-middle">收款通知</th>
+            <!--<th colspan="2" class="text-center v-middle">开票信息</th>-->
+            <th colspan="3" class="text-center v-middle">到账明细</th>
+        </tr>
+        <tr>
+            <th width="18%"  class="text-center v-middle">收款节点</th>
+            <th width="10%"  class="text-center v-middle">比例</th>
+            <th width="10%"  class="text-center v-middle">金额（元）</th>
+            <th width="10%"  class="text-center">发起人</th>
+            <th width="10%"  class="text-center">金额（元）</th>
+
+            <th width="10%"  class="text-center">发票类型</th>
+            <!--<th width="12%"  class="text-center">发票号码</th>-->
+
+            <th width="12%"  class="text-center">到账金额（元）</th>
+            <th width="10%"  class="text-center">到账日期</th>
+            <th width="10%" class="text-center">应收（元）</th>
+        </tr>
+        </thead>
+        <tbody class="border-no-t">
+        {{each pointList as p i}}
+        <tr data-i="{{i}}" data-id="{{p.id}}" data-fee="{{p.fee}}" data-backFee="{{p.backFee}}"  data-main-id="{{p.mainId?p.mainId:''}}">
+            <!--以下是节点描述-->
+            <td class="feeDescription" rowspan="{{p.pointDetailList.length==0?1:p.pointDetailList.length}}">
+                {{if editFlag==1 && projectCostRole.receiveProjectFeeSet==1  && operateCompanyId==dataCompanyId}}
+                    <span class="feeDescription  l-h-22" data-string="{{p.feeDescription}}">
+                        <a href="javascript:void(0);" class="editable-click" data-action="editContract" data-edit-type="1" data-placeholder="请输入收款节点描述" data-key="feeDescription" data-type="1" data-valid="3" >
+                            {{p.feeDescription}}
+                        </a>
+                    </span>
+                {{else}}
+                    <span class="feeDescription pt-relative" data-string="{{p.feeDescription}}">
+                        {{p.feeDescription}}
+                    </span>
+                {{/if}}
+                {{if status==0 && projectCostRole.startReceive==1 && p.backFee-0!=p.fee && (p.fee!=null && p.fee-0>0) }}
+                    <a href="javascript:void(0)" class="btn btn-primary btn-xs pull-right" data-action="initiatedContract" data-id="{{p.id}}" >发起收款</a>
+                {{/if}}
+                {{if editFlag==1 && p.deleteFlag == 0 && projectCostRole.receiveProjectFeeSet==1  && operateCompanyId==dataCompanyId && p.id!=null}}
+                    <a href="javascript:void(0)" class="btn btn-danger btn-xs pull-right m-r-xs" data-action="delCostPoint" data-id="{{p.id}}" >删除</a>
+                {{/if}}
+            </td>
+            <!--以下是节点比例-->
+            <td rowspan="{{p.pointDetailList.length==0?1:p.pointDetailList.length}}" class="text-center feeProportion {{p.pid==null?'f-w-bold':''}}" data-value="{{p.feeProportion}}">
+                {{if editFlag==1 && projectCostRole.receiveProjectFeeSet==1  && operateCompanyId==dataCompanyId && totalCost!=null && totalCost-0>0 }}
+                    <a href="javascript:void(0);" class="editable-click" data-action="editContract" data-edit-type="2"
+                       data-key="feeProportion" data-type="8" data-valid="4" data-limit-min="{{p.backFee}}" data-total-cost="{{totalCost}}">
+                        {{!(p.feeProportion!=null && p.feeProportion-0>0)?'':p.feeProportion+'%'}}
+                    </a>
+                {{else}}
+                    {{p.feeProportion==null || p.feeProportion-0==0?'0':p.feeProportion+'%'}}
+                {{/if}}
+            </td>
+            <!--以下是节点金额-->
+            <td rowspan="{{p.pointDetailList.length==0?1:p.pointDetailList.length}}" class="text-center fee {{p.pid==null?'f-w-bold':''}}" data-value="{{p.fee}}">
+                {{if editFlag==1 && projectCostRole.receiveProjectFeeSet==1  && operateCompanyId==dataCompanyId && totalCost!=null && totalCost-0>0 }}
+                    <a href="javascript:void(0);" class="editable-click" data-action="editContract" data-edit-type="3"
+                       data-key="fee" data-type="8" data-valid="4" data-limit-min="{{p.backFee}}" data-total-cost="{{totalCost}}">
+                        {{p.fee!=null && p.fee-0>0?_expNumberFilter(p.fee):''}}
+                    </a>
+                {{else}}
+                    {{p.fee!=null && p.fee-0>0?_expNumberFilter(p.fee):'0'}}
+                {{/if}}
+            </td>
+            <!--以下是收款发起人-->
+            <td class="text-center">
+                {{if p.pointDetailList!=null && p.pointDetailList.length>0}}
+                    <span data-toggle="tooltip" data-placement="top" title="{{p.pointDetailList[0].createDate}}">
+                        {{p.pointDetailList[0].userName}}
+                    </span>
+                {{/if}}
+            </td>
+            <!--以下是收款金额-->
+            <td class=" totalPaidFee text-center" data-value="{{p.pointDetailList.length>0?p.pointDetailList[0].fee:''}}">
+                {{if p.pointDetailList!=null && p.pointDetailList.length>0}}
+                    {{if status==0 && projectCostRole.startReceive==1 && (p.pointDetailList[0].paymentList==null || p.pointDetailList[0].paymentList.length==0) && p.pointDetailList[0].companyId==currentCompanyId && p.pointDetailList[0].roleMap.editReceiveAndPayment==1}}
+                        <a href="javascript:void(0);" class="editable-click" data-action="editContract" data-edit-type="4" data-id="{{p.pointDetailList[0].id}}"
+                           data-key="fee" data-value="{{p.pointDetailList[0].fee-0}}" data-type="1" data-valid="6" data-limit-min="{{p.pointDetailList[0].paidFee-0}}" data-limit-max="{{p.fee-0-(p.backFee-0)+(p.pointDetailList[0].fee-0)}}" >
+                            {{_expNumberFilter(p.pointDetailList[0].fee)}}
+                        </a>
+                    {{else}}
+                        {{_expNumberFilter(p.pointDetailList[0].fee)}}
+                    {{/if}}
+                    {{if status==0 && p.pointDetailList[0]!=null && p.pointDetailList[0].id!=null && projectCostRole.startReceive==1 && p.pointDetailList[0].companyId==currentCompanyId && p.pointDetailList[0].roleMap.deleteReceiveAndPayment==1}}
+                        <a href="javascript:void(0)" class="btn btn-danger btn-xs pull-right" data-action="delCostPointDetail" data-id="{{p.pointDetailList[0].id}}">删除</a>
+                    {{/if}}
+                {{/if}}
+            </td>
+            <!-- 发票类型 -->
+            <td class="text-center">
+
+                {{if p.pointDetailList!=null && p.pointDetailList.length>0 && p.pointDetailList[0].invoiceType==1}}
+                <a href="javascript:void(0);" class="btn btn-primary btn-xs" data-action="editInvoice" data-invoice="{{p.pointDetailList[0].invoice}}" data-id="{{p.pointDetailList[0].id}}">普票</a>
+                {{else if p.pointDetailList!=null && p.pointDetailList.length>0 && p.pointDetailList[0].invoiceType==2}}
+                <a href="javascript:void(0);" class="btn btn-primary btn-xs" data-action="editInvoice"  data-invoice="{{p.pointDetailList[0].invoice}}" data-id="{{p.pointDetailList[0].id}}">专票</a>
+                {{else if p.pointDetailList!=null && p.pointDetailList.length>0 && p.pointDetailList[0].invoiceType==3}}
+                <a href="javascript:void(0);" class="btn btn-primary btn-xs" data-action="editInvoice"  data-invoice="{{p.pointDetailList[0].invoice}}" data-id="{{p.pointDetailList[0].id}}">收据</a>
+                {{else if status==0 && p.pointDetailList!=null && p.pointDetailList.length>0 && projectCostRole.startReceive==1}}
+                    <a href="javascript:void(0);" class="btn btn-primary btn-xs" data-action="replenishInvoice" data-id="{{p.pointDetailList[0].id}}">补录发票</a>
+                {{/if}}
+
+
+            </td>
+            <!-- 发票号码 -->
+            <!--<td class="invoice text-center {{ p.pointDetailList!=null && p.pointDetailList[0] && (!_isNullOrBlank(p.pointDetailList[0].invoiceNo) || !_isNullOrBlank(p.pointDetailList[0].roleMap.invoiceConfirm))?'':'bg-muted'}}">
+                {{if status==0 && p.pointDetailList!=null && p.pointDetailList.length>0 && !_isNullOrBlank(p.pointDetailList[0].invoice) && !_isNullOrBlank(p.pointDetailList[0].roleMap.invoiceConfirm)}}
+
+                    <a href="javascript:void(0)" class="btn btn-primary btn-xs" data-action="confirmInvoice" data-id="{{p.pointDetailList[0].id}}" data-invoice="{{p.pointDetailList[0].invoice}}">确认开票</a>
+
+                {{else if status==0 && p.pointDetailList!=null && p.pointDetailList.length>0 && p.pointDetailList[0].roleMap && p.pointDetailList[0].roleMap.modifyInvoiceFlag=='1'}}
+
+                    &lt;!&ndash;<a href="javascript:void(0);" class="editable-click" data-action="editContract" data-edit-type="6" data-placeholder="请输入发票号码"
+                       data-key="invoiceNo" data-type="1" data-valid="1" data-invoice="{{p.pointDetailList[0].invoice}}">
+                        {{p.pointDetailList[0].invoiceNo}}
+                    </a>&ndash;&gt;
+                    <a href="javascript:void(0)" class="" data-action="editInvoice" data-id="{{p.pointDetailList[0].id}}" data-invoice="{{p.pointDetailList[0].invoice}}">
+                        {{p.pointDetailList[0].invoiceNo}}
+                    </a>
+                    {{if p.pointDetailList[0].paymentList.length == 0}}
+                    <a href="javascript:void(0)" class="btn btn-danger btn-xs pull-right m-r-xs" data-action="deleteInvoice" delete-type="1" data-invoice="{{p.pointDetailList[0].invoice}}">删除</a>
+                    <a href="javascript:void(0)" class="btn btn-danger btn-xs pull-right m-r-xs" data-action="deleteInvoice" delete-type="2" data-invoice="{{p.pointDetailList[0].invoice}}">作废</a>
+                    {{/if}}
+                {{else if p.pointDetailList!=null && p.pointDetailList.length>0}}
+
+                    {{p.pointDetailList[0].invoiceNo}}
+
+                {{/if}}
+            </td>-->
+            <!--以下是到账明细节点-->
+            <td class="text-center no-padding" colspan="2">
+                {{if p.pointDetailList!=null  && p.pointDetailList.length>0 && p.pointDetailList[0].paymentList.length>0}}
+                    {{each p.pointDetailList[0].paymentList as v vi}}
+                        <div class="{{ p.pointDetailList[0].paymentList.length==vi+1 && !(p.pointDetailList[0].roleMap!=null && p.pointDetailList[0].roleMap.financialForFee!=null)?'l-h-38':'paid-detail-box'}}">
+                            <!-- 到账金额 -->
+                            <div class="bPaidFee">
+                                <span>{{_expNumberFilter(v.fee)}}</span>
+                                {{if status==0 && deleteFinanceData== 1}}
+                                    <a href="javascript:void(0)" class="btn btn-danger btn-xs pull-right m-r-xs" data-action="delPaidFee" data-id="{{v.id}}">删除</a>
+                                {{/if}}
+                            </div>
+                            <!-- 到账日期 -->
+                            <div class="paid-date">
+                                {{if _isNullOrBlank(v.paidDate) &&  v.roleMap!=null && v.roleMap.financialForFee!=null}}
+                                <a href="javascript:void(0)" class="btn btn-primary btn-xs" data-action="costConfirm" data-fee="{{v.fee}}"
+                                   data-id="{{v.roleMap.financialForFee}}">确认</a>
+                                {{else}}
+                                {{_momentFormat(v.paidDate,'YYYY/MM/DD')}}
+                                {{/if}}
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    {{/each}}
+                {{/if}}
+                {{if status==0 && p.pointDetailList.length>0 && p.pointDetailList[0].roleMap!=null && p.pointDetailList[0].roleMap.financialForFee!=null}}
+                    <span data-toggle="tooltip" data-placement="top" title="添加到账金额" class="l-h-38 pt-relative">
+                        <a class="btn btn-outline full-width no-padding" href="javascript:void(0)" data-id="{{p.pointDetailList[0].roleMap.financialForFee}}" data-edit-type="5" data-action="editContract"
+                           data-key="fee" data-type="9" data-valid="6" data-limit-min="0" data-limit-max="{{p.pointDetailList[0].notReceiveFee-0}}"  type="button" >
+                            <i class="fa fa-plus color-dark-blue f-s-xl" ></i>
+                        </a>
+                    </span>
+                {{/if}}
+            </td>
+            <!-- 应收 -->
+            <td class="text-center">
+                {{if p.pointDetailList!=null && p.pointDetailList.length>0}}
+                    {{_expNumberFilter(p.pointDetailList[0].notReceiveFee)}}
+                {{/if}}
+            </td>
+        </tr>
+        {{if p.pointDetailList!=null && p.pointDetailList.length>1}}
+        {{each p.pointDetailList as c ci}}
+        {{if ci>0}}
+        <tr data-id="{{p.id}}" data-fee="{{p.fee}}" data-backFee="{{p.backFee}}">
+            <!--以下是收款发起人-->
+            <td class="text-center">
+                <span data-toggle="tooltip" data-placement="top" title="{{c.createDate}}">
+                    {{c.userName}}
+                </span>
+            </td>
+            <!--以下是收款金额-->
+            <td class=" totalPaidFee text-center"  data-value="{{c.fee}}">
+                {{if status==0 && projectCostRole.startReceive==1 && (c.paymentList==null || c.paymentList.length==0) && c.companyId==currentCompanyId && c.roleMap.editReceiveAndPayment==1}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="editContract" data-edit-type="4" data-id="{{c.id}}"
+                       data-key="fee" data-value="{{c.fee-0}}" data-type="1" data-valid="6" data-limit-min="{{c.paidFee-0}}" data-limit-max="{{p.fee-0-(p.backFee-0)+(c.fee-0)}}">
+                        {{_expNumberFilter(c.fee)}}
+                    </a>
+                {{else}}
+                    {{_expNumberFilter(c.fee)}}
+                {{/if}}
+                {{if status==0 && c.id!=null && projectCostRole.startReceive==1 && c.companyId==currentCompanyId && c.roleMap.deleteReceiveAndPayment==1}}
+                    <a href="javascript:void(0)" class="btn btn-danger btn-xs pull-right" data-action="delCostPointDetail" data-id="{{c.id}}">删除</a>
+                {{/if}}
+            </td>
+
+            <!-- 发票信息 -->
+            <td class="text-center">
+                {{if c.invoiceType==1}}
+                <a href="javascript:void(0);" class="btn btn-primary btn-xs" data-action="editInvoice" data-invoice="{{c.invoice}}" data-id="{{c.id}}">普票</a>
+                {{else if c.invoiceType==2}}
+                <a href="javascript:void(0);" class="btn btn-primary btn-xs" data-action="editInvoice"  data-invoice="{{c.invoice}}" data-id="{{c.id}}">专票</a>
+                {{else if c.invoiceType==3}}
+                <a href="javascript:void(0);" class="btn btn-primary btn-xs" data-action="editInvoice"  data-invoice="{{c.invoice}}" data-id="{{c.id}}">收据</a>
+                {{else if status==0 && projectCostRole.startReceive==1}}
+                    <a href="javascript:void(0);" class="btn btn-primary btn-xs" data-action="replenishInvoice" data-id="{{c.id}}">补录发票</a>
+                {{/if}}
+            </td>
+            <!-- 发票号码 -->
+            <!--<td class="invoice text-center {{!_isNullOrBlank(c.invoiceNo) || !_isNullOrBlank(c.roleMap.invoiceConfirm)?'':'bg-muted'}}">
+                {{if status==0 && !_isNullOrBlank(c.invoice) && !_isNullOrBlank(c.roleMap.invoiceConfirm)}}
+                    <a href="javascript:void(0)" class="btn btn-primary btn-xs" data-action="confirmInvoice" data-id="{{c.id}}" data-invoice="{{c.invoice}}">确认开票</a>
+                {{else if status==0 && c.roleMap && c.roleMap.modifyInvoiceFlag=='1'}}
+                    &lt;!&ndash;<a href="javascript:void(0);" class="editable-click" data-action="editContract" data-edit-type="6" data-placeholder="请输入发票号码"
+                       data-key="invoiceNo" data-type="1" data-valid="1" data-invoice="{{c.invoice}}">
+                        {{c.invoiceNo}}
+                    </a>&ndash;&gt;
+                    <a href="javascript:void(0)" class="" data-action="editInvoice" data-id="{{c.id}}" data-invoice="{{c.invoice}}">
+                        {{c.invoiceNo}}
+                    </a>
+                    {{if c.paymentList.length == 0}}
+                        <a href="javascript:void(0)" class="btn btn-danger btn-xs pull-right m-r-xs" data-action="deleteInvoice" delete-type="1" data-invoice="{{c.invoice}}">删除</a>
+                        <a href="javascript:void(0)" class="btn btn-danger btn-xs pull-right m-r-xs" data-action="deleteInvoice" delete-type="2" data-invoice="{{c.invoice}}">作废</a>
+                    {{/if}}
+                {{else}}
+                    {{c.invoiceNo}}
+                {{/if}}
+            </td>-->
+
+            <!--以下是到账明细节点-->
+            <td class="text-center no-padding" colspan="2">
+                {{if c.paymentList.length>0}}
+                    {{each c.paymentList as v vi}}
+                        <div class="{{ c.paymentList.length==vi+1 && !(c.roleMap!=null && c.roleMap.financialForFee!=null)?'l-h-38':'paid-detail-box'}}" >
+                            <!-- 到账金额 -->
+                            <div class="bPaidFee">
+                                <span>{{_expNumberFilter(v.fee)}}</span>
+                                {{if status==0 && deleteFinanceData== 1}}
+                                    <a href="javascript:void(0)" class="btn btn-danger btn-xs pull-right m-r-xs" data-action="delPaidFee" data-id="{{v.id}}">删除</a>
+                                {{/if}}
+                            </div>
+                            <!-- 到账日期 -->
+                            <div class="paid-date">
+                                {{if _isNullOrBlank(v.paidDate) &&  v.roleMap!=null && v.roleMap.financialForFee!=null}}
+                                <a href="javascript:void(0)" class="btn btn-primary btn-xs" data-action="costConfirm" data-fee="{{v.fee}}"
+                                   data-id="{{v.roleMap.financialForFee}}">确认</a>
+                                {{else}}
+                                {{_momentFormat(v.paidDate,'YYYY/MM/DD')}}
+                                {{/if}}
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    {{/each}}
+                {{/if}}
+                {{if status==0 && c.roleMap!=null && c.roleMap.financialForFee!=null }}
+                    <span data-toggle="tooltip" data-placement="top" title="添加到账金额" class="l-h-38 pt-relative">
+                        <a class="btn btn-outline full-width no-padding" href="javascript:void(0)" data-id="{{c.roleMap.financialForFee}}" data-edit-type="5" data-action="editContract"
+                           data-key="fee" data-type="9" data-valid="6" data-limit-min="0" data-limit-max="{{c.notReceiveFee-0}}" type="button" >
+                            <i class="fa fa-plus color-dark-blue f-s-xl" ></i>
+                        </a>
+
+                    </span>
+                {{/if}}
+            </td>
+            <!-- 应收 -->
+            <td class="text-center">{{_expNumberFilter(c.notReceiveFee)}}</td>
+        </tr>
+        {{/if}}
+        {{/each}}
+        {{/if}}
+        {{/each}}
+
+        {{if editFlag==1 && projectCostRole.receiveProjectFeeSet==1  && operateCompanyId==dataCompanyId && totalCost!=null && totalCost-0>0 && total.feeProportion<100}}
+        <tr>
+            <td colspan="9" align="center">
+                <span data-toggle="tooltip" data-placement="top" title="添加收款节点">
+                    <a class="btn btn-outline full-width border-dashed" href="javascript:void(0)" data-action="addContract" type="button" >
+                        <i class="fa fa-plus color-dark-blue f-s-xl" ></i>
+                    </a>
+                </span>
+            </td>
+        </tr>
+        {{/if}}
+
+        <tr class="gray-bg">
+            <td class="text-center">合计</td>
+            <td class="text-center f-w-bold">{{total.feeProportion==null || total.feeProportion-0==0?'0':total.feeProportion+'%'}}</td>
+            <td class="text-center f-w-bold">{{total.fee==null || total.fee-0==0?0:_expNumberFilter(total.fee)}}</td>
+            <td></td>
+            <td class="text-center">{{total.backMoney==null || total.backMoney-0==0?0:_expNumberFilter(total.backMoney)}}</td>
+            <td></td>
+            <td class="text-center">{{total.toTheMoney==null || total.toTheMoney-0==0?0:_expNumberFilter(total.toTheMoney)}}</td>
+            <td></td>
+            <td class="text-center">{{total.receivedUncollected==null || total.receivedUncollected-0==0?0:_expNumberFilter(total.receivedUncollected)}}</td>
+        </tr>
+        </tbody>
+
+    </table>
+</div>

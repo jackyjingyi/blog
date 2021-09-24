@@ -1,0 +1,105 @@
+.role-list.list-group .group-item,
+.role-list.list-group .role-item{
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+.role-list.list-group .role-item{
+    padding-left: 40px;
+}
+.role-list.list-group .group-item.p-l-l{
+    padding-left: 25px;
+}
+.role-list.list-group .list-group-item{
+    padding: 0;
+    margin: 0;
+    overflow: inherit;
+}
+.role-list.list-group .group-item:hover,
+.role-list.list-group .role-item:hover{
+     background-color: #f5f5f5;
+}
+.role-list.list-group a[data-action="expand"]{
+    width: 11px;
+    display: inline-block;
+    vertical-align: text-top;
+}
+.role-list.list-group a.role-name{
+    padding: 2px 5px;
+}
+.role-list.list-group a.role-name.active{
+    background: #449FAE;
+    border-radius: 4px;
+    color: #fff;
+}
+.role-list.list-group .btn-group{
+    position: absolute;
+    right: 10px;
+    top: 0px;
+    border: none;
+}
+.role-list.list-group .btn-group a.dropdown-toggle{
+    border: 0;
+    font-size: 20px;
+    padding: 0;
+    background: none;
+    box-shadow:none;
+}
+.role-list.list-group .btn-group ul.dropdown-menu{
+    left:initial;
+    right:0px;
+}
+.th-title:before{
+    content: "";
+    position: absolute;
+    width: 1px;
+    height: 130px;
+    top: 0;
+    left: 0;
+    background-color: #ddd;
+    display: block;
+    transform: rotate(-57deg);
+    transform-origin: top;
+    -ms-transform: rotate(-57deg);
+    -ms-transform-origin: top;
+}
+div.role-view .th-title:before{
+    height: 130px;
+    transform: rotate(-57deg);
+    transform-origin: top;
+    -ms-transform: rotate(-57deg);
+    -ms-transform-origin: top;
+}
+.th-title .span-1{
+    position: absolute;
+    top: 46px;
+    left: 12px;
+}
+.th-title .span-2{
+    position: absolute;
+    top: 8px;
+    right: 15px;
+}
+.i-checks.i-checks-label .i-checks-span.f-bold-red{
+    font-weight: bold;
+    color: red;
+}
+
+.role-list .tooltip-inner{
+    word-break: break-all;
+    max-width: 140px;
+}
+.m-role-manager-settings .treegrid-expander{
+    vertical-align: text-bottom;
+}
+.m-role-manager-settings .treegrid-indent{
+    height: 16px;
+}
+.m-role-org-change .i-checks-span.text-ellipsis{
+    width: 82px;
+}
+.m-role-data-range .i-checks-span.text-ellipsis,
+.m-role-view .i-checks-span.text-ellipsis{
+    width: auto;
+    max-width: 98px;
+}
+

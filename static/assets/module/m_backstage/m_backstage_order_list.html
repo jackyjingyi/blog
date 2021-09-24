@@ -1,0 +1,89 @@
+<table class="table table-hover" >
+    <thead>
+    <tr>
+        <th width="12%">订购时间</th>
+        <th width="10%">订单内容</th>
+        <th width="8%">单价</th>
+        <th width="8%">数量</th>
+        <th width="20%">有效时间</th>
+        <th width="10%">开通状态</th>
+        <th width="12%">小计(元)</th>
+        <th width="10">发票</th>
+        <th width="10">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList && dataList.length>0}}
+    {{each dataList as p i}}
+    <tr class="curp" data-i="{{i}}" data-id="{{p.id}}">
+        <td>{{_momentFormat(p.createDate,'YYYY/MM/DD')}}</td>
+        <td>
+            <!--{{p.productName}}-->
+            {{if p.productContentType=='2'}}
+                账号扩充・{{p.productName}}
+            {{else if p.productContentType=='3'}}
+                版本续费・{{p.productName}}
+            {{else if p.productContentType=='4'}}
+                存储空间扩容
+            {{else if p.productContentType=='5'}}
+                存储空间续费
+            {{else}}
+                版本升级・{{p.productName}}
+            {{/if}}
+        </td>
+        <td>
+            {{p.costPerUnit}}{{p.productType=='0'?'元/G/年':'/人/年'}}
+        </td>
+        <td>
+            {{if p.orderCount}}
+                {{p.orderCount}}{{p.productType=='0'?'G':''}}
+            {{else}}
+                --
+            {{/if}}
+        </td>
+        <td>
+            {{if _isNullOrBlank(p.effectStartTime) && _isNullOrBlank(p.effectEndTime)}}
+            --
+            {{else}}
+            {{_momentFormat(p.effectStartTime,'YYYY/MM/DD')}}-{{_momentFormat(p.effectEndTime,'YYYY/MM/DD')}}
+            {{/if}}
+        </td>
+        <td>
+            {{if p.isPayment==0}}
+                <!--<a href="javascript:void(0);" data-action="payOrder" data-value="{{p.isPayment}}">未支付</a>-->
+                未开通
+            {{else}}
+                已开通
+            {{/if}}
+        </td>
+        <td>{{_expNumberFilter(p.orderAmount)}}</td>
+        <td>
+            {{if p.status==1}}
+                <a href="javascript:void(0);" data-action="applyBilling" data-status="{{p.status}}" data-invoice-id="{{p.invoiceId}}" class="roleControl" roleCode="10000101" flag="2">申请开票</a>
+            {{else if p.status==2}}
+                <a href="javascript:void(0);" data-action="applyBilling" data-status="{{p.status}}" data-invoice-id="{{p.invoiceId}}" class="roleControl" roleCode="10000101" flag="2">待开票</a>
+            {{else if p.status==3}}
+                <a href="javascript:void(0);" data-action="applyBilling" data-status="{{p.status}}" data-invoice-id="{{p.invoiceId}}" class="roleControl" roleCode="10000101" flag="2">已开票</a>
+            {{else}}
+                --
+            {{/if}}
+        </td>
+        <td>
+            {{if p.isPayment!=1}}
+                <a href="javascript:void(0);" data-action="delOrder" class="roleControl" roleCode="10000101" flag="2">删除</a>
+            {{/if}}
+        </td>
+    </tr>
+    {{/each}}
+    {{else}}
+    <tr class="no-data">
+        <td colspan="9" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">暂无购买记录</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

@@ -1,0 +1,55 @@
+<div class="row">
+    <div class="col-md-9">
+        <form class="form-horizontal m">
+            <div class="form-group ">
+                <div class="col-sm-12 row-edit-item">
+                    <input placeholder="请输入生产任务名称" class="form-control" type="text" name="taskName" value="{{dataInfo?dataInfo.taskName:''}}">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12" id="remarkEditor">
+
+                </div>
+            </div>
+            <div class="form-group bg-v2-grey p-h-m no-margins">
+                <div class="col-sm-12 m-b-sm">
+                    <label class="pull-left control-label">任务负责人：</label>
+                    <div class="col-sm-6 row-edit-item" style="padding-top: 4px;">
+                        <span class="show-span"> <span class="fc-v1-grey">{{dataInfo?dataInfo.personInCharge:''}}</span> </span>
+                        <a href="javascript:void(0);" class="btn btn-default btn-circle"  data-action="setTaskLeader" data-id="{{dataInfo?dataInfo.personInChargeId:''}}"><i class="fa fa-plus"></i></a>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label class="pull-left control-label">开始时间</label>
+
+                    <div class="col-sm-6 row-edit-item">
+                        <div class="input-group pull-left">
+                            <input type="text" class="form-control timeInput startTime" id="ipt_startTime" name="startTime" placeholder="开始日期" readonly
+                                   onFocus="startTimeFun(this)"  data-appointmentStartTime = "" value="{{dataInfo?dataInfo.startTime:''}}">
+                            <span class="input-group-addon" onclick="javascript:$(this).prev().focus();"><i class="icon-append fa fa-calendar" ></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <label class="pull-left control-label">结束时间</label>
+                    <div class="col-sm-6 row-edit-item">
+                        <div class="input-group">
+                            <input type="text" class="form-control timeInput endTime" id="ipt_endTime" name="endTime" placeholder="结束日期" readonly
+                                   onFocus="endTimeFun(this)"  data-appointmentEndTime="" value="{{dataInfo?dataInfo.endTime:''}}">
+                            <span class="input-group-addon" onclick="javascript:$(this).prev().focus();"><i class="icon-append fa fa-calendar"></i></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="form-group m-t-sm">
+                <div class="col-sm-12">
+                    <button class="btn btn-primary" data-action="submit">提交</button>
+                    <button class="btn btn-default" data-action="cancel">取消</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+

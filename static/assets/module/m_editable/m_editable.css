@@ -1,0 +1,23 @@
+.editable-inline .m-editable .m-editable-content.bg-grey {
+    background: #f9f9f9;
+    padding: 8px 10px;
+    border-radius: 5px;
+}
+.editable-inline .m-editable .error{
+    display: block;
+}
+.editable-inline .m-editable .m-editable-control{
+    width:100%;position: relative;
+}
+.editable-inline .m-editable .m-editable-control.show-btn{
+    width:80%;
+}
+.m-editable .m-editable-clear.textarea-clear{
+    top:6px;
+}
+.m-editable .m-editable-buttons{
+    vertical-align: top;margin-left: 5px;
+}
+.m-editable .m-editable-buttons.dp-block{
+    margin-top: 5px;
+}

@@ -1,0 +1,52 @@
+<div class="ibox m_organizational no-margins">
+    <!--组织架构树 开始-->
+    <div class="ibox-content no-padding">
+        <div class="col-24-md-24">
+            <div class="row org-btn-box">
+                <div class="treeSwitch" style="">
+                    <!--<a class="m-t-sm" href="javascript:void(0)" data-action="treeSwitch">
+                        <img src="{{_url('/img/whole_org_framework.png')}}" style="height: 23px;" data-toggle="tooltip" data-placement="top" title="查看完整组织架构" />
+                    </a>-->
+                </div>
+                <div class="col-24-md-23 col-24-sm-23 col-24-xs-23 headContent">
+                    <a href="javascript:void(0)" class=" roleControl" roleCode="10000101" flag="2" data-action="addDepart">
+                        <i class="iconfont rounded icon-2fengongsi m-r-xs"></i>添加部门
+                    </a>
+                    <span class="divice roleControl" roleCode="10000101" flag="2" >|</span>
+                    <a href="javascript:void(0)" class="roleControl p-r-none" roleCode="10000101" flag="2" data-action="addUser">添加人员</a>
+                    <a href="javascript:void(0)" class="roleControl" roleCode="10000101" flag="2" data-action="bulkImport">批量导入成员</a>
+                    <!-- 非基础版 -->
+                    <!--{{if companyVersion!='03'}}
+                    <span class="divice ">|</span>
+                    <a href="javascript:void(0)" data-action="addOrgType"><i class="iconfont rounded icon-2fengongsi1 m-r-xs"></i>添加部门分组</a>
+                    {{/if}}-->
+                </div>
+            </div>
+        </div>
+        <div class="col-24-sm-8 col-24-md-8 col-24-lg-6 border-right of-auto"  id="org-tree-box" style="height: 500px;">
+            <div class="clearfix margin-bottom-10"></div>
+            <div id="organization_treeH">
+                <ul class="sidebar-nav list-group sidebar-nav-v1">
+                </ul>
+            </div>
+        </div>
+        <!--组织架构树 end-->
+        <div class="col-24-sm-16 col-24-md-16 col-24-lg-18 no-padding"  >
+            <div class="col-sm-12 no-padding editDepartTop" >
+                <div class="col-sm-10 no-padding m">
+                    <span id="departName">{{departName}}</span>
+
+                </div>
+                <div class="col-sm-2 text-right p-xxs">
+                    <button type="button" class="btn btn-primary btn-sm roleControl" roleCode="20030601" flag="2"  data-action="editDepartIntroduction" style="display:none;">编辑部门介绍</button>
+                </div>
+
+            </div>
+            <div class="col-sm-12 no-padding" id="orgUserListBox">
+
+            </div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+
+</div>

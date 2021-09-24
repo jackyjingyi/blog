@@ -1,0 +1,19 @@
+.m-website-footer .media-body{
+    font-size: 14px;
+}
+@media (max-width: 768px){
+    .m-website-footer .container.p-h-100{
+        padding: 20px 0;
+    }
+    .m-website-footer .product-introduction{
+        background-color: #fff;
+    }
+    .container.copyright{
+        padding: 20px 0 10px;
+        text-align: center;
+    }
+    .m-website-footer .product-introduction .product-link,
+    .m-website-footer .product-introduction .product-contact h2{
+        display: none;
+    }
+}

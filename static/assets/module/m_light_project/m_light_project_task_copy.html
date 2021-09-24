@@ -1,0 +1,25 @@
+<form class="form-horizontal m">
+    <div class="form-group">
+        <div class="col-sm-12">
+            <span class="fc-dark-gray">{{titlePrefix}}工作项</span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">选择看板<span class="fc-red">*</span>：</label>
+        <div class="col-sm-12">
+           <select class="form-control" name="projectList"></select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-12">选择板块<span class="fc-red">*</span>：</label>
+        <div class="col-sm-12">
+            <select class="form-control" name="groupList"></select>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <button class="btn btn-primary btn-sm" data-action="save">{{titlePrefix}}</button>
+            <button class="btn btn-default btn-sm" data-action="closeDialog">取消</button>
+        </div>
+    </div>
+</form>

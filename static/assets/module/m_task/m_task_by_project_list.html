@@ -1,0 +1,45 @@
+<table class="tree table table-bordered m-b-none">
+    <thead>
+    <tr>
+        <th width="5%">序号</th>
+        <th>项目</th>
+        <th>子项</th>
+        <th>设计阶段</th>
+        <th>设计专业</th>
+        <!--<th>生产任务</th>-->
+        <th>角色</th>
+        <th>任务状态</th>
+        <th>开始时间</th>
+        <th>结束时间</th>
+        <th>完成时间</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList!=null && dataList.length>0}}
+    {{each dataList as p i}}
+        <tr class="curp" data-member-type="{{p.memberType}}">
+            <td>{{i+1}}</td>
+            <td>{{p.projectName}}</td>
+            <td>{{p.childName}}</td>
+            <td>{{p.designName}}</td>
+            <td>{{p.taskName}}</td>
+            <!--<td>{{}}</td>-->
+            <td>{{p.role}}</td>
+            <td>{{p.statusName}}</td>
+            <td>{{_emptyDisplay(_momentFormat(p.startTime,'YYYY/MM/DD'))}}</td>
+            <td>{{_emptyDisplay(_momentFormat(p.endTime,'YYYY/MM/DD'))}}</td>
+            <td>{{_emptyDisplay(_momentFormat(p.completeDate,'YYYY/MM/DD'))}}</td>
+        </tr>
+    {{/each}}
+    {{else}}
+    <tr class="no-data-tr">
+        <td colspan="10" class="text-center ">
+            <div>
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关任务</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

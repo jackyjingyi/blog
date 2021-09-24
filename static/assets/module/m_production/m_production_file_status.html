@@ -1,0 +1,56 @@
+<form class="form-horizontal m">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">状态：</label>
+        <div class="col-sm-10">
+            <div class="pull-left m-r-xs m-t-xs">
+                <label class="i-checks i-checks-label fw-normal">
+                    {{if fileStatus==1}}
+                    <input type="radio" name="fileStatus" value="1" checked/>
+                    {{else}}
+                    <input type="radio" name="fileStatus" value="1"/>
+                    {{/if}}
+                    <span class="i-checks-span">设计中</span>
+                </label>
+            </div>
+            <div class="pull-left m-r-xs m-t-xs">
+                <label class="i-checks i-checks-label fw-normal">
+                    {{if fileStatus==2}}
+                    <input type="radio" name="fileStatus" value="2" checked/>
+                    {{else}}
+                    <input type="radio" name="fileStatus" value="2"/>
+                    {{/if}}
+                    <span class="i-checks-span">校对中</span>
+                </label>
+            </div>
+            <div class="pull-left m-r-xs m-t-xs">
+                <label class="i-checks i-checks-label fw-normal">
+                    {{if fileStatus==3}}
+                    <input type="radio" name="fileStatus" value="3" checked/>
+                    {{else}}
+                    <input type="radio" name="fileStatus" value="3"/>
+                    {{/if}}
+                    <span class="i-checks-span">审核中</span>
+                </label>
+            </div>
+            <div class="pull-left m-r-xs m-t-xs">
+                <label class="i-checks i-checks-label fw-normal">
+                    {{if fileStatus==4}}
+                    <input type="radio" name="fileStatus" value="4" checked/>
+                    {{else}}
+                    <input type="radio" name="fileStatus" value="4"/>
+                    {{/if}}
+                    <span class="i-checks-span">验收中</span>
+                </label>
+            </div>
+            <div class="row"><div class="col-sm-10"></div></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">人员：</label>
+        <div class="col-sm-10">
+            <select class="form-control" name="designUserList" >
+
+            </select>
+        </div>
+    </div>
+</form>

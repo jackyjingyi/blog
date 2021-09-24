@@ -1,0 +1,47 @@
+<nav class="navbar-default navbar-content border" role="navigation" >
+    <div class="sidebar-collapse">
+        <ul class="nav">
+            <li class="" data-id="">
+                <a class="nav-first-level"  href="#/products">
+                    <span class="nav-label"><i class="fa fa-long-arrow-left"></i>返回</span>
+                </a>
+            </li>
+            <li class="active border-t-dashed" data-id="1">
+                <a class="nav-first-level p-l-35"  href="#/products/details/1">
+                    <span class="nav-label">组织管理</span>
+                </a>
+            </li>
+            <li class="border-t-dashed" data-id="2">
+                <a class="nav-first-level p-l-35"  href="#/products/details/2">
+                    <span class="nav-label">项目管理</span>
+                </a>
+            </li>
+            <li class="border-t-dashed" data-id="3">
+                <a class="nav-first-level p-l-35"  href="#/products/details/3">
+                    <span class="nav-label">财务管理</span>
+                </a>
+            </li>
+            <li class="border-t-dashed" data-id="4">
+                <a class="nav-first-level p-l-35"  href="#/products/details/4">
+                    <span class="nav-label">移动办公</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="phone-navbar-default">
+    <a href="#/products">产品介绍</a>
+    <span class="fa fa-angle-right"></span>
+    <span class="fc-v2-grey">
+        {{if activeId==1}}
+            组织管理
+        {{else if activeId==2}}
+            项目管理
+        {{else if activeId==3}}
+            财务管理
+        {{else if activeId==4}}
+            移动办公
+        {{/if}}
+    </span>
+</div>
+<div class="clearfix"></div>

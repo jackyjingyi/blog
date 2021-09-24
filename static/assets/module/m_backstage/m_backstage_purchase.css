@@ -1,0 +1,24 @@
+.m-backstage-purchase-step1 .nav-tabs>li>a,
+.m-backstage-purchase-step1 .nav-tabs>li>a:hover{
+    margin-right: 0;
+    border: solid 1px #e7eaec;
+    border-radius: 0;
+}
+.m-backstage-purchase-step1 .tabs-container .nav-tabs > li{
+    width: 33.3%;
+    text-align: center;
+}
+.m-backstage-purchase-step1 .tabs-container .nav-tabs > li:last-child{
+    width: 33.4%;
+}
+.m-backstage-purchase-step1 .tabs-container[data-version="03"] .nav-tabs > li{
+    width: 50%;
+}
+.m-backstage-purchase-step1 .tabs-container .nav-tabs > li.active > a,
+.m-backstage-purchase-step1 .tabs-container .nav-tabs > li.active > a:hover,
+.m-backstage-purchase-step1 .tabs-container .nav-tabs > li.active > a:focus{
+    background-color: #337b8e;
+    color: #fff;
+    border-radius: 0;
+    border-color: #337b8e;
+}

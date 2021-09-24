@@ -1,0 +1,33 @@
+<style>
+    .m-task-issue-nav #orgTreeH{
+        display: block;
+        padding: 10px;
+        border-radius: 4px;
+        height: 300px;
+        overflow: auto;
+        z-index: 9;
+        background-color: #fff;
+    }
+
+</style>
+{{if renderType==0}}
+<div class="btn-group m-task-issue-nav">
+    <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-action="selectOrg" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false"  data-stopPropagation="true" style="{{buttonStyle==null?'':buttonStyle}}">
+        <span class="task-name" style="{{spanStyle==null?'':spanStyle}}">{{taskList.text}}</span> <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" style="left: inherit;right: 0;">
+        <li>
+            <div id="orgTreeH" >
+                <ul class="sidebar-nav list-group sidebar-nav-v1">
+                </ul>
+            </div>
+        </li>
+    </ul>
+</div>
+{{else}}
+<div id="orgTreeH" >
+    <ul class="sidebar-nav list-group sidebar-nav-v1">
+    </ul>
+</div>
+{{/if}}

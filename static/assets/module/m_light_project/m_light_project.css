@@ -1,0 +1,137 @@
+.m-light-project #groupList .list-group-item:hover:not(.active){
+   background: #f5f5f5;
+}
+.m-light-project #groupList .list-group-item.active .group-name,
+.m-light-project #groupList .list-group-item.active .fa{
+    color: #fff;
+}
+.m-light-project #groupList .list-group-item .btn-group{
+    height: 18px;
+}
+.m-light-project #groupList .list-group-item.active .btn-group a{
+    color: #333;
+}
+.m-light-project-temp-add .temp-card{
+    width: 283px;
+    height: 223px;
+    border: 1px solid #e5e5e5;
+    border-radius: 4px;
+    transition: box-shadow 0.3s;
+    padding: 18px 20px;
+    cursor: pointer;
+    display: inline-block;
+}
+.m-light-project-temp-add .temp-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.m-light-project-temp-add .temp-card-img{
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 126px;
+    margin-bottom: 12px;
+}
+.m-light-project-task-detail .content-editable{
+    width: 610px;
+    background-color: #FFFFFF;
+    background-image: none;
+    border: 1px solid #e5e6e7;
+    border-radius: 1px;
+    color: inherit;
+    display: block;
+    padding: 6px 12px;
+    min-height: 32px;
+}
+.m-light-project-task-detail .content-editable-placeholder{
+    position: absolute;
+    top: 7px;
+    left: 20px;
+    color: #ccc;
+}
+.m-light-project-task-detail .checklist-list .checklist-item{
+    list-style: none;
+    position: relative;
+}
+.m-light-project-task-detail .checklist-progress .progress{
+    width: 550px;
+    height: 10px;
+    margin-bottom: 0;
+}
+.m-light-project-task-detail .checklist-progress .checklist-progress-num{
+    width: 35px;
+}
+.m-light-project-task-detail .task-remark{
+    border: solid 4px #fff;
+    width: 600px;
+    display: block;
+    min-height: 35px;
+    padding: 5px;
+    color: initial;
+}
+.m-light-project-task-detail .task-remark:hover{
+    border: solid 4px #f5f5f5;
+}
+
+.template-task-flow .overview-content{
+    -ms-flex-flow: wrap;
+    flex-flow: wrap;
+    margin-bottom: -20px;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+}
+.template-task-flow .template-task-flow-item{
+    line-height: 20px;
+    list-style: none;
+    height: 30px;
+    max-width: 115px;
+    position: relative;
+    margin-bottom: 20px;
+    border-radius: 2px;
+    box-shadow: 0 0 3px rgba(0,0,0,0.2);
+}
+.template-task-flow .template-task-flow-item .item-name{
+    display: block;
+    padding: 0 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 30px;
+}
+.template-task-flow .template-task-flow-item:not(:last-child):after {
+    display: inline-block;
+    font-family: 'Glyphicons Halflings';
+    font-stretch: normal;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 400;
+    speak: none;
+    text-transform: none;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    vertical-align: top;
+    top: 5px;
+    right: -17px;
+    color: #d9d9d9;
+    position: absolute;
+}
+.template-task-flow .template-task-flow-item:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #1b9aee;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+}
+.template-task-flow .template-task-flow-item:not(:last-child):after {
+    content: "\e258";
+}

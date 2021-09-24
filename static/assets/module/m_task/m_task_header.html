@@ -1,0 +1,18 @@
+<div class="row m-task-header border">
+    <div class="col-24-xs-3 height-60 border-right bg-v2-grey">
+        <div class="btn-group btn-group-new text-center" id="taskStatus">
+            <button data-toggle="dropdown" class="bg-v2-grey" aria-expanded="true">
+                {{if status==0}}
+                    <span>待处理{{doType==2?'工作项':'任务'}}</span>
+                {{else}}
+                    <span>已处理{{doType==2?'工作项':'任务'}}</span>
+                {{/if}}
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="javascript:void(0);" data-status="0">待处理{{doType==2?'工作项':'任务'}}</a></li>
+                <li><a href="javascript:void(0);" data-status="1">已处理{{doType==2?'工作项':'任务'}}</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,51 @@
+<div class="text-center  border-bottom date-chose-box">
+    <span class="f-s-xl pull-left m-l-md">{{_momentFormat(expFixedData.expDate,'YYYY年MM月')}}</span>
+    <span class="pull-right m-r-md">支出：<span class="f-s-xl">{{_expNumberFilter(expFixedData.expAmount)}}</span> 元</span>
+    <span class="pull-right m-r-md">收入：<span class="f-s-xl">{{_expNumberFilter(expFixedData.incomeAmount)}}</span> 元</span>
+    <div class="clearfix"></div>
+</div>
+<div class="p-m">
+    <form id="expFixedForm">
+    <table class="table table-bordered table-responsive">
+        <thead>
+        <tr>
+            <th colspan="2">类别名称</th>
+            <th>金额（元）</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if expFixedData.fixedList!=null && expFixedData.fixedList.length>0}}
+            {{each expFixedData.fixedList as p pi}}
+                {{if p.detailList!=null && p.detailList.length>0}}
+                    {{each p.detailList as s si}}
+                    <tr>
+                        {{if si==0}}
+                        <td rowspan="{{p.detailList.length}}" class="v-middle">{{p.expTypeName}}</td>
+                        {{/if}}
+                        <td class="v-middle">{{s.expTypeName}}</td>
+
+                            {{if managerCompanyIds && managerCompanyIds.indexOf(selectedOrg.id)>-1}}
+                                <td class="v-middle">
+                                    <input class="form-control input-sm" type="text" name="expAmount" maxlength="50" value="{{s.expAmount}}" id="{{s.id}}"
+                                           data-exptype="{{s.expType}}" data-parent-name="{{p.expTypeName}}" data-name="{{s.expTypeName}}" data-seq="{{s.seq}}">
+                                </td>
+                            {{else}}
+                                <td>
+                                    <span>{{_expNumberFilter(s.expAmount)}}</span>
+                                </td>
+                            {{/if}}
+
+                    </tr>
+                    {{/each}}
+                {{/if}}
+            {{/each}}
+        {{/if}}
+        </tbody>
+    </table>
+    </form>
+    <div class="text-right">
+        {{if managerCompanyIds && managerCompanyIds.indexOf(selectedOrg.id)>-1}}
+            <a class="btn btn-primary roleControl" roleCode="40001001" flag="2" data-action="saveExpFixed">保存</a>
+        {{/if}}
+    </div>
+</div>

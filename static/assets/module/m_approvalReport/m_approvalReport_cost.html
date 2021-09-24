@@ -1,0 +1,58 @@
+<!-- 报销汇总 STRAT-->
+<div class="data-list-box {{doType==2?'m':''}}">
+    {{if doType==2}}
+    <form role="form" class="form-inline m-b-sm">
+        <div class="form-group z-index-1">
+            <label  class="">当前组织：</label>
+            <div class="btn-group" id="selectOrg">
+            </div>
+        </div>
+        <div class="form-group z-index-1">
+            <label  class="">审批类型：</label>
+            <select class="form-control" name="expType"></select>
+        </div>
+        <div class="time-combination form-group">
+
+        </div>
+        <button class="btn btn-white btn-sm" data-action="refreshBtn">刷新数据</button>
+    </form>
+    {{else}}
+    <form role="form" class="form-inline m-b-sm">
+        <div class="row">
+            <div class="col-md-12 m-b-sm">
+                <div class="z-index-1">
+                    <label class="inline">当前组织：</label>
+                    <div class="btn-group" id="selectOrg">
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <label  class="">审批类型：</label>
+                <!--<select class="form-control" name="expType"></select>-->
+                <div class="dp-inline-block-1 m-l-sm" id="expTypeBox"></div>
+            </div>
+            <div class="col-md-12" id="timeSelect">
+
+            </div>
+            <div class="col-md-12">
+                <div class="border-bottom p-b-sm">
+                    <button class="btn btn-primary" data-action="search">查询</button>
+                    <button class="btn btn-default" data-action="refreshBtn">重置条件</button>
+                </div>
+            </div>
+        </div>
+        <div class="row m-b-sm m-t-xs p-t-sm">
+            <div class="col-md-9 filter-result-col">
+                <span>筛选条件： 共 <span id="totalBySearch">0</span> 项 &nbsp;</span>
+            </div>
+            <div class="col-md-3 text-right"></div>
+        </div>
+    </form>
+    {{/if}}
+    <div class="data-list-container"></div>
+    <div class="p-w-xs">
+        <div id="data-pagination-container" class="m-pagination pull-right "></div>
+    </div>
+</div>
+<!-- 报销汇总 END-->

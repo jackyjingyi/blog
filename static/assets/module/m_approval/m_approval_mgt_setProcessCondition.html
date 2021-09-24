@@ -1,0 +1,79 @@
+<form class="form-horizontal m m_approval_mgt_setProcessCondition ">
+    <div class="form-group">
+        <div class="col-md-12">
+            <h4>{{processData.name}}</h4>
+            <p class="fc-v1-grey">
+                请输入“<span id="processName">{{processData.name}}</span><span id="processUnit">（{{processData.unit}}）</span>”的分隔数字，我们将为您自动生成数值区间做为审批条件：
+            </p>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-12">
+            <p>请选择分组条件</p>
+            <p class="">
+                {{if processData.optionalConditionList && processData.optionalConditionList.length>0}}
+                {{each processData.optionalConditionList as o i}}
+                    <div class="pull-left m-r-xs m-t-xs">
+                        <label class="i-checks i-checks-label fw-normal" data-name="{{o.name}}" data-unit="{{o.unit}}">
+                            {{if i==0}}
+                            <input type="radio"  name="optionalCondition" value="{{o.id}}" checked/>
+                            {{else}}
+                            <input type="radio"  name="optionalCondition" value="{{o.id}}"/>
+                            {{/if}}
+                            <span class="i-checks-span">{{o.name?o.name:'数字'}}</span>
+                        </label>
+                    </div>
+                    {{/each}}
+            {{/if}}
+            </p>
+        </div>
+    </div>
+    <div class="form-group m-b-xs">
+        <div class="col-md-2 m-b-xs">
+            <input class="form-control input-sm" type="text" name="conditionalVal">
+        </div>
+        <div class="col-md-1 m-b-xs">
+            <a class="btn btn-primary btn-circle " type="button" data-action="addCondition">
+                <i class="fa fa-plus"></i>
+            </a>
+        </div>
+    </div>
+    <div class="error-tip m-b-xs"></div>
+    <div class="well m-b-none">
+        <p>例如：</p>
+        <p>1、输入“报销金额”分隔数字</p>
+        <div class="row">
+            <div class="col-md-2 m-b-xs">
+                <input class="form-control input-sm" type="text" value="1000" readonly>
+            </div>
+            <div class="col-md-1 m-b-xs p-xxs text-center"> < </div>
+            <div class="col-md-2 m-b-xs">
+                <input class="form-control input-sm" type="text" value="3000" readonly>
+            </div>
+        </div>
+        <p>2、我们将为您自动生成数值区间做为审批条件</p>
+        <div class="row">
+            <div class="col-md-12 ">
+                <span class="label label-primary">报销金额 < 1000</span>
+            </div>
+            <div class="col-md-12 m-t-xs">
+                <span class="label label-white">审批人：张三</span>
+            </div>
+            <div class="col-md-12 m-t-xs">
+                <span class="label label-primary">1000 <= 报销金额 < 3000</span>
+            </div>
+            <div class="col-md-12 m-t-xs">
+                <span class="label label-white">审批人：李四</span>
+            </div>
+            <div class="col-md-12 m-t-xs">
+                <span class="label label-white">审批人：王五</span>
+            </div>
+            <div class="col-md-12 m-t-xs">
+                <span class="label label-primary">报销金额 >= 3000</span>
+            </div>
+            <div class="col-md-12 m-t-xs">
+                <span class="label label-white">审批人：张三</span>
+            </div>
+        </div>
+    </div>
+</form>

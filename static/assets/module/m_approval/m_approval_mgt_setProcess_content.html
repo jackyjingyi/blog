@@ -1,0 +1,102 @@
+<div class="row m-t-lg">
+    <div class="col-md-2 text-right">部门：</div>
+    <div class="col-md-10">{{treeSelectedData?treeSelectedData.text:''}}</div>
+</div>
+<div class="row m-t-sm">
+    <div class="col-md-2 text-right">模版模型：</div>
+    <div class="col-md-10">{{name}}</div>
+</div>
+<div class="row m-t-sm">
+    <div class="col-md-2 text-right">审批流程：</div>
+    <div class="col-md-10">
+        <!-- 系统默认 -->
+        {{if isSystem==1 && formId!='attendanceClock'}}
+        <div class="m-b-xs">
+            <label class="i-checks i-checks-label">
+                <input class="ck"  name="iCheck" type="radio" data-type="0" />
+                <span class="i-checks-span-default">无需审批</span>
+            </label>
+        </div>
+        {{/if}}
+        <div>
+            <label class="i-checks i-checks-label">
+                <input class="ck"  name="iCheck" type="radio" data-type="1" />
+                <span class="i-checks-span-default">自由流程</span>
+            </label>
+            <span class="fc-v1-grey dp-inline-block vertical-top">（组织成员可自行添加相应的审批人）</span>
+        </div>
+        <div class="m-t-xs">
+            <label class="i-checks i-checks-label">
+                <input class="ck"  name="iCheck" type="radio" data-type="2" />
+                <span class="i-checks-span-default">固定流程</span>
+            </label>
+            <span class="fc-v1-grey dp-inline-block vertical-top">（组织成员需按照规定好的审批人流程进行审批）</span>
+        </div>
+        <div class="panel panel-default" data-type="2" data-i="0" style="display: none;">
+            <div class="panel-heading">
+                当为“固定流程”时
+            </div>
+            <div class="panel-body" >
+                <div class="row">
+                    <div class="col-24-xs-3 col-xl-1 p-t-md p-l-sm p-r-none text-center">
+                        审批人设置：
+                    </div>
+                    <div class="col-24-xs-21 col-xl-11 p-l-none panel-item" >
+                        <div class="approver-box text-center">
+                            <a class="btn btn-default btn-circle " type="button" data-action="addApprover">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                            <div class="m-t-xs">添加</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row border-top p-t">
+                    <div class="col-24-xs-3 col-xl-1 p-t-md p-l-sm p-r-none text-center">
+                        抄送人设置：
+                    </div>
+                    <div class="col-24-xs-21 col-xl-11 p-l-none panel-item">
+                        <div class="approver-box text-center">
+                            <a class="btn btn-default btn-circle" type="button" data-action="addCcUser">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                            <div class="m-t-xs">添加</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <p>比如组织报销流程为“酋长  >  部落”，设定固定流程后，组织成员填写审批单时，审批人已经默认设置为“酋长  >  部落”，且成员自己不能修改。 </p>
+            </div>
+        </div>
+        <div class="m-t-xs">
+            {{if (optionalConditionList && optionalConditionList.length>0) || formId=='projectPayApply'  }}
+                <label class="i-checks i-checks-label">
+                    <input class="ck"  name="iCheck" type="radio" data-type="3"  />
+                    <span class="i-checks-span-default">分条件设置流程</span>
+                </label>
+            {{else}}
+                <label class="i-checks i-checks-label" title="当前审批不可设置此项">
+                    <input class="ck"  name="iCheck" type="radio" data-type="3"  disabled title="当前审批不可设置此项"/>
+                    <span class="i-checks-span-default">分条件设置流程</span>
+                </label>
+            {{/if}}
+            <span class="fc-v1-grey dp-inline-block vertical-top">（申请人提交的表单会进入相应审批条件设置的审批流程）</span>
+            {{if (optionalConditionList && optionalConditionList.length>0) || formId=='projectPayApply' }}
+            <a class="btn btn-link vertical-top no-padding" data-action="setApprovalCondition" data-type="3" style="display: none;margin-top: -1px;">设置审批条件</a>
+            {{else}}
+            <span class="fc-v1-grey dp-inline-block vertical-top">（当前没有可选的分组条件,不能选择此项！）</span>
+            {{/if}}
+        </div>
+        <div id="flowTaskGroupList">
+
+        </div>
+
+    </div>
+</div>
+<div class="row m-b-sm">
+    <div class="col-md-2"></div>
+    <div class="col-md-10">
+        <a class="btn btn-primary" data-action="save">保存</a>
+        <!--<a class="btn btn-default" data-action="back">返回</a>-->
+    </div>
+</div>

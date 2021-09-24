@@ -1,0 +1,50 @@
+{{if dataList!=null && dataList.length>0}}
+{{each dataList as d i}}
+<tr class="{{trClass}}" data-id="{{d.id}}" data-i="{{i}}" businessType = "{{d.businessType}}">
+    {{each headerList as f fi}}
+        <td data-code="{{f.code}}">
+            {{if f.showByATag}}
+            <a href="javascript:void(0)" data-action="{{f.code}}">
+                <!-- /** 字段类型：1-字符串,2-日期,3-金额（万元）,4-金额（元） **/ -->
+                {{if f.type==2}}
+                    {{_momentFormat(d[f.code],'YYYY/MM/DD')}}
+                {{else if f.type==3 || f.type==4}}
+                    {{_expNumberFilter(d[f.code])}}
+                {{else}}
+                    {{d[f.code]}}
+                {{/if}}
+            </a>
+            {{else if !_isNullOrBlank(f.showByButtonTag) && ((!_isNullOrBlank(f.showByButtonTagCode) && d[f.showByButtonTagCode]==0) || _isNullOrBlank(f.showByButtonTagCode))}}
+
+                <button class="btn btn-primary btn-xs" data-action="{{f.code}}_{{f.showByButtonTagCode}}">{{f.showByButtonTag}}</button>
+
+            {{else}}
+                <span>
+                    {{if f.type==2}}
+                        {{_momentFormat(d[f.code],'YYYY/MM/DD')}}
+                    {{else if f.type==3 || f.type==4}}
+                        {{_expNumberFilter(d[f.code])}}
+                    {{else}}
+                        {{if f.code=='projectCreatorName' && d.isOtherCreateProject==1}}
+                            {{d[f.code]}}&nbsp;&nbsp;<span class="icon iconfont icon-weibiaoti- fc-dark-blue"></span>
+                        {{else}}
+                            {{d[f.code]}}
+                        {{/if}}
+                    {{/if}}
+                </span>
+            {{/if}}
+        </td>
+    {{/each}}
+</tr>
+{{/each}}
+{{else}}
+<tr class="no-data">
+    <td colspan="{{headerList.length}}" class="text-center v-middle">
+        <div class="m-b-xl m-t-md">
+            <img src="{{_url('/img/default/without_data.png')}}">
+            <span class="fc-dark-blue dp-block">没有相关数据</span>
+        </div>
+    </td>
+</tr>
+{{/if}}
+

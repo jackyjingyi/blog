@@ -1,0 +1,28 @@
+.m-project-dynamics .vertical-container{
+    width: 88%;max-width:none; margin-left: 110px;
+}
+.m-project-dynamics .center-orientation .vertical-timeline-content {
+    float: right;
+    margin-right: 15px;
+    width: 90%;
+}
+.m-project-dynamics #vertical-timeline.center-orientation:before {
+    left: 0;
+}
+.m-project-dynamics .center-orientation .vertical-timeline-icon{
+    left: 0;
+}
+.m-project-dynamics .dark-timeline.center-orientation .vertical-timeline-content:before{
+    border-color: transparent #f5f5f5 transparent transparent;
+    left: auto;
+}
+@media only screen and (min-width: 1366px){
+    .m-project-dynamics .vertical-container{
+        width: 90%;max-width:none; margin-left: 110px;
+    }
+    .m-project-dynamics .center-orientation .vertical-timeline-content {
+        float: right;
+        margin-right: 15px;
+        width: 95%;
+    }
+}

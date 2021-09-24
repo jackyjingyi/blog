@@ -1,0 +1,149 @@
+<div class="m-task-approval-opinion task-list-box">
+    <table class="table table-bordered ">
+        <thead>
+        <tr>
+            <th>任务名称</th>
+            <th>图名</th>
+            <th>
+                <label class="i-checks fw-normal m-b-none dp-inline-block">
+                    <input name="approvalOpinionCk" type="checkbox" value="" />
+                    <span class="i-checks-span"></span>
+                </label>
+                <div class="list-action-box dp-inline-block">
+                    <div class="btn-group batchOperation" id="batchAllOperation">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle action-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="批量操作">
+                            <span class="ic-operation-batch"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="javascript:void(0);" class="" data-action="batchStateFlow" data-canbedelete="">批量流转</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <span>缺陷</span>
+            </th>
+            <th>缺陷状态</th>
+            <th>处理人</th>
+            <th>严重程度</th>
+            <th>创建时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if dataList!=null && dataList.length>0}}
+        {{each dataList as p i}}
+
+            {{if p.childList && p.childList.length>0}}
+                {{each p.childList as p1 i1}}
+                    {{if p1.childList && p1.childList.length>0}}
+                        {{each p1.childList as p2 i2}}
+                            <tr class="curp" data-id="{{p2.id}}" data-pid="{{p1.id}}" data-ppid="{{p.id}}"
+                                　data-i="{{i2}}" data-pi="{{i1}}" data-ppi="{{i}}" data-file-id="{{p2.fileId}}">
+                                {{if i1==0 && i2==0}}
+                                <td rowspan="{{_allChildrenLen(p.childList,'childList')}}">{{p.taskName}}</td>
+                                {{/if}}
+                                {{if i2==0}}
+                                <td rowspan="{{p1.childList&&p1.childList.length?p1.childList.length:1}}">{{p1.fileName}}</td>
+                                {{/if}}
+                                <td data-type="1">
+                                    <label class="i-checks fw-normal m-b-none dp-inline-block">
+                                        <input name="approvalOpinionCk" type="checkbox" value="{{p2.id}}" data-status="{{p2.status}}"/>
+                                        <span class="i-checks-span"></span>
+                                    </label>
+                                    <span class="audit-name">{{p2.auditName}}</span>
+                                </td>
+                                <td>
+                                    <span class="show-span">
+                                        {{if !_isNullOrBlank(p2.statusName)}}
+                                            <button class="btn btn-white btn-rounded btn-status no-hover selected">
+                                                {{p2.statusName}}
+                                            </button>
+                                        {{else}}
+                                            <span class="fc-v1-grey">未设置</span>
+                                        {{/if}}
+                                    </span>
+                                    <a href="javascript:void(0);" class="btn-edit"  data-action="xeditableStatusByApprovalOpinion" data-key="status" data-value="{{p2.status}}" data-type="5" style="visibility: hidden;">
+                                        <i class="icon iconfont icon-bianji"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                     <span class="show-span">
+                                        {{if p2.executers && p2.executers.length>0}}
+                                            {{each p2.executers as e ei}}
+                                                {{if ei>0}}
+                                                    ,{{e.userName}}
+                                                {{else}}
+                                                    {{e.userName}}
+                                                {{/if}}
+                                            {{/each}}
+                                        {{else}}
+                                        <span class="fc-v1-grey">未设置</span>
+                                        {{/if}}
+                                    </span>
+                                    <a href="javascript:void(0);" class="btn-edit"  data-action="xeditableUserByApprovalOpinion" data-key="handler" style="visibility: hidden;">
+                                        <i class="icon iconfont icon-bianji"></i>
+                                    </a>
+                                </td>
+                                <td>
+                                    <span class="show-span {{p2.severity==1||p2.severity==2?'fc-red':''}}">
+                                        <!--{{p2.severityName}}-->
+                                        {{if p2.severity==0}}
+                                            空
+                                        {{else if p2.severity==1}}
+                                            致命
+                                        {{else if p2.severity==2}}
+                                            严重
+                                        {{else if p2.severity==3}}
+                                            一般
+                                        {{else if p2.severity==4}}
+                                            提示
+                                        {{else if p2.severity==5}}
+                                            建议
+                                        {{/if}}
+                                    </span>
+                                    <a href="javascript:void(0);" class="btn-edit"  data-action="xeditableByApprovalOpinion" data-key="severity" data-value="{{p2.severity}}" data-type="5" style="visibility: hidden;">
+                                        <i class="icon iconfont icon-bianji"></i>
+                                    </a>
+                                </td>
+                                <td> {{_momentFormat(p2.createTime,'YYYY/MM/DD HH:mm:ss')}}</td>
+                            </tr>
+                        {{/each}}
+                    {{else}}
+                        <tr>
+                            {{if i1==0}}
+                            <td rowspan="{{p.childList&&p.childList.length?p.childList.length:1}}">{{p.taskName}}</td>
+                            {{/if}}
+                            <td data-type="2">{{p1.fileName}}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    {{/if}}
+                {{/each}}
+            {{else}}
+                <tr>
+                    <td>{{p.taskName}}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            {{/if}}
+        {{/each}}
+        {{else}}
+        <tr class="no-data">
+            <td colspan="8" class="text-center v-middle">
+                <div class="m-b-xl m-t-md">
+                    <img src="{{_url('/img/default/without_data.png')}}">
+                    <span class="fc-dark-blue dp-block">暂无相关数据</span>
+                </div>
+            </td>
+        </tr>
+        {{/if}}
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,13 @@
+<form class="form-horizontal m min-h-50">
+    <div class="form-group">
+        <label class="col-sm-2  text-right m-t-xs">名称<span class="color-red">*</span>：</label>
+        <div class="col-sm-10">
+            {{if type==3}}
+            <select class="form-control" name="fieldName"></select>
+            {{else}}
+            <input type="text" class="form-control" name="fieldName" maxlength="50" placeholder="请输入名称" value="{{dataInfo!=null?dataInfo.fieldName:''}}">
+            {{/if}}
+        </div>
+    </div>
+</form>
+

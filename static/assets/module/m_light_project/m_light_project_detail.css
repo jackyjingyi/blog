@@ -1,0 +1,51 @@
+.m-light-project-detail #projectContent{
+    overflow-x: auto;
+    overflow-y: hidden;
+    width: 100%;
+    white-space: nowrap;
+}
+.m-light-project-detail .panel.panel-kanban{
+    width: 280px;
+    display: inline-block;
+    vertical-align: top;
+    overflow: auto;
+}
+.m-light-project-detail .panel.panel-kanban .input-time,
+.m-light-project-detail .panel.panel-kanban .select-user{
+    background: none;
+    display: inline-block;
+    padding: 0 5px;
+}
+.m-light-project-detail .panel.panel-kanban .task-group-add{
+    border: none;
+    padding: 3px 15px;
+    line-height: 31px;
+    cursor: pointer;
+}
+.m-light-project-detail .task-group-name.text-ellipsis{
+    width: auto;
+    max-width: 190px;
+}
+.m-light-project-detail .panel-kanban .panel-body .list-group-item .btn-group{display: none;}
+.m-light-project-detail .panel-kanban .panel-body .list-group-item:hover .btn-group{display:block;}
+.m-light-project-detail .panel-kanban .panel-body .list-group-item .task-name{
+    width: 190px;
+}
+
+.task-item-tags .item-line{
+    display: block;
+    width: 150px;
+    padding: 5px;
+    color: #fff;
+    text-align: left;
+}
+.task-item-tags .item-line:hover{
+    width: 160px;
+}
+.task-item-tags .item-line.select{
+    width: 160px;
+    background-image: url("../img/icon/ic_card_select.png");
+    background-position: 140px 3px;
+    background-repeat: no-repeat;
+}
+

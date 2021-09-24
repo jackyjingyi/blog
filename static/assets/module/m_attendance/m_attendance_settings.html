@@ -1,0 +1,70 @@
+<div class="m">
+    <div class="row m-b-xs">
+        <div class="col-md-12 text-right">
+            <button class="btn btn-primary" data-action="add">添加规则</button>
+            <a class="btn btn-default" href="#/backstageMgt/attendance">返回</a>
+        </div>
+    </div>
+    <table class="table table-hover table-bordered table-responsive dataTable" >
+        <thead>
+        <tr>
+            <th>规则名称</th>
+            <th>打卡时间</th>
+            <th>打卡地点</th>
+            <th width="">操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{each dataList as p i}}
+        <tr data-id="{{p.id}}">
+            <td>{{p.ruleName}}</td>
+            <td>
+                {{if p.periodList!=null && p.periodList.length>0}}
+                {{each p.periodList as t ti}}
+                    <p>
+                        {{if p.ruleType==2}}
+                            {{t.classesName}}
+                        {{else}}
+                            {{_daysFormat(t.workDays)}}
+                        {{/if}}
+                    </p>
+                    {{if t.timeList!=null && t.timeList.length>0}}
+                        {{each t.timeList as time }}
+                            <p>上班 {{time.startTime}}  —  下班 {{time.endTime}}</p>
+                        {{/each}}
+                    {{/if}}
+                {{/each}}
+                {{/if}}
+            </td>
+            <td>
+                {{if p.addressList!=null && p.addressList.length>0}}
+                    {{each p.addressList as address}}
+                        <p>{{address.address}}</p>
+                    {{/each}}
+                {{/if}}
+                {{if p.wifiList!=null && p.wifiList.length>0}}
+                    {{each p.wifiList as wifi}}
+                        <p>{{wifi.address}}</p>
+                    {{/each}}
+                {{/if}}
+            </td>
+            <td>
+                <button class="btn btn-primary btn-xs" data-action="edit">编辑</button>
+                <button class="btn btn-danger btn-xs" data-action="del">删除</button>
+            </td>
+        </tr>
+        {{/each}}
+        {{if dataList==null || dataList.length==0}}
+        <tr class="no-data">
+            <td colspan="4" class="text-center v-middle">
+                <div class="m-b-xl m-t-md">
+                    <img src="{{_url('/img/default/without_data.png')}}">
+                    <span class="fc-dark-blue dp-block">您还没有相关数据</span>
+                </div>
+            </td>
+        </tr>
+        {{/if}}
+        </tbody>
+    </table>
+</div>
+

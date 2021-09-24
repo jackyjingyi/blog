@@ -1,0 +1,76 @@
+<div class="m min-h-500">
+<div class="row">
+    <div class="col-md-12" style="font-size: 15px;font-weight: bold;">
+        <span > 院领导：{{userName}}</span>
+    </div>
+    <div class="col-md-12"  style=" margin-top: 10px;font-size: 15px; font-weight: bold;">
+        <span>
+            {{if type==1}}
+            {{year}}年合同总额：
+            {{else}}
+            {{year}}年收入：
+            {{/if}}
+             {{_expNumberFilter(fee)}}元</span>
+        <a class="btn btn-outline no-padding" data-action="addFee"   data-edit-type="2"
+           data-placeholder="请输入备注内容"
+           data-key="fee"    data-type="14"
+           title="新增修正记录"
+           data-valid="6"><i class="fa fa-plus color-dark-blue f-s-xl" ></i></a>
+    </div>
+
+</div>
+
+<table class="tree table table-bordered m-b-none m-t-xs">
+    <thead>
+    <tr>
+        <th>修正金额</th>
+        <th>合同编号</th>
+
+        <th>修正日期</th>
+        <th>操作人</th>
+        <th width="30%">备注</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList!=null && dataList.length>0}}
+    {{each dataList as p i}}
+    <tr class="curp" data-id="{{p.id}}" data-user-id="{{p.companyUserId}}" >
+
+        <td>
+   {{_expNumberFilter(p.fee)}}
+        </td>
+        <td>{{p.contractNo}}</td>
+
+        <td>{{p.modifyDate}}</td>
+        <td>{{p.userName}}<a href="javascript:void(0);" class="editable-click roleControl" roleCode="40000105" flag="5"  data-action="editFee" data-edit-type="2"
+                             data-id="{{p.id}}"
+                             data-placeholder="请输入备注内容"
+                             data-fee="{{p.fee}}"   data-type="14"
+                             data-contract-no="{{p.contractNo}}"
+                             data-modify-date="{{p.modifyDate}}"
+                             data-remark="{{p.remark}}"
+                             title="编辑修正记录"
+                             data-valid="6">
+            <i class=" fa fa-pencil fc-dark-blue"></i>
+        </a>
+
+
+        </td>
+        <td>{{p.remark}}  <a class="curp pt-absolute  m-l-xs" href="javascript:void(0)" data-id="{{p.id}}" data-action="delFee"  title="删除修正记录">
+            <i class="fa fa-times fc-red"></i>
+        </a></td>
+    </tr>
+    {{/each}}
+    {{else}}
+    <tr class="no-data-tr">
+        <td colspan="5" class="text-center ">
+            <div>
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>
+</div>

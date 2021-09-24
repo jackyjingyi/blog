@@ -1,0 +1,71 @@
+<tr class="content-row " data-id="{{t.id}}" data-i="{{tIndex}}" data-pid="{{t.taskPid}}"
+    data-company-id="{{t.companyId}}" data-publish-id="{{t.publishId}}">
+    <td class="b-l-none pt-relative">
+        <a href="#/project/taskIssue/details?id={{projectId}}&projectName={{projectNameCode}}&taskId={{t.id}}&dataCompanyId={{dataCompanyId}}" class="show-span task-name pt-relative" data-string="{{t.taskName}}" >
+            {{t.taskName}}
+        </a>
+        {{if t.role && t.role.edit==1}}
+        <a href="javascript:void(0);" data-action="xeditable" data-value="{{t.taskName}}" data-key="taskName"  data-placeholder="请输入项目/子项名称" data-type="1" data-valid="1" data-max-length="50" style="display: none;">
+            <i class="icon iconfont icon-bianji"></i>
+        </a>
+        {{/if}}
+    </td>
+    <td class="">
+        <span class="show-span">
+            {{if t.role && t.role.edit==1}}
+                {{if _isNullOrBlank(t.startTime)}}
+                    <span class="fc-v1-grey">未设置</span>
+                {{else}}
+                    {{_momentFormat(t.startTime,'YYYY/MM/DD')}}
+                {{/if}}
+            {{else}}
+                {{if _isNullOrBlank(t.startTime)}}
+                    <span class="fc-v1-grey">--</span>
+                {{else}}
+                    {{_momentFormat(t.startTime,'YYYY/MM/DD')}}
+                {{/if}}
+            {{/if}}
+        </span>
+        {{if t.role && t.role.edit==1}}
+        <a href="javascript:void(0);" data-action="xeditable" data-value="{{t.startTime}}" data-type="10" data-key="startTime"
+           data-max-date="{{t.endTime}}" data-init-show="1" data-onpicked-save="1" style="display: none;">
+            <i class="icon iconfont icon-bianji"></i>
+        </a>
+        {{/if}}
+    </td>
+    <td class="">
+        <span class="show-span">
+            {{if t.role && t.role.edit==1}}
+                {{if _isNullOrBlank(t.endTime)}}
+                    <span class="fc-v1-grey">未设置</span>
+                {{else}}
+                    {{_momentFormat(t.endTime,'YYYY/MM/DD')}}
+                {{/if}}
+            {{else}}
+                {{if _isNullOrBlank(t.endTime)}}
+                    <span class="fc-v1-grey">--</span>
+                {{else}}
+                    {{_momentFormat(t.endTime,'YYYY/MM/DD')}}
+                {{/if}}
+            {{/if}}
+        </span>
+        {{if t.role && t.role.edit==1}}
+        <a href="javascript:void(0);" data-action="xeditable" data-value="{{t.endTime}}" data-type="10" data-key="endTime"
+           data-min-date="{{t.startTime}}" data-init-show="1" data-onpicked-save="1" style="display: none;">
+            <i class="icon iconfont icon-bianji"></i>
+        </a>
+        {{/if}}
+    </td>
+    <td>
+        <a href="javascript:void(0);" class="{{ t.role && t.role.changeStatus==1?'':'a-span'}}" data-action="{{ t.role && t.role.changeStatus==1?'stateFlow':''}}" data-end-status="{{t.endStatus}}">
+            <!--根据状态改变样式-->
+            {{if t.endStatus ==3 || t.endStatus ==4}}
+            <span class="text-danger">{{t.stateHtml}}</span>
+            {{else if t.endStatus ==2}}
+            <span class="text-success">{{t.stateHtml}}</span>
+            {{else}}
+                <span>{{t.stateHtml}}</span>
+            {{/if}}
+        </a>
+    </td>
+</tr>

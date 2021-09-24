@@ -1,0 +1,373 @@
+{{if type==1}}
+<div class="col-xs-12 form-item" data-type="1" data-key="{{itemKey}}">
+    <div class="form-group">
+        <label class="col-24-xs-4 control-label">
+            <span>
+                {{defaultData.fieldTitle}}
+            </span>
+            {{if defaultData.requiredType==1}}
+                <span class="fc-red">*</span>
+            {{/if}}
+        </label>
+        <div class="col-24-xs-20">
+            <input type="text" class="form-control control" value="" placeholder="{{defaultData.fieldTooltip}}">
+        </div>
+    </div>
+    <button class="btn btn-link absolute-top-right dp-none" data-action="delItem"><i class="glyphicon glyphicon-remove"></i></button>
+</div>
+{{else if type==2}}
+<div class="col-xs-12 form-item " data-type="2" data-key="{{itemKey}}">
+    <div class="form-group">
+        <label class="col-24-xs-4 control-label">
+            <span>{{defaultData.fieldTitle}}</span>
+            {{if defaultData.requiredType==1}}
+                <span class="fc-red">*</span>
+            {{/if}}
+        </label>
+        <div class="col-24-xs-20">
+            <textarea type="text" class="form-control control" placeholder="{{defaultData.fieldTooltip}}"></textarea>
+        </div>
+    </div>
+    <button class="btn btn-link absolute-top-right dp-none" data-action="delItem"><i class="glyphicon glyphicon-remove"></i></button>
+</div>
+{{else if type==3}}
+<div class="col-xs-12 form-item " data-type="3" data-key="{{itemKey}}">
+    <div class="form-group">
+        <label class="col-24-xs-4 control-label">
+            <span>{{defaultData.fieldTitle}}</span>
+            {{if defaultData.requiredType==1}}
+                <span class="fc-red">*</span>
+            {{/if}}
+        </label>
+        <div class="col-24-xs-20">
+            <div class="input-group">
+                <input type="text" class="form-control control" placeholder="{{defaultData.fieldTooltip}}" readonly="" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="">
+                <span class="input-group-addon " onclick="javascript:$(this).prev().focus();">
+                    <i class="icon-append fa fa-calendar"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-link absolute-top-right dp-none" data-action="delItem"><i class="glyphicon glyphicon-remove"></i></button>
+</div>
+{{else if type==4}}
+<div class="col-xs-12 form-item " data-type="4" data-key="{{itemKey}}">
+    <div class="form-group">
+        <label class="col-24-xs-4 control-label">
+            <span>{{defaultData.fieldTitle}}</span>
+            {{if defaultData.requiredType==1}}
+            <span class="fc-red">*</span>
+            {{/if}}
+        </label>
+        <div class="col-24-xs-8 no-padding">
+            <div class="{{defaultData.dateFormatType==1?'col-24-xs-24':'col-24-xs-12 p-r-none'}} time-box">
+                <div class="input-group">
+                    <input type="text" class="form-control control" placeholder="{{defaultData.fieldTooltip}}" readonly="" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="">
+                    <span class="input-group-addon " onclick="javascript:$(this).prev().focus();"><i class="icon-append fa fa-calendar"></i></span>
+                </div>
+            </div>
+            <div class="col-24-xs-6 p-l-xs p-r-none time-hh" style="{{defaultData.dateFormatType==1 || defaultData.dateFormatType==3?'display: none;':''}}">
+                <select class="form-control">
+                    <option value="01">01</option>
+                    <option value="02">02</option>
+                    <option value="03">03</option>
+                    <option value="04">04</option>
+                    <option value="05">05</option>
+                    <option value="06">06</option>
+                    <option value="07">07</option>
+                    <option value="08">08</option>
+                    <option value="09" selected>09</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                </select>
+            </div>
+            <div class="col-24-xs-6 p-l-xs p-r-none time-mm" style="{{defaultData.dateFormatType==1 || defaultData.dateFormatType==3?'display: none;':''}}">
+                <select class="form-control">
+                    <option value="00">00</option>
+                    <option value="30">30</option>
+                </select>
+            </div>
+            <div class="col-24-xs-12 p-l-xs am-pm" style="{{defaultData.dateFormatType==1 || defaultData.dateFormatType==2?'display: none;':''}}">
+                <select class="form-control">
+                    <option>上午</option>
+                    <option>下午</option>
+                </select>
+            </div>
+        </div>
+        <label class="col-24-xs-4 control-label">
+            <span>{{defaultData.fieldTitle2}}</span>
+            {{if defaultData.requiredType==1}}
+            <span class="fc-red">*</span>
+            {{/if}}
+        </label>
+        <div class="col-24-xs-8 no-padding">
+            <div class="{{defaultData.dateFormatType==1?'col-24-xs-24':'col-24-xs-12 p-r-none'}} time-box">
+                <div class="input-group">
+                    <input type="text" class="form-control control" placeholder="{{defaultData.fieldTooltip2}}" readonly="" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="">
+                    <span class="input-group-addon " onclick="javascript:$(this).prev().focus();"><i class="icon-append fa fa-calendar"></i></span>
+                </div>
+            </div>
+            <div class="col-24-xs-6 p-l-xs p-r-none time-hh" style="{{defaultData.dateFormatType==1 || defaultData.dateFormatType==3?'display: none;':''}}">
+                <select class="form-control">
+                    <option value="01">01</option>
+                    <option value="02">02</option>
+                    <option value="03">03</option>
+                    <option value="04">04</option>
+                    <option value="05">05</option>
+                    <option value="06">06</option>
+                    <option value="07">07</option>
+                    <option value="08">08</option>
+                    <option value="09" selected>09</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                    <option value="24">24</option>
+                </select>
+            </div>
+            <div class="col-24-xs-6 p-l-xs p-r-none time-mm" style="{{defaultData.dateFormatType==1 || defaultData.dateFormatType==3?'display: none;':''}}">
+                <select class="form-control">
+                    <option value="00">00</option>
+                    <option value="30">30</option>
+                </select>
+            </div>
+            <div class="col-24-xs-12 p-l-xs am-pm" style="{{defaultData.dateFormatType==1 || defaultData.dateFormatType==2?'display: none;':''}}">
+                <select class="form-control">
+                    <option>上午</option>
+                    <option>下午</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-link absolute-top-right dp-none" data-action="delItem"><i class="glyphicon glyphicon-remove"></i></button>
+</div>
+{{else if type==5}}
+<div class="col-xs-12 form-item " data-type="5" data-key="{{itemKey}}">
+    <div class="form-group">
+        <label class="col-24-xs-4 control-label">
+            <span>{{defaultData.fieldTitle}}</span>
+            {{if defaultData.requiredType==1}}
+            <span class="fc-red">*</span>
+            {{/if}}
+        </label>
+        <div class="col-24-xs-20">
+            <div class="input-group full-width">
+                <input type="text" class="form-control control" placeholder="{{defaultData.fieldTooltip}}" name="fieldUnit" >
+                {{if defaultData.fieldUnit!=null && defaultData.fieldUnit!=''}}
+                    <span class="input-group-addon ">{{defaultData.fieldUnit}}</span>
+                {{else}}
+                    <span class="input-group-addon" style="display: none;"></span>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+    <button class="btn btn-link absolute-top-right dp-none" data-action="delItem"><i class="glyphicon glyphicon-remove"></i></button>
+</div>
+{{else if type==6}}
+<div class="col-xs-12 form-item " data-type="6" data-key="{{itemKey}}">
+    <div class="form-group">
+        <label class="col-24-xs-4 control-label">
+            <span>{{defaultData.fieldTitle}}</span>
+            {{if defaultData.requiredType==1}}
+            <span class="fc-red">*</span>
+            {{/if}}
+        </label>
+        <div class="col-24-xs-20">
+            <select class="form-control control">
+                <option value="">{{defaultData.fieldTooltip}}</option>
+                {{if defaultData.fieldSelectedValueList && defaultData.fieldSelectedValueList.length>0 && defaultData.fieldSelectedValueList[0].child!=null}}
+                    {{each defaultData.fieldSelectedValueList as p }}
+                    <optgroup data-select2-id="{{p.id}}" label="{{p.name}}">
+                        {{if p.child!=null && p.child.length>0}}
+                            {{each p.child as c }}
+                                <option value="{{c.id}}">{{c.name==null?c.selectableName:c.name}}</option>
+                            {{/each}}
+                        {{/if}}
+                    </optgroup>
+                    {{/each}}
+                {{else defaultData.fieldSelectedValueList && defaultData.fieldSelectedValueList.length>0}}
+                    {{if defaultData.fieldTooltip && defaultData.fieldTooltip!=''}}
+                        <option value="">{{defaultData.fieldTooltip}}</option>
+                    {{/if}}
+                    {{each defaultData.fieldSelectedValueList as o}}
+                        <option value="{{o.id}}">{{o.name==null?o.selectableName:o.name}}</option>
+                    {{/each}}
+                {{/if}}
+            </select>
+        </div>
+    </div>
+    <button class="btn btn-link absolute-top-right dp-none" data-action="delItem"><i class="glyphicon glyphicon-remove"></i></button>
+</div>
+{{else if type==7}}
+<div class="col-xs-12 form-item " data-type="7" data-key="{{itemKey}}">
+    <div class="form-group">
+        <label class="col-24-xs-4 control-label">
+            <span>{{defaultData.fieldTitle}}</span>
+            {{if defaultData.requiredType==1}}
+            <span class="fc-red">*</span>
+            {{/if}}
+        </label>
+        <div class="col-24-xs-20">
+            {{if defaultData.fieldSelectedValueList && defaultData.fieldSelectedValueList.length>0}}
+                {{each defaultData.fieldSelectedValueList as o}}
+                    <div class="{{defaultData.arrangeType==1?'pull-left':''}} m-r-xs m-t-xs">
+                        <label class="i-checks i-checks-label fw-normal">
+                            <input type="radio"  name="optional"/>
+                            <span class="i-checks-span">{{o.name==null?o.selectableName:o.name}}</span>
+                        </label>
+                    </div>
+                {{/each}}
+            {{else}}
+                <div class="pull-left m-r-xs m-t-xs">
+                    <label class="i-checks i-checks-label fw-normal">
+                        <input type="radio" name="optional"/>
+                        <span class="i-checks-span">选项1</span>
+                    </label>
+                </div>
+                <div class="pull-left m-r-xs m-t-xs">
+                    <label class="i-checks i-checks-label fw-normal">
+                        <input type="radio" name="optional"/>
+                        <span class="i-checks-span">选项2</span>
+                    </label>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+    <button class="btn btn-link absolute-top-right dp-none" data-action="delItem"><i class="glyphicon glyphicon-remove"></i></button>
+</div>
+{{else if type==8}}
+<div class="col-xs-12 form-item " data-type="8" data-key="{{itemKey}}">
+    <div class="form-group">
+        <label class="col-24-xs-4 control-label">
+            <span>{{defaultData.fieldTitle}}</span>
+            {{if defaultData.requiredType==1}}
+            <span class="fc-red">*</span>
+            {{/if}}
+        </label>
+        <div class="col-24-xs-20">
+
+            {{if defaultData.fieldSelectedValueList && defaultData.fieldSelectedValueList.length>0}}
+                {{each defaultData.fieldSelectedValueList as o}}
+                    <div class="{{defaultData.arrangeType==1?'pull-left':''}} m-r-xs m-t-xs">
+                        <label class="i-checks i-checks-label fw-normal">
+                            <input type="checkbox"  name="optional"/>
+                            <span class="i-checks-span">{{o.name==null?o.selectableName:o.name}}</span>
+                        </label>
+                    </div>
+                {{/each}}
+            {{else}}
+                <div class="pull-left m-r-xs m-t-xs">
+                    <label class="i-checks i-checks-label fw-normal">
+                        <input type="checkbox" name="optional" />
+                        <span class="i-checks-span">选项1</span>
+                    </label>
+                </div>
+                <div class="pull-left m-r-xs m-t-xs">
+                    <label class="i-checks i-checks-label fw-normal">
+                        <input type="checkbox" name="optional" />
+                        <span class="i-checks-span">选项2</span>
+                    </label>
+                </div>
+            {{/if}}
+        </div>
+    </div>
+    <button class="btn btn-link absolute-top-right dp-none" data-action="delItem"><i class="glyphicon glyphicon-remove"></i></button>
+</div>
+{{else if type==9}}
+<div class="col-xs-12 form-item " data-type="9" data-key="{{itemKey}}">
+    <div class="form-group">
+        <div class="panel panel-default" style="min-height: 100px;margin-left:45px;">
+            <div class="panel-body">
+                <form id="subFieldBox">
+                    <h4 class="title-line"> 明细 <span class="fc-v1-grey fw-normal">(可拖入左侧多个控件，不包括明细、附件控件)</span></h4>
+                </form>
+            </div>
+        </div>
+        <div class="col-24-xs-20 col-24-xs-offset-4">
+            <button class="btn btn-primary btn-sm" data-action="addItem" title="添加明细"><i class="fa fa-plus"></i>&nbsp;添加明细</button>
+        </div>
+    </div>
+    <button class="btn btn-link absolute-top-right dp-none" data-action="delItem"><i class="glyphicon glyphicon-remove"></i></button>
+</div>
+{{else if type==10}}
+<div class="col-xs-12 form-item " data-type="10" data-key="{{itemKey}}">
+    <div class="form-group">
+        <label class="col-24-xs-4 control-label">附件</label>
+        <div class="col-24-xs-20">
+            <button class="btn btn-primary btn-sm" data-action="addItem" title="上传附件"><i class="fa fa-upload"></i>&nbsp;上传附件</button>
+        </div>
+    </div>
+    <button class="btn btn-link absolute-top-right dp-none" data-action="delItem"><i class="glyphicon glyphicon-remove"></i></button>
+</div>
+{{else if type==11}}
+<div class="col-xs-12 form-item " data-type="11" data-key="{{itemKey}}">
+    <div class="form-group">
+        <label class="col-24-xs-4 control-label">
+            <span>{{defaultData.fieldTitle}}</span>
+            {{if defaultData.requiredType==1}}
+            <span class="fc-red">*</span>
+            {{/if}}
+        </label>
+        <div class="col-24-xs-20">
+            <select class="form-control control">
+                <option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+    <button class="btn btn-link absolute-top-right dp-none" data-action="delItem"><i class="glyphicon glyphicon-remove"></i></button>
+</div>
+{{else if type==12}}
+<div class="col-xs-12 form-item " data-type="12" data-key="{{itemKey}}">
+    <div class="form-group">
+        <label class="col-24-xs-4 control-label">
+            <span>{{defaultData.fieldTitle}}</span>
+            {{if defaultData.requiredType==1}}
+            <span class="fc-red">*</span>
+            {{/if}}
+        </label>
+        <div class="col-24-xs-20">
+            <select class="form-control control">
+                <option value="">请选择</option>
+            </select>
+        </div>
+    </div>
+    <button class="btn btn-link absolute-top-right dp-none" data-action="delItem"><i class="glyphicon glyphicon-remove"></i></button>
+</div>
+{{else if type==13}}
+<div class="col-xs-12 form-item " data-type="13" data-key="{{itemKey}}">
+    <div class="form-group">
+        <label class="col-24-xs-4 control-label"><span>{{defaultData.fieldTitle}}</span></label>
+        <div class="col-24-xs-20">
+        </div>
+    </div>
+    <button class="btn btn-link absolute-top-right dp-none" data-action="delItem"><i class="glyphicon glyphicon-remove"></i></button>
+</div>
+{{else if type==14}}
+<div class="col-xs-12 form-item " data-type="14" data-key="{{itemKey}}">
+    <div class="hr-line-dashed m-t-none m-b-sm"></div>
+    <button class="btn btn-link absolute-top-right dp-none" data-action="delItem"><i class="glyphicon glyphicon-remove"></i></button>
+</div>
+{{/if}}

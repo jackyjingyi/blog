@@ -1,0 +1,84 @@
+<form class="form-horizontal p-sm overflow-y-auto m-dialog-resize">
+    {{if isShowTips}}
+    <div class="alert alert-danger alert-dismissable m-l m-r">
+        <button aria-hidden="true" data-dismiss="alert" class="close" type="button">×</button>
+        <!-- 无审批 叫发布 -->
+        {{if auditFlag==0}}
+            确定发布{{title}}计划后，{{title}}中的节点、比例、金额将不能被新增、修改、删除。
+        {{else}}
+        <!-- 有审批 叫提交 -->
+            确定提交{{title}}计划后，{{title}}中的节点、比例、金额将不能被新增、修改、删除。
+        {{/if}}
+    </div>
+    {{/if}}
+    <div class="p-w-sm">
+        <div class="form-group ">
+            <label class="col-24-xs-3 text-right p-l-none">关联项目：</label>
+            <div class="col-24-xs-21">
+                {{projectName}}
+            </div>
+        </div>
+        <div class="form-group ">
+            <label class="col-24-xs-3 text-right p-l-none">收款类型：</label>
+            <div class="col-24-xs-21">
+                {{pageText.title}}
+            </div>
+        </div>
+        <div class="form-group ">
+            <label class="col-24-xs-3 text-right p-l-none">计划收款金额：</label>
+            <div class="col-24-xs-21">
+                {{_expNumberFilter(totalCost)}} 元
+            </div>
+        </div>
+        <div class="form-group ">
+            <label class="col-24-xs-3 text-right p-l-none">付款方：</label>
+            <div class="col-24-xs-21">
+                {{companyName}}
+            </div>
+        </div>
+        <div class="form-group ">
+            <label class="col-24-xs-3 text-right p-l-none">附件：</label>
+            <div class="col-24-xs-21">
+                {{if attachList!=null && attachList.length>0}}
+                {{each attachList as a}}
+                <span class="bg-v1-grey b-r-sm p-xxs m-r-xs f-s-xs pull-left">
+                        <a href="javascript:void(0)" data-action="preview" data-file-ext="{{a.fileExtName}}" data-net-file-id="{{a.id}}"  data-src="{{a.fileFullPath}}" data-name="{{a.fileName}}">{{a.fileName}}</a>
+                    </span>
+                {{/each}}
+                {{else}}
+                <span class="pull-left m-r-xs">暂无上传文件</span>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+    {{each pointList as d i}}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h4 class="title-line">
+                明细(<span data-action="itemIndex">{{i+1}}</span>)
+            </h4>
+            <div class="form-group">
+                <label class="col-24-xs-3 text-right">节点描述：</label>
+                <div class="col-24-xs-21">
+                    {{d.feeDescription}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-24-xs-3 text-right">比例：</label>
+                <div class="col-24-xs-21">
+                    {{d.feeProportion}}%
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-24-xs-3 text-right">金额：</label>
+                <div class="col-24-xs-21">
+                    {{_expNumberFilter(d.fee)}} 元
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+    <div class="p-w-sm" id="approverOutBox">
+
+    </div>
+</form>

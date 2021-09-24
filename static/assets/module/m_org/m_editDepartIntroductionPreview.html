@@ -1,0 +1,58 @@
+<div class="ibox m_organizational no-margins">
+    <!-- 组织－组织架构- 研究组简介 预览-->
+    <div class="ibox-content no-padding">
+
+            <a class="close-btn" href="javascript:void(0)"  data-action="backToLastDepartIntroduction" title="退出预览">
+                <i class="fa fa-times fc-red"></i>
+            </a>
+
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-8 " style="width:73%;    padding: 1% 15% 1% 1%;" >
+                    <div id="js-bg" class="pt-relative">
+                        <img alt="image"
+                             src="{{_isNullOrBlank(fileFullPath)?_url('/img/depart_introduction_default_img.png'):fileFullPath}}"
+                             onerror=javascript:this.src="{{_url('/img/depart_introduction_default_img.png')}}"
+                             style="width: 50vw; height: 25vw;">
+                    </div>
+                    <div   style="width: 50vw; padding:0px;margin:0px; line-height: 25px;letter-spacing: 0px;word-break: break-all;">
+                        <div>
+                            <p>
+                                {{#explainDesc}}
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-md-4  "  style="width:27%; padding: 0px;" >
+                    <div class="middleLine" style="width:1px;height:750px;background:#e2e2e2;float:left;position:relative"></div>
+                    <div class="right-panel ">
+                        <div class="panel-heading">
+                            课题名称
+                        </div>
+                        <div >
+                            {{if projectList && projectList.length>0}}
+                            {{each projectList as p}}
+                            <div style=" padding: 10px 10px 0px 15px;border-bottom: 1px solid #e2e2e2;">
+                                <p>
+                                    <a  href="javascript:void(0);" data-action="projectAction" data-key="{{p.id}}" data-value="{{p.projectName}}">{{p.projectName}}</a>
+                                </p>
+                            </div>
+                            {{/each}}
+                            {{else}}
+                            <div class="notice-row">
+                                <div class="text-center">
+                                    <img src="{{_url('/img/default/without_data.png')}}">
+                                    <span class="fc-dark-blue dp-block">您还没有相关数据</span>
+                                </div>
+                            </div>
+                            {{/if}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>

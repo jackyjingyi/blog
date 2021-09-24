@@ -1,0 +1,11 @@
+.m-floating-popover.users-chooser-popover ul.dropdown-menu li.title{
+    padding: 10px 15px 5px;
+    color: #999;
+}
+.m-floating-popover.users-chooser-popover ul.dropdown-menu > li > a{
+    line-height: 18px;margin: 2px;
+}
+.m-floating-popover.users-chooser-popover ul.dropdown-menu li:not(.title):hover,
+.m-floating-popover.users-chooser-popover ul.dropdown-menu > li > a:hover{
+    background: #6ebbbd;
+}

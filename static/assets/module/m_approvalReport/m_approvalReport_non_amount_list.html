@@ -1,0 +1,80 @@
+<table class="table table-hover table-bordered table-responsive dataTable" >
+    <thead>
+    <tr>
+        <th width="6%">序号</th>
+        <th width="12%">
+            申请人
+            <a class="icon-filter pull-right" id="filter_userNameLike" ><i class="icon iconfont icon-shaixuan"></i></a>
+        </th>
+        <!--<th width="14%">
+            所在组织
+            <a class="icon-filter pull-right" id="filter_applyCompanyName" ><i class="icon iconfont icon-shaixuan"></i></a>
+        </th>-->
+        {{if financeFlag==3}}
+            <th>
+                关联项目
+                <!--<a class="icon-filter pull-right" id="filter_projectName" ><i class="icon iconfont icon-shaixuan"></i></a>-->
+            </th>
+        {{else}}
+            <th>
+                所在部门
+                <a class="icon-filter pull-right" id="filter_applyDepartName" ><i class="icon iconfont icon-shaixuan"></i></a>
+            </th>
+        {{/if}}
+        <th>
+            审批类型
+            <!--<a class="icon-filter pull-right" id="filter_expType" ><i class="icon iconfont icon-shaixuan"></i></a>-->
+        </th>
+        {{if expType=='收款计划审批' || expType=='付款计划审批' || expType=='付款审批'}}
+        <th>金额</th>
+        {{/if}}
+        <th width="12%">
+            审批人
+            <a class="icon-filter pull-right" id="filter_auditPerson" ><i class="icon iconfont icon-shaixuan"></i></a>
+        </th>
+        <th width="12%" class="sorting_desc" data-action="sort" data-code="approveDate">
+            审批时间
+        </th>
+        <th width="12%" class="sorting_desc" data-action="sort" data-code="expDate">
+            申请时间
+            <a class="icon-filter pull-right" id="filter_startDate_endDate" ><i class="icon iconfont icon-shaixuan"></i></a>
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {{each dataList as p}}
+    <tr class="curp" data-action="openShowExp" i="{{$index}}" versionNum="{{p.versionNum}}" data-type="{{p.type}}" data-id="{{p.id}}">
+        <td>{{$index+1+pageIndex*10}}</td>
+        <td>{{p.userName}}</td>
+        <!--<td>{{p.companyName}}</td>-->
+        {{if financeFlag==3}}
+            <td>{{p.projectName}}</td>
+        {{else}}
+            <td>{{p.departName}}</td>
+        {{/if}}
+        <td>{{p.expTypeName}}</td>
+        {{if expType=='收款计划审批' || expType=='付款计划审批' || expType=='付款审批'}}
+        <td>{{_expNumberFilter(p.expSumAmount)}}</td>
+        {{/if}}
+        <td>{{p.auditPersonName}}</td>
+        <td>{{_momentFormat(p.approveDate,'YYYY/MM/DD')}}</td>
+        <td>{{_momentFormat(p.expDate,'YYYY/MM/DD')}}</td>
+    </tr>
+    {{/each}}
+    {{if dataList==null || dataList.length==0}}
+    <tr class="no-data">
+        <td colspan="{{expType=='收款计划审批' || expType=='付款计划审批' || expType=='付款审批'?8:7}}" align="center">
+            <div class="text-center">
+                <img src="{{_url('/img/default/without_exp.png')}}">
+            </div>
+            <span style="color:#337b8e">暂无汇总内容</span>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>
+{{if dataList!=null && dataList.length!=0 && (expType=='收款计划审批' || expType=='付款计划审批' || expType=='付款审批')}}
+<div class="pt-absolute m-t-sm" id="totalAmount">
+    &nbsp;&nbsp;合计：<span class="">{{_expNumberFilter(expSumAmount)}}</span>元
+</div>
+{{/if}}

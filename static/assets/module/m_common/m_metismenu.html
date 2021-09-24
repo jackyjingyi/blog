@@ -1,0 +1,160 @@
+<nav class="navbar-default navbar-static-side m-metismenu" role="navigation" >
+    <div class="sidebar-collapse">
+        <ul class="nav metismenu" id="side-menu" style="display: block;">
+
+            <li class="navbar-minimalize">
+                <a href="javascript:void(0);" class="workbench" style="">
+                    <i class="pull-left icon iconfont icon-pc"></i>
+                    <span class="nav-label pull-left"><!--工作台-->&nbsp;</span>
+                    <div class="clearfix"></div>
+                </a>
+                <!--<a class="maoding-yun ic-cloud-disk" title="点击进入云盘" data-action="goMaodingYun">
+                    &lt;!&ndash;<span class="icon iconfont icon-wangpan"></span>&ndash;&gt;
+                </a>-->
+            </li>
+            <li class="roleControl" roleCode="20000101" flag="2">
+                <a id="addProject" class="svg" href="#/addProject">
+                    <i class="pull-left icon iconfont icon-tianjia1"></i>
+                    <span class="nav-label pull-left">立项</span>
+                    <div class="clearfix"></div>
+                </a>
+            </li>
+
+            <!--<li class="parentStudyProject" roleCode="" flag="2">-->
+
+                <!--<a class="svg"  href="javascript:void(0);">-->
+                    <!--<i class="pull-left font-style-normal text-bold m-metismenu-icon">P</i>-->
+                    <!--<span class="nav-label pull-left">课题项目</span>-->
+                    <!--<span class="fa arrow"></span>-->
+                    <!--<div class="clearfix"></div>-->
+                <!--</a>-->
+                <!--<ul class="nav nav-second-level collapse" >-->
+                    <!--<li class="liStudyProjectList">-->
+                        <!--<a href="#/studyProjectOverview?businessType=2" id="studyProjectList" class = "studyProjectList">-->
+                            <!--<span>项目总览</span>-->
+
+                        <!--</a>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<a href="#/studyProjectSection?businessType=2" id="studyProjectSection"><span>研究组</span></a>-->
+                    <!--</li>-->
+
+                <!--</ul>-->
+            <!--</li>-->
+            <li class="parentProject" roleCode="" flag="2">
+                <a class="svg"  href="javascript:void(0);">
+                    <i class="pull-left font-style-normal text-bold m-metismenu-icon">P</i>
+                    <span class="nav-label pull-left">课题项目</span>
+                    <span class="fa arrow"></span>
+                    <div class="clearfix"></div>
+                </a>
+                <ul class="nav nav-second-level collapse" >
+               <!--     <li>
+                        <a href="#/projectSection?businessType=1" id="projectSection" ><span>业务类型</span></a>
+                    </li>-->
+                    <li class="liProjectList">
+                        <a href="#/projectOverview" id="projectList" class = "projectList"><span>项目总览</span>
+                            <div class="clearfix"></div></a>
+                    </li>
+                    <li>
+                        <a href="#/studyProjectSection?businessType=2" id="studyProjectSection"><span>研究组</span></a>
+                    </li>
+                </ul>
+            </li>
+
+            {{if companyVersion!='03'}}
+            <li class="roleControl" roleCode="20200101" flag="2" >
+                <a id="myTask" class="svg" href="#/myTask">
+                    <i class="pull-left font-style-normal text-bold m-metismenu-icon">T</i>
+                    <span class="nav-label pull-left">我的任务</span>
+                    <div class="clearfix"></div>
+                </a>
+            </li>
+            {{/if}}
+
+
+
+            <li  class="roleControl" flag="2" >
+                <a class="svg"  href="javascript:void(0);">
+                    <i class="pull-left font-style-normal text-bold m-metismenu-icon">I</i>
+                    <span class="nav-label pull-left">信息动态</span>
+                    <span class="fa arrow"></span>
+                    <div class="clearfix"></div>
+                </a>
+                <ul class="nav nav-second-level collapse" >
+                    <li class="roleControl"  roleCode="10-10-01"  flag="2">
+                        <a href="#/projectDynamics" id="projectDynamics"><span>动态快讯</span></a>
+                    </li>
+                    <li class="roleControl"  roleCode="10-10-02" flag="2">
+                        <a href="#/projectDynamicsAll" id="projectDynamicsAll"><span>动态总览</span></a>
+                    </li>
+                    <li class="roleControl" roleCode="10-10-03"  flag="2">
+                        <a href="#/technologySync" id="technologySync"><span>技术协同</span></a>
+                    </li>
+                    <li class="roleControl" roleCode="10-10-04"  flag="2">
+                        <a href="#/partyBuild" id="partyBuild"><span>党史学习教育</span></a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="roleControl" roleCode="" flag="2">
+                <a class="svg"  href="javascript:void(0);">
+                    <i class="pull-left font-style-normal text-bold m-metismenu-icon">R</i>
+                    <span class="nav-label pull-left">统计管理</span>
+                    <span class="fa arrow"></span>
+                    <div class="clearfix"></div>
+                </a>
+                <ul class="nav nav-second-level collapse" >
+                    <li class="roleControl" roleCode="40001301" flag="2">
+                        <a href="#/proProgressStats" id="proProgressStats"><span>进度总览</span></a>
+                    </li>
+                    <li class="roleControl" roleCode="47000101,47000105" flag="2">
+                        <a href="#/userOutputStats" id="userOutputStats"><span>个人效能</span></a>
+                    </li>
+
+                    <!--<li class="roleControl" roleCode="450010101" flag="2">
+                        <a href="#/proTypeStats" id="proTypeStats"><span>类型分析</span></a>
+                    </li>-->
+                    <li class="roleControl" roleCode="450010102" flag="2">
+                        <a href="#/theaterRanking" id="theaterRanking"><span>服务公司</span></a>
+                    </li>
+                    <li class="roleControl" roleCode="400012" flag="2">
+                        <a href="#/projectCostDetail" id="projectCostDetail"><span>收支汇总</span></a>
+                    </li>
+              <!--      <li class="roleControl" roleCode="400010,40001902,40001903,40001904,40001905" flag="2">
+                        <a href="#/financeConfirm" id="financeConfirm"><span>收支确认</span></a>
+                    </li>-->
+                    <li class="roleControl" roleCode="47000103" flag="2">
+                        <a href="#/deanBillStatistic" id="deanBillStatistic"><span>经营收入</span></a>
+                    </li>
+                </ul>
+            </li>
+
+            <!--<li  class="roleControl" roleCode="400012,40001301,40001302,400014,400016,40001501,40001701,40001702,40001703,40001704,40001705,400010,40001902,40001903,40001904,40001905" flag="2">-->
+                <!--<a class="svg"  href="javascript:void(0);">-->
+                    <!--<i class="pull-left font-style-normal text-bold m-metismenu-icon">F</i>-->
+                    <!--<span class="nav-label pull-left">财务管理</span>-->
+                    <!--<span class="fa arrow"></span>-->
+                    <!--<div class="clearfix"></div>-->
+                <!--</a>-->
+                <!--<ul class="nav nav-second-level collapse" >-->
+                    <!--<li class="roleControl" roleCode="40001501" flag="2">-->
+                        <!--<a href="#/financeSettings" id="financeSettings"><span>财务设置</span></a>-->
+                    <!--</li>-->
+                    <!--<li class="roleControl" roleCode="400010,40001902,40001903,40001904,40001905" flag="2">-->
+                        <!--<a href="#/financeConfirm" id="financeConfirm"><span>收支确认</span></a>-->
+                    <!--</li>-->
+                <!--</ul>-->
+            <!--</li>-->
+            <li class="roleControl" roleCode="20210101" flag="2">
+                <a class="svg"  a href="#/addressBook" id="addressBook">
+                    <i class="pull-left font-style-normal text-bold m-metismenu-icon">A</i>
+                    <span class="nav-label pull-left">通讯录</span>
+                    <div class="clearfix"></div>
+                </a>
+            </li>
+        </ul>
+
+    </div>
+</nav>
+<div class="clearfix"></div>

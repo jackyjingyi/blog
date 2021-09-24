@@ -1,0 +1,53 @@
+<form class="form-horizontal p-m overflow-y-auto m-dialog-resize m-approval-cost-off">
+    <div class="form-group">
+        <div class="col-sm-12">
+            <button class="btn btn-primary btn-xs" data-action="addItem" title="添加明细"><i class="fa fa-plus"></i>添加明细</button>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <div class="row">
+                <div class="col-md-12 m-b-xs">
+                    <span id="showFileLoading"> </span>
+                </div>
+                <div class="col-md-12">
+                    <span class="uploadmgrContainer"> </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 text-right">报销金额：</label>
+        <div class="col-sm-10">
+            <i class="fa fa-jpy"></i> <span id="expAmount" data-value="0">0</span>元
+        </div>
+    </div>
+    <!--<div class="form-group">
+        <label class="col-sm-2 control-label">退还金额：</label>
+        <div class="col-sm-10">
+            <input placeholder="请输入退还金额" class="form-control" type="text" name="returnAmount" value="">
+        </div>
+    </div>-->
+    <div class="form-group">
+        <label class="col-sm-2 text-right">核销金额：</label>
+        <div class="col-sm-10">
+            <i class="fa fa-jpy"></i> <span id="verificationAmount">{{_expNumberFilter(0)}}</span>元
+        </div>
+    </div>
+    <!--<div class="form-group">
+        <label class="col-sm-2 control-label">费用余额：</label>
+        <div class="col-sm-10 p-t-7">
+            <div><span id="expBalance">{{dataInfo?_expNumberFilter(0-dataInfo.sumExpAmount):'0'}}</span>元</div>
+            <p class="f-s-xs fc-v1-grey">备注：费用余额为负值，申请人退回等值金额后，该费用申请流程结束；费用余额为正值，申请人报销等值金额后，该费用申请流程结束</p>
+        </div>
+    </div>-->
+
+    <div class="hr-line-dashed m-t-none m-b-sm m-l m-r"></div>
+    <div id="approverOutBox">
+
+    </div>
+</form>
+<div class="footer border-b-radius text-right">
+    <button class="btn btn-default" data-action="cancel">取消</button>
+    <button class="btn btn-primary" data-action="save">确认</button>
+</div>

@@ -1,0 +1,82 @@
+<table class="table table-bordered table-hover table-responsive">
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>申请日期</th>
+        <th>申请人</th>
+        <th>金额</th>
+        <th>
+            收款类型
+            <a class="icon-filter pull-right" id="filter_feeType"><i class="icon iconfont icon-shaixuan"></i></a>
+        </th>
+        <th>
+            关联项目
+            <a class="icon-filter pull-right" id="filter_projectName"><i class="icon iconfont icon-shaixuan"></i></a>
+        </th>
+        <th>回款节点</th>
+        <th>
+            付款方
+            <a class="icon-filter pull-right" id="filter_associatedOrg"><i class="icon iconfont icon-shaixuan"></i></a>
+        </th>
+        <th>到账金额</th>
+        <th>到账时间</th>
+        <th>应收</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList!=null && dataList.length>0}}
+    {{each dataList as d i}}
+    <tr class="curp" data-id="{{d.id}}" data-i="{{i}}">
+        <td>{{i+1+pageIndex*10}}</td>
+        <td>{{_momentFormat(d.createDate,'YYYY/MM/DD')}}</td>
+        <td>{{d.operatorName}}</td>
+        <td>
+            <span class="td-span-pr">{{_expNumberFilter(d.fee)}}</span>
+        </td>
+        <td>{{d.feeTypeName}}</td>
+        <td class="max-width-v1">
+            <div class="text-ellipsis-2 text-wrap" data-toggle="tooltip" data-container="body" data-original-title="{{d.projectName}}">
+                {{d.projectName}}
+            </div>
+        </td>
+        <td class="max-width-v1">
+            <div class="text-ellipsis-2 text-wrap" data-toggle="tooltip" data-container="body" data-original-title="{{d.feeName}}">
+                {{d.feeName}}
+            </div>
+        </td>
+        <td>
+            {{if d.fromCompanyName!=null && d.fromCompanyName!=''}}
+            {{d.fromCompanyName}}
+            {{else}}
+            --
+            {{/if}}
+        </td>
+        <td>
+            <button class="btn btn-primary btn-xs roleControl" roleCode="40000103" flag="7" data-id="{{d.myTaskId}}" data-edit-type="5" data-action="editContract"
+               data-key="fee" data-type="9" data-valid="6" data-limit-min="0" data-limit-max="{{d.profitFee-0}}">
+                到账确认
+            </button>
+        </td>
+        <td>
+            {{if _isNullOrBlank(d.lastPaymentDate)}}
+                --
+            {{else}}
+                {{_momentFormat(d.lastPaymentDate,'YYYY/MM/DD')}}
+            {{/if}}
+        </td>
+        <td>{{_expNumberFilter(d.profitFee)}}</td>
+    </tr>
+    {{/each}}
+    {{else}}
+    <tr class="no-data">
+        <td colspan="11" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>
+

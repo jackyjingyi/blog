@@ -1,0 +1,52 @@
+<div class="col-md-12">
+    <div class="progress progress-drag">
+        <div style="width: {{totalRatio}}%" aria-valuemax="100" aria-valuemin="0" aria-valuenow="{{totalRatio}}" role="progressbar" class="progress-bar b-r-sm text-right">
+            <span class="">{{totalRatio}}%</span>&nbsp;
+            <div class="dot" title="拖拽修改"></div>
+        </div>
+    </div>
+</div>
+{{if businessType==1}}
+<div class="col-md-12">
+    <table class="table table-bordered info m-b-xs">
+        <tbody>
+        <tr>
+            <td width="12%"><b>计划收款</b></td>
+            <td width="37%">
+                {{if dataInfo.summary}}
+                    {{_expNumberFilter(dataInfo.summary.planReceiveFee)}}
+                {{else}}
+                    0.00
+                {{/if}}
+            </td>
+            <td width="12%"><b>计划付款</b></td>
+            <td>
+                {{if dataInfo.summary}}
+                {{_expNumberFilter(dataInfo.summary.planPayFee)}}
+                {{else}}
+                0.00
+                {{/if}}
+            </td>
+        </tr>
+        <tr>
+            <td><b>到账金额</b></td>
+            <td>
+                {{if dataInfo.summary}}
+                {{_expNumberFilter(dataInfo.summary.receiveFee)}}
+                {{else}}
+                0.00
+                {{/if}}
+            </td>
+            <td><b>付款金额</b></td>
+            <td>
+                {{if dataInfo.summary}}
+                {{_expNumberFilter(dataInfo.summary.payFee)}}
+                {{else}}
+                0.00
+                {{/if}}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+{{/if}}

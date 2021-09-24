@@ -1,0 +1,15 @@
+{{if selectedItemList!=null && selectedItemList.length>0 }}
+    {{each selectedItemList as s si}}
+        <div class="col-md-6 p-r-none m-b list-group-item" data-sortId="{{si}}">
+            <span class="item-span m-r-xs bg-muted p-xxs f-s-xs" >
+                <span class="field-name text-ellipsis" data-toggle="tooltip" data-container="body" data-original-title="{{s.fieldName}} {{s.unitName!=null&& s.unitName!=''?'('+s.unitName+')':''}}"
+                      data-field-name="{{s.fieldName}}" data-unit-name="{{s.unitName}}" data-id="{{s.id}}" data-relation-id="{{s.relationId}}">
+                    {{s.fieldName}}&nbsp;
+                    {{s.unitName!=null&& s.unitName!=''?'('+s.unitName+')':''}}
+                </span>
+                <a class="curp" href="javascript:void(0)" data-action="delSelectedItem">
+                    <i class="fa fa-times fc-red"></i></a>
+            </span>
+        </div>
+    {{/each}}
+{{/if}}

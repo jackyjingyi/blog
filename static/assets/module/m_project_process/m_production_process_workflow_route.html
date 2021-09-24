@@ -1,0 +1,89 @@
+<div class="ibox m-production-process-workflow-route">
+    {{if fromType==1}}
+    <div class="ibox-title secondary-menu-outbox">
+        <div class="row">
+            <!-- 面包屑 -->
+            <div class="col-md-12" id="breadcrumb"></div>
+        </div>
+    </div>
+    {{/if}}
+    <div class="ibox-content {{fromType==1?'':'no-borders no-padding'}}">
+        <h4 class="font-normal">流转设置</h4>
+        <p class="fc-v1-grey">工作流流转设置，是设置工作流各状态间的先后流转关系。如果需要设置该流转，请在两个状态间的复选框内打勾。</p>
+        <div class="row no-margin dp-flex border m-b-sm" id="contentRow">
+            <div class="pull-left" id="contentLeft">
+                <table class="table table-hover text-nowrap">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        {{each dataList as t ti}}
+                        <th>{{t.nodeName}}</th>
+                        {{/each}}
+                    </tr>
+                    </thead>
+                    <tbody id="sortTr">
+                    {{if dataList!=null && dataList.length>0}}
+                    {{each dataList as t ti}}
+                    <tr class="{{doType==1?'curp':''}}" data-id="{{t.id}}" data-sort-id="{{ti}}">
+                        <td>
+                            从【{{t.nodeName}}】可流转到
+                        </td>
+                        {{each t.routeList as r ri}}
+                        <td>
+                            {{if doType==1}}
+                                <label class="i-checks fw-normal m-b-none">
+                                    {{if r.isSelect==1}}
+                                        {{if r.currentNodeId==r.nextNodeId}}
+                                            <input name="itemCk" type="checkbox"  value="" data-key="{{ti}}_{{ri}}" data-current-node="{{r.currentNodeId}}" data-next-node="{{r.nextNodeId}}" data-current-text="{{r.currentNodeName}}" data-next-text="{{r.nextNodeName}}" checked disabled/>
+                                        {{else}}
+                                            <input name="itemCk" type="checkbox"  value="" data-key="{{ti}}_{{ri}}" data-current-node="{{r.currentNodeId}}" data-next-node="{{r.nextNodeId}}" data-current-text="{{r.currentNodeName}}" data-next-text="{{r.nextNodeName}}" checked/>
+                                        {{/if}}
+                                    {{else}}
+                                        <input name="itemCk" type="checkbox"  value="" data-key="{{ti}}_{{ri}}" data-current-node="{{r.currentNodeId}}" data-next-node="{{r.nextNodeId}}" data-current-text="{{r.currentNodeName}}" data-next-text="{{r.nextNodeName}}"/>
+                                    {{/if}}
+                                    <span class="i-checks-span v-middle"></span>
+                                </label>
+                            {{else}}
+
+                                {{if r.isSelect==1}}
+                                    {{if r.currentNodeId==r.nextNodeId}}
+                                        <i class="fa fa-check-square-o fc-v2-blue f-s-xl" name="itemCk" data-key="{{ti}}_{{ri}}" data-current-node="{{r.currentNodeId}}" data-next-node="{{r.nextNodeId}}" data-current-text="{{r.currentNodeName}}" data-next-text="{{r.nextNodeName}}"></i>
+                                    {{else}}
+                                        <i class="fa fa-check-square-o fc-dark-blue f-s-xl" name="itemCk" data-key="{{ti}}_{{ri}}" data-current-node="{{r.currentNodeId}}" data-next-node="{{r.nextNodeId}}" data-current-text="{{r.currentNodeName}}" data-next-text="{{r.nextNodeName}}"></i>
+                                    {{/if}}
+                                {{else}}
+                                    <i class="fa fa-square-o fc-v1-grey f-s-xl"></i>
+                                {{/if}}
+
+                            {{/if}}
+                        </td>
+                        {{/each}}
+                    </tr>
+                    {{/each}}
+                    {{/if}}
+                    </tbody>
+                </table>
+            </div>
+            <div class="pull-left" id="contentResize">
+
+            </div>
+            <div class="pull-left" id="contentRight">
+
+            </div>
+        </div>
+
+        <div>
+
+            {{if fromType==1}}
+                <button class="btn btn-default" data-action="back">返回生产安排</button>
+            {{else if doType==1}}
+                <button class="btn btn-primary" data-action="save">保存</button>
+                <button class="btn btn-default" data-action="cancel">取消</button>
+            {{else if doType==2}}
+                <button class="btn btn-default" data-action="cancel">返回流程列表</button>
+            {{/if}}
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,83 @@
+<table class="table table-hover table-bordered table-responsive dataTable" >
+    <thead>
+    <tr>
+        <th width="10%">日期</th>
+        <th width="15%"><span>收入</span></th>
+        <th width="15%"><span>支出</span></th>
+        <th width="15%"><span>合计</span></th>
+        <th width="15%"><span>当月余额值变更</span></th>
+        <th width="15%"><span>本月余额</span></th>
+        <th width="*">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList!=null && dataList.length>0}}
+    {{each dataList as p}}
+    <tr data-id="{{p.id}}" data-month="{{p.month}}">
+        <td>{{_momentFormat(p.month,'YYYY/MM')}}</td>
+        <td>
+            {{ if _isBlank(p.receiveAmount)}}
+            <span class="fc-v1-green">0</span>
+            {{else if  (p.receiveAmount+'').indexOf('-')>-1}}
+            <span class="fc-v1-red">{{_expNumberFilter(p.receiveAmount)}}</span>
+            {{else}}
+            <span class="fc-v1-green">{{_expNumberFilter(p.receiveAmount)}}</span>
+            {{/if}}
+        </td>
+        <td>
+            {{ if _isBlank(p.payAmount)}}
+            <span class="fc-v1-green">0</span>
+            {{else if  ((0-p.payAmount)+'').indexOf('-')>-1}}
+            <span class="fc-v1-red">{{_expPositiveNumberFilter(p.payAmount)}}</span>
+            {{else}}
+            <span class="fc-v1-green">{{_expNumberFilter(p.payAmount)}}</span>
+            {{/if}}
+        </td>
+        <td>
+            {{ if _isBlank(p.profit)}}
+            <span class="fc-v1-green">0</span>
+            {{else if  (p.profit+'').indexOf('-')>-1}}
+            <span class="fc-v1-red">{{_expNumberFilter(p.profit)}}</span>
+            {{else}}
+            <span class="fc-v1-green">{{_expNumberFilter(p.profit)}}</span>
+            {{/if}}
+        </td>
+        <td>
+            {{ if _isBlank(p.changeAmount)}}
+            <span class="fc-v1-green">0</span>
+            {{else if  (p.changeAmount+'').indexOf('-')>-1}}
+            <span class="fc-v1-red">{{_expNumberFilter(p.changeAmount)}}</span>
+            {{else}}
+            <span class="fc-v1-green">{{_expNumberFilter(p.changeAmount)}}</span>
+            {{/if}}
+        </td>
+        <td>
+            {{ if _isBlank(p.balance)}}
+            <span class="fc-v1-green">0</span>
+            {{else if  (p.balance+'').indexOf('-')>-1}}
+            <span class="fc-v1-red">{{_expNumberFilter(p.balance)}}</span>
+            {{else}}
+            <span class="fc-v1-green">{{_expNumberFilter(p.balance)}}</span>
+            {{/if}}
+        </td>
+        <td>
+            {{if p.flag==2 }}
+            <button class="btn btn-default btn-sm roleControl" roleCode="40001303" flag="2" data-action="cancelBill">取消扎账</button>
+            {{else if p.flag==1 }}
+            <button class="btn btn-primary btn-sm roleControl" roleCode="40001303" flag="2" data-action="tieBill">确认扎账</button>
+            {{/if}}
+        </td>
+    </tr>
+    {{/each}}
+    {{else}}
+    <tr class="no-data">
+        <td colspan="7" class="text-center v-middle">
+            <div >
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">您还没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

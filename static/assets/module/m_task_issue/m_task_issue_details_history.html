@@ -1,0 +1,51 @@
+<table class="table table-striped m-task-issue-details-history">
+    <thead>
+    <tr>
+        <th width="6%">序号</th>
+        <th width="16%">变更时间</th>
+        <th width="12%">变更人</th>
+        <th width="12%">变更字段</th>
+        <th width="27%">变更前</th>
+        <th width="27%">变更后</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList!=null && dataList.length>0}}
+    {{each dataList as h hi}}
+    <tr data-id="{{h.id}}">
+        <td>{{hi+1+pageIndex*10}}</td>
+        <td>{{_momentFormat(h.createDate,'YYYY/MM/DD HH:mm:ss')}}</td>
+        <td>{{h.userName}}</td>
+        <td>{{h.fieldNameDesc}}</td>
+        <td>
+            {{if h.fieldNameDesc=='任务描述' || h.fieldNameDesc=='项目详情'}}
+            <a href="javascript:void(0);" class="btn btn-link no-padding" data-action="viewTaskRemark" data-key="oldValue">点击查看变更前{{h.fieldNameDesc}}</a>
+            {{else if h.fieldNameDesc=='结束时间' || h.fieldNameDesc=='开始时间' }}
+                {{_momentFormat(h.oldValue,'YYYY/MM/DD')}}
+            {{else}}
+                {{h.oldValue}}
+            {{/if}}
+        </td>
+        <td>
+            {{if h.fieldNameDesc=='任务描述' || h.fieldNameDesc=='项目详情'}}
+            <a href="javascript:void(0);" class="btn btn-link no-padding" data-action="viewTaskRemark"  data-key="newValue">点击查看变更后{{h.fieldNameDesc}}</a>
+            {{else if h.fieldNameDesc=='结束时间' || h.fieldNameDesc=='开始时间' }}
+                {{_momentFormat(h.newValue,'YYYY/MM/DD')}}
+            {{else}}
+                {{h.newValue}}
+            {{/if}}
+        </td>
+    </tr>
+    {{/each}}
+    {{else}}
+    <tr class="no-data">
+        <td colspan="6" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">暂无相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

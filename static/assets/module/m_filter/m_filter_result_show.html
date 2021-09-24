@@ -1,0 +1,15 @@
+{{each dataList as p i}}
+<span class="filter-result">
+    <span class="label ">
+        <span class="filter-result-name">{{p.name}}</span>
+        {{if p.isDelete!=0}}
+        <a class="curp" href="javascript:void(0)" data-action="delSelectedFilter" data-type="{{p.type}}">
+            <i class="fa fa-times fc-red"></i>
+        </a>
+        {{/if}}
+    </span>
+    {{if i < dataList.length-1 }}
+        &nbsp;<span class="fa fa-angle-right p-w-xxs"></span>
+    {{/if}}
+</span>
+{{/each}}

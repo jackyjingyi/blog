@@ -1,0 +1,16 @@
+<form class="form-horizontal m width-200">
+    <div class="form-group">
+        <div class="col-sm-9">
+            <div class="input-group">
+                <input type="text" class="form-control input-sm" name="confirmDate"
+                       placeholder="选择日期" readonly onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="{{confirmDate}}">
+                <span class="input-group-addon no-padding" onclick="javascript:$(this).prev().focus();">
+                <i class="icon-sm icon-append fa fa-calendar"></i>
+            </span>
+            </div>
+        </div>
+        <div class="col-sm-3 no-padding">
+            <button class="btn btn-primary btn-sm">确认</button>
+        </div>
+    </div>
+</form>

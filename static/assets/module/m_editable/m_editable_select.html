@@ -1,0 +1,10 @@
+<select class="form-control" name="{{key}}">
+    {{each dataInfo as s i}}
+        {{if s.isSelected==1}}
+            <option selected value="{{s.id}}">{{s.name }}</option>
+        {{else}}
+            <option value="{{s.id}}">{{s.name }}</option>
+        {{/if}}
+    {{/each}}
+</select>
+

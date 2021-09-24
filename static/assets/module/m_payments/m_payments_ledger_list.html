@@ -1,0 +1,135 @@
+<div class="m-b-sm">
+    <span>当前余额：</span>
+    <span>
+        {{ if _isBlank(summary.sumBalance)}}
+            <span class="fc-v1-green">0</span>
+        {{else if  (summary.sumBalance+'').indexOf('-')>-1}}
+            <span class="fc-v1-red">{{_expNumberFilter(summary.sumBalance)}}</span>
+        {{else}}
+            <span class="fc-v1-green">{{_expNumberFilter(summary.sumBalance)}}</span>
+        {{/if}}
+        元 &nbsp;
+        {{if changeList && changeList.length>0}}
+            <button class="btn btn-link no-padding fc-dark-blue vertical-baseline" data-action="viewSumBalanceChangeList" title="余额变更记录"><i class="fa fa-info-circle"></i></button>
+        {{/if}}
+    </span>
+</div>
+<table class="table table-bordered table-hover table-responsive text-nowrap m-b-none">
+    <thead>
+        <tr>
+            <th>日期</th>
+            <th width="12%">
+                <!--<span class="th-span-pr">-->
+                    金额（元）
+                <!--</span>-->
+                <a class="icon-filter pull-right" id="filter_profitType"><i class="icon iconfont icon-shaixuan"></i></a>
+            </th>
+            <th>
+                收支分类
+            </th>
+            <th>
+                分类子项
+            </th>
+            <th>备注</th>
+            <th>
+                收款组织
+                <a class="icon-filter pull-right" id="filter_toCompanyName"><i class="icon iconfont icon-shaixuan"></i></a>
+            </th>
+            <th>
+                付款组织
+                <a class="icon-filter pull-right" id="filter_fromCompanyName"><i class="icon iconfont icon-shaixuan"></i></a>
+            </th>
+            <th>
+                关联项目
+                <a class="icon-filter pull-right" id="filter_projectName"><i class="icon iconfont icon-shaixuan"></i></a>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        {{each dataList as d i}}
+        <tr data-id="{{d.id}}" data-i="{{i}}" class="curp">
+            <td>{{_momentFormat(d.profitDate,'YYYY/MM/DD')}}</td>
+            <td>
+                {{if (d.profitFee+'').indexOf('-')>-1 }}
+                    <span class="fc-v1-red ">{{_expPositiveNumberFilter(d.profitFee)}}</span>
+                {{else}}
+                    <span class="fc-v1-green ">{{_expNumberFilter(d.profitFee)}}</span>
+                {{/if}}
+            </td>
+            <td>{{d.feeTypeParentName}}</td>
+            <td>{{d.feeTypeName}}</td>
+            <td class="max-width-v1">
+                <div class="text-ellipsis-2 text-wrap" data-toggle="tooltip" data-container="body" data-original-title="{{d.feeName}}">
+                    {{d.feeName}}
+                </div>
+            </td>
+            <td>
+                {{if d.toCompanyName!=null && d.toCompanyName!=''}}
+                    {{d.toCompanyName}}
+                {{else}}
+                    --
+                {{/if}}
+            </td>
+            <td>
+                {{if d.fromCompanyName!=null && d.fromCompanyName!=''}}
+                    {{d.fromCompanyName}}
+                {{else}}
+                    --
+                {{/if}}
+            </td>
+            <td class="max-width-v1">
+                <div class="text-ellipsis-2 text-wrap" data-toggle="tooltip" data-container="body" data-original-title="{{d.projectName}}">
+                    {{d.projectName}}
+                </div>
+            </td>
+        </tr>
+        {{/each}}
+        {{if !(dataList && dataList.length>0)}}
+        <tr class="no-data">
+            <td colspan="8" class="text-center v-middle">
+                <div class="m-b-xl m-t-md">
+                    <img src="{{_url('/img/default/without_data.png')}}">
+                    <span class="fc-dark-blue dp-block">没有相关数据</span>
+                </div>
+            </td>
+        </tr>
+        {{/if}}
+    </tbody>
+</table>
+<div class="pt-absolute m-t-sm p-l-sm">
+
+    <span>合计金额：</span>
+    <span>
+        {{ if _isBlank(summary.amount)}}
+            <span class="fc-v1-green">0</span>
+        {{else if  (summary.amount+'').indexOf('-')>-1}}
+            <span class="fc-v1-red">{{_expNumberFilter(summary.amount)}}</span>
+        {{else}}
+            <span class="fc-v1-green">{{_expNumberFilter(summary.amount)}}</span>
+        {{/if}}
+        元 &nbsp;&nbsp;
+    </span>
+    <span>收入：</span>
+    <span>
+        {{ if _isBlank(summary.gain)}}
+            <span class="fc-v1-green">0</span>
+        {{else if  (summary.gain+'').indexOf('-')>-1}}
+            <span class="fc-v1-red">{{_expNumberFilter(summary.gain)}}</span>
+        {{else}}
+            <span class="fc-v1-green">{{_expNumberFilter(summary.gain)}}</span>
+        {{/if}}
+        元 &nbsp;&nbsp;
+    </span>
+    <span>支出：</span>
+    <span>
+        {{ if _isBlank(summary.pay)}}
+            <span class="fc-v1-green">0</span>
+        {{else if  (summary.pay+'').indexOf('-')>-1}}
+            <span class="fc-v1-red">{{_expPositiveNumberFilter(summary.pay)}}</span>
+        {{else}}
+            <span class="fc-v1-green">{{_expNumberFilter(summary.pay)}}</span>
+        {{/if}}
+        元 &nbsp;&nbsp;
+    </span>
+
+</div>

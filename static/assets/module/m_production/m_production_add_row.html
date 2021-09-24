@@ -1,0 +1,57 @@
+<tr class="task-add-row content-row-edit" data-pid="{{taskId}}">
+    <td colspan="{{colspan?colspan:'12'}}">
+        <form>
+            <div class="pull-left row-edit-item p-r-xs">
+                <textarea placeholder="请输入任务名称" class="form-control" type="text" name="taskName" style="width: 88%;display: inline-block;"></textarea>
+                <span><span class="wordCount">0</span>/<span>50</span></span>
+            </div>
+
+            <div class="pull-left row-edit-item p-r-xs">
+                <!--<input placeholder="设计任务" class="form-control" type="text" name="taskName" style="width: 80%;display: inline-block;">
+                <span><span class="wordCount">0</span>/<span>50</span></span>-->
+                <div class="{{taskOptionList && taskOptionList.length>0?'input-group':''}}">
+                    {{if taskOptionList && taskOptionList.length>0}}
+                    <div class="input-group-btn">
+                        <button data-toggle="dropdown" class="btn btn-white dropdown-toggle" type="button" aria-expanded="false"><span class="caret"></span></button>
+                        <ul class="dropdown-menu pt-relative hide">
+                            {{each taskOptionList as t}}
+                            <li><a href="javascript:void(0);" data-action="selectTaskOption" data-id="{{t.id}}">{{t.name}}</a></li>
+                            {{/each}}
+                        </ul>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+            <!--<div class="pull-left row-edit-item p-t-xs">
+                <span class="show-span">
+                    <span class="fc-v1-grey">{{personInChargeInfo.personInCharge}}</span>
+                 </span>
+                <a href="javascript:void(0);" data-action="setTaskLeader" data-user-name="{{personInChargeInfo.personInCharge}}" data-id="{{personInChargeInfo.personInChargeId}}">
+                    <i class="fa fa-pencil-square-o"></i>
+                </a>
+            </div>-->
+            <div class="pull-left row-edit-item p-r-xs" >
+                <div class="input-group">
+                    <input type="text" class="form-control timeInput startTime" id="ipt_startTime" name="startTime" placeholder="开始日期" readonly
+                           onFocus="startTimeFun(this)" data-appointmentStartTime = "" value="{{appointmentStartTime}}">
+                    <span class="input-group-addon" onclick="javascript:$(this).prev().focus();"> <i class="icon-append fa fa-calendar"></i> </span>
+                </div>
+            </div>
+            <div class="pull-left row-edit-item p-r-xs">
+                <div class="input-group">
+                    <input type="text" class="form-control timeInput endTime" id="ipt_endTime" name="endTime" placeholder="结束日期" readonly
+                           onFocus="endTimeFun(this)" data-appointmentEndTime = "" value="{{appointmentEndTime}}">
+                    <span class="input-group-addon" onclick="javascript:$(this).prev().focus();"> <i class="icon-append fa fa-calendar"></i> </span>
+                </div>
+            </div>
+            <div class="pull-left row-edit-item">
+                <button class="btn btn-primary" data-action="submit">创建</button>
+                <button class="btn btn-default" data-action="cancel">取消</button>
+            </div>
+            <!--<div class="pull-left row-edit-item" style="width: 80%;margin-left: 6%;margin-top: 5px;">
+                <input placeholder="任务描述" class="form-control" type="text" name="taskRemark" >
+            </div>-->
+        </form>
+    </td>
+</tr>
+

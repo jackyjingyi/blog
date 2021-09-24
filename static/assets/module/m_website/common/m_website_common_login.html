@@ -1,0 +1,291 @@
+<style>
+
+    div.wrapper{
+        background-color: #fff;
+        padding: 0;
+    }
+
+    .header-v6 .head-row {
+        height: 73px;
+        max-height: 73px;
+        line-height: 73px;
+    }
+
+
+
+    @media (min-width:700px){
+        .head-logo{
+            margin-left: 10%;
+            margin-top: -15px;
+            padding:0px;
+        }
+    }
+
+
+    @media (min-width:700px){
+        .head-reg{
+            padding-right: 20px;
+            margin-right: 150px;
+        }
+    }
+    .login-bg-wrapper {
+        z-index: 1;
+        overflow: hidden;
+        position: fixed;
+        width:100%;
+        height:100%;
+        background:url({{_url('/img/login_bg_not_logo.png')}}) no-repeat;
+        background-size:cover;
+    }
+
+
+
+
+
+    /*---------- login-form --------- */
+    .login-form-wrapper {
+        font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif !important;
+        box-sizing: border-box;
+        float:right;
+        margin-right:3%;
+    }
+    @media (min-width:1367px){
+        .login-form-wrapper{
+            min-width: 530px;
+            width: 530px;
+            max-width: 530px;
+        }
+    }
+    @media (min-width:992px) and (max-width: 1366px){
+        .login-form-wrapper{
+            min-width: 530px;
+            width: 530px;
+            max-width: 530px;
+        }
+    }
+    @media (min-width:768px) and (max-width: 991px){
+        .login-form-wrapper{
+            min-width: 350px;
+            width: 350px;
+            max-width: 350px;
+        }
+    }
+    @media (min-width: 350px) and (max-width:767px){
+        .login-form-wrapper{
+            min-width: 350px;
+            width: 350px;
+            max-width: 350px;
+        }
+    }
+
+    @media (min-width: 200px) and (max-width:349px){
+        .login-form-wrapper{
+            min-width: 200px;
+            width: 340px;
+            max-width: 340px;
+        }
+    }
+
+
+    @media (min-width:992px){
+        .login-form{
+            min-width: 350px;
+            width: 350px;
+            max-width: 350px;
+        }
+    }
+    @media (min-width:768px) and (max-width: 991px){
+        .login-form{
+            min-width: 350px;
+            width: 350px;
+            max-width: 350px;
+        }
+    }
+    @media (min-width: 350px) and (max-width:767px){
+        .login-form{
+            min-width: 350px;
+            width: 350px;
+            max-width: 350px;
+        }
+    }
+
+    @media (min-width: 200px) and (max-width:349px){
+        .login-form{
+            min-width: 200px;
+            width: 320px;
+            max-width: 340px;
+        }
+    }
+
+    .left-word-wrapper{
+        margin-left: 10%;
+        margin-top: 5px;
+        display: block;
+        float: left;
+        position: absolute;
+        font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif !important;
+    }
+
+
+
+    .left-word{
+        font-size:6rem;
+        color:#585657;
+        margin: 0px;
+    }
+
+    .login-form p {
+        text-align: left;
+    }
+
+    .login-form label {
+        line-height: 20px;
+        color: #555;
+    }
+
+    .login-form-header {
+        color: #555;
+        text-align: center;
+        margin-bottom: 20px;
+        border-bottom: solid 1px #eee;
+    }
+
+    .login-form-header h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    .login-form hr{
+        margin: 15px 0;
+    }
+
+    .login-form-remeberme{
+        float:left;
+        text-align: left;
+        padding-top: 0px;
+    }
+    .login-form-submit{
+        float:right;
+    }
+
+
+    .login-form-qrcode-wrapper{
+        float: left;
+        box-sizing: border-box;
+        width: 170px;
+        padding: 0 10px;
+    }
+
+    .login-form-qrcode {
+        padding: 20px 20px 0 20px;
+        width: 150px;
+        background-color: #fff;
+        text-align: center;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        -moz-border-radius-topleft: 4px;
+        -moz-border-radius-topright: 4px;
+        -webkit-border-top-left-radius: 4px;
+        -webkit-border-top-right-radius: 4px;
+    }
+
+    .login-form-qrcode-word {
+        color: #999;
+        box-sizing: border-box;
+        border-bottom-left-radius: 4px;
+        border-bottom-right-radius: 4px;
+        -moz-border-radius-bottomleft: 4px;
+        -moz-border-radius-bottomright: 4px;
+        -webkit-border-bottom-left-radius: 4px;
+        -webkit-border-bottom-right-radius: 4px;
+        width: 150px;
+        background-color: #fff;
+        text-align: center;
+        padding: 10px;
+    }
+
+    .login-form-forget-word{
+        margin: 0 0 5px;
+    }
+
+    .forget-form .modal-dialog{
+        margin:0 auto;
+        min-width: 430px;
+        width:430px;
+        max-width: 430px;
+    }
+
+    .center-vertical {
+        position:relative;
+        top:50%;
+        transform:translateY(-50%);
+    }
+
+    .vertical-center{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    .modal-header{
+        padding: 15px 30px !important;
+    }
+
+    .margin-right-15{
+        margin-right: 15px;
+    }
+
+    .foot-copy-rights{
+        width:100%;
+        padding: 10px;
+        position:absolute;
+        bottom:0px;
+        z-index: 2;
+    }
+
+    .btn-default{
+        background: #f0f0f0;
+    }
+    .tooltip.left .tooltip-inner {
+        background-color:red;
+    }
+    .tooltip.left .tooltip-arrow {
+        border-left-color: red;
+    }
+    a.svg{display: inline-block;position: relative;top: 15px;}
+    a.svg:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left:0;
+    }
+    .login-bg-wrapper .mt-14p{
+     margin-top: 14%;
+    }
+
+</style>
+<div class="bg-white ">
+    <div class="login-bg-wrapper">
+        <div class="head-logo">
+            <a href="javascript:void(0)" class="svg" style="height:10%;width:10%;">
+                <object data="{{_url('/img/login_lef_logo.png')}}"></object >
+            </a>
+        </div>
+                    <div class="left-word-wrapper">
+
+                        <h1 class="left-word">
+                            项目管理平台
+                        </h1>
+                    </div>
+                    <div class="login-form-wrapper rounded login-content">
+                    </div>
+                </div>
+            <div class="row foot-copy-rights">
+                <p class="text-center">深圳华侨城创新研究院有限公司 <a href="http://beian.miit.gov.cn" target="_blank">粤ICP备2020097205号-3</a></p>
+            </div>
+
+    </div>
+

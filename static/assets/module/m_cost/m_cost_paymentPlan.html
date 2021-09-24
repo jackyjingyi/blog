@@ -1,0 +1,20 @@
+<div class="row">
+    <div class="col-md-6" id="designManagerBox">
+
+    </div>
+    <div class="col-md-6 text-right">
+        {{if projectCostRole.paymentProjectFeeSet==1}}
+        <a class="btn btn-primary" data-action="addCollectionPlan">添加付款计划</a>
+        {{/if}}
+    </div>
+</div>
+<div class="m-t-xs" id="collectionPlanBox" >
+    {{if dataList==null || dataList.length==0}}
+    <div class="panel panel-default no-borders m-t-xs">
+        <div class="panel-body text-center no-borders">
+            <img src="{{_url('/img/default/without_data.png')}}">
+            <span class="fc-dark-blue dp-block">没有相关数据</span>
+        </div>
+    </div>
+    {{/if}}
+</div>

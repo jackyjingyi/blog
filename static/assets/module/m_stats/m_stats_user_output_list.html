@@ -1,0 +1,35 @@
+<table class="tree table table-hover table-bordered m-b-none m-stats-pro-process-list dataTable">
+    <thead>
+    <tr>
+        <th width="12%">姓名</th>
+        <th width="13%"> 所属组</th>
+       <!-- <th>参与项目数（超时任务数）</th>-->
+        <th width="25%" data-type="1" class="sorting_desc w-100" data-action="sort" data-code="projectCount">参与项目数</th>
+        <th width="25%" data-type="1"   class="sorting_desc w-100" data-action="sort" data-code="outPutValue">个人工作量</th>
+        <th width="25%" data-type="1" class="sorting_desc w-100" data-action="sort" data-code="personalRatio">效能值</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList!=null && dataList.length>0}}
+    {{each dataList as p i}}
+        <tr class="curp" data-id="{{p.id}}">
+            <td>{{p.userName}}</td>
+            <td>{{p.departName}}</td>
+           <!-- <td>{{p.projectCount}}{{if p.delayCount>0}}<span class="color-red">({{p.delayCount}})</span>{{/if}}</td>-->
+            <td>{{p.projectCount}}</td>
+            <td>{{_expNumberFilter(p.outPutValue)}}</td>
+            <td>{{_expNumberFilterPoint2(p.personalRatio/100)}}</td>
+        </tr>
+    {{/each}}
+    {{else}}
+    <tr class="no-data-tr">
+        <td colspan="5" class="text-center ">
+            <div>
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

@@ -1,0 +1,42 @@
+<div class="m">
+    <form role="form" class="form-horizontal filter-form m-b-sm">
+        <div class="row" id="filterBox">
+            <div class="col-md-12">
+                <div class="">
+                    <label  class="inline">项目范围：</label>
+                    <select class="from-control width-300 inline" name="zoneOrgId"></select>
+                </div>
+            </div>
+            <div class="col-md-12 m-t-xs" id="timeSelect">
+
+            </div>
+
+            <div class="col-md-12 m-t-xs">
+                <div class=" ">
+                    <label class="inline">搜&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;索：</label>
+                    <input class="form-control input-sm width-300 inline v-middle" type="text" name="keyword" placeholder="请输入关键字">
+                </div>
+            </div>
+
+            <div class="col-md-12 m-t">
+                <div class="border-bottom p-b-sm">
+                    <button class="btn btn-primary" data-action="search">查询</button>
+                    <button class="btn btn-default" data-action="refreshBtn">重置条件</button>
+                </div>
+            </div>
+        </div>
+        <div class="row m-t-xs p-t-sm">
+            <div class="col-md-9 filter-result-col">
+                <span>筛选条件： 共 <span id="totalBySearch">0</span> 项 &nbsp;</span>
+            </div>
+            <div class="col-md-3 text-right">
+            </div>
+        </div>
+    </form>
+    <div class="data-list-box">
+        <div class="data-list-container"></div>
+        <div class="p-w-xs">
+            <div id="data-pagination-container" class="m-pagination pull-right "></div>
+        </div>
+    </div>
+</div>

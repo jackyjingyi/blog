@@ -1,0 +1,49 @@
+<form class="form-horizontal m m-light-project-temp-select">
+    <div class="row m-l-n-xs">
+        <div class="col-sm-9">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                <input type="text" name="keyword" placeholder="搜索任务模板" class="form-control" value="{{projectName?projectName:''}}">
+            </div>
+        </div>
+        <div class="col-sm-3 text-right">
+            <button class="btn btn-link fc-dark-blue" data-action="addTaskTemp"><i class="fa fa-plus-circle"></i>&nbsp;新建模板</button>
+            <button class="btn btn-link fc-dark-blue" data-action="allTaskTemp"><i class="fa fa-table"></i>&nbsp;全部模板</button>
+        </div>
+    </div>
+    <div class="row m-l-n-xs">
+        {{if dataList && dataList.length>0}}
+        {{each dataList as d}}
+        <div class="task-temp-box" data-action="addLightProjectByTemp" data-id="{{d.id}}">
+            <div class="task-temp-container">
+                <div class="task-temp-main">
+                    {{if d.image}}
+                    <div class="task-temp-cover" style="background-image: url('{{d.image}}');"></div>
+                    {{else}}
+                    <div class="task-temp-cover" style="background-image: url('{{_url('/img/task/001.png')}}');"></div>
+                    {{/if}}
+                    <div class="task-temp-mask"></div>
+                    <!--<div class="task-temp-header">
+                        <div class="task-temp-creator">创建者：Teambition</div>
+                    </div>-->
+                    <div class="task-temp-content">
+                        <div class="task-temp-name">
+                            <div class="task-temp-namewrap">{{d.name}}</div>
+                            <div class="task-temp-tags"></div>
+                        </div>
+                        <!--<div class="task-temp-desc">从标书制作到投标的工作管理模板，帮助管理者高效的组织投标工作，管理招投标文档。</div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+        {{else}}
+        <div class="text-center fc-v1-grey p-t-xxl f-s-xl">
+            <p>未搜索到与“{{projectName?projectName:''}}”相关的模板</p>
+            <p>尝试其他关键词或查看全部模板</p>
+            <button class="btn btn-default fc-dark-blue" data-action="allTaskTemp">全部模板</button>
+        </div>
+        {{/if}}
+
+    </div>
+</form>

@@ -1,0 +1,42 @@
+<div class="container-fluid">
+    <div id="createOrgBox" class="width-600 m-auto m-t-lg animated fadeInRight">
+        <form class="createOrgBox">
+            <div class="headline">
+                <h2>创建组织</h2>
+                <span class="fc-v1-grey">(创建一个组织，邀请成员加入，通过项目一起高效的协作)</span>
+            </div>
+            <div class="form-group pt-relative">
+                <label>组织名称<span class="fc-red">*</span></label>
+                <input type="text" class="form-control companyName" id="companyName" name="companyName" placeholder="请输入组织名称" autocomplete='off'>
+                <!--<span class="fc-v1-grey">可在工商信息中查看企业名称，如查找不到请自行输入</span>
+                <a href="javascript:void(0);" id="viewPartyACompany" data-action="viewPartyACompany" style="position: absolute;right: 5px;top: 30px;display:none;">
+                    <i class="fa fa-info-circle"></i>
+                </a>-->
+            </div>
+            <div class="form-group" id="citysBox">
+                <label for="selectRegion">所在地区</label>
+                <div class="input-group" id="selectRegion" name="selectRegion">
+                    <div class="dp-inline-block">
+                        <select class="prov form-control" name="province"></select>
+                    </div>
+                    <div class="dp-inline-block m-l-xs">
+                        <select class="city form-control" name="city" disabled="disabled" style="display: none"></select>
+                    </div>
+                    <div  class="dp-inline-block m-l-xs">
+                        <select class="dist form-control" name="county" disabled="disabled" style="display: none"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group serviceTypeEdit">
+                <label>经营范围</label>
+                <div id="serviceTypeBox">
+
+                </div>
+            </div>
+            <div class="footTools">
+                <div class="pull-left fc-v1-grey f-s-xs">*选择本组织涉及的服务类型，后续会在人员专业和项目模板中使用。</div>
+                <a type="button" class="btn-u pull-right getClickFun rounded" data-action="saveOrg" href="javascript:void(0)">立即创建</a>
+            </div>
+        </form>
+    </div>
+</div>

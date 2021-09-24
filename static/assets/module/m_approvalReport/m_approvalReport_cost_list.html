@@ -1,0 +1,112 @@
+<style>
+    .table-hover>tbody>tr.no-data:hover {
+        background-color: transparent;
+    }
+</style>
+<div class="row">
+    <div class="col-md-12 of-auto">
+        <table class="table table-hover table-bordered table-responsive dataTable" >
+            <thead>
+            <tr>
+                <th>序号</th>
+                <th>
+                    编号
+                    <a class="icon-filter pull-right" id="filter_expNo" ><i class="icon iconfont icon-shaixuan"></i></a>
+                </th>
+                <th>金额（元）</th>
+                <!--<th width="9%" class="w-100">
+                    所在组织
+                    <a class="icon-filter pull-right" id="filter_applyCompanyName" ><i class="icon iconfont icon-shaixuan"></i></a>
+                </th>-->
+                <th>
+                    部门
+                    <a class="icon-filter pull-right" id="filter_applyDepartName" ><i class="icon iconfont icon-shaixuan"></i></a>
+                </th>
+                <th>
+                    经办人
+                    <a class="icon-filter pull-right" id="filter_submitUserName" ><i class="icon iconfont icon-shaixuan"></i></a>
+                </th>
+                <th>
+                    审批人
+                    <a class="icon-filter pull-right" id="filter_auditPerson" ><i class="icon iconfont icon-shaixuan"></i></a>
+                </th>
+                <th>
+                    收款方
+                    <a class="icon-filter pull-right" id="filter_toCompanyName" ><i class="icon iconfont icon-shaixuan"></i></a>
+                </th>
+                <th>
+                    付款方
+                    <a class="icon-filter pull-right" id="filter_fromCompanyName" ><i class="icon iconfont icon-shaixuan"></i></a>
+                </th>
+                <th>收支分类</th>
+                <th>分类子项</th>
+                <th class="sorting_desc w-100" data-action="sort" data-code="expDate">
+                    申请时间
+                </th>
+                <th class="sorting_desc w-100" data-action="sort" data-code="approveDate">审批时间</th>
+                <th class="sorting_desc w-100" data-action="sort" data-code="allocationDate">
+                    付款时间
+                    <a class="icon-filter pull-right" id="filter_allocationStartDate_allocationEndDate" ><i class="icon iconfont icon-shaixuan"></i></a>
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {{each dataList as p}}
+            <tr class="curp" data-action="openShowExp" i="{{$index}}" versionNum="{{p.versionNum}}" data-type="{{p.type}}" data-id="{{p.id}}">
+                <td>{{$index+1+pageIndex*10}}</td>
+                <td>{{p.expNo}}</td>
+                <td>
+                    <span class="">{{_expNumberFilter(p.expSumAmount)}}</span>
+                </td>
+                <!--<td>{{p.companyName}}</td>-->
+                <td>{{p.departName}}</td>
+                <td>{{p.submitUserName}}</td>
+                <td>{{p.auditPersonName}}</td>
+                <td>{{_emptyDisplay(p.enterpriseId)}}</td>
+                <td>{{_emptyDisplay(p.fromCompanyId)}}</td>
+                <td>{{p.expParentName}}</td>
+                <td>{{p.expName}}</td>
+                <td>{{_momentFormat(p.expDate,'YYYY/MM/DD')}}</td>
+                <td>{{_momentFormat(p.approveDate,'YYYY/MM/DD')}}</td>
+                <td>
+                    {{if doType==2}}
+                        {{if managerCompanyIds && managerCompanyIds.indexOf(selectedOrg.id)>-1}}
+                            <button type="button" class="btn btn-primary btn-xs rounded" data-action="agreeToGrant" data-id="{{p.id}}">同意拨款</button>
+                            <button type="button" class="btn btn-default btn-xs rounded" data-action="sendBack" data-id="{{p.id}}">退回</button>
+                        {{/if}}
+                    {{else}}
+                        {{if p.allocationDate!=null && p.allocationDate!=''}}
+                            {{_momentFormat(p.allocationDate,'YYYY/MM/DD')}}
+                        {{else if p.approveStatus==1 && p.financeFlag==1 && isFinance}}
+                            <button type="button" class="btn btn-primary btn-xs rounded" data-action="agreeToGrant" data-id="{{p.id}}">同意拨款</button>
+                        {{else if p.approveStatus==7}}
+                            已退回
+                        {{else}}
+                            待拨款
+                        {{/if}}
+                        {{if p.approveStatus==1 && p.financeFlag==1 && isFinance}}
+                            <button type="button" class="btn btn-default btn-xs rounded" data-action="sendBack" data-id="{{p.id}}">退回</button>
+                        {{/if}}
+                    {{/if}}
+                </td>
+            </tr>
+            {{/each}}
+            {{if dataList==null || dataList.length==0}}
+            <tr class="no-data">
+                <td colspan="13" align="center">
+                    <div class="text-center">
+                        <img src="{{_url('/img/default/without_exp.png')}}">
+                    </div>
+                    <span style="color:#337b8e">暂无汇总内容</span>
+                </td>
+            </tr>
+            {{/if}}
+            </tbody>
+        </table>
+    </div>
+</div>
+{{if dataList!=null && dataList.length!=0}}
+<div class="pt-absolute m-t-sm" id="totalAmount">
+    &nbsp;&nbsp;合计：<span class="">{{_expNumberFilter(expSumAmount)}}</span>元
+</div>
+{{/if}}

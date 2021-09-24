@@ -1,0 +1,187 @@
+<form class="form-horizontal p-sm overflow-y-auto m-dialog-resize">
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">日期：</label>
+        <div class="col-md-10">
+            {{if feeType==7 || feeType==8}}
+                {{_momentFormat(profitDate,'YYYY/MM/DD')}}
+            {{else}}
+                {{_momentFormat(paymentDetail.createDate,'YYYY/MM/DD')}}
+            {{/if}}
+        </div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">金额（元）：</label>
+        <div class="col-md-10">
+            {{if (profitFee+'').indexOf('-')>-1 }}
+                <span class="fc-v1-red">{{_expPositiveNumberFilter(profitFee)}}</span>
+            {{else}}
+                <span class="fc-v1-green">{{_expNumberFilter(profitFee)}}</span>
+            {{/if}}
+        </div>
+    </div>
+    <div class="hr-line-dashed m-t-none m-b-sm" ></div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">收支分类：</label>
+        <div class="col-md-10">{{feeTypeParentName}}</div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">分类子项：</label>
+        <div class="col-md-10">{{feeTypeName}}</div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">收款组织：</label>
+        <div class="col-md-10">
+            {{if feeType==7 || feeType==8}}
+                {{if toCompanyName!=null && toCompanyName!=''}}
+                    {{toCompanyName}}
+                {{else}}
+                    --
+                {{/if}}
+            {{else}}
+                {{if cost.toCompanyName!=null && cost.toCompanyName!=''}}
+                    {{cost.toCompanyName}}
+                {{else}}
+                    --
+                {{/if}}
+            {{/if}}
+        </div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">付款组织：</label>
+        <div class="col-md-10">
+            {{if feeType==7 || feeType==8}}
+                {{if fromCompanyName!=null && fromCompanyName!=''}}
+                    {{fromCompanyName}}
+                {{else}}
+                    --
+                {{/if}}
+            {{else}}
+                {{if cost.fromCompanyName!=null && cost.fromCompanyName!=''}}
+                    {{cost.fromCompanyName}}
+                {{else}}
+                    --
+                {{/if}}
+            {{/if}}
+        </div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">关联项目：</label>
+        <div class="col-md-10">
+            {{if feeType==7 || feeType==8}}
+                {{projectName}}
+            {{else}}
+                {{cost.projectName}}
+            {{/if}}
+        </div>
+    </div>
+    <div class="hr-line-dashed m-t-none m-b-sm" ></div>
+    {{if feeType==7 || feeType==8}}
+        <div class="form-group m-b-xs">
+            <label class="col-md-2 text-right">财务人员：</label>
+            <div class="col-md-10">{{operatorName}}</div>
+        </div>
+    {{else}}
+        <div class="form-group m-b-xs">
+            <label class="col-md-2 text-right">{{profitType==1?'收款':'付款'}}节点：</label>
+            <div class="col-md-10">{{point.feeDescription}}</div>
+        </div>
+        <div class="form-group m-b-xs">
+            <label class="col-md-2 text-right">比例：</label>
+            <div class="col-md-10">{{point.feeProportion}}%</div>
+        </div>
+        <div class="form-group m-b-xs">
+            <label class="col-md-2 text-right">节点金额：</label>
+            <div class="col-md-10">{{point.fee}}</div>
+        </div>
+        <div class="form-group m-b-xs">
+            <label class="col-md-2 text-right">申请人：</label>
+            <div class="col-md-10">{{pointDetailInfo.userName}}</div>
+        </div>
+        <div class="form-group m-b-xs">
+            <label class="col-md-2 text-right">申请金额：</label>
+            <div class="col-md-10">{{pointDetailInfo.fee}}</div>
+        </div>
+        {{if profitType==1}}
+            <div class="form-group m-b-xs">
+                <label class="col-md-2 text-right">到账金额：</label>
+                <div class="col-md-10">{{_expNumberFilter(pointDetailInfo.sumPaidFee)}}</div>
+            </div>
+        {{else}}
+            <div class="form-group m-b-xs">
+                <label class="col-md-2 text-right">付款金额：</label>
+                <div class="col-md-10">{{_expNumberFilter(pointDetailInfo.sumPayFee)}}</div>
+            </div>
+        {{/if}}
+    {{/if}}
+    {{if auditList!=null && auditList.length>0}}
+    <h4 class="title-line m-l-sm">审批流程</h4>
+    <div class="hr-line-dashed m-t-none m-b-sm m-l m-r" ></div>
+    <div class="form-group">
+        <div class="col-sm-12 p-w-md">
+            <table class="table table-hover table-bordered m-b-xs" >
+                <thead>
+                <tr>
+                    <th width="40%">审批</th>
+                    <th width="40%">操作</th>
+                    <th width="20%">审批时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{each auditList as s i}}
+                <tr>
+                    <td>
+                        {{if _isNullOrBlank(s.fileFullPath)}}
+                        <img alt="image" class="img-circle img-responsive dp-inline-block vertical-top" src="{{_url('/img/head_default.png')}}" width="30"/>
+                        {{else}}
+                        <img alt="image" class="img-circle img-responsive dp-inline-block vertical-top" src="{{s.fileFullPath}}" width="30" >
+                        {{/if}}
+                        <span class="dp-inline-block">
+                                <p class="m-b-none">{{s.userName}}</p>
+                                <p class="m-b-none fc-v1-grey">{{s.companyName}}</p>
+                            </span>
+                    </td>
+                    <td>
+                        {{if s.approveStatus=='1'}}
+                        <p class="text-success m-b-none">{{s.approveStatusName}}</p>
+                        {{else if s.approveStatus=='2' || s.approveStatus=='3'}}
+                        <p class="text-danger m-b-none">{{s.approveStatusName}}</p>
+                        {{else}}
+                        <p class="m-b-none">{{s.approveStatusName}}</p>
+                        {{/if}}
+                        {{if s.approveStatusName=='发起申请' && !_isNullOrBlank(s.remark)}}
+                        <p class="fc-v1-grey m-b-none">{{typeStr}}备注：{{s.remark}}</p>
+                        {{/if}}
+                        {{if s.approveStatusName=='退回'  && !_isNullOrBlank(s.auditMessage)}}
+                        <p class="fc-v1-grey m-b-none">退回原因：{{s.auditMessage}}</p>
+                        {{/if}}
+                    </td>
+                    <td>
+                        {{_momentFormat(s.approveDate,'YYYY/MM/DD')}}
+                    </td>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{/if}}
+    {{if ccCompanyUserList!=null && ccCompanyUserList.length>0}}
+    <h4 class="title-line m-l-sm">抄送人</h4>
+    <div class="hr-line-dashed m-t-none m-b-sm m-l m-r"></div>
+    <div class="form-group">
+        <div class="col-sm-12 p-w-md approval-out-box">
+            {{each ccCompanyUserList as u ui}}
+            <div class="approver-outbox">
+                <div class="approver-box ">
+                    <div class="img-circle">
+                        <img alt="image" class="img-circle" src="{{_isNullOrBlank(u.fileFullPath)?_url('/img/head_default.png'):u.fileFullPath}}" width="30" height="30">
+                    </div>
+                    <div class="m-t-xs">{{u.userName}}</div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+    {{/if}}
+
+</form>

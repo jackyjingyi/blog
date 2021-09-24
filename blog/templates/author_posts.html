@@ -30,369 +30,366 @@
         }
     </style>
 
-    <div class="row">
+    <div class="row" style="margin:10px">
         {% if user.is_authenticated and user == author %}
-            <hr>
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active link-secondary" id="home-tab" data-bs-toggle="tab" href="#home"
-                            type="button"
-                            role="tab" aria-controls="home" aria-selected="true" data-bs-target="#home">草稿
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link link-secondary" id="profile-tab" data-bs-toggle="tab" href="#profile"
-                            type="button"
-                            role="tab" aria-controls="profile" aria-selected="false" data-bs-target="#profile">已发布
-                    </button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link link-secondary" id="contact-tab" data-bs-toggle="tab" href="#contact"
-                            type="button"
-                            role="tab" aria-controls="contact" aria-selected="false" data-bs-target="#contact">审核中
-                    </button>
-                </li>
-            </ul>
-            <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                    {% if draft_page_obj %}
-                        <br>
-                        <small>
-                            共{{ draft_page_obj.paginator.count }}篇
-                            <div class="btn-group" role="group">
-                                <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle btn-sm"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                    批量操作
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                    <li>
+            <div>
 
-                                        <button id="draft_bulk_submit"
-                                                class="list-group-item list-group-item-action btn-sm">
-                                            批量提交
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button id="draft_bulk_delete"
-                                                class="list-group-item list-group-item-action btn-sm">
-                                            批量删除
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-                        </small>
-                        <hr style="margin-bottom: 2px; margin-top:5px">
-                        <table class="table table-bordered" style="margin-bottom: 5px">
-                            <thead>
-                            <tr>
-                                <th scope="col" class="col-md-half">
-                                    <div class="form-check">
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab"
+                                                              data-toggle="tab">草稿箱</a></li>
+                    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab"
+                                               data-toggle="tab">已发布</a>
+                    </li>
+                    <li role="presentation"><a href="#contact" aria-controls="contact" role="tab"
+                                               data-toggle="tab">审核中</a>
 
-                                        <input class="form-check-input_draft_all" type="checkbox" value=""
-                                               id="flexCheckDefault_select_all_draft">
-                                        <label class="form-check-label" for="flexCheckDefault_select_all_draft">
-                                        </label>
-                                    </div>
-                                </th>
-                                <th scope="col" class="col-md-1">ID</th>
-                                <th scope="col" class="col-md-4">文章名称</th>
-                                <th scope="col" class="col-md-1">来源</th>
-                                <th scope="col" class="col-md-1">标签</th>
-                                <th scope="col" class="col-md-2">创建日期</th>
-                                <th scope="col" class="col-md-2">操作</th>
-                            </tr>
-                            </thead>
-                            <tbody>
+                </ul>
 
-                            {% for post in draft_page_obj %}
-                                {% if post.status_id == 1 %}
-                                    <tr>
-                                        <th class="col-md-half">
 
-                                            <div class="form-check">
-                                                <input class="form-check-input1" type="checkbox" value=""
-                                                       id="flexCheckDefault_1">
-                                                <label class="form-check-label" for="flexCheckDefault_1"
-                                                       style="display: none">{{ post.pk }}
-                                                </label>
-                                            </div>
+                <div class="tab-content" id="myTabContent">
+                    <div class="tab-pane fade in active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                        {% if draft_page_obj %}
+                            <br>
+                            <small>
+                                <div class="dropdown">
+                                    <button id="dLabel1" type="button" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                        批量操作
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dLabel1">
+                                        <li>
 
-                                        </th>
-                                        <td>
-                                            <small>{{ forloop.counter }}</small>
-                                        </td>
-                                        <td>
-                                            <small><a
-                                                    href="{% url 'article_detail' post.pk %}">{{ post.title }}</a></small>
-                                        </td>
-                                        <td>
-                                            <small><a
-                                                    href="{% url 'group_post' post.author.groups.first %}">{{ post.author.groups.first.name }}</a></small>
-                                        </td>
-                                        <td>
-                                            <small><a
-                                                    href="{% url 'category' post.category %}">{{ post.category }}</a></small>
-                                        </td>
-                                        <td>
-                                            <small>{{ post.post_date|date:"Y年n月d日" }}</small>
-                                        </td>
-                                        <td>
-                                            {% if user.is_authenticated and user.id == post.author.pk %}
-                                                <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
-                                                <small><a href="#" class="toDraftDelete">删除</a> </small>
-                                                <small><a href="#" class="toDraftSubmit">提交</a></small>
-                                            {% endif %}
-                                        </td>
-                                    </tr>
-                                {% endif %}
-
-                            {% endfor %}
-
-                            </tbody>
-                        </table>
-                        <div style="float: right">
-                            {% if is_draft_page_paginated %}
-                                <ul class="pagination pagination-sm">
-                                    {% if draft_page_obj.has_previous %}
-                                        <li class="page-item">
-                                            <a class="page-link"
-                                               href="?page_draft={{ draft_page_obj.previous_page_number }}"
-                                               style="color: cornflowerblue">上一页</a>
+                                            <button id="draft_bulk_submit"
+                                                    class="list-group-item list-group-item-action btn-sm">
+                                                批量提交
+                                            </button>
                                         </li>
-                                    {% else %}
-                                        <li class="page-item disabled">
-                                            <span class="page-link">上一页</span>
+                                        <li>
+                                            <button id="draft_bulk_delete"
+                                                    class="list-group-item list-group-item-action btn-sm">
+                                                批量删除
+                                            </button>
                                         </li>
-                                    {% endif %}
+                                    </ul>
+                                </div>
 
-                                    {% for i in draft_page_range %}
-                                        {% if draft_page_obj.number == i %}
-                                            <li class="page-item active">
-                                                <span class="page-link">{{ i }}</span>
-                                            </li>
-                                        {% elif i == author_draft_paginator.ELLIPSIS %}
-                                            <li class="page-item"><a class="page-link" href="?page_draft=1">{{ i }}</a>
-                                            </li>
-                                        {% else %}
-                                            <li class="page-item"><a class="page-link"
-                                                                     href="?page_draft={{ i }}">{{ i }}</a>
-                                            </li>
-                                        {% endif %}
+                            </small>
+                            <hr style="margin-bottom: 2px; margin-top:5px">
+                            <table class="table table-bordered" style="margin-bottom: 5px">
+                                <thead>
+                                <tr>
+                                    <th scope="col" class="col-md-half">
+                                        <div class="form-check">
 
-                                    {% endfor %}
+                                            <input class="form-check-input_draft_all" type="checkbox" value=""
+                                                   id="flexCheckDefault_select_all_draft">
+                                            <label class="form-check-label" for="flexCheckDefault_select_all_draft">
+                                            </label>
+                                        </div>
+                                    </th>
+                                    <th scope="col" class="col-md-1">ID</th>
+                                    <th scope="col" class="col-md-4">文章名称</th>
+                                    <th scope="col" class="col-md-1">来源</th>
+                                    <th scope="col" class="col-md-1">标签</th>
+                                    <th scope="col" class="col-md-2">创建日期</th>
+                                    <th scope="col" class="col-md-2">操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
 
-                                    {% if draft_page_obj.has_next %}
-                                        <li class="page-item"><a class="page-link"
-                                                                 href="?page_draft={{ draft_page_obj.next_page_number }}">Next</a>
-                                        </li>
-                                    {% else %}
-                                        <li class="page-item disabled"><span class="page-link">下一页</span></li>
-                                    {% endif %}
-                                </ul>
-                            {% endif %}
-                        </div>
-                    {% else %}
-                        暂无
-                    {% endif %}
+                                {% for post in draft_page_obj %}
+                                    {% if post.status_id == 1 %}
+                                        <tr>
+                                            <th class="col-md-half">
 
-                </div>
-                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                    {#            已发布#}
-                    {% if pub_page_obj %}
-                        <br>
-                        <small>
-                            共{{ pub_page_obj.paginator.count }}篇
-                        </small>
-                        <hr style="margin-bottom: 2px; margin-top:5px">
-                        <table class="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th scope="col" class="col-1">ID</th>
-                                <th scope="col" class="col-4">文章名称</th>
-                                <th scope="col" class="col-2">来源</th>
-                                <th scope="col" class="col-2">标签</th>
-                                <th scope="col" class="col-1">报送状态</th>
-                                <th scope="col" class="col-2">发布日期</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for post in pub_page_obj %}
-
-                                {% if post.publish %}
-                                    <tr>
-                                        <th scope="row">
-                                            <small>{{ forloop.counter }}</small>
-                                        </th>
-                                        <td><small><a
-                                                href="{% url 'article_detail' post.pk %}">{{ post.title|slice:"10" }}</a></small>
-                                        </td>
-                                        <td><small><a
-                                                href="{% url 'category' post.category %}">{{ post.category }}</a></small>
-                                        </td>
-                                        <td><small><a
-                                                href="{% url 'category' post.category %}">{{ post.subcategory }}</a></small>
-                                        </td>
-                                        <td>{{ post.get_oa_status_verbose_name }}</td>
-                                        <td>{{ post.publish_date|date:"Y年n月d日" }}</td>
-                                    </tr>
-
-                                {% endif %}
-
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                        <div style="float: right">
-                            {% if is_pub_paginated %}
-                                <ul class="pagination pagination-sm">
-                                    {% if pub_page_obj.has_previous %}
-                                        <li class="page-item">
-                                            <a class="page-link"
-                                               href="?page_pub={{ pub_page_obj.previous_page_number }}"
-                                               style="color: cornflowerblue">上一页</a>
-                                        </li>
-                                    {% else %}
-                                        <li class="page-item disabled">
-                                            <span class="page-link">上一页</span>
-                                        </li>
-                                    {% endif %}
-
-                                    {% for i in published_page_range %}
-                                        {% if pub_page_obj.number == i %}
-                                            <li class="page-item active">
-                                                <span class="page-link">{{ i }}</span>
-                                            </li>
-                                        {% elif i == author_published_paginator.ELLIPSIS %}
-                                            <li class="page-item"><a class="page-link" href="?page_pub=1">{{ i }}</a>
-                                            </li>
-                                        {% else %}
-                                            <li class="page-item"><a class="page-link"
-                                                                     href="?page_pub={{ i }}">{{ i }}</a>
-                                            </li>
-                                        {% endif %}
-
-                                    {% endfor %}
-
-                                    {% if pub_page_obj.has_next %}
-                                        <li class="page-item"><a class="page-link"
-                                                                 href="?page_pub={{ pub_page_obj.next_page_number }}">下一页</a>
-                                        </li>
-                                    {% else %}
-                                        <li class="page-item disabled"><span class="page-link">下一页</span></li>
-                                    {% endif %}
-                                </ul>
-                            {% endif %}
-                        </div>
-                    {% else %}
-                        暂无
-                    {% endif %}
-                </div>
-                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
-                    {#            审批#}
-                    {% if author_submitted.count > 0 %}
-                        <br>
-                        <small style="margin-top: 10px">
-                            共{{ author_submitted.count }}篇
-                            <div class="btn-group" role="group">
-                                <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle btn-sm"
-                                        data-bs-toggle="dropdown" aria-expanded="false">
-                                    批量操作
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                                    <li>
-
-                                        <button id="approving_bulk_submit"
-                                                class="list-group-item list-group-item-action btn-sm">
-                                            批量转为草稿
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <button id="approving_bulk_delete"
-                                                class="list-group-item list-group-item-action btn-sm">
-                                            批量删除
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
-
-                        </small>
-
-                        <hr style="margin-bottom: 2px; margin-top:5px">
-                        <table class="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th scope="col" class="col-md-half">
-
-                                    <input class="form-check-input_submitted_all" type="checkbox" value=""
-                                           id="flexCheckDefault_select_all_submitted">
-                                    <label class="form-check-label" for="flexCheckDefault_select_all_submitted">
-                                    </label>
-                                </th>
-                                <th scope="col" class="col-sm-1">ID</th>
-                                <th scope="col" class="col-lg-4">文章名称</th>
-                                <th scope="col" class="col-md-2">来源</th>
-                                <th scope="col" class="col-md-2">最近处理</th>
-                                <th scope="col" class="col-md-2">状态</th>
-                            </tr>
-                            </thead>
-
-                            <tbody>
-                            {% for post in author_submitted %}
-
-                                {% if post.status_id >= 3 and post.status_id != 9 %}
-                                    <tr>
-                                        <th scope="row">
-                                            <div class="form-check">
-                                                {% if post.status_id == 6 or post.status_id == 7 or post.status_id == 8 %}
-                                                    <input class="form-check-input2" type="checkbox" value=""
-                                                           id="flexCheckDefault_2">
-                                                    <label class="form-check-label" for="flexCheckDefault_2"
+                                                <div class="form-check">
+                                                    <input class="form-check-input1" type="checkbox" value=""
+                                                           id="flexCheckDefault_1">
+                                                    <label class="form-check-label" for="flexCheckDefault_1"
                                                            style="display: none">{{ post.pk }}
                                                     </label>
-                                                {% else %}
-                                                    <input class="form-check-input3" type="checkbox" value=""
-                                                           id="flexCheckDefault_3" disabled>
-                                                    <label class="form-check-label" for="flexCheckDefault_3"
-                                                           style="display: none">{{ post.pk }}
-                                                    </label>
-                                                {% endif %}
-                                            </div>
-                                        </th>
-                                        <td>
-                                            <small>{{ forloop.counter }}</small>
-                                        </td>
-                                        <td>
-                                            <small><a
-                                                    href="{% url 'article_detail' post.pk %}">{{ post.title }}</a></small>
+                                                </div>
 
-                                        </td>
-                                        <td>
-                                            <small><a
-                                                    href="{% url 'group_post' post.author.groups.first %}">{{ post.author.groups.first.name }}</a></small>
-                                        </td>
-
-                                        <td>
-                                            <small>{{ post.update_time|date:"Y年n月d日 H:i:s" }}</small>
-                                        </td>
-
-                                        <td>
-                                            {{ post.get_status_verbose_name }}
-                                            {% if post.status_id > 5 and post.status_id != 10 %}
+                                            </th>
+                                            <td>
+                                                <small>{{ forloop.counter }}</small>
+                                            </td>
+                                            <td>
+                                                <small><a
+                                                        href="{% url 'article_detail' post.pk %}">{{ post.title }}</a></small>
+                                            </td>
+                                            <td>
+                                                <small><a
+                                                        href="{% url 'group_post' post.author.groups.first %}">{{ post.author.groups.first.name }}</a></small>
+                                            </td>
+                                            <td>
+                                                <small><a
+                                                        href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                                            </td>
+                                            <td>
+                                                <small>{{ post.post_date|date:"Y年n月d日" }}</small>
+                                            </td>
+                                            <td>
                                                 {% if user.is_authenticated and user.id == post.author.pk %}
-                                                    <small><a href="" class="toDraft">转为草稿</a> </small>
-                                                    <small><a href="" class="toAppDelete">删除</a> </small>
+                                                    <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>
+                                                    <small><a href="#" class="toDraftDelete">删除</a> </small>
+                                                    <small><a href="#" class="toDraftSubmit">提交</a></small>
                                                 {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                            <div style="float: right">
+                                {% if is_draft_page_paginated %}
+                                    <ul class="pagination pagination-sm">
+                                        {% if draft_page_obj.has_previous %}
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                   href="?page_draft={{ draft_page_obj.previous_page_number }}"
+                                                   style="color: cornflowerblue">上一页</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item disabled">
+                                                <span class="page-link">上一页</span>
+                                            </li>
+                                        {% endif %}
+
+                                        {% for i in draft_page_range %}
+                                            {% if draft_page_obj.number == i %}
+                                                <li class="page-item active">
+                                                    <span class="page-link">{{ i }}</span>
+                                                </li>
+                                            {% elif i == author_draft_paginator.ELLIPSIS %}
+                                                <li class="page-item"><a class="page-link"
+                                                                         href="?page_draft=1">{{ i }}</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item"><a class="page-link"
+                                                                         href="?page_draft={{ i }}">{{ i }}</a>
+                                                </li>
                                             {% endif %}
-                                        </td>
-                                    </tr>
+
+                                        {% endfor %}
+
+                                        {% if draft_page_obj.has_next %}
+                                            <li class="page-item"><a class="page-link"
+                                                                     href="?page_draft={{ draft_page_obj.next_page_number }}">Next</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item disabled"><span class="page-link">下一页</span></li>
+                                        {% endif %}
+                                    </ul>
                                 {% endif %}
+                            </div>
+                        {% else %}
+                            暂无
+                        {% endif %}
 
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                    </div>
+                    <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        {#            已发布#}
+                        {% if pub_page_obj %}
+                            <br>
+                            <small>
+                                共{{ pub_page_obj.paginator.count }}篇
+                            </small>
+                            <hr style="margin-bottom: 2px; margin-top:5px">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th scope="col" class="col-1">ID</th>
+                                    <th scope="col" class="col-4">文章名称</th>
+                                    <th scope="col" class="col-2">来源</th>
+                                    <th scope="col" class="col-2">标签</th>
+                                    <th scope="col" class="col-1">报送状态</th>
+                                    <th scope="col" class="col-2">发布日期</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for post in pub_page_obj %}
 
-                    {% else %}
-                        暂无
-                    {% endif %}
+                                    {% if post.publish %}
+                                        <tr>
+                                            <th scope="row">
+                                                <small>{{ forloop.counter }}</small>
+                                            </th>
+                                            <td><small><a
+                                                    href="{% url 'article_detail' post.pk %}">{{ post.title|slice:"10" }}</a></small>
+                                            </td>
+                                            <td><small><a
+                                                    href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                                            </td>
+                                            <td><small><a
+                                                    href="{% url 'category' post.category %}">{{ post.subcategory }}</a></small>
+                                            </td>
+                                            <td>{{ post.get_oa_status_verbose_name }}</td>
+                                            <td>{{ post.publish_date|date:"Y年n月d日" }}</td>
+                                        </tr>
+
+                                    {% endif %}
+
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                            <div style="float: right">
+                                {% if is_pub_paginated %}
+                                    <ul class="pagination pagination-sm">
+                                        {% if pub_page_obj.has_previous %}
+                                            <li class="page-item">
+                                                <a class="page-link"
+                                                   href="?page_pub={{ pub_page_obj.previous_page_number }}"
+                                                   style="color: cornflowerblue">上一页</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item disabled">
+                                                <span class="page-link">上一页</span>
+                                            </li>
+                                        {% endif %}
+
+                                        {% for i in published_page_range %}
+                                            {% if pub_page_obj.number == i %}
+                                                <li class="page-item active">
+                                                    <span class="page-link">{{ i }}</span>
+                                                </li>
+                                            {% elif i == author_published_paginator.ELLIPSIS %}
+                                                <li class="page-item"><a class="page-link"
+                                                                         href="?page_pub=1">{{ i }}</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item"><a class="page-link"
+                                                                         href="?page_pub={{ i }}">{{ i }}</a>
+                                                </li>
+                                            {% endif %}
+
+                                        {% endfor %}
+
+                                        {% if pub_page_obj.has_next %}
+                                            <li class="page-item"><a class="page-link"
+                                                                     href="?page_pub={{ pub_page_obj.next_page_number }}">下一页</a>
+                                            </li>
+                                        {% else %}
+                                            <li class="page-item disabled"><span class="page-link">下一页</span></li>
+                                        {% endif %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        {% else %}
+                            暂无
+                        {% endif %}
+                    </div>
+                    <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                        {#            审批#}
+                        {% if author_submitted.count > 0 %}
+                            <br>
+                            <small style="margin-top: 10px">
+                                <div class="dropdown">
+                                    <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                        批量操作
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dLabel">
+                                        <li>
+
+                                            <button id="approving_bulk_submit"
+                                                    class="list-group-item list-group-item-action btn-sm">
+                                                批量转为草稿
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <button id="approving_bulk_delete"
+                                                    class="list-group-item list-group-item-action btn-sm">
+                                                批量删除
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </small>
+
+                            <hr style="margin-bottom: 2px; margin-top:5px">
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th scope="col" class="col-md-half">
+
+                                        <input class="form-check-input_submitted_all" type="checkbox" value=""
+                                               id="flexCheckDefault_select_all_submitted">
+                                        <label class="form-check-label" for="flexCheckDefault_select_all_submitted">
+                                        </label>
+                                    </th>
+                                    <th scope="col" class="col-sm-1">ID</th>
+                                    <th scope="col" class="col-lg-4">文章名称</th>
+                                    <th scope="col" class="col-md-2">来源</th>
+                                    <th scope="col" class="col-md-2">最近处理</th>
+                                    <th scope="col" class="col-md-2">状态</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {% for post in author_submitted %}
+
+                                    {% if post.status_id >= 3 and post.status_id != 9 %}
+                                        <tr>
+                                            <th scope="row">
+                                                <div class="form-check">
+                                                    {% if post.status_id == 6 or post.status_id == 7 or post.status_id == 8 %}
+                                                        <input class="form-check-input2" type="checkbox" value=""
+                                                               id="flexCheckDefault_2">
+                                                        <label class="form-check-label" for="flexCheckDefault_2"
+                                                               style="display: none">{{ post.pk }}
+                                                        </label>
+                                                    {% else %}
+                                                        <input class="form-check-input3" type="checkbox" value=""
+                                                               id="flexCheckDefault_3" disabled>
+                                                        <label class="form-check-label" for="flexCheckDefault_3"
+                                                               style="display: none">{{ post.pk }}
+                                                        </label>
+                                                    {% endif %}
+                                                </div>
+                                            </th>
+                                            <td>
+                                                <small>{{ forloop.counter }}</small>
+                                            </td>
+                                            <td>
+                                                <small><a
+                                                        href="{% url 'article_detail' post.pk %}">{{ post.title }}</a></small>
+
+                                            </td>
+                                            <td>
+                                                <small><a
+                                                        href="{% url 'group_post' post.author.groups.first %}">{{ post.author.groups.first.name }}</a></small>
+                                            </td>
+
+                                            <td>
+                                                <small>{{ post.update_time|date:"Y年n月d日 H:i:s" }}</small>
+                                            </td>
+
+                                            <td>
+                                                {{ post.get_status_verbose_name }}
+                                                {% if post.status_id > 5 and post.status_id != 10 %}
+                                                    {% if user.is_authenticated and user.id == post.author.pk %}
+                                                        <small><a href="" class="toDraft">转为草稿</a> </small>
+                                                        <small><a href="" class="toAppDelete">删除</a> </small>
+                                                    {% endif %}
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        {% else %}
+                            暂无
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         {% else %}
@@ -404,11 +401,6 @@
                             href="{% url 'group_post' post.author.groups.first %}">{{ post.author.groups.first.name }}</a></small>
                     <small>标签：<a href="{% url 'category' post.category %}">{{ post.category }}</a></small>
                     <small>日期：{{ post.post_date|date:"Y年n月d日" }}</small>
-
-                    {#                        {% if user.is_authenticated and user.id == post.author.pk %}#}
-                    {#                            <small><a href="{% url 'update_post' post.pk %}">编辑</a> </small>#}
-                    {#                            <small><a href="{% url 'delete_post' post.pk %}">删除</a> </small>#}
-                    {#                        {% endif %}#}
                     {{ post.body|slice:":200"|safe }}
                 </li>
 
@@ -419,6 +411,11 @@
     <script>
 
         {#全选#}
+        $(document).ready(function () {
+            $('#secondaryMenu').append(
+                "<li class='fa fa-angle-right active fw-bold'>" + "工作空间" + "</li>"
+            )
+        })
 
         function select_all(selectall, selectones) {
             for (let i = 0; i < selectones.length; i++) {

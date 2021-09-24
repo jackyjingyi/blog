@@ -1,0 +1,17 @@
+{{if dataList && dataList.length>0}}
+    {{each dataList as p}}
+    <div class="section-row curp" data-action="selectDepart" data-id="{{p.id}}">
+        <h4>{{p.departName}}</h4>
+        <p>
+            {{p.departDesc}}
+        </p>
+    </div>
+    {{/each}}
+{{else}}
+    <div class="section-row">
+        <div class="text-center">
+            <img src="{{_url('/img/default/without_data.png')}}">
+            <span class="fc-dark-blue dp-block">没有相关数据</span>
+        </div>
+    </div>
+{{/if}}

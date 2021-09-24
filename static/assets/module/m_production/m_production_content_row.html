@@ -1,0 +1,174 @@
+<tr class="m-production-content-row tree-box-tr treegrid-{{t.id}}
+{{if t.taskPid!=null && t.taskPid!=''}} treegrid-parent-{{t.taskPid}} {{/if}} {{t.completeDate==null?'':'complete-date-tr'}} "
+    data-id="{{t.id}}" data-pid="{{t.taskPid}}" data-i="{{tIndex}}" data-path="{{t.taskPath}}"
+    data-handler="{{t.handler?t.handler.companyUserId:''}}">
+    <td class=" b-r-none">
+        <div class="list-check-box vertical-sub">
+            <label class="i-checks fw-normal m-b-none">
+                <input name="taskCk" type="checkbox" data-is-can1="{{t.role.delete}}" value="{{t.id}}"
+                       data-end-status="{{t.endStatus}}"/>
+                <span class="i-checks-span"></span>
+            </label>
+        </div>
+    </td>
+    <td class="b-r-none b-l-none v-middle">
+        <div class="list-action-box">
+            {{if doType!=3 && t.role && (t.role.add==1 || t.role.edit==1 || t.role.edit==1 || t.role.delete==1)}}
+            <div class="btn-group singleOperation" style="display: none;">
+                <button type="button" class="btn btn-default btn-xs dropdown-toggle action-button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="ic-operation"></span>
+                </button>
+                <ul class="dropdown-menu pt-relative hide">
+                    <!-- 上个任务，是否跟当前是同级 是＝可向上移动 -->
+                    {{if t.role && t.role.edit==1}}
+                    <li><a href="javascript:void(0);" data-action="moveUp">向上移动</a></li>
+                    {{/if}}
+                    <!-- 下个任务，是否跟当前是同级 是＝可向下移动 -->
+                    {{if t.role && t.role.edit==1}}
+                    <li><a href="javascript:void(0);" data-action="moveDown">向下移动</a></li>
+                    {{/if}}
+                    {{if t.role && (t.role.delete==1||(t.role.edit==1&&t.taskType==6))}}
+                    <li><a href="javascript:void(0);" data-action="delTask" data-canbedelete="">删除</a></li>
+                    {{/if}}
+
+                </ul>
+            </div>
+            {{/if}}
+        </div>
+    </td>
+    <td class="tree-td pt-relative p-r-none b-l-none">
+        {{if doType==3}}
+        <a href="#/myTask/details?id={{t.id}}&projectId={{projectId}}&status={{taskStatus}}"
+           class="show-span task-name pt-relative " data-string="{{t.taskName}}">
+            {{t.taskName}}
+        </a>
+        {{else}}
+        <a href="#/project/production/details?id={{projectId}}&projectName={{projectNameCode}}&taskId={{t.id}}&dataCompanyId={{dataCompanyId}}&fromType={{doType}}"
+           class="show-span task-name pt-relative " data-string="{{t.taskName}}">
+            {{t.taskName}}
+        </a>
+        {{/if}}
+        {{if t.role && t.role.edit==1}}
+        <a href="javascript:void(0);" data-action="xeditable" data-value="{{t.taskName}}" data-key="taskName"
+           data-placeholder="请输入任务名称"  title="编辑任务名称" data-type="2" data-valid="1" data-max-length="50" style="visibility: hidden;">
+            <i class="icon iconfont icon-bianji"></i>
+        </a>
+        {{/if}}
+
+    </td>
+    <td>
+        <span class="show-span">
+            {{if !_isNullOrBlank(t.endStatusName)}}
+                <button class="btn {{_getStatusColor(t.endStatus)}} btn-rounded btn-status  no-hover">{{t.endStatusName}}</button>
+            {{else}}
+                <span class="fc-v1-grey">未设置</span>
+            {{/if}}
+        </span>
+        <!-- 生产任务状态 -->
+        {{if t.taskType==0 && t.role && t.role.changeStatus==1}}
+        <a href="javascript:void(0);" data-action="xeditableByClick" data-key="endStatus" data-value="{{t.endStatus}}"
+           data-type="5" style="visibility: hidden;">
+            <i class="icon iconfont icon-bianji"></i>
+        </a>
+        {{/if}}
+    </td>
+    <td>
+        <span class="show-span">
+            {{if t.handler}}
+                {{t.handler.userName}}
+            {{else}}
+                <span class="fc-v1-grey">未设置</span>
+            {{/if}}
+        </span>
+        {{if t.role && t.role.changeDesigner==1}}
+        <a href="javascript:void(0);" data-action="xeditable" data-type="12" data-url-type="1" data-key="handlerUser"
+           data-do-type="2" data-multiple="0" data-cookies="0"
+           data-value="{{t.handler?t.handler.companyUserId:''}}" data-name="{{t.handler?t.handler.userName:''}}"
+           data-task-id="{{t.id}}" style="visibility: hidden;">
+            <i class="icon iconfont icon-bianji"></i>
+        </a>
+        {{/if}}
+    </td>
+    <td>
+        <span class="show-span">
+            {{if _isNullOrBlank(t.ratio)}}
+             <span class="fc-v1-grey">未设置</span>
+            {{else}}
+                {{t.ratio}}%
+            {{/if}}
+        </span>
+        {{if t.role && t.role.edit==1}}
+        <a href="javascript:void(0);" data-action="xeditable" data-value="{{t.ratio}}" data-key="ratio"  data-placeholder="请输入占比" data-unit="%" data-type="1" data-valid="7"
+           data-valid-title="占比"  data-limit-min="0" data-limit-max="{{t.lessRatio}}"
+           style="visibility: hidden;">
+            <i class="icon iconfont icon-bianji"></i>
+        </a>
+        {{/if}}
+
+    </td>
+    <td>
+        <span class="show-span">
+            {{if t.role && t.role.edit==1}}
+                {{if _isNullOrBlank(t.startTime)}}
+                    <span class="fc-v1-grey">未设置</span>
+                {{else}}
+                    {{_momentFormat(t.startTime,'YYYY/MM/DD')}}
+                {{/if}}
+            {{else}}
+                {{if _isNullOrBlank(t.startTime)}}
+                    <span class="fc-v1-grey">--</span>
+                {{else}}
+                    {{_momentFormat(t.startTime,'YYYY/MM/DD')}}
+                {{/if}}
+            {{/if}}
+        </span>
+        {{if t.role && t.role.edit==1}}
+        <a href="javascript:void(0);" data-action="xeditable" data-value="{{t.startTime}}" data-type="10"
+           data-key="startTime"
+           data-max-date="{{t.endTime}}" data-init-show="1" data-onpicked-save="1" style="visibility: hidden;">
+            <i class="icon iconfont icon-bianji"></i>
+        </a>
+        {{/if}}
+    </td>
+    <td class="">
+        <span class="show-span">
+            {{if t.role && t.role.edit==1}}
+                {{if _isNullOrBlank(t.endTime)}}
+                    <span class="fc-v1-grey">未设置</span>
+                {{else}}
+                    {{_momentFormat(t.endTime,'YYYY/MM/DD')}}
+                {{/if}}
+            {{else}}
+                {{if _isNullOrBlank(t.endTime)}}
+                    <span class="fc-v1-grey">--</span>
+                {{else}}
+                    {{_momentFormat(t.endTime,'YYYY/MM/DD')}}
+                {{/if}}
+            {{/if}}
+        </span>
+        {{if t.role && t.role.edit==1}}
+        <a href="javascript:void(0);" data-action="xeditable" data-value="{{t.endTime}}" data-type="10"
+           data-key="endTime"
+           data-min-date="{{t.startTime}}" data-init-show="1" data-onpicked-save="1" style="visibility: hidden;">
+            <i class="icon iconfont icon-bianji"></i>
+        </a>
+        {{/if}}
+    </td>
+    <td class="">
+        <span class="show-span">
+            {{if t.completeDate!=null &&  t.completeDate!=''}}
+                {{_momentFormat(t.completeDate,'YYYY/MM/DD')}}
+            {{else}}
+                --
+            {{/if}}
+        </span>
+        {{if t.taskType==0 && t.role && t.role.changeStatus==1&&t.endStatus=='status_complete'}}
+        <a href="javascript:void(0);" data-action="xeditable" data-value="{{t.completeDate}}" data-type="10"
+           data-key="completeDate"
+           data-min-date="{{t.startTime}}" data-init-show="1" data-onpicked-save="1" style="visibility: hidden;">
+            <i class="icon iconfont icon-bianji"></i>
+        </a>
+        {{/if}}
+    </td>
+</tr>

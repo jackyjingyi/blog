@@ -1,0 +1,77 @@
+<div class="m-form-template-generate-edit p-sm">
+    <form class="form-horizontal" id="fieldForm">
+        <div class="form-group">
+            <label class="col-xs-2 control-label">
+                申请人<span class="fc-red">*</span>：
+            </label>
+            <div class="col-xs-10">
+                <select class="form-control" name="applyUserId"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-2 control-label">
+                部门<span class="fc-red">*</span>：
+            </label>
+            <div class="col-xs-10">
+                <select class="form-control" name="departId"></select>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">收款方<span class="fc-red">*</span>：</label>
+            <div class="col-sm-10">
+                <select class="form-control receiveName" name="enterpriseId" data-placeholder="请输入或选择收款方"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">付款方<span class="fc-red">*</span>：</label>
+            <div class="col-sm-10">
+                <select class="form-control payment-collection" name="fromCompanyId" data-placeholder="请输入或选择付款方"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">类型<span class="fc-red">*</span>：</label>
+            <div class="col-sm-10">
+                <select class="form-control" name="expAllName"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">用途说明：</label>
+            <div class="col-sm-10">
+                <textarea placeholder="请输入付款事由" class="form-control" type="text" name="remark">{{dataInfo?dataInfo.remark:''}}</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">金额<span class="fc-red">*</span>：</label>
+            <div class="col-sm-10">
+                <input placeholder="请输入付款金额" class="form-control" type="text" name="sumExpAmount" value="{{dataInfo?dataInfo.fee:''}}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">付款方式：</label>
+            <div class="col-sm-10">
+                <select class="form-control" name="expType"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label">附件：</label>
+            <div class="col-sm-10">
+                <div class="row">
+                    <div class="col-md-12 m-b-xs">
+                        <span id="showFileLoading"> </span>
+                    </div>
+                    <div class="col-md-12 m-b-sm">
+                        <span class="uploadmgrContainer"> </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{if formView!=1}}
+        <div class="hr-line-dashed m-t-none m-b-sm m-l m-r"></div>
+        <div id="approverOutBox">
+
+        </div>
+        {{/if}}
+    </form>
+</div>

@@ -1,0 +1,94 @@
+<!--<div class="tabs-container">
+    <ul class="nav nav-tabs">
+        {{if isVerification}}
+        <li class="active">
+            <a data-toggle="tab" href="#tab-1" aria-expanded="false">
+                费用核销{{dataInfo && dataInfo.verificationList && dataInfo.verificationList.length>0?dataInfo.verificationList.length+1:''}}
+            </a>
+        </li>
+        {{/if}}
+        {{if dataInfo && dataInfo.verificationList && dataInfo.verificationList.length>0}}
+        {{each dataInfo.verificationList as p i}}
+        <li class=""><a data-toggle="tab" href="#tab-record-{{i+1}}" aria-expanded="false">费用核销{{i+1}}</a></li>
+        {{/each}}
+        {{/if}}
+        <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">费用申请2</a></li>
+    </ul>
+    <div class="tab-content">
+        {{if isVerification}}
+        <div id="tab-1" class="tab-pane active" data-type="costOff">
+            <div class="panel-body no-padding">
+
+            </div>
+        </div>
+        {{/if}}
+        {{if dataInfo && dataInfo.verificationList && dataInfo.verificationList.length>0}}
+        {{each dataInfo.verificationList as p i}}
+        <div id="tab-record-{{i+1}}" class="tab-pane" data-type="costOffRecord" data-i="{{i}}">
+            <div class="panel-body no-padding">
+
+            </div>
+        </div>
+        {{/each}}
+        {{/if}}
+
+        <div id="tab-2" class="tab-pane" data-type="expApply">
+            <div class="panel-body no-padding">
+
+            </div>
+        </div>
+
+    </div>
+</div>-->
+<div class="m-dialog-resize p-m overflow-y-auto">
+    <div>
+        <h4 class="title-line m-l-sm">
+            往来明细
+            <button class="btn btn-link pull-right f-s-xl m-t-n-sm" data-action="expand"><i class="fa fa-angle-double-down"></i></button>
+        </h4>
+        <div class="hr-line-dashed m-t-none m-b-sm m-l m-r"></div>
+        <div class="tab-pane content hide" data-type="expApply"></div>
+    </div>
+    {{if dataInfo && dataInfo.verificationList && dataInfo.verificationList.length>0}}
+    <div>
+        <h4 class="title-line m-l-sm">
+            核销记录
+            <button class="btn btn-link pull-right f-s-xl m-t-n-sm" data-action="expand"><i class="fa fa-angle-double-down"></i></button>
+        </h4>
+        <div class="hr-line-dashed m-t-none m-b-sm m-l m-r"></div>
+        <div class="p-xs content hide">
+            {{each dataInfo.verificationList as p i}}
+            <div>
+                <h4 class="title-line m-l-sm">
+                    费用核销{{i+1}}
+                </h4>
+                <div class="hr-line-dashed m-t-none m-b-sm m-l m-r"></div>
+                <div class="tab-pane" data-type="costOffRecord" data-i="{{i}}"></div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+    {{/if}}
+    {{if isVerification}}
+    <div>
+        <h4 class="title-line m-l-sm">
+            费用核销
+            <button class="btn btn-link pull-right f-s-xl m-t-n-sm" data-action="expand"><i class="fa fa-angle-double-down"></i></button>
+        </h4>
+        <div class="hr-line-dashed m-t-none m-b-sm m-l m-r"></div>
+        <div class="tab-pane content hide" data-type="costOff"></div>
+    </div>
+    {{/if}}
+</div>
+<!--  -->
+{{if isVerification}}
+    <div class="footer border-b-radius text-right">
+        <button class="btn btn-default" data-action="cancel">取消</button>
+        <button class="btn btn-primary" data-action="confirmCostOff">确认核销</button>
+    </div>
+{{else}}
+    <div class="footer border-b-radius text-right">
+        <button class="btn btn-default" data-action="cancel">关闭</button>
+    </div>
+{{/if}}
+

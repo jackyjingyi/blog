@@ -1,0 +1,17 @@
+<form class="form-horizontal file-state-flow">
+    <div class="row no-margin">
+        <div class="col-md-12 p-t p-b bg-v2-grey  ">
+            {{each statusList as t i}}
+            <button class="btn btn-white btn-rounded btn-status  m-b-xs {{i==0?'selected':''}}" data-status="{{t.nodeValue}}" data-role-type="{{t.roleType}}">
+                {{if i==0}}
+                {{status==t.nodeValue?'保持为':''}}{{t.nodeName}}
+                {{else}}
+                {{t.nodeName}}
+                {{/if}}
+            </button>
+            {{/each}}
+
+        </div>
+    </div>
+</form>
+

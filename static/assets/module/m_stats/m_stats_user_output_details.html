@@ -1,0 +1,131 @@
+<form class="form-horizontal m">
+    <div class="form-group">
+        <label class="col-sm-3 control-label">姓名：
+        </label>
+        <div class="col-sm-3 p-t-7">
+           {{dataInfo.userName}}
+        </div>
+        <label class="col-sm-2 control-label">工作占比：</label>
+        <div class="col-sm-3 p-t-7">
+            {{dataInfo.personalRatio+'%'}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">参与项目数：</label>
+        <div class="col-sm-3 p-t-7">
+            {{dataInfo.projectCount}}
+        </div>
+        <label class="col-sm-2 control-label">最高项目效能值为：</label>
+        <div class="col-sm-3 p-t-7">
+            {{_expNumberFilterPoint2(dataInfo.maxOutPutValue/100)}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">累计效能值为：</label>
+        <div class="col-sm-3 p-t-7">
+            {{_expNumberFilterPoint2(dataInfo.outPutValue/100)}}
+        </div>
+        <label class="col-sm-2 control-label">最低项目效能值为：</label>
+        <div class="col-sm-3 p-t-7">
+            {{_expNumberFilterPoint2(dataInfo.minOutPutValue/100)}}
+        </div>
+    </div>
+</form>
+<form class="task-list-box p-w-sm">
+    {{if dataInfo.personList && dataInfo.personList.length>0}}
+    {{each dataInfo.personList as p i}}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-24-sm-14 p-l-4 p-r-none">
+                    <a href="javascript:void(0);" data-action="expander"><span class="ic-open vertical-middle m-l-7 m-r-sm"></span></a>
+                    <span class="p-task-name" >
+                        <a href="javascript:void(0);"  data-action="projectDetail" data-project-id="{{p.projectId}}" data-project-name="{{p.projectName}}" businessType = "{{p.businessType}}">
+                            <span class="show-span pt-relative font-bold text-ellipsis width-600 vertical-middle" data-container="body" data-toggle="tooltip" data-original-title="{{p.taskName}}" style="width: 600px">
+                            {{p.projectName}}
+                        </span>
+                        </a>
+
+                    </span>
+                </div>
+                <div class="col-24-sm-10 text-right">
+                    <span class="m-r-sm">项目类型：{{p.businessType==1?'业务':'课题'}}</span>
+                    <span class="m-r-sm">业务类型：{{p.projectType}}</span>
+                    <span class="m-r-sm">占比计算：{{p.personalRatio?p.personalRatio+'%':''}}</span>
+                    <span class="m-r-sm">效能值：{{_expNumberFilterPoint2(p.personalRatio/100)}}</span>
+                </div>
+
+            </div>
+        </div>
+        <div class="panel-body no-padding">
+            <table class="table table-striped m-b-none">
+                <thead>
+                <tr>
+                    <th width="24%" class="b-l-none">任务分配</th>
+
+                    <th width="10%">工作占比</th>
+
+                    {{if doType==2}}
+                    <th width="10%" >所属组</th>
+                    {{/if}}
+                    <th width="12%" >开始时间</th>
+                    <th width="12%" >结束时间</th>
+                    <th width="12%" >完成时间</th>
+                    <th width="10%">任务占比</th>
+                    {{if doType==1}}
+                    <th>占比计算</th>
+                    {{/if}}
+                    <th width="10%">效能值</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{if p.taskList!=null && p.taskList.length>0}}
+                {{each p.taskList as t ti}}
+                <tr class="content-row {{t.taskState=='3'||t.taskState=='4'?'complete-date-tr':''}}" data-id="{{t.id}}" data-i="{{tIndex}}" data-task-name="{{t.taskName}}">
+                    <td>{{t.taskName}}</td>
+
+                    <td>{{t.contentRatio?t.contentRatio+'%':''}}</td>
+
+                    {{if doType==2}}
+                    <td>{{t.departName}}</td>
+                    {{/if}}
+                    <td>{{_momentFormat(t.startTime,'YYYY/MM/DD')}}</td>
+                    <td>{{_momentFormat(t.endTime,'YYYY/MM/DD')}}
+                <!--        {{if t.delayDesc}}
+                        <span class="color-red">({{t.delayDesc}})</span>
+                        {{/if}}-->
+                    </td>
+                    <td>{{_momentFormat(t.completeDate,'YYYY/MM/DD')}}</td>
+                    <td>{{t.taskRatio?t.taskRatio+'%':''}}</td>
+                    {{if doType==1}}
+                    <td>{{t.personalRatio?_expNumberFilterPoint2((t.totalRatio==null||t.totalRatio==''||t.totalRatio=='0'?1:t.totalRatio)*t.personalRatio)+'%':''}}</td>
+                    {{/if}}
+                    <td>{{_expNumberFilterPoint2((t.totalRatio==null||t.totalRatio==''||t.totalRatio=='0'?1:t.totalRatio)*t.personalRatio/100)}}</td>
+                </tr>
+                {{/each}}
+                {{else}}
+                <tr class="no-data-tr">
+                    <td colspan="7" class="text-center ">
+                        <div>
+                            <img src="{{_url('/img/default/without_data.png')}}">
+                            <span class="fc-dark-blue dp-block">没有相关数据</span>
+                        </div>
+                    </td>
+                </tr>
+                {{/if}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{/each}}
+    {{else}}
+    <div class="row no-data-tr" style="padding-left: 50px;padding-right: 50px">
+        <div class="text-center col-md-12  border" >
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">暂无相关效能</span>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+</form>

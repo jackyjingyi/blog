@@ -1,0 +1,49 @@
+<div class="of-hidden" style="padding:15px;">
+    <form class="editAliasForm" style="font-size: 12px;">
+        <div class="row form-group">
+            <label class="col-md-3 text-right m-t-xs">组织名称<span class="fc-red">*</span>：</label>
+            <div class="col-md-9">
+                {{if _isNullOrBlank(enterpriseId)}}
+                    <input type="text" class="form-control input-sm" id="companyName" name="companyName" value="{{companyOriginalName}}" placeholder="请输入组织名称" autocomplete='off'>
+                    <!--<span class="fc-v1-grey">可在工商信息中查看企业名称，如查找不到请自行输入</span>
+                    <a href="javascript:void(0);" id="viewPartyACompany" data-action="viewPartyACompany" class="test" style="position: absolute;right: 20px;top: 8px;display:none;">
+                        <i class="fa fa-info-circle"></i>
+                    </a>-->
+                {{else}}
+                    <span class="dp-inline-block p-t-xs">{{companyOriginalName}}</span>
+                    <span class="dp-inline-block"><i class="iconfont icon-v"></i></span>
+                {{/if}}
+            </div>
+        </div>
+        <!--<div class="row">
+            <label class="col-md-3 text-right m-t-xs">类型标示： <span class="fc-red">*</span></label>
+            <div class="col-md-9 m-t-xs">
+                <div class="radio radio-inline m-t-none ">
+                    {{if relationTypeId==null || relationTypeId==1}}
+                        <input id="t1" class="curp" value="1" name="roleType" type="radio"  checked>
+                    {{else}}
+                        <input id="t1" class="curp" value="1" name="roleType" type="radio">
+                    {{/if}}
+                    <label class="r-blue-bg" for="t1">&lt;!&ndash;独立组织型&ndash;&gt;</label>
+                </div>
+                <div class="radio radio-inline curp">
+                    {{if relationTypeId!=null && relationTypeId==2}}
+                        <input id="t2" class="curp" value="2" name="roleType" type="radio" checked>
+                    {{else}}
+                        <input id="t2" class="curp" value="2" name="roleType" type="radio">
+                    {{/if}}
+                    <label class="r-green-bg" for="t2">&lt;!&ndash;独立财务型&ndash;&gt;</label>
+                </div>
+                <div class="radio radio-inline curp hide">
+                    {{if relationTypeId!=null && relationTypeId==3}}
+                    <input id="t3" class="curp" value="3" name="roleType" type="radio" checked>
+                    {{else}}
+                    <input id="t3" class="curp" value="3" name="roleType" type="radio">
+                    {{/if}}
+                    <label class="r-red-bg" for="t3">&lt;!&ndash;非独立组织型&ndash;&gt;</label>
+                </div>
+                <span><a class="btn-link" data-action="roleRightsPreView">权限预览</a></span>
+            </div>
+        </div>-->
+    </form>
+</div>

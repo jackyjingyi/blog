@@ -1,0 +1,133 @@
+
+.m_technology_sync  .panel-success{
+    border-color:transparent;
+}
+.m_technology_sync  .panel-heading {
+
+    border: 1px solid transparent;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+}
+.m_technology_sync .panel-body {
+    border-color: transparent;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+.m_technology_sync  .panel-success > .panel-heading {
+   color: white;
+   background-color: #478A61;
+}
+.m_technology_sync  .panel-success > .panel-body {
+   color: #545955;
+   height: 164px;
+   font-size: 14px;
+   overflow: auto;
+   background-color: #effaf4;
+}
+.m_technology_sync  .panel-default > .panel-heading {
+    color: white;
+    background-color: #478A61;
+}
+.m_technology_sync  .panel-default > .panel-body {
+    color: #545955;
+    height:393px;
+    font-size: 16px;
+    padding: 0px;
+    overflow-y:scroll;
+    overflow-x:hidden;
+    background-color: #F8F8F8;
+}
+
+.m_technology_sync  .panel-default{
+    border-color:transparent;
+}
+.m_technology_sync  .vertical-timeline-content{
+    padding: 5px 15px 5px 15px;
+}
+.m_technology_sync  .vertical-timeline-block{
+    margin: 10px;
+}
+
+.m_technology_sync  .head-row-item:nth-child(1){
+    width: 80%;
+    display: inline-block;
+    font-size: 16px;
+    padding-left: 16px;
+    vertical-align:middle;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+ }
+ .m_technology_sync  .head-row-item:nth-child(2){
+    width: 18%;
+    padding-left:0.5em;
+    display: inline-block;
+    vertical-align:middle;
+ }
+.m_technology_sync  .content-row-item-left{
+    width: 85%;
+    display: inline-block;
+    padding-left: 16px;
+    padding-top:10px;
+    padding-bottom:0px;
+    vertical-align:middle;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+.m_technology_sync  .content-row-item-right{
+    width: 14%;
+    display: inline-block;
+    vertical-align:middle;
+    padding-right: 10px;
+}
+ .m_technology_sync  .overflow-ellipsis{
+     overflow: hidden;
+     text-overflow: ellipsis;
+     -o-text-overflow: ellipsis;
+     -webkit-text-overflow: ellipsis;
+     -moz-text-overflow: ellipsis;
+     white-space: nowrap;
+     display: inline-block;
+ }
+ .m_technology_sync  .bottom-line{
+     background:#dedede;
+     height:1px;
+     width: 96%;
+     margin-left:2%;
+     margin-right:2%;
+ }
+ .m_technology_sync  .line-feed{
+     word-break:normal;
+     width:auto;
+     display:block;
+     white-space:pre-wrap;
+     word-wrap : break-word ;
+     overflow: hidden ;
+ }
+.m_technology_sync .feed-element {
+    border-bottom: 1px solid #e7ece8;
+}
+.m_technology_sync .feed-element .msg-content {
+    display: table-cell;
+    vertical-align: middle;
+    font-size: 16px;
+}
+.m_technology_sync .feed-element .msg-content-box {
+    display: table;
+    height: 50px;
+}
+/*单行文字溢出加省略号*/
+.m_technology_sync .text-ellipsis{
+    width: auto;
+    max-width: 94%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -webkit-text-overflow: ellipsis;
+    -moz-text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    line-height: 20px;
+}

@@ -1,0 +1,89 @@
+<form class="form-horizontal m-attendance-arrange-work">
+    <div class="p-m">
+        <div class="row">
+            <div class="col-sm-12 text-center">
+                <a href="javascript:void(0);" data-action="prevDate"><i class="fa fa-chevron-left"></i></a>
+                <input  name="selectDate" readonly value="{{month}}" style="border: none;color: #4D95D7;font-size: 16px;text-align: center;width: 84px;display: inline-block;cursor: pointer;"/>
+                <a href="javascript:void(0);" data-action="nextDate"><i class="fa fa-chevron-right"></i></a>
+            </div>
+        </div>
+        <div class="work-box pt-relative table-box">
+            <div class="table-head">
+                <div class="table-head-wrap">
+                    <table class="grid table table-hover table-bordered table-responsive ">
+                        <colgroup>
+                            <col> </col>
+                            {{each days as d i}}
+                            <col style="width:32px"> </col>
+                            {{/each}}
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th></th>
+                            {{each days as d i}}
+                            <th class="date-head" data-date="{{d.date}}">
+                                <p>{{d.day}}</p>
+                                <p>{{_dateToWeekFormat(d.date)}}</p>
+                            </th>
+                            {{/each}}
+                        </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+            <div class="table-content" >
+                <table class="grid table table-hover table-bordered table-responsive " style="margin: 0;">
+                    <colgroup>
+                        <col> </col>
+                        {{each days as d i}}
+                        <col style="width:32px"> </col>
+                        {{/each}}
+                    </colgroup>
+                    <tbody>
+                        {{each userList as u}}
+                        <tr class="user-row" data-id="{{u.id}}">
+                            <td class="user-name">{{u.text}}</td>
+                            {{each days as d i}}
+                            <td class="no-padding" data-date="{{d.date}}">
+                            </td>
+                            {{/each}}
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+                <div class="attendance-edit-border" style="display: none;border: 2px solid #4171AA;"></div>
+            </div>
+            <div class="table-foot " >
+                <div class="table-foot-wrap">
+                    <table class="grid table table-hover table-bordered table-responsive " style="margin: 0;">
+                        <colgroup>
+                            <col> </col>
+                            {{each days as d i}}
+                            <col style="width:32px"> </col>
+                            {{/each}}
+                        </colgroup>
+                        <tfoot>
+                        {{each periodList as p}}
+                        <tr class="period-row" data-id="{{p.id?p.id:p.itemKey}}" data-color="{{p.color}}">
+                            <td ><i class="fa fa-circle" style="color:{{p.color}}"></i>{{p.classesName}}</td>
+                            {{each days as d i}}
+                            <td data-date="{{d.date}}">
+                            </td>
+                            {{/each}}
+                        </tr>
+                        {{/each}}
+                        <tr class="period-row" data-id="rest" data-color="#dfdfdf">
+                            <td><i class="fa fa-circle" style="color:#dfdfdf;"></i>休息</td>
+                            {{each days as d i}}
+                            <td  data-date="{{d.date}}">
+                            </td>
+                            {{/each}}
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="attendance-edit-border1" style="display: none;border: 2px solid #4171AA;"></div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,22 @@
+<!-- 根据权限、值判断展示代码  type==1=时间-->
+{{if role==1}}
+    {{if _isNullOrBlank(value)}}
+        <span class="fc-v1-grey">未设置</span>
+    {{else}}
+        {{if type==1}}
+            {{_momentFormat(value,'YYYY/MM/DD')}}
+        {{else}}
+            {{value}}
+        {{/if}}
+    {{/if}}
+{{else}}
+    {{if _isNullOrBlank(value)}}
+        <span class="fc-v1-grey">--</span>
+    {{else}}
+        {{if type==1}}
+            {{_momentFormat(value,'YYYY/MM/DD')}}
+        {{else}}
+            {{value}}
+        {{/if}}
+    {{/if}}
+{{/if}}

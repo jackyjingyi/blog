@@ -1,0 +1,29 @@
+.m-task-header .s{
+    border-right: solid;
+    height: 60px;
+    background: #f5f5f5;
+}
+.m-task-header .btn-group-new{
+    width: 100%;
+    vertical-align: middle;
+    padding-top: 15px;
+}
+.m-task-header .btn-group-new button{
+    border: 0;
+    font-size: 16px;
+}
+.m-task-header .btn-group-new button:focus,
+.m-task-header .btn-group-new button:active{
+    outline: none;
+}
+.m-task-approval-opinion span.audit-name,
+.m-task-design-file span.file-name{
+    margin-left: 25px;
+}
+.m-task-production .m-production-content-row td .popover.m-floating-popover input[name="taskName"]{
+    width: 90%;
+}
+.task-list-box table.m-task-production > tbody > tr td a.task-name{
+    width: auto;
+    max-width: 90%;
+}

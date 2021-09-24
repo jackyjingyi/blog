@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html class="ie8"> <![endif]-->
+<!--[if IE 9]> <html class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en"> <!--<![endif]-->
+<head>
+    <title>华侨城创新研究院</title>
+    <template src="lib_header.html" lib_header></template>
+</head>
+<body class="top-navigation bg-white">
+<div id="wrapper">
+    <div id="page-wrapper" class="white-bg">
+
+    </div>
+</div>
+<template src="lib_footer.html" lib_footer></template>
+<script type="text/javascript">
+
+    $(function () {
+
+        function GetQueryString(name)
+        {
+            var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+            var r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
+            if(r!=null)return  unescape(r[2]); return null;
+        }
+
+
+
+        var option = {};
+        option.url = window.serverPath+'/iWork/sys/reLogin';
+        var currentUrl = window.location.href;
+        var urlArr = currentUrl.split('/');
+//        var token = urlArr[urlArr.length-1];
+//        var cellphone = urlArr[urlArr.length-2];
+        var cellphone = GetQueryString("cellphone");
+        var token = GetQueryString("token");
+//        alert(cellphone+token);
+        option.postData = {
+            cellphone:cellphone,
+            token:token
+        };
+        m_ajax.postJson(option, function (response) {
+            if (response.code == '0') {
+
+                window.location.href = window.serverPath + '/iWork/home/workbench';
+
+            } else {
+                S_layer.error(response.info);
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

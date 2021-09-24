@@ -1,0 +1,36 @@
+<style type="text/css">
+    form.m-attendance-address-add{min-height: 250px;}
+    #l-map{height:300px;width:100%;}
+    #r-result{width:100%;}
+    .tangram-suggestion-main{z-index: 19891099;}
+</style>
+<form class="form-horizontal m-attendance-address-add">
+    <div id="l-map" style="display: none;"></div>
+    <div class="form-group m-t-sm" id="r-result">
+        <div class="col-sm-8 col-sm-offset-2">
+            <div class="input-group">
+                <span class="input-group-addon"><i class="fa fa-search"></i></span>
+                <input placeholder="请输入公司打卡地址，例如“卯丁大厦”" class="form-control" type="text" name="suggestId" id="suggestId" value="">
+            </div>
+        </div>
+    </div>
+    <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+    <div class="p-m" id="addressInfo" style="display: none;">
+        <div class="form-group">
+            <label class="col-sm-2 control-label p-l-none p-r-none">打卡地点名称<span class="fc-red">*</span>：</label>
+            <div class="col-sm-10">
+                <input placeholder="请输入打卡名称" class="form-control" type="text" name="punchCardName" value="">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 control-label p-l-none p-r-none">打卡范围<span class="fc-red">*</span>：</label>
+            <div class="col-sm-10">
+                <select class="form-control full-width" name="punchRange" >
+                    <option value="100">100米</option>
+                    <option value="200">200米</option>
+                    <option value="300">300米</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</form>

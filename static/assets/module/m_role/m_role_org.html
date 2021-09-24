@@ -1,0 +1,55 @@
+<div class="row m-b-xs">
+    <div class="col-md-6">
+        <span>全部成员，共{{dataList?dataList.length:0}}个</span>
+    </div>
+    <div class="col-md-6 text-right">
+
+    </div>
+</div>
+<table class="table table-hover table-bordered table-responsive" id="table-role-users">
+    <thead>
+    <tr>
+        <th>部门名称</th>
+        <th>权限类型</th>
+        <th>负责人</th>
+        <th>手机号码</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList!=null && dataList.length>0}}
+    {{each dataList as p i}}
+    <tr data-id="{{p.id}}" data-i="{{i}}">
+        <td>{{p.orgName}}</td>
+        <td>{{p.roleName}}</td>
+        <td>
+            <span class="show-span">
+                {{if p.systemManager}}
+                    {{p.systemManager}}
+                {{else}}
+                    <span class="fc-v1-grey">--</span>
+                {{/if}}
+            </span>
+        </td>
+        <td>{{p.cellphone}}</td>
+        <td>
+            <!--<button class="btn btn-primary btn-xs" data-action="setDirectDepart">设置成直属部门</button>
+            <button class="btn btn-default btn-xs" data-action="setManager" data-id="{{p.systemManagerId}}" data-name="{{p.systemManager}}">设置负责人</button>
+            <button class="btn btn-info btn-xs" data-action="setIndependentOrg">设置成独立机构</button>-->
+
+            <button class="btn btn-primary btn-xs" data-action="changeRole">变更权限</button>
+        </td>
+    </tr>
+    {{/each}}
+    {{else}}
+    <tr class="no-data">
+        <td colspan="{{role.id!='10001' && role.id!='departManager'?5:4}}" class="text-center ">
+            <div>
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

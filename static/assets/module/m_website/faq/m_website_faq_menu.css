@@ -1,0 +1,19 @@
+.navbar-default.navbar-content ul.nav-second-level{
+    background: none;
+}
+.navbar-default.navbar-content .nav > li > a{
+    color: #666;
+    padding: 12px 10px 12px 20px;
+}
+.navbar-default.navbar-content .nav > li.active,
+.navbar-default.navbar-content .nav > li > a:hover,
+.navbar-default.navbar-content .nav > li > a:focus {
+    background-color: #f8f8f8;
+    color: #337b8e;
+}
+.navbar-default.navbar-content .nav-second-level > li > a{
+    padding: 12px 10px 12px 40px;
+}
+.navbar-default.navbar-content li.selected .fa.arrow:before{
+    content: "\f107";
+}

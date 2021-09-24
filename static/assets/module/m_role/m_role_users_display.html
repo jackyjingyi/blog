@@ -1,0 +1,25 @@
+{{if userList!=null && userList.length>0}}
+    {{if user}}
+    <span class="{{user.companyUserId == currentCompanyUserId?'text-navy':''}}">{{user.name}}</span>
+    {{/if}}
+    {{each userList as u ui}}
+
+        {{if user }}
+            {{if u.id!=user.id}}
+                ,<span>{{u.name}}</span>
+            {{/if}}
+        {{else}}
+            {{if ui>0}}
+                ,<span>{{u.name}}</span>
+            {{else}}
+                <span>{{u.name}}</span>
+            {{/if}}
+        {{/if}}
+    {{/each}}
+{{else}}
+    {{if role && role==1}}
+        <span class="fc-v1-grey">未设置</span>
+    {{else}}
+        <span class="fc-v1-grey">--</span>
+    {{/if}}
+{{/if}}

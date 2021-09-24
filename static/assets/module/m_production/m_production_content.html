@@ -1,0 +1,89 @@
+<form class="task-list-box">
+    {{if productionList!=null && productionList.length>0}}
+    {{each productionList as p i}}
+    <div class="panel panel-default no-border" data-id="{{p.id}}" data-i="{{i}}" data-company-id="{{p.companyId}}">
+        <div class="panel-heading border border-v1-grey">
+            <div class="row">
+                <div class="col-sm-3 p-l-none">
+                    <a href="javascript:void(0);" data-action="expander"><span class="ic-open vertical-text-bottom m-l-sm m-r-sm"></span></a>
+                    <a href="#/project/production/details?id={{projectId}}&projectName={{projectNameCode}}&taskId={{p.id}}&dataCompanyId={{dataCompanyId}}" class="text-ellipsis task-full-name" data-container="body" data-toggle="tooltip" data-original-title="{{p.taskName}}">
+                        {{p.taskName}}
+                    </a>
+                </div>
+                <div class="col-sm-7">
+                    <span class="">任务负责人：</span>
+                    <span class="p-handler">
+                        <span class="show-span">
+                             {{if p.designer==null}}
+                                <span class="fc-v1-grey">未设置</span>
+                            {{else}}
+                                {{p.designer.userName}}
+                            {{/if}}
+                        </span>
+                        {{if p.role && p.role.changeDesignerManager==1}}
+                        <a href="javascript:void(0);" data-action="xeditableByHandlerUser" data-type="12" data-url-type="2" data-key="personInCharge" data-do-type="2" data-multiple="0" data-cookies="0" data-id="{{p.designer?p.designer.companyUserId:''}}"
+                                       data-task-id="{{p.id}}" data-user-name="{{p.designer?p.designer.userName:''}}" style="visibility: hidden;">
+                            <i class="icon iconfont icon-bianji"></i>
+                        </a>
+                        {{/if}}
+                    </span>
+                    &nbsp;&nbsp;
+                    <span class="">任务状态：</span>
+                    <a href="javascript:void(0);" class="font-bold {{ p.role && p.role.changeStatus==1?'':'a-span'}}" data-action="{{ p.role && p.role.changeStatus==1?'taskStateFlow':''}}" data-end-status="{{p.endStatus}}">
+                        <!--根据状态改变样式-->
+                        {{if p.endStatus ==3 || p.endStatus ==4}}
+                        <span class="text-danger">{{p.stateHtml}}</span>
+                        {{else if p.endStatus ==2}}
+                        <span class="text-success">{{p.stateHtml}}</span>
+                        {{else}}
+                        <span>{{p.stateHtml}}</span>
+                        {{/if}}
+                    </a>
+                    &nbsp;&nbsp;
+                    </span>
+                    <span>
+                        开始时间：
+                        {{if !_isNullOrBlank(p.startTime)}}
+                            {{_momentFormat(p.startTime,'YYYY/MM/DD')}}
+                        {{else}}
+                            --
+                        {{/if}}
+                        &nbsp;&nbsp;
+                    </span>
+                    <span>
+                        结束时间：
+                        {{if !_isNullOrBlank(p.endTime)}}
+                            {{_momentFormat(p.endTime,'YYYY/MM/DD')}}
+                        {{else}}
+                            --
+                        {{/if}}
+                    </span>
+                </div>
+                <div class="col-sm-2 text-right">
+
+                    {{if (managerInfo.projectManager && managerInfo.projectManager.companyUserId==currentCompanyUserId)
+                    || (managerInfo.assistant && managerInfo.assistant.companyUserId==currentCompanyUserId)
+                    || (p.designer  && p.designer.companyUserId==currentCompanyUserId)}}
+                    <!--<a class="btn btn-dotted-default btn-xs" data-action="downloadFile"  data-id="{{p.id}}" >导出图纸</a>-->
+                    <a href="javascript:void(0);" class="btn btn-primary btn-xs" data-action="distributionRatio">分配工作内容占比</a>
+                    <a class="btn btn-dotted-default btn-xs" data-action="addProjectMember"><i class="fa fa-plus f-s-m" ></i>&nbsp;人员</a>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+        <div class="panel-body no-padding no-borders of-auto min-h-300">
+
+        </div>
+    </div>
+    {{/each}}
+    {{else}}
+    <div class="row no-data-tr">
+        <div class="text-center col-md-12">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">您还没有相关生产安排</span>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+</form>

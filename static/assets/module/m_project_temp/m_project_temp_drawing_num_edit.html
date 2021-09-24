@@ -1,0 +1,62 @@
+<div class="m-project-temp-drawing-num-add">
+
+    <div class="">
+        <form class="form-horizontal m-t">
+            <div class="form-group p-l">
+                <label class="pull-left control-label f-s-m-v1">编号规则名称<span class="fc-red">*</span>：</label>
+                <div class="pull-left">
+                    {{if isView}}
+                    <span class="p-t-7 dp-block">{{dataInfo?dataInfo.templateName:''}}</span>
+                    {{else}}
+                    <input type="text" class="form-control width-600" name="templateName" placeholder="请输入编号规则名称" value="{{dataInfo?dataInfo.templateName:''}}">
+                    {{/if}}
+
+                </div>
+            </div>
+            <div id="processNodeList">
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        {{each dataInfo.stageDesignList as p }}
+                            <th>{{p.fieldName}}</th>
+                        {{/each}}
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{each dataInfo.majorList as p i}}
+                    <tr>
+                        <td class="v-middle">{{p.fieldName}}</td>
+                        {{each p.routeList as c ci}}
+                        <td>
+                            {{if isView}}
+                            <span>{{c.name}}</span>
+                            {{else}}
+                            <input class="form-control input-sm" name="itemName" value="{{c.name}}" data-id="{{c.id}}" data-stage-design="{{c.stageDesignRelationId}}" data-major-design="{{c.majorDesignRelationId}}"/>
+                            {{/if}}
+                        </td>
+                        {{/each}}
+                    </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-6 f-s-xs fc-dark-gray">
+                    注释：图纸编号规则使用在项目-生产安排-图纸目录中完整展示方式为：子项号+图纸编号+图纸序号。例如：01JC-001
+                </div>
+                {{if !isView}}
+                <div class="col-sm-6  text-right p-r">
+                    <button class="btn btn-default" data-action="cancel">取消</button>
+                    <button class="btn btn-primary" data-action="save">保存</button>
+                </div>
+                {{/if}}
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+

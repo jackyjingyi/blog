@@ -1,0 +1,43 @@
+<div class="ibox no-margins">
+    <div class="ibox-title secondary-menu-outbox">
+        <div class="row">
+            <div class="col-md-12" id="secondary-menu">
+                <!-- 面包屑 -->
+                <div class="pull-left" id="breadcrumb"></div>
+                <div class="pull-right">
+                    <ul class="secondary-menu-ul">
+                        <!--<li class="active roleControl" id="index" roleCode="100001" flag="2">
+                            <a href="#/backstageMgt/index">控制台</a>
+                        </li>-->
+                        {{if role.isRootCompany==1}}
+                        <li class="roleControl" id="orgInfo" roleCode="100007,10000301" flag="2">
+                            <a href="#/backstageMgt/orgInfo">组织信息</a>
+                        </li>
+                        {{/if}}
+                        <li id="organizational" class="roleControl" roleCode="100001,10000101" flag="2">
+                            <a href="#/backstageMgt/organizational">组织架构</a>
+                        </li>
+                        <li id="permissionSettings" class="roleControl" roleCode="100004,10000401" flag="2">
+                            <a href="#/backstageMgt/permissionSettings">权限配置</a>
+                        </li>
+                        <!--<li id="attendance" class="roleControl"  roleCode="100008" flag="2">
+                            <a href="#/backstageMgt/attendance">考勤设置</a>
+                        </li>
+                        <li id="approvalMgt" class="roleControl" roleCode="300001" flag="2">
+                            <a href="#/backstageMgt/approvalMgt">审批设置</a>
+                        </li>-->
+                        <li id="projectSettings" class="roleControl" roleCode="10000601,10000602" flag="2">
+                            <a href="#/backstageMgt/projectSettings">项目设置</a>
+                        </li>
+                        <!--<li id="historicalDataImport" class="roleControl" roleCode="100006" flag="2">
+                            <a href="#/backstageMgt/historicalDataImport">历史数据导入 </a>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ibox-content no-padding" id="content-box">
+
+    </div>
+</div>

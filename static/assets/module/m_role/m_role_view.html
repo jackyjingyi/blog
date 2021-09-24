@@ -1,0 +1,211 @@
+<div class="m-role-view pt-relative {{isDialog?'m':''}} {{isView?'role-view':''}}" data-from-type="{{formType}}">
+    {{if !isView}}
+    <div class="row m-b-xs">
+        <!-- <div class="col-md-10">
+             <span>设置角色对应的功能操作、后台管理权限。（操作权限子项选择，父项跟着选择。）</span>
+         </div>-->
+        <div class="col-md-12 text-right">
+            <label class="i-checks i-checks-label fw-normal m-b-none" id="roleViewAllCkLabel">
+                {{if role.isEdit==1}}
+                <input name="roleViewAllCk" type="checkbox" />
+                {{else}}
+                <input name="roleViewAllCk" type="checkbox" disabled/>
+                {{/if}}
+                <span class="i-checks-span">全选</span>
+            </label>
+        </div>
+    </div>
+    {{/if}}
+    <table class="table table-bordered table-responsive permission-table m-b-none">
+        <thead>
+        <tr>
+            <th width="17%">功能模块</th>
+            <th width="42%">数据查看权限</th>
+            <th width="*">功能操作权限</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if viewList!=null && viewList.length>0}}
+        {{each viewList as v vi}}
+        <tr data-id="{{v.id}}"  data-i="{{vi}}">
+            <td class="v-middle" rowspan="{{(v.viewOne.childList.length>0 && v.viewTwo.childList.length>0) || (v.operatorOne.childList.length>0 && v.operatorTwo.childList.length>0)?'2':''}}">
+                <label class="i-checks i-checks-label fw-normal m-b-none">
+                    {{if role.isEdit == 0 || v.permissionType == 1}}
+                    {{if v.isSelect==1}}
+                    <input name="viewCK" type="checkbox" value="{{v.id}}"  data-relation-id="{{v.relationId}}" disabled checked/>
+                    {{else}}
+                    <input name="viewCK" type="checkbox" value="{{v.id}}"  data-relation-id="{{v.relationId}}" disabled/>
+                    {{/if}}
+                    {{else}}
+                    {{if v.isSelect==1}}
+                    <input name="viewCK" type="checkbox" value="{{v.id}}" data-relation-id="{{v.relationId}}" checked/>
+                    {{else}}
+                    <input name="viewCK" type="checkbox" value="{{v.id}}" data-relation-id="{{v.relationId}}" />
+                    {{/if}}
+                    {{/if}}
+                    <span class="i-checks-span" title="{{v.name}}">{{v.name}}</span>
+                </label>
+            </td>
+            <td rowspan="{{ (!(v.viewOne.childList.length>0 && v.viewTwo.childList.length>0) && v.operatorOne.childList.length>0 && v.operatorTwo.childList.length>0)?'2':''  }}">
+
+                {{if v.viewOne.childList.length>0}}
+                <div class="row no-margin" data-group-id="{{v.viewOne.groupId}}">
+                    {{each v.viewOne.childList as c ci}}
+                    <div class="{{c.name.length>12 && !isView?'col-sm-12 col-xl-6':'col-sm-12 col-lg-6'}} no-padding">
+                        <label class="i-checks i-checks-label fw-normal no-margins dp-inline-block v-middle" data-code="{{c.code}}">
+                            {{if role.isEdit == 0 || c.permissionType == 1}}
+                            {{if c.isSelect==1}}
+                            <input name="viewCK1{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}" checked disabled/>
+                            {{else}}
+                            <input name="viewCK1{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}" disabled/>
+                            {{/if}}
+                            {{else}}
+                            {{if c.isSelect==1}}
+                            <input name="viewCK1{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}" checked/>
+                            {{else}}
+                            <input name="viewCK1{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}"/>
+                            {{/if}}
+                            {{/if}}
+                            <span class="i-checks-span" title="{{c.name}}">{{c.name}}</span>
+                        </label>
+                    </div>
+                    {{/each}}
+                </div>
+                {{else if v.viewTwo.childList.length>0}}
+                <div class="row no-margin" data-group-id="{{v.viewTwo.groupId}}">
+                    {{each v.viewTwo.childList as c ci}}
+                    <div class="{{c.name.length>12 && !isView?'col-sm-12 col-xl-6':'col-sm-12 col-lg-6'}} no-padding">
+                        <label class="i-checks i-checks-label fw-normal no-margins dp-inline-block v-middle" data-code="{{c.code}}">
+                            {{if role.isEdit == 0 || c.permissionType == 1}}
+                            {{if c.isSelect==1}}
+                            <input name="viewCK2{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}" checked disabled/>
+                            {{else}}
+                            <input name="viewCK2{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}" disabled/>
+                            {{/if}}
+                            {{else}}
+                            {{if c.isSelect==1}}
+                            <input name="viewCK2{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}" checked/>
+                            {{else}}
+                            <input name="viewCK2{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}"/>
+                            {{/if}}
+                            {{/if}}
+                            <span class="i-checks-span" title="{{c.name}}">{{c.name}}</span>
+                        </label>
+                    </div>
+                    {{/each}}
+                </div>
+                {{/if}}
+
+            </td>
+            <td rowspan="{{ (!(v.operatorOne.childList.length>0 && v.operatorTwo.childList.length>0) && v.viewOne.childList.length>0 && v.viewTwo.childList.length>0)?'2':''  }}">
+                {{if v.operatorOne.childList.length>0}}
+                <div class="row no-margin" data-group-id="{{v.operatorOne.groupId}}">
+                    {{each v.operatorOne.childList as c ci}}
+                    <div class=" {{c.name.length>12 && !isView?'col-sm-12 col-xl-6':'col-sm-12 col-lg-6'}} no-padding">
+                        <label class="i-checks i-checks-label fw-normal no-margins dp-inline-block v-middle" data-code="{{c.code}}">
+                            {{if role.isEdit == 0 || c.permissionType == 1}}
+                            {{if c.isSelect==1}}
+                            <input name="operatorCK1{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}" checked disabled/>
+                            {{else}}
+                            <input name="operatorCK1{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}" disabled/>
+                            {{/if}}
+                            {{else}}
+                            {{if c.isSelect==1}}
+                            <input name="operatorCK1{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}"  checked/>
+                            {{else}}
+                            <input name="operatorCK1{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}"/>
+                            {{/if}}
+                            {{/if}}
+                            <span class="i-checks-span" title="{{c.name}}">{{c.name}}</span>
+                        </label>
+                    </div>
+                    {{/each}}
+                </div>
+                {{else if v.operatorTwo.childList.length>0}}
+                <div class="row no-margin" data-group-id="{{v.operatorTwo.groupId}}">
+                    {{each v.operatorTwo.childList as c ci}}
+                    <div class="{{c.name.length>12 && !isView?'col-sm-12 col-xl-6':'col-sm-12 col-lg-6'}} no-padding">
+                        <label class="i-checks i-checks-label fw-normal no-margins dp-inline-block v-middle" data-code="{{c.code}}">
+                            {{if role.isEdit == 0 || c.permissionType == 1}}
+                            {{if c.isSelect==1}}
+                            <input name="operatorCK2{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}" checked disabled/>
+                            {{else}}
+                            <input name="operatorCK2{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}" disabled/>
+                            {{/if}}
+                            {{else}}
+                            {{if c.isSelect==1}}
+                            <input name="operatorCK2{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}" checked/>
+                            {{else}}
+                            <input name="operatorCK2{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}"/>
+                            {{/if}}
+                            {{/if}}
+                            <span class="i-checks-span" title="{{c.name}}">{{c.name}}</span>
+                        </label>
+                    </div>
+                    {{/each}}
+                </div>
+                {{/if}}
+
+            </td>
+        </tr>
+        {{if ( v.viewOne.childList.length>0 && v.viewTwo.childList.length>0) || (v.operatorOne.childList.length>0 && v.operatorTwo.childList.length>0)}}
+        <tr data-id="{{v.id}}">
+            {{if v.viewOne.childList.length>0 && v.viewTwo.childList.length>0}}
+            <td>
+                <div class="row no-margin" data-group-id="{{v.viewTwo.groupId}}">
+                    {{each v.viewTwo.childList as c ci}}
+                    <div class="{{c.name.length>12 && !isView?'col-sm-12 col-xl-6':'col-sm-12 col-lg-6'}} no-padding">
+                        <label class="i-checks i-checks-label fw-normal no-margins dp-inline-block v-middle" data-code="{{c.code}}">
+                            {{if role.isEdit == 0 || c.permissionType == 1}}
+                            {{if c.isSelect==1}}
+                            <input name="viewCK2{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}" checked disabled/>
+                            {{else}}
+                            <input name="viewCK2{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}" disabled/>
+                            {{/if}}
+                            {{else}}
+                            {{if c.isSelect==1}}
+                            <input name="viewCK2{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}" checked/>
+                            {{else}}
+                            <input name="viewCK2{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}"/>
+                            {{/if}}
+                            {{/if}}
+                            <span class="i-checks-span" title="{{c.name}}">{{c.name}}</span>
+                        </label>
+                    </div>
+                    {{/each}}
+                </div>
+            </td>
+            {{/if}}
+            {{if v.operatorOne.childList.length>0 && v.operatorTwo.childList.length>0}}
+            <td>
+                <div class="row no-margin" data-group-id="{{v.operatorTwo.groupId}}">
+                    {{each v.operatorTwo.childList as c ci}}
+                    <div class="{{c.name.length>12 && !isView?'col-sm-12 col-xl-6':'col-sm-12 col-lg-6'}} no-padding">
+                        <label class="i-checks i-checks-label fw-normal no-margins dp-inline-block v-middle" data-code="{{c.code}}">
+                            {{if role.isEdit == 0 || c.permissionType == 1}}
+                            {{if c.isSelect==1}}
+                            <input name="operatorCK2{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}" checked disabled/>
+                            {{else}}
+                            <input name="operatorCK2{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}" disabled/>
+                            {{/if}}
+                            {{else}}
+                            {{if c.isSelect==1}}
+                            <input name="operatorCK2{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}" checked/>
+                            {{else}}
+                            <input name="operatorCK2{{vi}}" type="checkbox" value="{{c.id}}" data-relation-id="{{c.relationId}}"/>
+                            {{/if}}
+                            {{/if}}
+                            <span class="i-checks-span" title="{{c.name}}">{{c.name}}</span>
+                        </label>
+                    </div>
+                    {{/each}}
+                </div>
+            </td>
+            {{/if}}
+        </tr>
+        {{/if}}
+        {{/each}}
+        {{/if}}
+        </tbody>
+    </table>
+</div>

@@ -791,5 +791,77 @@ def approval_article_detail(request, approver, pk):
     else:
         return bulk_submit(request)
 
-def approval_action(user, ):
-    pass
+
+def get_approval_list(request):
+    user = request.user
+    try:
+        if isinstance(user, AnonymousUser):
+            raise Http404
+        role = Profile.objects.get(user=user)
+        if role.role != '2':
+            raise Http404
+        group = user.groups.all()
+        if role.is_lv1_approver:
+            return Post.objects.filter(lv1_approval_status='1', author__groups__in=group).order_by('-submit_time')
+        elif role.is_lv2_approver:
+            return Post.objects.filter(lv2_approval_status='1', author__groups__in=group).order_by('-submit_time')
+        elif role.is_lv3_approver:
+            return Post.objects.filter(lv3_approval_status='1', author__groups__in=group).order_by('-submit_time')
+        elif role.is_lv4_approver:
+            return Post.objects.filter(lv4_approval_status='1', author__groups__in=group).order_by('-submit_time')
+    except Http404:
+        return None
+
+
+def tag_formatter(tag):
+    def add_tags(element, *args, **kwargs):
+        tag_properties = ''
+        for k, v in kwargs.items():
+            if k == 'cls_property':
+                tag_properties += f"class = '{v}'"
+            else:
+                tag_properties += f"{k} = '{v}'"
+        return f"<{tag} {tag_properties}>{element}</{tag}>"
+
+    return add_tags
+
+
+def my_tasks(request):
+    headers = ['标题', '作者', '提交日期']
+    obj_list = get_approval_list(request)
+
+    if isinstance(request.user, AnonymousUser):
+        return JsonResponse({'msg': 'unauthorised user'}, status=401, safe=False)
+    else:
+        if obj_list:
+            link = tag_formatter('a')
+            small = tag_formatter('small')
+            table = tag_formatter('table')
+            thead = tag_formatter('thead')
+            tbody = tag_formatter('tbody')
+            th = tag_formatter('th')
+            tr = tag_formatter('tr')
+            td = tag_formatter('td')
+            div = tag_formatter('div')
+            pre = tag_formatter('pre')
+            t_rows = []
+            for item in obj_list:
+                row = ''
+                row += td(
+                    small(link(item.title[:15], href='approval_article_detail/{}/{}'.format(request.user.id, item.id))),
+                    cls_property='m-1 p-1')
+                row += td(small(item.author.first_name), cls_property='m-1 p-1')
+                row += td(small(item.update_time.strftime('%Y-%m-%d')), cls_property='m-1 p-1')
+                t_rows.append(tr(row, cls_property='m-0'))
+            t_body = tbody(''.join(t_rows))
+            hrow = ''
+            for i in headers:
+                hrow += th(small(i), scope='col', cls_property='m-1 p-1')
+            t_head = thead(tr(hrow))
+
+            html = div(table(t_head + t_body, cls_property='table table-striped table-bordered m-3 mt-2'),
+                       style='width:750px;height:360px;', cls_property='m-1')
+
+            return JsonResponse(html, status=200, safe=False)
+        else:
+            return JsonResponse({'msg': 'no task'}, status=404, safe=False)

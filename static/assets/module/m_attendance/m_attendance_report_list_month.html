@@ -1,0 +1,48 @@
+<table class="table table-hover table-bordered table-responsive " >
+    <thead>
+    <tr>
+        <th>时间</th>
+        <th>姓名</th>
+        <th>部门</th>
+        {{if type==0}}
+        <th>所属规则</th>
+        <th>应打卡天数</th>
+        <th>正常天数</th>
+        <th>异常天数</th>
+        <th>补卡</th>
+        {{else}}
+        <th>外出打卡天数</th>
+        <th>外出打卡次数</th>
+        {{/if}}
+    </tr>
+    </thead>
+    <tbody>
+    {{each dataList as p i}}
+    <tr class="curp" data-i="{{i}}" data-id="{{p.id}}">
+        <td>{{_momentFormat(p.workDate,'YYYY/MM')}}</td>
+        <td>{{p.userName}}</td>
+        <td>{{p.departName}}</td>
+        {{if type==0}}
+            <td>{{p.ruleName}}</td>
+            <td>{{p.clockNumDue}}</td>
+            <td>{{p.clockNumNormal}}</td>
+            <td>{{p.clockNumAbnormal}}</td>
+            <td>{{p.correctClock}}</td>
+        {{else}}
+            <td>{{p.clockNumNormal}}</td>
+            <td>{{p.clockNumDue}}</td>
+        {{/if}}
+    </tr>
+    {{/each}}
+    {{if dataList==null || dataList.length==0}}
+    <tr class="no-data">
+        <td colspan="{{type==0?'8':'5'}}" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">您还没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

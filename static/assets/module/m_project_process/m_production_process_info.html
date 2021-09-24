@@ -1,0 +1,41 @@
+<!--<h4 class="font-normal">查看工作流</h4>
+<div class="row">
+    <div class="col-md-12">
+        {{if fromType==1}}
+        <a class="btn btn-default btn-sm" href="#/project/production?id={{query.id}}&projectName={{query.projectName}}&dataCompanyId={{query.dataCompanyId}}">返回生产安排</a>
+        {{else}}
+        <button class="btn btn-primary btn-sm" data-action="editWorkflow">编辑</button>
+        <button class="btn btn-default btn-sm" data-action="backWorkflowList">返回流程列表</button>
+        {{/if}}
+    </div>
+</div>
+<h4 class="title-line m-t-sm">基本信息</h4>
+<div class="panel panel-default m-b-sm">
+    <div class="panel-body">
+        <div class="row m-b-sm">
+            <div class="col-24-xs-3 col-24-lg-2 text-bold text-right">工作流名称：</div>
+            <div class="col-24-xs-5 col-24-lg-6">{{process.processName}}</div>
+            <div class="col-24-xs-3 col-24-lg-2 text-bold text-right">创建人：</div>
+            <div class="col-24-xs-5 col-24-lg-6">{{process.createUserName}}</div>
+            <div class="col-24-xs-3 col-24-lg-2 text-bold text-right">创建时间：</div>
+            <div class="col-24-xs-5 col-24-lg-6">{{_momentFormat(process.updateDate,'YYYY/MM/DD')}}</div>
+        </div>
+    </div>
+</div>
+<h4 class="title-line">流程图</h4>-->
+<div class="">
+        <div id="flowPaper" class="flow-paper full-width" ></div>
+    <!--<div class="col-sm-6">
+        <h4>步骤</h4>
+        <table class="table table-striped table-bordered">
+            <tbody>
+            {{each routeList as r ri}}
+            <tr>
+                <td>{{r.currentNodeName}}>{{r.nextNodeName}}</td>
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
+    </div>-->
+</div>
+

@@ -1,0 +1,27 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        任务模版
+    </div>
+    <div class="panel-body max-h-300 of-auto no-borders">
+        <table class="table table-bordered table-hover">
+            <tbody>
+            {{if dataList!=null && dataList.length>0}}
+            {{each dataList as t ti}}
+            <tr>
+                <td>{{t.fieldName}}</td>
+            </tr>
+            {{/each}}
+            {{else}}
+            <tr class="no-data">
+                <td class="text-center v-middle">
+                    <div class="m-b-xl m-t-md">
+                        <img src="{{_url('/img/default/without_data.png')}}">
+                        <span class="fc-dark-blue dp-block">暂无相关数据</span>
+                    </div>
+                </td>
+            </tr>
+            {{/if}}
+            </tbody>
+        </table>
+    </div>
+</div>

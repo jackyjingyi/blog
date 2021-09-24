@@ -1,0 +1,214 @@
+<div class="m-task-details-content">
+    <span class="font-bold">
+        {{dataInfo.task.taskName}}
+    </span>
+    <span class="m-l-lg">
+        任务状态：
+        {{if (dataInfo.task.taskType==2||dataInfo.task.taskType==3) && dataInfo.task.isOperaterTask==0}}
+            <a id="taskStateFlow" href="javascript:void(0);" class="font-bold {{ dataInfo.task.role && dataInfo.task.role.changeStatus==1?'':'a-span'}}" data-end-status="{{dataInfo.task.endStatus}}"
+               data-action="{{dataInfo.task.role && dataInfo.task.role.changeStatus==1?'taskStateFlow':''}}" >
+                <!--根据状态改变样式-->
+                {{if dataInfo.task.endStatus ==3 || dataInfo.task.endStatus ==4}}
+                    <span class="text-danger">{{dataInfo.task.stateHtml}}</span>
+                {{else if dataInfo.task.endStatus ==2}}
+                    <span class="text-success">{{dataInfo.task.stateHtml}}</span>
+                {{else}}
+                    <span>{{dataInfo.task.stateHtml}}</span>
+                {{/if}}
+            </a>
+        {{else}}
+            <button id="taskStateFlowBtn" class="btn btn-white btn-rounded btn-status no-hover selected">{{dataInfo.task.endStatusName}}</button>
+        {{/if}}
+    </span>
+    <div class="tabs-container m-t">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="false">设计文件</a></li>
+            <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">校审意见</a></li>
+            <li class=""><a data-toggle="tab" href="#tab-4" aria-expanded="false">变更历史</a></li>
+            <li class=""><a data-toggle="tab" href="#tab-3" aria-expanded="false">任务描述</a></li>
+            {{if (dataInfo.task.taskType==2||dataInfo.task.taskType==3) && dataInfo.task.isOperaterTask==0}}
+            <li class=""><a data-toggle="tab" href="#tab-5" aria-expanded="false">审批记录</a></li>
+            {{/if}}
+        </ul>
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active" data-type="designFile">
+                <div class="panel-body">
+                    {{if dataInfo.task.endStatus!='0' && dataInfo.filePid!=null}}
+                    <button class="btn btn-primary btn-sm" data-action="uploadFile">上传设计文件</button>
+                    {{/if}}
+                    <!--<button class="btn btn-primary btn-sm" data-action="batchTransfer">批量流转</button>-->
+                    <div class="design-file-list">
+
+                    </div>
+                </div>
+            </div>
+            <div id="tab-2" class="tab-pane" data-type="approvalOpinion">
+                <div class="panel-body">
+                    <div class="data-list-box">
+                        <div class="data-list-container"></div>
+                        <div class="p-w-sm">
+                            <div id="data-pagination-container-approvalOpinion" class="m-pagination pull-right "></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-3" class="tab-pane">
+                <div class="panel-body">
+                    <form class="form-horizontal details-edit">
+                        <div class="form-group ">
+                            <div class="col-sm-4">
+                                <label class="pull-left p-t-xs">处理人：</label>
+                                <div class="pull-left l-h-28 details-dataInfo-box">
+                                                <span class="show-span">
+                                                    {{#_include('m_production/m_production_users_display',{userList:dataInfo.task.handlerUser.userList,role:dataInfo.task.role.changeDesigner,currentCompanyUserId:currentCompanyUserId})}}
+                                                </span>
+                                    {{if dataInfo.task.role && dataInfo.task.role.changeDesigner==1}}
+                                    <a href="javascript:void(0);" data-action="xeditableUser"  data-key="handlerUser" style="visibility: hidden;">
+                                        <i class="icon iconfont icon-bianji"></i>
+                                    </a>
+                                    {{/if}}
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="pull-left p-t-xs">开始时间：</label>
+                                <div class="pull-left l-h-28 details-dataInfo-box">
+                                                <span class="show-span">
+                                                    {{#_include('m_common/m_display_by_role_value',{role:dataInfo.task.role.edit,value:dataInfo.task.startTime,type:1})}}
+                                                </span>
+                                    {{if dataInfo.task.role && dataInfo.task.role.edit==1}}
+                                    <a href="javascript:void(0);" data-action="xeditable" data-value="{{dataInfo.task.startTime}}" data-type="10" data-key="startTime" data-max-date="{{dataInfo.task.endTime}}"
+                                       data-init-show="1" data-onpicked-save="1" style="visibility: hidden;">
+                                        <i class="icon iconfont icon-bianji"></i>
+                                    </a>
+                                    {{/if}}
+
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <label class="pull-left p-t-xs">结束时间：</label>
+                                <div class="pull-left l-h-28 details-dataInfo-box">
+                                                <span class="show-span">
+                                                    {{#_include('m_common/m_display_by_role_value',{role:dataInfo.task.role.edit,value:dataInfo.task.endTime,type:1})}}
+                                                </span>
+                                    {{if dataInfo.task.role && dataInfo.task.role.edit==1}}
+                                    <a href="javascript:void(0);" data-action="xeditable" data-value="{{dataInfo.task.endTime}}" data-type="10" data-key="endTime" data-min-date="{{dataInfo.task.startTime}}"
+                                       data-init-show="1" data-onpicked-save="1" style="visibility: hidden;">
+                                        <i class="icon iconfont icon-bianji"></i>
+                                    </a>
+                                    {{/if}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <div class="col-sm-4">
+                                <label class="pull-left p-t-xs">完成时间：</label>
+                                <div class="pull-left l-h-28 details-dataInfo-box">
+                                    {{#_include('m_common/m_display_by_role_value',{value:dataInfo.task.completeDate,type:1})}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group ">
+                            <label class="col-sm-12">
+                                描      述：
+                                <a href="javascript:void(0);" data-action="xeditable" data-type="11" data-key="taskRemark" data-target-ele="#task-remark-edit" data-is-picture="1" style="visibility: hidden;">
+                                    <i class="icon iconfont icon-bianji"></i>
+                                </a>
+                            </label>
+                            <div class="col-sm-12">
+                                <div class="show-span">{{#dataInfo.task.taskRemark}}</div>
+                                <div id="task-remark-edit"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div id="tab-4" class="tab-pane" data-type="changeHistory">
+                <div class="panel-body">
+                    <div class="data-list-box">
+                        <div class="data-list-container"></div>
+                        <div class="p-w-sm">
+                            <div id="data-pagination-container" class="m-pagination pull-right "></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{if (dataInfo.task.taskType==2||dataInfo.task.taskType==3) && dataInfo.task.isOperaterTask==0}}
+            <div id="tab-5" class="tab-pane" data-type="approvalRecord">
+                <div class="panel-body">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th width="6%">序号</th>
+                            <th width="19%">提交时间</th>
+                            <th width="30%">设计组织</th>
+                            <!--<th width="19%">设计文件</th>-->
+                            <th width="15%">审批前状态</th>
+                            <th width="15%">审批后状态</th>
+                            <th width="15%">审批时间</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {{if dataInfo.taskCheckAuditList!=null && dataInfo.taskCheckAuditList.length>0}}
+                        {{each dataInfo.taskCheckAuditList as t ti}}
+                        <tr class="curp" data-id="{{t.id}}">
+                            <td>{{ti+1}}</td>
+                            <td>{{_momentFormat(t.submitDate,'YYYY/MM/DD HH:mm:ss')}}</td>
+                            <td>{{t.companyName}}</td>
+                            <!--<td>{{t.taskName}}</td>-->
+                            <td>{{t.beforeStatus}}</td>
+                            <td>{{t.afterStatus}}</td>
+                            <td>{{_momentFormat(t.auditDate,'YYYY/MM/DD')}}</td>
+                        </tr>
+                        {{/each}}
+                        {{else}}
+                        <tr class="no-data">
+                            <td colspan="6" class="text-center v-middle">
+                                <div class="m-b-xl m-t-md">
+                                    <img src="{{_url('/img/default/without_data.png')}}">
+                                    <span class="fc-dark-blue dp-block">暂无相关数据</span>
+                                </div>
+                            </td>
+                        </tr>
+                        {{/if}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+    {{if !((dataInfo.task.taskType==2||dataInfo.task.taskType==3) && dataInfo.task.isOperaterTask==0)}}
+    <div class="row m-t-sm">
+        <form class="form-horizontal m-r-lg" id="commentForm">
+            <div class="col-md-12 m-b-sm f-s-lg">下一状态</div>
+            <div class="col-md-12">
+                {{each dataInfo.nodeList as t i}}
+                <button class="btn btn-white btn-rounded btn-status {{i==0?'selected':'fc-v1-grey'}}" data-node-type="1" data-status="{{t.nodeValue}}">
+                    {{if i==0}}
+                    {{dataInfo.task.endStatus==t.nodeValue?'保持为':''}}{{t.nodeName}}
+                    {{else}}
+                    {{t.nodeName}}
+                    {{/if}}
+                </button>
+                {{/each}}
+            </div>
+            <div class="col-xs-12 bg-v2-grey p-m m">
+                <div class="form-group">
+                    <label class="col-24-xs-3 fw-normal fc-v2-grey p-t-xs">处理人：</label>
+                    <div class="col-24-xs-21">
+                        <div data-action="handler"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <div class="col-24-xs-21">
+                        <button class="btn btn-primary btn-w-m" data-action="submitWorkflow">流转</button>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </form>
+    </div>
+    {{/if}}
+</div>

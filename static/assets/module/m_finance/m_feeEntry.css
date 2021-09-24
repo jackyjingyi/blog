@@ -1,0 +1,66 @@
+.m_feeEntry .date-chose-box{
+    padding: 9px 0;
+}
+.m_feeEntry .month-menu-box{
+    height: 100px;
+    border-bottom: solid 1px #ebebeb;
+}
+.m_feeEntry .month-menu-box.active{
+    background-color: #d7d7d7;
+}
+.m_feeEntry .month-menu-box .month{
+    font-size: 20px;
+    font-weight: bold;
+    padding-top: 20px;
+}
+.m_feeEntry .month-menu-box .detail .income{
+    padding-top: 20px;
+}
+.m_feeEntry .month-menu-box .detail .income span,
+.m_feeEntry .month-menu-box .detail .expenditure span{
+    font-size: 18px;
+}
+.m_feeEntry .month .user-name{
+    font-size: 14px;
+    font-weight: normal;
+    margin-top: 5px;
+    line-height: 20px;
+}
+
+.m_feeEntry_settings #left-box{
+    border-right: solid 1px #ccc;
+}
+.m_feeEntry_settings .table>tbody>tr>td.p-l-25{
+    padding-left: 25px;
+}
+.m_feeEntry_settings .check-box {
+    height: 20px;
+    display: inline-block;
+    padding-top: 2px;
+}
+.m_feeEntry_settings .check-box .i-checks .i-checks-span{
+    font-size: 14px;
+}
+.m_feeEntry_settings .btn-add{
+    margin: -1px 0 0 10px;
+    padding: 0;
+    float: left;
+}
+
+.m_feeEntry span.span-money{
+    width: auto;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -webkit-text-overflow: ellipsis;
+    -moz-text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    line-height: 16px;
+}
+@media (min-width: 1600px) {
+    .m_feeEntry span.span-money{
+        max-width: 170px;
+    }
+}

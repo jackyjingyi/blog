@@ -1,0 +1,164 @@
+<!--
+    doType==1 收支确认, doType==2 审批列表， doType==3 审批报表
+-->
+<table class="table table-bordered table-responsive dataTable">
+    <thead>
+    <tr>
+        {{if doType==1 || doType==3}}
+        <th>序号</th>
+        {{/if}}
+        <th>
+            编号
+            <a class="icon-filter pull-right" id="filter_expNo" ><i class="icon iconfont icon-shaixuan"></i></a>
+        </th>
+        <th>金额（元）</th>
+        <th>核销金额</th>
+        <th>核销日期</th>
+        <th>待核销</th>
+
+        <th>部门</th>
+        <th class="">
+            经办人
+            <a class="icon-filter pull-right" id="filter_submitUserName"><i class="icon iconfont icon-shaixuan"></i></a>
+        </th>
+        <th>审批人</th>
+        <th>
+            收款方
+            {{if doType==3}}
+            <a class="icon-filter pull-right" id="filter_toCompanyName" ><i class="icon iconfont icon-shaixuan"></i></a>
+            {{/if}}
+        </th>
+        <th>
+            付款方
+            {{if doType==3}}
+            <a class="icon-filter pull-right" id="filter_fromCompanyName" ><i class="icon iconfont icon-shaixuan"></i></a>
+            {{/if}}
+        </th>
+        <th>收支分类</th>
+        <th>分类子项</th>
+        <th class="sorting_desc min-w-60" data-action="sort" data-code="expDate">
+            申请时间
+        </th>
+        <th class="sorting_desc min-w-60" data-action="sort" data-code="approveDate">审批时间</th>
+        <th>付款时间</th>
+        <!--<td>报销金额</td>
+        <th>退还金额</th>-->
+    </tr>
+    </thead>
+    <tbody>
+        {{if dataList!=null && dataList.length>0}}
+        {{each dataList as p i}}
+        {{if p.verificationList && p.verificationList.length>0}}
+            {{each p.verificationList as c ci}}
+                <tr class="curp" data-id="{{p.id}}" data-sid="{{c.id}}" data-i="{{i}}" data-sumexpamount="{{p.sumExpAmount}}">
+                    {{if (doType==1 || doType==3) && ci==0}}
+                    <td rowspan="{{p.verificationList.length+1}}" class="v-middle">{{i+1+pageIndex*10}}</td>
+                    {{/if}}
+                    {{if ci==0}}
+                    <td rowspan="{{p.verificationList.length+1}}" class="v-middle">{{p.expNo}}</td>
+                    <td rowspan="{{p.verificationList.length+1}}" class="v-middle">{{_expNumberFilter(p.sumExpAmount)}}</td>
+                    {{/if}}
+                    <td>
+                        {{_expNumberFilter(c.verificationAmount)}}
+                    </td>
+                    <td>
+                        {{if doType==1 && c.approveStatus==1}}
+                            <button type="button" class="btn btn-primary btn-xs rounded" data-action="costOffItem">核销</button>
+                        {{else}}
+                            {{_momentFormat(c.verificationDate,'YYYY/MM/DD')}}
+                        {{/if}}
+                    </td>
+                    {{if ci==0}}
+                    <td rowspan="{{p.verificationList.length+1}}" class="v-middle">{{_expNumberFilter(_mathSubtract(p.sumExpAmount,p.verificationAmount))}}</td>
+                    <td rowspan="{{p.verificationList.length+1}}" class="v-middle">{{p.departName}}</td>
+                    <td rowspan="{{p.verificationList.length+1}}" class="v-middle">{{p.submitUserName}}</td>
+                    <td rowspan="{{p.verificationList.length+1}}" class="v-middle">{{p.auditPersonName}}</td>
+                    <td rowspan="{{p.verificationList.length+1}}" class="v-middle">{{_emptyDisplay(p.enterpriseId)}}</td>
+                    <td rowspan="{{p.verificationList.length+1}}" class="v-middle">{{_emptyDisplay(p.fromCompanyId)}}</td>
+                    <td rowspan="{{p.verificationList.length+1}}" class="v-middle">{{p.expParentName}}</td>
+                    <td rowspan="{{p.verificationList.length+1}}" class="v-middle">{{p.expName}}</td>
+                    <td rowspan="{{p.verificationList.length+1}}" class="v-middle">{{_momentFormat(p.expDate,'YYYY/MM/DD')}}</td>
+                    <td rowspan="{{p.verificationList.length+1}}" class="v-middle">{{_momentFormat(p.approveDate,'YYYY/MM/DD')}}</td>
+                    <td rowspan="{{p.verificationList.length+1}}" class="v-middle">
+                        {{if doType==1 &&  p.approveStatus == '1' && p.allocationDate==null}}
+                        <button type="button" class="btn btn-primary btn-xs rounded" data-action="agreeToGrant" data-id="{{p.id}}">同意拨款</button>
+                        <button type="button" class="btn btn-default btn-xs rounded" data-action="sendBack" data-id="{{p.id}}">退回</button>
+                        {{else}}
+                        {{_momentFormat(p.allocationDate,'YYYY/MM/DD')}}
+                        {{/if}}
+                    </td>
+                    {{/if}}
+                    <!--<td>{{_expNumberFilter(c.reimburseAmount)}}</td>
+                    <td>{{_expNumberFilter(c.returnAmount)}}</td>-->
+                </tr>
+                {{if ci==p.verificationList.length-1}}
+                <tr data-id="{{p.id}}" data-sid="" data-type="operation">
+                    <td colspan="2" class="text-center">
+                        {{if doType==2 && p.companyUserId == currentCompanyUserId && p.approveStatus == '6' && p.applyAmount < p.sumExpAmount}}
+                        <button type="button" class="btn btn-link no-padding height-20" data-action="costOff" data-depart-id="{{p.departId}}" data-type="2" title="核销申请">
+                            <i class="fa fa-plus color-dark-blue f-s-xl"></i>
+                        </button>
+                        {{else if doType==1 && p.applyAmount < p.sumExpAmount}}
+                        <button type="button" class="btn btn-link no-padding height-20" data-action="costOff" data-depart-id="{{p.departId}}" data-type="1" title="核销">
+                            <i class="fa fa-plus color-dark-blue f-s-xl"></i>
+                        </button>
+                        {{else}}
+                        {{/if}}
+                    </td>
+                </tr>
+                {{/if}}
+            {{/each}}
+        {{else}}
+            <tr class="curp" data-id="{{p.id}}" data-sid="" data-i="{{i}}" data-sumexpamount="{{p.sumExpAmount}}">
+                {{if doType==1 || doType==3}}
+                <td>{{i+1+pageIndex*10}}</td>
+                {{/if}}
+                <td>{{p.expNo}}</td>
+                <td>{{_expNumberFilter(p.sumExpAmount)}}</td>
+                <td colspan="2" class="text-center">
+                    {{if doType==2 && p.companyUserId == currentCompanyUserId && p.approveStatus == '6' && p.applyAmount < p.sumExpAmount}}
+                    <button type="button" class="btn btn-link no-padding height-20" data-action="costOff" data-depart-id="{{p.departId}}" data-type="2" title="核销申请">
+                        <i class="fa fa-plus color-dark-blue f-s-xl"></i>
+                    </button>
+                    {{else if doType==1 && p.approveStatus == '6' && p.applyAmount < p.sumExpAmount}}
+                    <button type="button" class="btn btn-link no-padding height-20" data-action="costOff" data-depart-id="{{p.departId}}" data-type="1" title="核销">
+                        <i class="fa fa-plus color-dark-blue f-s-xl"></i>
+                    </button>
+                    {{else}}
+                    {{/if}}
+                </td>
+                <td>{{_expNumberFilter(_mathSubtract(p.sumExpAmount,p.verificationAmount))}}</td>
+                <td>{{p.departName}}</td>
+                <td>{{p.submitUserName}}</td>
+                <td>{{p.auditPersonName}}</td>
+                <td>{{_emptyDisplay(p.enterpriseId)}}</td>
+                <td>{{_emptyDisplay(p.fromCompanyId)}}</td>
+                <td>{{p.expParentName}}</td>
+                <td>{{p.expName}}</td>
+                <td>{{_momentFormat(p.expDate,'YYYY/MM/DD')}}</td>
+                <td>{{_momentFormat(p.approveDate,'YYYY/MM/DD')}}</td>
+                <td>
+                    {{if doType==1 &&  p.approveStatus == '1' && p.allocationDate==null}}
+                    <button type="button" class="btn btn-primary btn-xs rounded" data-action="agreeToGrant" data-id="{{p.id}}">同意拨款</button>
+                    <button type="button" class="btn btn-default btn-xs rounded" data-action="sendBack" data-id="{{p.id}}">退回</button>
+                    {{else}}
+                    {{_momentFormat(p.allocationDate,'YYYY/MM/DD')}}
+                    {{/if}}
+                </td>
+
+            </tr>
+        {{/if}}
+        {{/each}}
+        {{else}}
+        <tr class="no-data">
+            <td colspan="{{doType==1 || doType==3?'16':'15'}}" class="text-center v-middle">
+                <div class="m-b-xl m-t-md">
+                    <img src="{{_url('/img/default/without_data.png')}}">
+                    <span class="fc-dark-blue dp-block">没有相关数据</span>
+                </div>
+            </td>
+        </tr>
+        {{/if}}
+    </tbody>
+</table>
+

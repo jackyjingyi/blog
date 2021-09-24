@@ -1,0 +1,69 @@
+<form class="form-horizontal p-m m-b-lg overflow-y-auto m-dialog-resize">
+    {{each detailList as d i}}
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <h4 class="title-line">
+                {{title}}明细(<span data-action="itemIndex">{{i+1}}</span>)
+            </h4>
+            <div class="form-group">
+                <label class="col-24-xs-3 text-right">{{title}}金额：</label>
+                <div class="col-24-xs-21">
+                    {{_expNumberFilter(d.expAmount)}} 元
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-24-xs-3 text-right">{{title}}类型：</label>
+                <div class="col-24-xs-21">
+                    {{d.expName}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-24-xs-3 text-right">用途说明：</label>
+                <div class="col-24-xs-21">
+                    {{d.expUse}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-24-xs-3 text-right">关联项目：</label>
+                <div class="col-24-xs-21">
+                    {{d.projectName}}
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">报销金额：</label>
+        <div class="col-24-xs-21">
+            <i class="fa fa-jpy"></i> <span id="expAmount">{{_expNumberFilter(mainAmount.reimburseAmount)}}</span>元
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">退还金额：</label>
+        <div class="col-24-xs-21">
+            <i class="fa fa-jpy"></i> <span id="returnAmount">{{_expNumberFilter(mainAmount.returnAmount)}}</span>元
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">核销金额：</label>
+        <div class="col-24-xs-21">
+            <i class="fa fa-jpy"></i> <span id="verificationAmount">{{_expNumberFilter(mainAmount.verificationAmount)}}</span>元
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">附件：</label>
+        <div class="col-24-xs-21">
+            {{if attachList!=null && attachList.length>0}}
+                {{each attachList as a i}}
+                     <span class="label m-r-xs" style="background: #ecf0f1;padding: 5px 10px;">
+                         <a href="javascript:void(0)" data-action="preview" data-file-ext="{{a.fileExtName}}" data-net-file-id="{{a.id}}"  data-src="{{a.fileFullPath}}" data-name="{{a.fileName}}">
+                            {{a.fileName}}
+                         </a>
+                     </span>
+                {{/each}}
+            {{/if}}
+        </div>
+    </div>
+
+</form>
+

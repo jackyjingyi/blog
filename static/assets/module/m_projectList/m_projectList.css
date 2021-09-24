@@ -1,0 +1,28 @@
+.m_projectList .project-list table thead th{
+    white-space:nowrap;
+    position: relative;
+    min-width: 100px;
+}
+
+.m_projectList .project-list table tr td{
+    padding:8px;
+    white-space:nowrap;
+}
+.m_projectList .set-gray,
+.m_projectList .set-gray span,
+.m_projectList .set-gray a{
+    color: #ccc;
+}
+
+.m_projectList .section-row,
+.m-projectList-index .notice-row{
+    border-bottom: solid 1px #ddd;
+    padding: 15px;
+}
+.m_projectList .section-row:last-child,
+.m-projectList-index .notice-row:last-child{
+    border-bottom: none;
+}
+.m_projectList .section-row.active{
+    background: #6ebbbd;
+}

@@ -11,9 +11,11 @@
         pointer-events: none;
     }
 </style>
+
 {% block content %}
 
     {% if user.is_authenticated and user.profile.is_publisher %}
+        <link href="{% static 'blog/css/blog-loader.css' %}" rel="stylesheet">
         <div class="row" id="subHeader">
             <div class="col-4 pt-1"></div>
             <div class="col-4 text-center"><h2 class="text-center" type="hidden/inherit">文件上传</h2></div>
@@ -29,7 +31,7 @@
         </div>
 
         <div class="row mb-5" id="afterSuccess" type="hidden">
-            <h2 class="text-md-center">成功!</h2>
+            <h2 class="text-md-center" id="uploadInfo"></h2>
             <hr>
             <div class="row mb-5">
                 <div class="col-md-6 mb-5 text-center">
@@ -114,10 +116,20 @@
     {% else %}
         暂无发布权限
     {% endif %}
-
+    <div class="loader" style="height: auto">
+        <div class="loaderInfo text-light text-center"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
     <script>
         $(document).ready()
         {
+            var loader = $('.loader')
+            loader.hide();
+            $('#secondaryMenu').append(
+                "<li class='fa fa-angle-right active fw-bold'>" + "上传文章" + "</li>"
+            )
             $('#afterSuccess').children().hide()
             var options = $('#lv1_category option:selected');
             var lv1_cat_value = options.val();
@@ -204,6 +216,7 @@
                 fd.append('is_submit', false)
                 var btn = $('#directSubmit')[0]
                 var btn1 = $('#saveAsDraft')[0]
+                let loaderInfoText = "存为草稿中，请等待文件上传……"
                 $.ajax({
                     url: '/add_post/',
                     data: fd,
@@ -220,18 +233,23 @@
                             btn1.classList.add('disabled');
                             btn1.setAttribute('b4', $(this).textContent);
                             btn1.textContent = '正在提交';
+                            $(".loaderInfo")[0].textContent = loaderInfoText;
+                            loader.show();
                         }
                     },
                     success: function (data) {
                         // 保存 跳转 工作空间
-                        $('.form-group').hide()
-                        $('#subHeader').children().hide()
-                        $('#afterSuccess').children().show();
-                        btn.textContent = btn.getAttribute('b4')
-                        btn.removeAttribute('b4')
-                        btn1.textContent = btn.getAttribute('b4')
-                        btn1.removeAttribute('b4')
-
+                        setTimeout(function () {
+                            loader.hide();
+                            $('.form-group').hide()
+                            $('#subHeader').children().hide()
+                            $("#uploadInfo")[0].textContent = "已存为草稿"
+                            $('#afterSuccess').children().show();
+                            btn.textContent = btn.getAttribute('b4')
+                            btn.removeAttribute('b4')
+                            btn1.textContent = btn.getAttribute('b4')
+                            btn1.removeAttribute('b4')
+                        }, 3000)
                     },
                     error: function (error_data) {
                         console.log(error_data.responseText)
@@ -278,6 +296,7 @@
                 fd.append('is_submit', true)
                 var btn = $('#directSubmit')[0]
                 var btn1 = $('#saveAsDraft')[0]
+                let loaderInfoText = "提交审批中，请等待文件上传……"
                 $.ajax({
                     url: '/add_post/',
                     data: fd,
@@ -294,16 +313,23 @@
                             btn1.classList.add('disabled');
                             btn1.setAttribute('b4', $(this).textContent);
                             btn1.textContent = '正在提交';
+                            $(".loaderInfo")[0].textContent = loaderInfoText;
+                            loader.show();
                         }
                     },
                     success: function (data) {
-                        $('.form-group').hide()
-                        $('#subHeader').children().hide()
-                        $('#afterSuccess').children().show();
-                        btn.textContent = btn.getAttribute('b4')
-                        btn.removeAttribute('b4')
-                        btn1.textContent = btn.getAttribute('b4')
-                        btn1.removeAttribute('b4')
+                        setTimeout(function () {
+                            loader.hide();
+                            $('.form-group').hide()
+                            $('#subHeader').children().hide()
+                            $("#uploadInfo")[0].textContent = "已提交审批"
+                            $('#afterSuccess').children().show();
+                            btn.textContent = btn.getAttribute('b4')
+                            btn.removeAttribute('b4')
+                            btn1.textContent = btn.getAttribute('b4')
+                            btn1.removeAttribute('b4')
+                        }, 3000)
+
                     },
                     error: function (error_data) {
                         console.log(error_data.responseText)

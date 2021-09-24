@@ -1,0 +1,21 @@
+{{each dataList as p}}
+<div class="vertical-timeline-block" data-id="{{p.id}}"  data-action="fileAction" data-src="{{p.fileFullPath}}">
+    <div class="vertical-timeline-icon navy-bg">
+        <i class="fa fa-comments"></i>
+    </div>
+    <div class="vertical-timeline-content">
+        <h4 data-value="{{p.content}}">
+            {{p.content}}
+            <a href="javascript:void(0);" class="pull-right roleControl"  roleCode="10000611" flag="2" data-action="editDynamicsNotice" data-id="{{p.id}}" title="编辑动态" style="display: none;">
+                <i class="fa fa-pencil"></i>
+            </a>
+            <a href="javascript:void(0);" class="pull-right m-r-xs roleControl" roleCode="10000611" flag="2"  data-action="delDynamicsNotice" data-id="{{p.id}}" title="删除动态" style="display: none;">
+                <i class="fa fa-times"></i>
+            </a>
+        </h4>
+        <div class="row">
+            <div class="col-sm-12"><span class="fc-dark-gray">{{_momentFormat(p.createDate,'YYYY/MM/DD')}}</span></div>
+        </div>
+    </div>
+</div>
+{{/each}}

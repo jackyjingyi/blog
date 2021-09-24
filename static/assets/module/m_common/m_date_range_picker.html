@@ -1,0 +1,32 @@
+<style>
+    .quickDatePicker{
+        height: 241px;
+        border: solid 1px #ccc;
+    }
+    .quickDatePicker iframe{ height: 225px;box-shadow: none !important;}
+</style>
+<div class="m-date-range-picker">
+    <div class="row">
+        <div class="col-sm-6">
+            <span class="dp-inline-block p-xxs f-s-xs">开始时间</span>
+        </div>
+        <div class="col-sm-6 p-l-none">
+            <span class="dp-inline-block p-xxs f-s-xs">截止时间</span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 p-r-none">
+            <div id='quickDatePicker1' class="quickDatePicker"></div>
+        </div>
+        <div class="col-sm-6 p-l-none">
+            <div id='quickDatePicker2' class="quickDatePicker"></div>
+        </div>
+    </div>
+    <div class="row m-t-xs">
+        <div class="col-sm-12 text-right p-r-md">
+            <button class="btn btn-default btn-sm" data-action="cancel">取消</button>
+            <button class="btn btn-primary btn-sm" data-action="ok">确定</button>
+        </div>
+    </div>
+</div>
+

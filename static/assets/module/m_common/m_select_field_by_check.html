@@ -1,0 +1,39 @@
+<div class="m-select-field-by-check m" data-type="{{type}}">
+    <div class="row no-margin dp-box m-b-sm">
+        <div class="col-md-6 no-padding">
+            <div class="">选择项</div>
+        </div>
+        <div class="col-space"></div>
+        <div class="col-md-6 no-padding">
+            <div class="">已选择项</div>
+        </div>
+    </div>
+    <div class="row no-margin dp-box field-content">
+        <div class="col-md-6 border border-darker-grey">
+            <div class="m-b-sm m-t-sm">
+                <label class="i-checks i-checks-label fw-normal">
+                    <input name="allItemCK" type="checkbox" value="0"/>
+                    <span class="i-checks-span">全选</span>
+                </label>
+            </div>
+            <div class="row">
+                {{each dataList as p}}
+                <div class="col-md-4 p-r-none">
+                    <label class="i-checks i-checks-label fw-normal">
+                        <input name="itemCk" type="checkbox"  value="{{p.fieldName}}" data-id="{{p.id}}" data-relation-id="{{p.relationId}}"/>
+                        <span class="i-checks-span text-ellipsis" data-toggle="tooltip" data-container="body" data-original-title="{{p.fieldName}}">
+                            {{p.fieldName }}
+                        </span>
+                    </label>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+        <div class="col-space"></div>
+        <div class="col-md-6 border border-darker-grey">
+            <div class="row list-group no-margin p-t-sm" id="selectItemBox">
+
+            </div>
+        </div>
+    </div>
+</div>

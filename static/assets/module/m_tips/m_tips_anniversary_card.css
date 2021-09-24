@@ -1,0 +1,14 @@
+.m-tips-anniversary-card{
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: url(../img/common/year_card.png) no-repeat;
+    overflow: hidden;
+}
+.m-tips-anniversary-card .text-v1{
+    color: #efc07d;
+}
+.m-tips-anniversary-card .text-shadow {
+    color: #efc07d;
+    text-shadow: -1px -1px white, 1px 1px grey, 2px 2px #7a7a7a, 3px 3px #757575, 3px 3px #707070, 3px 3px #6b6b6b, 4px 4px #666666, 4px 4px #616161, 5px 5px #5c5c5c, 5px 5px #575757, 6px 6px #525252, 6px 6px #4d4d4d, 7px 7px 15px rgba(0, 0, 0, 0.4), 7px 7px 5px rgba(0, 0, 0, 0.4);
+}

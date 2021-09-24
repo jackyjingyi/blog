@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html class="ie8"> <![endif]-->
+<!--[if IE 9]> <html class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en"> <!--<![endif]-->
+<head>
+    <title>华侨城创新研究院</title>
+    <template src="lib_header.html" lib_header></template>
+    <link rel="stylesheet" href="@rootPath@/lib/icheck-1.x/skins/square/blue.min.css">
+    <link rel="stylesheet" href="@rootPath@/lib/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.min.css">
+    <style type="text/css">
+        .ui-popup.ui-popup-modal{z-index: 9999999!important;}
+        .createOrgOBox #createOrgBox{
+            width: 620px;
+            margin:0 auto;
+        }
+    </style>
+</head>
+<body class="top-navigation">
+<div id="wrapper">
+    <div id="page-wrapper" class="bg-v1">
+
+        <!--头部信息-->
+        <div id="m_top" class="row white-bg"></div>
+
+        <div class="wrapper wrapper-content createOrgOBox" style="padding: 30px 0 20px 0;z-index:999;position: relative;">
+            <div class="container-fluid">
+                <div class="row  margin-top-30 animated fadeInRight ">
+                      <div id="createOrgBox">
+
+                      </div>
+                </div>
+            </div>
+        </div>
+        <div style="clear: both;"></div>
+
+        <!--底部信息-->
+        <div id="m_bottom" class="footer fixed"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var currentNav = '';
+</script>
+<template src="lib_footer.html" lib_footer></template>
+<script type="text/javascript" src="@rootPath@/lib/citys/jquery.cityselect.min.js"></script>
+<script type="text/javascript" src="@rootPath@/lib/icheck-1.x/icheck.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        _.mixin(s.exports());
+        home_createOrg.init();
+    });
+</script>
+</body>
+</html>

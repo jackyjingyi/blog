@@ -1,0 +1,14 @@
+<div class="input-group">
+    <input type="text" class="form-control" name="{{key}}" value="{{value}}">
+    <span class="m-editable-clear" style="right: 40px;"><i class="fa fa-times-circle"></i></span>
+    <div class="input-group-btn">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right" style="right: 0;left: inherit;">
+            {{each dataInfo as p }}
+            <li><a href="javascript:void(0);" data-id="{{p.id}}" data-name="{{p.name}}">{{p.name}}</a></li>
+            {{/each}}
+        </ul>
+    </div>
+</div>

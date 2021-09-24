@@ -1,0 +1,136 @@
+<form class="form-horizontal m">
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">发起人：</label>
+        <div class="col-24-xs-21">
+            {{initiator}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">发起时间：</label>
+        <div class="col-24-xs-21">
+            {{_momentFormat(initiationDate,'YYYY/MM/DD')}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">任务路径：</label>
+        <div class="col-24-xs-21">
+            {{taskInfo.taskFullName}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">关联任务：</label>
+        <div class="col-24-xs-21">
+            {{taskInfo.taskName}}
+        </div>
+    </div>
+    <h4 class="title-line fc-dark-grey">设计文件</h4>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>设计文件</th>
+                    <th class="text-right"><button class="btn btn-primary btn-xs">下载全部</button></th>
+                </tr>
+                </thead>
+                <tbody>
+                {{each attachList as p i}}
+                <tr>
+                    <td>{{p.fileName}}</td>
+                    <td>12K</td>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-12 m-b-sm">
+            <span id="showFileLoading"></span>
+        </div>
+        <div class="col-md-12 m-b-sm">
+            <span class="uploadmgrContainer"></span>
+        </div>
+    </div>
+    <h4 class="title-line fc-dark-grey">流转记录</h4>
+    <div class="form-group">
+        <div class="col-sm-12">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>发起人</th>
+                    <th>发起时间</th>
+                    <th>附件</th>
+                    <th>发起事项</th>
+                    <th>处理人</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th>张三</th>
+                    <th>2019/02/12</th>
+                    <th>总体规划校对意见.xlsx</th>
+                    <th>审核</th>
+                    <th>2019/02/12</th>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <h4 class="title-line fc-dark-grey">任务流转</h4>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">任务流转：</label>
+        <div class="col-24-xs-21">
+            <div class="pull-left m-r-xs">
+                <label class="i-checks i-checks-label fw-normal">
+                    {{if fileStatus==1}}
+                    <input type="radio" name="fileStatus" value="1" checked/>
+                    {{else}}
+                    <input type="radio" name="fileStatus" value="1"/>
+                    {{/if}}
+                    <span class="i-checks-span">设计中</span>
+                </label>
+            </div>
+            <div class="pull-left m-r-xs">
+                <label class="i-checks i-checks-label fw-normal">
+                    {{if fileStatus==2}}
+                    <input type="radio" name="fileStatus" value="2" checked/>
+                    {{else}}
+                    <input type="radio" name="fileStatus" value="2"/>
+                    {{/if}}
+                    <span class="i-checks-span">校对中</span>
+                </label>
+            </div>
+            <div class="pull-left m-r-xs">
+                <label class="i-checks i-checks-label fw-normal">
+                    {{if fileStatus==3}}
+                    <input type="radio" name="fileStatus" value="3" checked/>
+                    {{else}}
+                    <input type="radio" name="fileStatus" value="3"/>
+                    {{/if}}
+                    <span class="i-checks-span">审核中</span>
+                </label>
+            </div>
+            <div class="pull-left m-r-xs">
+                <label class="i-checks i-checks-label fw-normal">
+                    {{if fileStatus==4}}
+                    <input type="radio" name="fileStatus" value="4" checked/>
+                    {{else}}
+                    <input type="radio" name="fileStatus" value="4"/>
+                    {{/if}}
+                    <span class="i-checks-span">验收中</span>
+                </label>
+            </div>
+            <div class="row"><div class="col-24-xs-21"></div></div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">处理人：</label>
+        <div class="col-24-xs-21">
+            <select class="form-control" name="designUserList" >
+
+            </select>
+        </div>
+    </div>
+
+</form>

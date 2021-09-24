@@ -1,0 +1,101 @@
+<table class="table table-bordered table-responsive">
+    <thead>
+    <tr>
+        <th colspan="21" class="text-center">
+            <input type="text" class="form-control time-span" id="d12" readonly>
+            <span class="time-span curp" data-action="timeSelect">{{month}}</span>
+            <span class="caret curp" data-action="timeSelect"></span>
+            <span>工资表</span>
+        </th>
+    </tr>
+    <tr>
+        <th rowspan="2">序号</th>
+        <th rowspan="2">姓名<a class="icon-filter pull-right" id="filter_userName"><i class="icon iconfont icon-shaixuan"></i></a></th>
+        <th rowspan="2">本月收入</th>
+        <th rowspan="2">考勤</th>
+        <th rowspan="2">应发金额</th>
+        <th rowspan="2">养老险</th>
+        <th rowspan="2">医疗险</th>
+        <th rowspan="2">失业险</th>
+        <th rowspan="2">住房公积金</th>
+        <th colspan="6">累计专项附加扣除</th>
+        <th colspan="4">依法准予扣除项目</th>
+        <th rowspan="2">本月实际预扣预缴个税</th>
+        <th rowspan="2">实际发放</th>
+    </tr>
+    <tr>
+        <th>子女教育</th>
+        <th>住房贷款利息</th>
+        <th>住房租金</th>
+        <th>赡养老人</th>
+        <th>继续教育</th>
+        <th>大病医疗</th>
+        <th>企业年金</th>
+        <th>商业健康险</th>
+        <th>准予扣除的捐赠</th>
+        <th>其他</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList && dataList.length>0}}
+    {{each dataList as d i}}
+    <tr class="detailTr">
+        <td>{{i+1+pageIndex*10}}</td>
+        <td>{{d.userName}}</td>
+        <td>{{d.income}}</td>
+        <td>{{d.deductAttendance}}</td>
+        <td>{{d.totalPayAmount}}</td>
+        <td>{{d.deductEndowmentInsurance}}</td>
+        <td>{{d.deductMedicalInsurance}}</td>
+        <td>{{d.deductUnemploymentInsurance}}</td>
+        <td>{{d.deductWorkingInjuryInsurance}}</td>
+        <td>{{d.sumSpecialDeductChildrenEducation}}</td>
+        <td>{{d.sumSpecialDeductHomeLoanTax}}</td>
+        <td>{{d.sumSpecialDeductHouseRent}}</td>
+        <td>{{d.sumSpecialDeductSupportOld}}</td>
+        <td>{{d.sumSpecialDeductContinueEducation}}</td>
+        <td>{{d.sumSpecialDeductSeriousDisease}}</td>
+        <td>{{d.enterpriseInRisk}}</td>
+        <td>{{d.commercialHealthInsurance}}</td>
+        <td>{{d.allowDeductDonate}}</td>
+        <td>{{d.other}}</td>
+        <td>{{d.actualPayTax}}</td>
+        <td>{{d.actualIncome}}</td>
+    </tr>
+    {{/each}}
+    <tr class="sumTr">
+        <td></td>
+        <td>合计</td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+
+    </tr>
+    {{else}}
+    <tr class="no-data">
+        <td colspan="21" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

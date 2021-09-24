@@ -1,0 +1,70 @@
+<div class="ibox">
+    <div class="ibox-title secondary-menu-outbox">
+        <div class="row">
+            <div class="col-md-6">
+                <!--面包屑-->
+                <div class="no-margin p-h-sm breadcrumb-box" >
+                    <ol class="breadcrumb">
+                        <li>
+                            费用管理
+                        </li>
+                        <li class="active fa fa-angle-right">
+                            <strong>分类统计</strong>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <div class="col-md-6 text-right p-w-sm">
+
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="ibox-content" >
+        <form role="form" class="form-inline m-b-sm">
+            <div class="form-group z-index-1">
+                <label  class="">当前组织：</label>
+                <div class="btn-group" id="selectOrg">
+
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="m-t-xs">时间单位：</label>
+                <div class="btn-group pull-right">
+                    <a class="btn btn-primary btn-sm m-r-none " href="javascript:void(0)" data-action="setTime"  data-type="month">月</a>
+                    <a class="btn btn-default btn-sm m-r-none" href="javascript:void(0)" data-action="setTime"  data-type="year">年</a>
+                </div>
+            </div>
+            <div class="form-group time-box">
+                <div class="input-group dp-inline-block">
+                    <input type="text" class="form-control input-sm " id="timeStart" name="timeStart" placeholder="开始月份" readonly style="width: 110px;" >
+                    <span class="input-group-addon no-padding" onclick="javascript:$(this).prev().click();"> <i class="icon-sm icon-append fa fa-calendar"></i> </span>
+                </div>
+                <div class="input-group dp-inline-block">
+                    <input type="text" class="form-control input-sm " id="timeEnd" name="timeEnd" placeholder="结束月份" readonly style="width: 110px;" >
+                    <span class="input-group-addon no-padding" onclick="javascript:$(this).prev().click();"> <i class="icon-sm icon-append fa fa-calendar"></i> </span>
+                </div>
+            </div>
+            <button class="btn btn-white btn-sm" data-action="refreshBtn">刷新数据</button>
+        </form>
+        <div class="m-b-sm">
+            <div><h4>分类统计范围：</h4></div>
+            <div id="categoryTypeBox">
+
+            </div>
+        </div>
+        <div>
+            <div>
+                单位：
+                <a class="btn btn-link text-info p-w-xxs" data-action="amountUnit" data-action-type="1">元</a>/
+                <a class="btn btn-link p-w-xxs" data-action="amountUnit" data-action-type="2">万元</a>
+            </div>
+            <div class="" id="barChartBox">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+</script>

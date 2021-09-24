@@ -1,0 +1,41 @@
+<form class="form-horizontal p-sm overflow-y-auto m-dialog-resize">
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">申请金额：</label>
+        <div class="col-24-xs-21">
+            {{_expNumberFilter(sumExpAmount)}} 元
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 control-label">核销金额：</label>
+        <div class="col-24-xs-21">
+            <input placeholder="请输入核销金额" class="form-control" type="text" name="returnAmount" value="{{_mathSubtract(sumExpAmount,applyAmount)}}">
+        </div>
+    </div>
+    <!--<div class="form-group">
+        <label class="col-24-xs-3 text-right">核销金额：</label>
+        <div class="col-24-xs-21">
+            <span id="verificationAmount">0</span> 元
+        </div>
+    </div>-->
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right p-t-7">附件：</label>
+        <div class="col-24-xs-21">
+            <div class="row">
+                <div class="col-md-12 m-b-xs">
+                    <span id="showFileLoading"> </span>
+                </div>
+                <div class="col-md-12">
+                    <span class="uploadmgrContainer"> </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hr-line-dashed m-t-none m-b-sm m-l m-r"></div>
+    <div id="approverOutBox">
+
+    </div>
+</form>
+<div class="footer border-b-radius text-right">
+    <button class="btn btn-default" data-action="cancel">取消</button>
+    <button class="btn btn-primary" data-action="save">确认核销</button>
+</div>

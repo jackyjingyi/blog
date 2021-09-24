@@ -1,0 +1,87 @@
+<table class="table table-bordered ">
+    <thead>
+    <tr>
+        <th>流程分类</th>
+        <th>名称</th>
+        <th>编号</th>
+        <th>图标</th>
+        <!--<th>应用范围</th>-->
+        <th>说明</th>
+        {{if editForm=='1'}}
+        <th>操作</th>
+        {{/if}}
+    </tr>
+    </thead>
+    <tbody>
+    {{each approvalList as p i}}
+        {{if p.formList!=null && p.formList.length>0}}
+            {{each p.formList as c ci}}
+                <tr data-id="{{c.id}}" data-pid="{{p.id}}" data-seq="{{c.seq}}" data-form-id="{{c.formId}}" class="{{c.status==0?'fc-v1-grey':''}}">
+                    {{if ci==0}}
+                    <td class="vertical-middle" rowspan="{{p.formList.length}}">
+                        <span class="text-bold">{{p.name}}</span>
+                        {{if editForm=='1' && p.isEdit == 1}}
+                        <button  class="btn btn-link btn-xs no-padding fc-dark-blue" data-action="editGroup" title="编辑分类">
+                            <i class="icon iconfont icon-bianji"></i>
+                        </button>
+                        <button  class="btn btn-link btn-xs no-padding fc-red" data-action="delGroup" title="删除分类">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </button>
+                        {{/if}}
+                    </td>
+                    {{/if}}
+                    <td class="vertical-middle">{{c.name}}</td>
+                    <td class="vertical-middle">{{c.rulePrefixKey}}</td>
+                    <td class="vertical-middle">
+                        <span class="icon-circle vertical-middle {{_getIconColor(c.iconKey?c.iconKey:'icon-zidingyibankuai')}}">
+                            <i class="icon iconfont {{c.iconKey?c.iconKey:'icon-zidingyibankuai'}}" ></i>
+                        </span>
+                    </td>
+                    <!--<td class="vertical-middle"></td>-->
+                    <td class="vertical-middle">{{c.documentation}}</td>
+                    {{if editForm=='1'}}
+                    <td class="vertical-middle">
+                        <button  class="btn btn-link btn-xs fc-dark-blue" data-action="editForm" title="编辑表单属性"><i class="icon iconfont icon-bianji"></i></button>
+                        <button class="btn btn-link btn-xs fc-dark-blue" data-action="preview" title="表单模板预览"><i class="icon iconfont icon-yulan"></i></button>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-link btn-xs fc-dark-blue dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true"><i class="icon iconfont icon-gengduo"></i></button>
+                            <ul class="dropdown-menu">
+                                <li><a class="fc-dark-grey" href="javascript:void(0);" data-action="moveToGroup">移动到其他分类</a></li>
+                                {{if c.isFixForm != 1}}
+                                <li><a class="fc-dark-grey" href="javascript:void(0);" data-action="delApproval">删除</a></li>
+                                {{/if}}
+                            </ul>
+                        </div>
+                        {{if c.isFixForm != 1}}
+                        <i class="icon-separation-line"></i>
+                        <button class="btn btn-link text-navy no-padding " data-action="editApproval" data-type="{{c.type}}">表单设置</button>
+                        {{/if}}
+                        <i class="icon-separation-line"></i>
+                        {{if c.status==1}}
+                        <a class="btn btn-link p-l-xs p-r-none fc-dark-blue" data-action="whetherEnable" data-status="0" title="是否启用"><i class="icon iconfont icon-kaiguanguan f-s-xs"></i></a>
+                        {{else}}
+                        <a class="btn btn-link p-l-xs p-r-none fc-v1-grey" data-action="whetherEnable" data-status="1" title="是否启用"><i class="icon iconfont icon-kaiguanguan1 f-s-xs"></i></a>
+                        {{/if}}
+                    </td>
+                    {{/if}}
+                </tr>
+            {{/each}}
+        {{else}}
+            <tr data-pid="{{p.id}}">
+                <td>
+                    <span class="text-bold">{{p.name}}</span>
+                    {{if editForm=='1' && p.isEdit == 1}}
+                    <button  class="btn btn-link btn-xs no-padding fc-dark-blue" data-action="editGroup" title="编辑分类">
+                        <i class="icon iconfont icon-bianji"></i>
+                    </button>
+                    <button  class="btn btn-link btn-xs no-padding fc-red" data-action="delGroup" title="删除分类">
+                        <i class="glyphicon glyphicon-remove"></i>
+                    </button>
+                    {{/if}}
+                </td>
+                <td colspan="{{editForm=='1'?5:4}}" class="text-center fc-v1-grey">暂无审批流程数据</td>
+            </tr>
+        {{/if}}
+    {{/each}}
+    </tbody>
+</table>

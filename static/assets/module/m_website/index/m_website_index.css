@@ -1,0 +1,256 @@
+.m-website-index .index-banner .banner-img{
+    width: 100%;
+    position: relative;
+    max-height: 870px;
+    /*max-width: 1920px;*/
+    margin: 0 auto;
+}
+.m-website-index .index-banner .banner-content{
+    width: 80%;
+    padding-bottom: 0px;
+    position: absolute;
+    left: 10%;
+    z-index: 2;
+    bottom: 92px;
+}
+.m-website-index p{
+    font-size: 14px;
+    letter-spacing: 0.8px;
+}
+.m-website-index .title-1,
+.m-website-index .title-2{
+    -webkit-animation:dragTop .7s ease-in-out both;
+    -moz-animation:dragTop .7s ease-in-out both;
+    -ms-animation:dragTop .7s ease-in-out both;
+    animation:dragTop .7s ease-in-out both;
+    -webkit-animation-delay: .8s;
+    -moz-animation-delay:.8s;
+    -ms-animation-delay:.8s;
+    animation-delay:.8s;
+}
+.m-website-index .carousel-control{
+    width: 50px;
+}
+.m-website-index .carousel-inner .item img{
+    width: 100%;
+}
+.m-website-index #oneSpindleContentMenu{
+    display: none;
+}
+@keyframes dragTop {
+    0% {
+        opacity:0;
+        transform:translateY(-70px)
+    }
+    60% {
+        opacity:1;
+        transform:translateY(20px)
+    }
+    90% {
+        transform:translateY(-5px)
+    }
+    97% {
+        transform:translateY(-1px)
+    }
+    100% {
+        transform:translateY(0px)
+    }
+}
+@-webkit-keyframes dragTop {
+    0% {
+        opacity:0;
+        -webkit-transform:translateY(-70px)
+    }
+    60% {
+        opacity:1;
+        -webkit-transform:translateY(20px)
+    }
+    90% {
+        -webkit-transform:translateY(-5px)
+    }
+    97% {
+        -webkit-transform:translateY(-1px)
+    }
+    100% {
+        -webkit-transform:translateY(0px)
+    }
+}
+@-moz-keyframes dragTop {
+    0% {
+        opacity:0;
+        -moz-transform:translateY(-70px)
+    }
+    60% {
+        opacity:1;
+        -moz-transform:translateY(20px)
+    }
+    90% {
+        -moz-transform:translateY(-5px)
+    }
+    97% {
+        -moz-transform:translateY(-1px)
+    }
+    100% {
+        -moz-transform:translateY(0px)
+    }
+}
+@-ms-keyframes dragTop {
+    0% {
+        opacity:0;
+        -ms-transform:translateY(-70px)
+    }
+    60% {
+        opacity:1;
+        -ms-transform:translateY(20px)
+    }
+    90% {
+        -ms-transform:translateY(-5px)
+    }
+    97% {
+        -ms-transform:translateY(-1px)
+    }
+    100% {
+        -ms-transform:translateY(0px)
+    }
+}
+@media (max-width: 1366px){
+    .m-website-index .index-banner .banner-content{
+        width: 80%;
+    }
+    .m-website-index .index-banner .banner-img{
+        max-height: 670px;
+    }
+}
+@media (max-width: 768px){
+
+    .m-website-index #mainIdea .content-title{
+        margin-bottom: 25px;
+    }
+    .m-website-index .index-banner .banner-content{
+        width: 100%;
+        padding-bottom: 0px;
+        left: 0;
+        bottom: 90px;
+        text-align: left;
+        padding-left: 8%;
+    }
+    .m-website-index .banner-content h2.title-2{
+        font-size: 2rem;
+    }
+    .m-website-index .banner-content .title-1{
+        font-size: 1.4rem;
+    }
+    .m-website-index .content-title{
+        line-height: 28px;
+        font-size: 20px;
+    }
+    .m-website-index #advantage{
+        background-color: #fff;
+    }
+    .m-website-index #advantage .advantage-content{
+        margin-top: 30px;
+    }
+    .m-website-index #advantage .p-lg{
+        padding: 0px;
+    }
+    .m-website-index #advantage h2.m-b-md{
+        margin-bottom: 10px;
+    }
+    .m-website-index #advantage img.img-fluid{
+       margin-top: 10px;
+    }
+    .m-website-index #advantage p.l-h-25{
+        letter-spacing: 0;
+        line-height: 18px;
+        margin-bottom: 40px;
+    }
+    .m-website-index section.p-h-100{
+        padding: 10px 0;
+    }
+    .m-website-index section#mainIdea{
+        padding: 10px 15px;
+    }
+    .phone-multi-line span{
+        display: block;
+    }
+
+    .m-website-index #oneSpindle .col-sm-6,
+    .m-website-index #oneSpindle .col-sm-4{
+        position: unset;
+        padding: 0;
+    }
+    .m-website-index #oneSpindle .m-b-xl{
+        margin-bottom: 0;
+    }
+    .m-website-index #oneSpindle h2{
+        margin-top: 0;
+    }
+    .m-website-index #oneSpindle .img-box{
+        margin-bottom: 40px;
+    }
+    .m-website-index .one-spindle-content{
+        position: absolute;
+        top: 0;
+        background-color:#000000;/* IE6和部分IE7内核的浏览器(如QQ浏览器)下颜色被覆盖 */
+        background-color:rgba(0,0,0,0.5); /* IE6和部分IE7内核的浏览器(如QQ浏览器)会读懂，但解析为透明 */
+        color: #fff;
+        width: 100%;
+        height: 100%;
+        padding: 35px 10%;
+    }
+    .m-website-index .one-spindle-content .fc-dark-grey,
+    .m-website-index .one-spindle-content .fc-v3-grey,
+    .m-website-index .one-spindle-content .fc-v2-grey,
+    .m-website-index .one-spindle-content .fc-black{
+        color: #fff;
+    }
+    .m-website-index .one-spindle-content[data-type="2"],
+    .m-website-index .one-spindle-content[data-type="3"],
+    .m-website-index .one-spindle-content[data-type="4"],
+    .m-website-index .one-spindle-content[data-type="5"]{
+        display: none;
+    }
+    .m-website-index #oneSpindleContentMenu{
+        display: block;
+        position: absolute;
+        bottom: 20px;
+        text-align: center;
+        width: 100%;
+    }
+    .m-website-index .m-b-xl{
+        margin-bottom: 0px;
+    }
+    .m-website-index #features .col-lg-6 .u-shadow-v1{
+        padding: 20px 20px 5px;
+    }
+    .m-website-index #features .col-lg-6.m-b-lg{
+        margin-bottom: 15px;
+    }
+    .m-website-index #worth .worth-content{
+        margin-top: 0px;
+        padding: 0 9%;
+    }
+    .m-website-index #worth .worth-content p{
+        letter-spacing: 0;
+    }
+    .m-website-index #worth .worth-content .m-t-xl{
+        margin-top: 0;
+    }
+    .m-website-index #app.p-h-100{
+        padding: 50px 0;
+    }
+    .m-website-index  .icon-triangle{
+        width: 0;
+        height: 0;
+        border-left: 30px solid transparent;
+        border-right: 30px solid transparent;
+        border-top: 30px solid #f5f5f5;
+        position: absolute;
+        left: 40%;
+        top: -1px;
+    }
+    .m-website-index .carousel-control.left,
+    .m-website-index .carousel-control.right{
+        display: none;
+    }
+}

@@ -1,0 +1,89 @@
+<div class="ibox m-projectList-index">
+    <div class="ibox-title secondary-menu-outbox">
+        <div class="row">
+            <div class="col-md-12">
+                <!-- 面包屑 -->
+                <div class="pull-left" id="breadcrumb"></div>
+                <div class="pull-right">
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="ibox-content" id="content-box">
+        <div class="row">
+            <div class="col-sm-6">
+                <h3>创新研究</h3>
+            </div>
+            <div class="col-sm-6">
+                <h3>业务项目</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6">
+                <img class="curp" src="{{_url('/img/website/index/banner1.jpg')}}" width="100%" onclick="javascript:window.location.href='#/myProjectList?businessType=2';return;"/>
+            </div>
+            <div class="col-sm-6">
+                <img class="curp" src="{{_url('/img/website/index/banner1.jpg')}}" width="100%" onclick="javascript:window.location.href='#/myProjectList?businessType=1';return;"/>
+            </div>
+        </div>
+        <div class="row m-t-sm">
+            <div class="col-sm-6">
+                <div class="panel panel-default b-r-none">
+                    <div class="panel-heading">
+                        创新研究动态
+                    </div>
+                    <div class="panel-body no-padding">
+                        {{if studyTypeList && studyTypeList.length>0}}
+                        {{each studyTypeList as p}}
+                        <div class="notice-row curp" onclick="javascript:window.location.href='#/projectDynamics';return;">
+                            <h4>{{p.noticeTitle}}</h4>
+                            <p>
+                                {{p.noticeContent}}
+                            </p>
+                            <span class="fc-dark-gray">{{_momentFormat(p.noticePublishdate,'YYYY/MM/DD')}}</span>
+                            <span class="fc-dark-gray pull-right">{{p.projectName}}</span>
+                        </div>
+                        {{/each}}
+                        {{else}}
+                        <div class="notice-row">
+                            <div class="text-center">
+                                <img src="{{_url('/img/default/without_data.png')}}">
+                                <span class="fc-dark-blue dp-block">您还没有相关数据</span>
+                            </div>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="panel panel-default b-r-none">
+                    <div class="panel-heading">
+                        业务项目动态
+                    </div>
+                    <div class="panel-body no-padding">
+                        {{if businessTypeList && businessTypeList.length>0}}
+                        {{each businessTypeList as p}}
+                        <div class="notice-row curp" onclick="javascript:window.location.href='#/projectDynamics';return;">
+                            <h4>{{p.noticeTitle}}</h4>
+                            <p>
+                                {{p.noticeContent}}
+                            </p>
+                            <span class="fc-dark-gray">{{_momentFormat(p.noticePublishdate,'YYYY/MM/DD')}}</span>
+                            <span class="fc-dark-gray pull-right">{{p.projectName}}</span>
+                        </div>
+                        {{/each}}
+                        {{else}}
+                        <div class="notice-row">
+                            <div class="text-center">
+                                <img src="{{_url('/img/default/without_data.png')}}">
+                                <span class="fc-dark-blue dp-block">您还没有相关数据</span>
+                            </div>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

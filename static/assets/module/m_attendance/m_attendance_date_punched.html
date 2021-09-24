@@ -1,0 +1,47 @@
+<form class="form-horizontal m-attendance-time-add">
+    <div class="p-m">
+        <div class="form-group">
+            <label class="col-sm-2 control-label p-l-none p-r-none">日期<span class="fc-red">*</span>：</label>
+            <div class="col-sm-6 p-r-lg">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="specialDate" onFocus="WdatePicker()" value="{{dataItem?dataItem.specialDate:''}}">
+                    <span class="input-group-addon" onclick="javascript:$(this).prev().focus();"><i class="icon-append fa fa-calendar"></i></span>
+                </div>
+            </div>
+        </div>
+        {{if dataType==1}}
+        <div class="form-group attendance-time-box">
+            <label class="col-sm-2 control-label p-l-none p-r-none">打卡时间<span class="fc-red">*</span>：</label>
+            <div class="col-sm-10">
+                <div class="row time-list-row">
+                    <div class="col-sm-7 ">
+                        <span>上班</span>
+                        <div class="border out-hh-mm">
+                            <span class="hh-mm"><select class="form-control input-sm" name="selectStaHH"></select></span>
+                            <span>:</span>
+                            <span class="hh-mm"><select class="form-control input-sm" name="selectStaMM" ></select></span>
+                        </div>
+                        <span> - 下班</span>
+                        <span class="border out-hh-mm">
+                            <span class="hh-mm"><select class="form-control input-sm" name="selectEndHH" ></select></span>
+                            <span>:</span>
+                            <span class="hh-mm"><select class="form-control input-sm" name="selectEndMM" ></select></span>
+                        </span>
+                    </div>
+                    <div class="col-sm-5 no-padding">
+                        <button class="btn btn-link hide p-l-none" data-action="delTimeField">删除</button>
+                        <button class="btn btn-link p-l-none" data-action="addTimeField">新增字段</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+        <div class="form-group " >
+            <label class="col-sm-2 control-label p-l-none p-r-none">事由<span class="fc-red">*</span>：</label>
+            <div class="col-sm-6 p-r-lg">
+                <textarea class="form-control" rows="3" name="reason">{{dataItem?dataItem.reason:''}}</textarea>
+            </div>
+        </div>
+
+    </div>
+</form>

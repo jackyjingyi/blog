@@ -1,0 +1,50 @@
+<table class="tree table table-bordered m-b-none">
+    <thead>
+    <tr>
+        <th>院领导</th>
+        <th>{{year}}年合同总额</th>
+        <th>{{year}}年收入</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList!=null && dataList.length>0}}
+    {{each dataList as p i}}
+        <tr class="curp">
+            <td>{{p.userName}}</td>
+            <td>
+                {{if p.userName=='合计'}}
+                {{_expNumberFilter(p.targetFee+p.contractFee)}}
+                {{else}}
+                <a href="javascript:void(0);" class="editable-click roleControl" roleCode="40000105" flag="5"  data-action="editFee"
+                   data-type="1"  data-id="{{p.id}}" data-user-id="{{p.companyUserId}}" data-year="{{p.year}}">
+                    {{_expNumberFilter(p.targetFee+p.contractFee)}}
+                </a>
+                {{/if}}
+
+            </td>
+
+            <td>
+                {{if p.userName=='合计'}}
+                {{_expNumberFilter(p.backFee+p.planReceiveFee)}}
+                {{else}}
+                <a href="javascript:void(0);" class="editable-click roleControl" roleCode="40000105" flag="5"  data-action="editFee"
+                   data-type="2"  data-id="{{p.id}}" data-user-id="{{p.companyUserId}}" data-year="{{p.year}}">
+                    {{_expNumberFilter(p.backFee+p.planReceiveFee)}}
+                </a>
+                {{/if}}
+
+            </td>
+        </tr>
+    {{/each}}
+    {{else}}
+    <tr class="no-data-tr">
+        <td colspan="3" class="text-center ">
+            <div>
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

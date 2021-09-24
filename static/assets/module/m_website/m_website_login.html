@@ -1,0 +1,84 @@
+<!-- Form -->
+<div class="tabs-container tabs-container-1">
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">账号登录</a></li>
+        <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">手机登录</a></li>
+    </ul>
+    <div class="tab-content min-h-50">
+        <div id="tab-1" class="tab-pane active">
+            <div class="panel-body no-padding" data-type="accountLogin">
+                <form id="loginForm"  class="p-h-sm">
+                    <div class="m-b-md">
+                        <label class="fc-dark-grey fw-bold f-s-sm">账号:</label>
+                        <input id="account" name="account" class="form-control fc-black bg-white  brd-gray-light-v1 rounded-5" type="account" placeholder="请输入您注册使用的手机号码">
+                    </div>
+                    <div class="m-b-lg">
+                        <div class="row">
+                            <div class="col-md-6 text-left">
+                                <label class="fc-dark-grey fw-bold f-s-sm">密码:</label>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                <a tabindex="-1" class="d-inline-block f-s-xs m-b-xxs" href="#/forgetLoginPwd">忘记密码?</a>
+                            </div>
+                        </div>
+                        <input id="password" name="password" class="form-control fc-black bg-white brd-gray-light-v1 rounded-5"
+                               type="password" placeholder="请输入您的账号密码">
+                        <div class="row m-t">
+                            <div class="col-md-8 p-t-sm">
+                                <!--<label class="dp-inline-block u-check fc-dark-gray f-s-sm p-l-l m-b-none">
+                                    <input class="hide pt-absolute top-0 left-0" type="checkbox">
+                                    <div class="u-check-icon-checkbox-v1 left-0 pt-absolute">
+                                        <i class="fa" data-check-icon="&#xf00c"></i>
+                                    </div>
+                                    下次自动登录
+                                </label>-->
+                            </div>
+                            <div class="col-md-4 text-center text-right">
+                                <a href="javascript:void(0);" id="btnLogin" class="btn btn-md u-btn-primary rounded-5" style="padding: 13px 25px;">登录</a>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div id="tab-2" class="tab-pane">
+            <div class="panel-body no-padding" data-type="mobileLogin">
+                <form id="mobileLoginForm"  class="p-h-sm">
+                    <div class="row m-b-md">
+                        <div class="col-sm-12">
+                            <label class="fc-dark-grey fw-bold f-s-sm">手机号码:</label>
+                            <input id="cellphone" name="cellphone" class="form-control fc-black bg-white brd-gray-light-v1 rounded-5" type="account" placeholder="请输入您注册使用的手机号码">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 text-left">
+                            <label class="fc-dark-grey fw-bold f-s-sm">验证码:</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="input-group">
+                                <input class="form-control fc-black bg-white brd-gray-light-v1 rounded-5" type="text" id="receiveCode" autocomplete="off" name="code" maxlength="11" placeholder="请输入手机验证码">
+                                <span class="input-group-btn">
+                                    <a href="javascript:;" class="btn btn-default btn-code" data-action="receiveCode">获取验证码</a>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-t">
+                        <div class="col-md-8 p-t-sm">
+
+                        </div>
+                        <div class="col-md-4 text-center text-right">
+                            <a href="javascript:void(0);" id="btnMobileLogin" class="btn btn-md u-btn-primary rounded-5" style="padding: 13px 25px;">登录</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Form -->
+<!--<footer class="text-center">
+    <p class="fc-dark-gray f-s-sm m-b-none">还没有账号? <a class="fw-bold" href="#/register">注册</a></p>
+</footer>-->

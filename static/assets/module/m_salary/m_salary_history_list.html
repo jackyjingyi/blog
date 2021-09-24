@@ -1,0 +1,35 @@
+<table class="table table-bordered table-responsive">
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>变更时间</th>
+        <th>变更人</th>
+        <th>变更字段</th>
+        <th>变更前</th>
+        <th>变更后</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList && dataList.length>0}}
+        {{each dataList as d i}}
+            <tr>
+                <th>{{i+1+pageIndex*10}}</th>
+                <th>{{_momentFormat(d.createDate,'YYYY/MM/DD')}}</th>
+                <th>{{d.userName}}</th>
+                <th>{{d.fieldNameDesc}}</th>
+                <th>{{d.oldValue}}</th>
+                <th>{{d.newValue}}</th>
+            </tr>
+        {{/each}}
+    {{else}}
+    <tr class="no-data">
+        <td colspan="6" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

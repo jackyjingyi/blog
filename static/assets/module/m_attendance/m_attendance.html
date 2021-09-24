@@ -1,0 +1,61 @@
+<style>
+    canvas{
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+    #chartjs-tooltip-barChart1,#chartjs-tooltip-barChart2 {
+        opacity: 1;
+        position: absolute;
+        background: rgba(0, 0, 0, .7);
+        color: white;
+        border-radius: 3px;
+        -webkit-transition: all .1s ease;
+        transition: all .1s ease;
+        pointer-events: none;
+        -webkit-transform: translate(-50%, 0);
+        transform: translate(-50%, 0);
+    }
+    .chartjs-tooltip-key {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        margin-right: 10px;
+    }
+    .chart-wrapper{
+        position: relative;
+
+    }
+</style>
+<div class="m">
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="title-line">打卡</h4>
+            <p>在手机上轻松打卡，并结合审批单据自动生成出勤报表。支持固定时间上下班、灵活排班、自由上下班和外出打卡。</p>
+        </div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <div>
+        <div class="col-md-3 border m-r-xs p-m fh-150">
+            <i class="icon iconfont icon-rili"></i>&nbsp;&nbsp;上下班打卡
+            <p>查看记录，设置打卡人员、时间和地点</p>
+            <p>本月异常&nbsp;<span class="text-navy" id="abnormalNum">0</span>&nbsp;人</p>
+            <a class="btn btn-link text-navy" href="#/backstageMgt/attendance/report?type=0">查看</a>
+            <a class="btn btn-link text-navy roleControl" href="#/backstageMgt/attendance/settings" roleCode="10000501" flag="2">设置</a>
+        </div>
+        <div class="col-md-3 border m-r-xs p-m fh-150">
+            <i class="fa fa-calendar"></i>&nbsp;&nbsp;外出打卡
+            <p>查看记录，设置汇总提醒时间</p>
+            <a class="btn btn-link text-navy" href="#/backstageMgt/attendance/report?type=1">查看</a>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="hr-line-dashed"></div>
+    <h4 class="title-line">异常打卡趋势</h4>
+    <form class="form-inline" id="filterTimeBox">
+
+    </form>
+    <div class="chart-wrapper">
+        <div id="chart1" class="chartjs-render-monitor" style="display: block; width: 100%; height: 350px; cursor: pointer;"></div>
+    </div>
+</div>

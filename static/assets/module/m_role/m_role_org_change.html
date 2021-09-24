@@ -1,0 +1,60 @@
+<form class="form-horizontal m-role-org-change m">
+    <div class="form-group">
+        <label class="col-sm-3 control-label">权限类型<span class="fc-red">*</span>：</label>
+        <div class="col-sm-9 p-t-7">
+            <div class="row">
+                {{if roleData.listRoleGroup && roleData.listRoleGroup.length>0}}
+                    {{each roleData.listRoleGroup as o i}}
+                        {{each o.roleList as p }}
+                        <div class="col-sm-3 p-r-none">
+                            <label class="i-checks i-checks-label fw-normal">
+                                {{if dataInfo && dataInfo.roleType==p.id}}
+                                    <input type="radio" name="roleType" value="{{p.id}}" title="{{p.description}}" checked/>
+                                {{else}}
+                                    <input type="radio" name="roleType" value="{{p.id}}" title="{{p.description}}"/>
+                                {{/if}}
+                                <span class="i-checks-span text-ellipsis">{{p.name}}</span>
+                            </label>
+                        </div>
+                        {{/each}}
+                    {{/each}}
+                {{/if}}
+            </div>
+        </div>
+    </div>
+    <div class="form-group {{dataInfo.roleType==0?'hide':''}}" data-type="orgType">
+        <label class="col-sm-3 control-label">部门分组<span class="fc-red">*</span>：</label>
+        <div class="col-sm-9 p-t-7">
+            <div class="row">
+                {{if roleData.listOrgGroup && roleData.listOrgGroup.length>0}}
+                {{each roleData.listOrgGroup as p}}
+                <div class="col-sm-3 p-r-none">
+                    <label class="i-checks i-checks-label fw-normal">
+                        {{if dataInfo && dataInfo.orgGroupId==p.id}}
+                        <input type="radio" name="orgGroupId" value="{{p.id}}" checked/>
+                        {{else}}
+                        <input type="radio" name="orgGroupId" value="{{p.id}}"/>
+                        {{/if}}
+                        <span class="i-checks-span text-ellipsis">{{p.orgName}}</span>
+                    </label>
+                </div>
+                {{/each}}
+                {{/if}}
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">负责人姓名<span class="fc-red">*</span>：</label>
+        <div class="col-sm-9">
+            <input placeholder="请输入负责人姓名" class="form-control" type="text" name="userName" value="{{dataInfo?dataInfo.systemManager:''}}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 control-label">负责人手机号<span class="fc-red">*</span>：</label>
+        <div class="col-sm-9">
+            <input placeholder="请输入负责人手机号" class="form-control" type="text" name="cellphone" maxlength="11" value="{{dataInfo?dataInfo.cellphone:''}}">
+        </div>
+    </div>
+
+
+</form>

@@ -1,0 +1,94 @@
+<div class="p-t p-l p-r m-role-manager-settings">
+    <table class="tree table table-bordered ">
+        <thead>
+        <tr>
+            <th width="30%" class="b-l-none">
+                {{dataList && dataList.length>0?dataList[0].text:'组织名称'}}
+            </th>
+            <th>部门主管</th>
+            <th>部门财务主管</th>
+            <th>部门行政主管</th>
+            <th>部门项目主管</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if dataList!=null && dataList.length>0}}
+        {{each dataList as t ti}}
+        <tr class="m-production-content-row tree-box-tr treegrid-{{t.id}} {{if t.pid!=null && t.pid!=''}} treegrid-parent-{{t.pid}} {{/if}}  "
+            data-id="{{t.id}}" data-pid="{{t.pid}}" >
+            <td class="vertical-middle">
+                <span class="dp-inline-block">{{t.text}}</span>
+            </td>
+            <td>
+                {{if t.type=='4'}}
+                --
+                {{else}}
+                <span class="show-span">
+                        {{#_include('m_role/m_role_users_display',{userList:t.departManagerList,role:1,currentCompanyUserId:currentCompanyUserId})}}
+                    </span>
+                <a href="javascript:void(0);" data-action="addUsers" data-key="departManagerList" data-role="departManager" data-title="部门主管" style="visibility: hidden;">
+                    <i class="icon iconfont icon-bianji"></i>
+                </a>
+                {{/if}}
+            </td>
+            <td>
+                {{if t.type=='4'}}
+                --
+                {{else}}
+                <span class="show-span">
+                    {{#_include('m_role/m_role_users_display',{userList:t.financeManagerList,role:1,currentCompanyUserId:currentCompanyUserId})}}
+                </span>
+                <a href="javascript:void(0);" data-action="addUsers" data-key="financeManagerList" data-role="financeManager" data-title="部门财务主管" style="visibility: hidden;">
+                    <i class="icon iconfont icon-bianji"></i>
+                </a>
+                {{/if}}
+            </td>
+            <td>
+                {{if t.type=='4'}}
+                --
+                {{else}}
+                <span class="show-span">
+                    {{#_include('m_role/m_role_users_display',{userList:t.adminManagerList,role:1,currentCompanyUserId:currentCompanyUserId})}}
+                </span>
+                <a href="javascript:void(0);" data-action="addUsers" data-key="adminManagerList" data-role="adminManager" data-title="部门行政主管" style="visibility: hidden;">
+                    <i class="icon iconfont icon-bianji"></i>
+                </a>
+                {{/if}}
+            </td>
+            <td>
+                {{if t.type=='4'}}
+                --
+                {{else}}
+                <span class="show-span">
+                    {{#_include('m_role/m_role_users_display',{userList:t.projectManagerList,role:1,currentCompanyUserId:currentCompanyUserId})}}
+                </span>
+                <a href="javascript:void(0);" data-action="addUsers" data-key="projectManagerList" data-role="projectManager" data-title="部门项目主管" style="visibility: hidden;">
+                    <i class="icon iconfont icon-bianji"></i>
+                </a>
+                {{/if}}
+            </td>
+        </tr>
+        {{/each}}
+        {{if dataList.length==1}}
+        <tr class="no-data-tr">
+            <td colspan="5" class="text-center ">
+                <div>
+                    <img src="{{_url('/img/default/without_data.png')}}">
+                    <span class="fc-dark-blue dp-block">没有相关数据</span>
+                </div>
+            </td>
+        </tr>
+        {{/if}}
+        {{else}}
+        <tr class="no-data-tr">
+            <td colspan="5" class="text-center ">
+                <div>
+                    <img src="{{_url('/img/default/without_data.png')}}">
+                    <span class="fc-dark-blue dp-block">没有相关数据</span>
+                </div>
+            </td>
+        </tr>
+        {{/if}}
+        </tbody>
+    </table>
+</div>

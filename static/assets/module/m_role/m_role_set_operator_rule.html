@@ -1,0 +1,31 @@
+<form class="form-horizontal m">
+    {{if ruleType==1}}
+        <p class="f-s-m">负责项目费用管理的商务秘书由系统指定时按以下规则处理：</p>
+    {{else}}
+        <p class="f-s-m">负责项目订单/生产管理的设计负责人由系统指定时按以下规则处理：</p>
+    {{/if}}
+    <div>
+        <label class="i-checks i-checks-label">
+            <input class="ck"  name="iCheck" type="radio" data-type="1" checked />
+            <span class="i-checks-span-default">固定人员</span>
+        </label>
+        <span class="fc-v1-grey dp-inline-block vertical-top"><!--（固定一个{{title}}负责人，当有新项目产生时，固定该人员为新项目的{{title}}负责人）--></span>
+    </div>
+    <div class="panel panel-default" data-type="1">
+        <div class="panel-body" >
+            <select class="form-control" name="companyUser1" ></select>
+        </div>
+    </div>
+    <div class="m-t-xs">
+        <label class="i-checks i-checks-label">
+            <input class="ck"  name="iCheck" type="radio" data-type="2" />
+            <span class="i-checks-span-default">轮流处理</span>
+        </label>
+        <span class="fc-v1-grey dp-inline-block vertical-top"><!--（{{title}}负责人有多个时，新项目产生时，由系统根据规则进行轮流分配处理）--></span>
+    </div>
+    <div class="panel panel-default" data-type="2" style="display: none;">
+        <div class="panel-body" >
+            <select class="form-control" name="companyUser2" multiple ></select>
+        </div>
+    </div>
+</form>

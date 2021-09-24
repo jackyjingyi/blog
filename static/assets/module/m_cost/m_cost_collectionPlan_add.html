@@ -1,0 +1,81 @@
+<form class="form-horizontal m_cost_collectionPlan_add m ">
+    <div class="form-group">
+        <label class="col-24-md-5 control-label">{{title}}类型<span class="fc-red">*</span>：</label>
+        <div class="col-24-md-19">
+            <select class="form-control" name="feeType" style="width: 100%;">
+                <!--<option value="">请选择</option>
+                {{if doType==0}}
+                <option value="1">合同回款</option>
+                {{/if}}
+                <option value="2">技术审查费</option>
+                <option value="3">合作设计费</option>
+                {{if doType==0}}
+                <option value="5">其他收入</option>
+                {{else}}
+                <option value="4">其他支出</option>
+                {{/if}}-->
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-md-5 control-label p-l-none">计划{{title}}金额<span class="fc-red">*</span>：</label>
+        <div class="col-24-md-19">
+            <div class="input-group">
+                <input class="form-control" type="text" name="fee" value="{{dataInfo?dataInfo.totalCost:''}}"> <span class="input-group-addon">元</span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+    <label class="col-24-md-5 control-label p-l-none">
+        {{if doType==1}}
+        收款方
+        {{else}}
+        付款方
+        {{/if}}
+        <span class="fc-red">*</span>：
+    </label>
+    <div class="col-24-md-19">
+        <input class="form-control" type="text" name="receivingUnit" value="{{dataInfo?dataInfo.companyName:''}}" >  </span>
+    </div>
+</div>
+    <div class="form-group">
+        <label class="col-24-md-5 control-label p-l-none">
+         合同名称<span class="fc-red">*</span>：
+        </label>
+        <div class="col-24-md-19">
+            <input class="form-control" type="text" name="contractName" value="{{dataInfo?dataInfo.contractName:''}}" >  </span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-md-5 control-label p-l-none">
+            合同编号<span class="fc-red">*</span>：
+        </label>
+        <div class="col-24-md-19">
+            <input class="form-control" type="text" name="contractNo" value="{{dataInfo?dataInfo.contractNo:''}}" >  </span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-md-5 control-label p-l-none">
+            合同日期<span class="fc-red">*</span>：
+        </label>
+        <div class="col-24-md-19">
+            <input type="text" class="form-control" name="contractDate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="{{_momentFormat(dataInfo?dataInfo.contractDate:'','YYYY-MM-DD')}}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-md-5 control-label">关联合同：</label>
+        <div class="col-24-md-19">
+            <div class="input-group select2-multiple">
+                <select class="js-example-disabled-results form-control" name="projectContract" multiple="multiple" readonly="" style="width: 392px;">
+
+                </select>
+                <div class="input-group-btn">
+                    <button tabindex="-1" class="web-uploader btn btn-primary" type="button" data-action="upload"></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--<div id="approverOutBox">
+
+    </div>-->
+</form>

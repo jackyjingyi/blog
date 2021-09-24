@@ -1,0 +1,13 @@
+.m-select-org-users #orgUserSearch .list-group .list-group-item{
+    border: none;
+    padding: 5px 15px;
+}
+.m-select-org-users #orgUserSearch .list-group .list-group-item:not(.item-title):not(.active):hover{
+    background: #f5f5f5;
+}
+
+.m-select-org-users #orgUserSearch,
+.m-select-org-users #orgUsersTree,
+.m-select-org-users #selectedOrgUsersList{
+    height: 384px;overflow: auto;
+}

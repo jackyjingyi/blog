@@ -1,0 +1,21 @@
+.m-salary .table>thead>tr>th,
+.m-salary .table>tbody>tr>td{
+    vertical-align: middle;
+}
+.m-salary .table>thead>tr>th[colspan]{
+    text-align: center;
+}
+.m-salary input.time-span{
+    display: inline-block;
+    padding: 0;
+    border: 0;
+    background: none;
+    width: 0px;
+}
+.m-salary table.m-salary-mgt-user-list{
+    border: 0;
+}
+.m-salary table.m-salary-mgt-user-list tr>td:first-child,
+.m-salary table.m-salary-mgt-user-list tr>th:first-child{
+    border-left: 0;
+}

@@ -1,0 +1,18 @@
+{{if userList!=null && userList.length>0}}
+    {{each userList as u ui}}
+    <div class="approver-outbox">
+        <div class="approver-box">
+            <div class="img-circle">
+                <img alt="image" class="img-circle" src="{{_isNullOrBlank(u.fileFullPath)?_url('/img/head_default.png'):u.fileFullPath}}"
+                     onerror=javascript:this.src="{{_url('/img/head_default.png')}}" width="30" height="30">
+            </div>
+            <div class="m-t-xs text-ellipsis full-width" data-container="body" data-toggle="tooltip" data-original-title="{{u.userName}}">{{u.userName}}</div>
+        </div>
+    </div>
+    {{if ui+1 < userList.length }}
+    <div class="arrow-icon dp-inline-block vertical-top p-h-sm">
+        <i class="fa fa-long-arrow-right"></i>
+    </div>
+    {{/if}}
+    {{/each}}
+{{/if}}

@@ -1,0 +1,40 @@
+.m-stats-pro-process .pro-process-info .tabs-container .panel-body{
+    padding: 10px;
+}
+
+.m-stats-pro-process .nav > li.active {
+    margin-left: 0px;
+}
+
+.m-stats-pro-process-list.table > thead > tr > th{
+    background-color: #f1f1f1;
+}
+.m-stats-pro-process-list.table > thead tr.project .sorting::after {
+    top: 28px !important;
+
+}
+.m-stats-pro-process-list.table > thead tr.project .sorting_asc::after,
+.m-stats-pro-process-list.table > thead .sorting_asc_disabled::after{
+    top:28px !important;
+}
+
+.m-stats-pro-process-list.table > thead tr.project .sorting_desc::after,
+.m-stats-pro-process-list.table > thead tr.project .sorting_desc_disabled::after{
+    top: 28px !important;
+}
+.chartjs-render-monitor{
+    display: block; width: 100%; height: 150px;
+}
+.form-top{
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 126px;
+    margin-bottom: 12px;
+}

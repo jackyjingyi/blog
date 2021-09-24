@@ -1,0 +1,210 @@
+<div class="m">
+    <div class="tabs-container">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#tab-role-select-1" aria-expanded="true">成员</a></li>
+            {{if isShowRole==1}}
+            <li class=""><a data-toggle="tab" href="#tab-role-select-2" aria-expanded="false">主管</a></li>
+            <li class="">
+                <a data-toggle="tab" href="#tab-role-select-3" aria-expanded="false">
+                    连续多级主管
+                    <i class="fa fa-info-circle" data-toggle="tooltip" data-container="body" data-original-title="发起人向上的各级主管依次审批"></i>
+                </a>
+            </li>
+            {{/if}}
+        </ul>
+        <div class="tab-content">
+            <div id="tab-role-select-1" class="tab-pane active">
+                <div class="panel-body">
+                    <div class="row m-b-sm">
+                        <div class="col-md-12">
+                            <div class="input-group">
+                                <input class="form-control" type="text" name="keyword" placeholder="搜索成员">
+                                <span class="input-group-btn">
+                                <button type="button" class="btn btn-primary" data-action="search">
+                                    <i class="fa fa-search"></i>
+                                </button>
+                            </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5" style="height: 320px;overflow: auto;">
+                            <div id="organization_treeH">
+                                <ul class="sidebar-nav list-group sidebar-nav-v1">
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-7 " >
+                            <div data-list="userList" style="height: 270px;overflow: auto"></div>
+                            <div id="userlist-pagination-container" class="m-pagination pull-right m-r"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{if isShowRole==1}}
+            <div id="tab-role-select-2" class="tab-pane" data-key="singleLevel">
+                <div class="panel-body">
+                    <div class="row m-b-sm">
+                        <label class="col-sm-2 control-label p-r-none">确定主管：</label>
+                        <div class="col-sm-10">
+                            <label class="i-checks i-checks-label fw-normal m-b-none">
+                                <input name="managerCK" type="checkbox" value="departManager"/>
+                                <span class="i-checks-span" >部门主管</span>
+                            </label>
+                            <label class="i-checks i-checks-label fw-normal m-b-none">
+                                <input name="managerCK" type="checkbox" value="financeManager"/>
+                                <span class="i-checks-span" >部门财务主管</span>
+                            </label>
+                            <label class="i-checks i-checks-label fw-normal m-b-none">
+                                <input name="managerCK" type="checkbox" value="adminManager"/>
+                                <span class="i-checks-span" >部门行政主管</span>
+                            </label>
+                            <label class="i-checks i-checks-label fw-normal m-b-none">
+                                <input name="managerCK" type="checkbox" value="projectManager"/>
+                                <span class="i-checks-span" >部门项目主管</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row m-b-sm">
+                        <label class="col-sm-2 control-label p-r-none">审批终点：</label>
+                        <div class="col-sm-10">
+                            <label class="i-checks i-checks-label fw-normal m-b-none">
+                                <input name="levelCK1" type="radio" value="" checked/>
+                                <span class="i-checks-span" >发起人的</span>
+                            </label>
+                            <div class="dp-inline-block">
+                                <select class="form-control" name="level">
+                                    <option value="1">第1级主管</option>
+                                    <option value="2">第2级主管</option>
+                                    <option value="3">第3级主管</option>
+                                    <option value="4">第4级主管</option>
+                                    <option value="5">第5级主管</option>
+                                    <option value="6">第6级主管</option>
+                                    <option value="7">第7级主管</option>
+                                    <option value="8">第8级主管</option>
+                                    <option value="9">第9级主管</option>
+                                    <option value="10">第10级主管</option>
+                                    <option value="11">第11级主管</option>
+                                    <option value="12">第12级主管</option>
+                                    <option value="13">第13级主管</option>
+                                    <option value="14">第14级主管</option>
+                                    <option value="15">第15级主管</option>
+                                    <option value="16">第16级主管</option>
+                                    <option value="17">第17级主管</option>
+                                    <option value="18">第18级主管</option>
+                                    <option value="19">第19级主管</option>
+                                    <option value="20">第20级主管</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!--<div class="row m-b-sm">
+                        <label class="col-sm-2 control-label p-r-none">审批人为空时：</label>
+                        <div class="col-sm-10">
+                            <label class="i-checks i-checks-label fw-normal m-b-none">
+                                <input name="autoPassCK1" type="radio" value="" checked/>
+                                <span class="i-checks-span" >
+                                    自动通过
+                                    <i class="fa fa-info-circle" data-toggle="tooltip" data-container="body" data-original-title="当该角色或主管没有人的时候，审批单将自动通过"></i>
+                                </span>
+                            </label>
+                        </div>
+                    </div>-->
+                    <div class="fc-v1-grey f-s-xs">
+                        <p>*部门主管等可在组织架构部门中进行设置。</p>
+                        <p>*已选的主管可在选择面板进行拖拽排序。</p>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-role-select-3" class="tab-pane" data-key="multiLevel">
+                <div class="panel-body">
+                    <div class="row m-b-sm">
+                        <label class="col-sm-2 control-label p-r-none">确定主管：</label>
+                        <div class="col-sm-10">
+                            <label class="i-checks i-checks-label fw-normal m-b-none">
+                                <input name="managerCK" type="checkbox" value="departManager" />
+                                <span class="i-checks-span" >部门主管</span>
+                            </label>
+                            <label class="i-checks i-checks-label fw-normal m-b-none">
+                                <input name="managerCK" type="checkbox" value="financeManager" />
+                                <span class="i-checks-span" >部门财务主管</span>
+                            </label>
+                            <label class="i-checks i-checks-label fw-normal m-b-none">
+                                <input name="managerCK" type="checkbox" value="adminManager" />
+                                <span class="i-checks-span" >部门行政主管</span>
+                            </label>
+                            <label class="i-checks i-checks-label fw-normal m-b-none">
+                                <input name="managerCK" type="checkbox" value="projectManager" />
+                                <span class="i-checks-span" >部门项目主管</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row m-b-sm">
+                        <label class="col-sm-2 control-label p-r-none">审批终点：</label>
+                        <div class="col-sm-10">
+                            <label class="i-checks i-checks-label fw-normal m-b-none">
+                                <input name="levelCK2" type="radio" value="" checked/>
+                                <span class="i-checks-span" >同时不超过发起人的</span>
+                            </label>
+                            <div class="dp-inline-block">
+                                <select class="form-control" name="level">
+                                    <option value="1">第1级主管</option>
+                                    <option value="2">第2级主管</option>
+                                    <option value="3">第3级主管</option>
+                                    <option value="4">第4级主管</option>
+                                    <option value="5">第5级主管</option>
+                                    <option value="6">第6级主管</option>
+                                    <option value="7">第7级主管</option>
+                                    <option value="8">第8级主管</option>
+                                    <option value="9">第9级主管</option>
+                                    <option value="10">第10级主管</option>
+                                    <option value="11">第11级主管</option>
+                                    <option value="12">第12级主管</option>
+                                    <option value="13">第13级主管</option>
+                                    <option value="14">第14级主管</option>
+                                    <option value="15">第15级主管</option>
+                                    <option value="16">第16级主管</option>
+                                    <option value="17">第17级主管</option>
+                                    <option value="18">第18级主管</option>
+                                    <option value="19">第19级主管</option>
+                                    <option value="20">第20级主管</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row m-b-sm">
+                        <label class="col-sm-2 control-label p-r-none">审批人为空时：</label>
+                        <div class="col-sm-10">
+                            <label class="i-checks i-checks-label fw-normal m-b-none">
+                                <input name="autoPassCK" type="radio" value="" checked/>
+                                <span class="i-checks-span" >
+                                    自动通过
+                                    <i class="fa fa-info-circle" data-toggle="tooltip" data-container="body" data-original-title="当该角色或主管没有人的时候，审批单将自动通过"></i>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="fc-v1-grey f-s-xs">
+                        <p>*部门主管等可在组织架构部门中进行设置。</p>
+                        <p>*已选的主管可在选择面板进行拖拽排序。</p>
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+        </div>
+
+        <div class="panel panel-default m-b-none m-t-sm no-borders" style="min-height: 50px;">
+            <div class="panel-body selectedUserBox" style="height: 100%">
+                {{each selectedUserList as u}}
+                <span class="selected-user m-r-xs">
+                     <span class="label label-light m-r-xs dp-inline-block">
+                         {{u.userName}}
+                         <a class="curp" href="javascript:void(0)" data-id="{{u.id}}" data-action="delChosedUser"><i class="fa fa-times fc-red"></i></a>
+                     </span>
+                </span>
+                {{/each}}
+            </div>
+        </div>
+
+    </div>
+</div>

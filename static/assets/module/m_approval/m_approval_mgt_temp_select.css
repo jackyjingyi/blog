@@ -1,0 +1,30 @@
+.m-approval-mgt-temp-select .approval-temp-box{
+    width: 212px;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 5px;
+    position: relative;
+    float: left;
+    margin: 5px;
+    cursor: pointer;
+}
+.m-approval-mgt-temp-select .temp-title-box,
+.m-approval-mgt-temp-select .temp-list-box{
+    overflow: auto;
+    max-height: 520px;
+}
+.m-approval-mgt-temp-select h3.title-v1{
+    margin: 0 -15px;
+    padding: 5px 15px;
+}
+.m-approval-mgt-temp-select h3.title-v2{
+    margin: 5px -14px 5px 0;
+    padding: 5px 0px 5px 12px;
+}
+.m-approval-mgt-temp-select .bg-v1{
+    background: #f9f9f9;
+}
+.m-approval-mgt-temp-select .temp-list-box{
+    overflow: auto;
+    max-height: 520px;
+}

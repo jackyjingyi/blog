@@ -1,0 +1,182 @@
+<tr>
+    <td width="12%">
+        <b>项目名称</b>
+    </td>
+    <td width="37%">
+        <a href="javascript:void(0);" class="editable-click" data-action="xeditable" data-placeholder="请输入项目名称" data-key="projectName" data-type="1" data-valid="1"
+           data-value="{{project.projectName}}" data-role="{{project.auditFlag==1?0:1}}">
+            {{project.projectName}}
+        </a>
+    </td>
+    <td width="12%"><b>项目状态</b></td>
+    <td>
+       <!-- <a href="javascript:void(0);" class="editable-click" data-action="xeditable" data-key="status" data-type="5" data-container-class="select-sm"
+           data-value="{{project.projectStatus?project.projectStatus.valueId:''}}" data-role="{{project.status==4 || updateProjectStatus==0?0:1}}">-->
+            {{if project.projectStatus && !_isNullOrBlank(project.projectStatus.content)}}
+            {{project.projectStatus.content}}
+            {{else}}
+            <span class="fc-v1-grey">未设置</span>
+            {{/if}}
+      <!--  </a>-->
+    </td>
+</tr>
+<tr>
+    <td><b>项目类型</b></td>
+    <td>
+        <a href="javascript:void(0);" class="editable-click" data-action="xeditable" data-key="projectTypeId" data-type="5" data-container-class="select-sm"
+           data-value="{{project.projectType?project.projectType.id:''}}" data-role="{{project.auditFlag==1?0:1}}">
+            {{if project.projectType && !_isNullOrBlank(project.projectType.content)}}
+            {{project.projectType.content}}
+            {{else}}
+            <span class="fc-v1-grey">未设置</span>
+            {{/if}}
+        </a>
+    </td>
+    <td><b>项目编号</b></td>
+    <td>
+        <a href="javascript:void(0);" class="editable-click"  data-action="xeditable" data-placeholder="请输入项目编号" data-key="projectNo" data-type="1"
+           data-value="{{project.projectNo?project.projectNo:''}}">
+            {{if !_isNullOrBlank(project.projectNo)}}
+            {{project.projectNo}}
+            {{else}}
+            <span class="fc-v1-grey">未设置</span>
+            {{/if}}
+        </a>
+    </td>
+
+</tr>
+<tr>
+    <td><b>所属公司</b></td>
+    <td>
+        <a href="javascript:void(0);" class="editable-click" data-action="edit_projectZone" data-key="orgId" data-type="5" data-container-class="select-sm"
+           data-value="{{project.projectZone?project.projectZone.id:''}}" data-role="{{project.auditFlag==1?0:1}}">
+            {{if project.projectZone && !_isNullOrBlank(project.projectZone.companyName)}}
+            {{project.projectZone.companyName}}
+            {{else}}
+            <span class="fc-v1-grey">未设置</span>
+            {{/if}}
+        </a>
+    </td>
+    <td><b>立项时间</b></td>
+    <td>
+        <a href="javascript:void(0);" id="editProjectCreateDate" data-action="edit_projectCreateDate" class="editable editable-click">
+            {{if project.projectCreateDate}}
+            {{_momentFormat(project.projectCreateDate,'YYYY/MM/DD')}}
+            {{else}}
+            <span class="fc-v1-grey">未设置</span>
+            {{/if}}
+        </a>
+    </td>
+
+</tr>
+<tr>
+    <td><b>分管院长</b></td>
+    <td>
+        <a href="javascript:void(0);" class="editable-click" data-action="edit_projectDean" data-key="companyUserId" data-type="5" data-container-class="select-sm"
+           data-value="{{project.projectDean?project.projectDean.companyUserId:''}}" data-role="{{project.auditFlag==1?0:1}}">
+            {{if project.projectDean && !_isNullOrBlank(project.projectDean.companyUserName)}}
+            {{project.projectDean.companyUserName}}
+            {{else}}
+            <span class="fc-v1-grey">未设置</span>
+            {{/if}}
+        </a>
+    </td>
+    <td><b>项目负责人</b></td>
+    <td>
+       <span id="designManagerBox">
+                </span>
+    </td>
+
+</tr>
+<tr>
+    <td><b>所属组</b></td>
+    <td>
+        <a href="javascript:void(0);" class="editable-click" data-action="xeditable" data-key="companyId" data-type="1" data-valid="1" data-container-class="select-sm"
+           data-value="{{project.creatorCompany?project.creatorCompany.companyName:''}}" data-id="{{project.creatorCompany?project.creatorCompany.id:''}}">
+            {{if project.creatorCompany && !_isNullOrBlank(project.creatorCompany.companyName)}}
+            {{project.creatorCompany.companyName}}
+            {{else}}
+            <span class="fc-v1-grey">未设置</span>
+            {{/if}}
+        </a>
+    </td>
+    <td><b>甲方</b></td>
+    <td>
+        <a href="javascript:void(0);" class="editable-click"  data-action="xeditable" data-placeholder="请输入甲方名称，多个请用“/”隔开" data-key="constructCompany" data-type="1"
+           data-value="{{project.constructCompany?project.constructCompany:''}}">
+            {{if !_isNullOrBlank(project.constructCompany)}}
+            {{project.constructCompany}}
+            {{else}}
+            <span class="fc-v1-grey">未设置</span>
+            {{/if}}
+        </a>
+    </td>
+
+</tr>
+<tr>
+    <td><b>创新技术委员会审核</b></td>
+    <td>
+        <a href="javascript:void(0);" class="editable-click" data-action="xeditable" data-key="isAudit" data-type="5" data-container-class="select-sm"
+           data-value="{{project.isAudit!=null?project.isAudit:''}}">
+            {{if project.isAudit==1}}
+            是
+            {{else}}
+            否
+            {{/if}}
+        </a>
+    </td>
+    <td><b>乙方</b></td>
+    <td>
+        <a href="javascript:void(0);" class="editable-click"  data-action="xeditable" data-placeholder="请输入乙方名称，多个请用“/”隔开" data-key="companyBid" data-type="6"
+           data-value="{{project.companyBid?project.companyBid:''}}">
+            {{if !_isNullOrBlank(project.companyBid)}}
+            {{project.companyBid}}
+            {{else}}
+            <span class="fc-v1-grey">未设置</span>
+            {{/if}}
+
+
+        </a>
+    </td>
+</tr>
+<tr>
+    <td><b>项目所在地</b></td>
+    <td colspan="3">
+        <span>
+            {{if project.auditFlag==1}}
+                {{if project.projectLocation!=null}}
+                    {{if project.projectLocation.province && project.projectLocation.province!=''}}
+                        {{project.projectLocation.province}}&nbsp;&nbsp;
+                    {{/if}}
+                    {{if project.projectLocation.city && project.projectLocation.city!=''}}
+                        {{project.projectLocation.city}}&nbsp;&nbsp;
+                    {{/if}}
+                    {{if project.projectLocation.county && project.projectLocation.county!=''}}
+                        {{project.projectLocation.county}}&nbsp;&nbsp;
+                    {{/if}}
+                    {{if project.projectLocation.detailAddress && project.projectLocation.detailAddress!=''}}
+                        {{project.projectLocation.detailAddress}}
+                    {{/if}}
+                {{/if}}
+            {{else}}
+                <a href="javascript:void(0);" class="editable editable-click" data-action="edit_address" data-valid="1"
+                   id="address" data-original-title title>
+                    {{if project.projectLocation!=null}}
+                        {{if project.projectLocation.province && project.projectLocation.province!=''}}
+                            {{project.projectLocation.province}}&nbsp;&nbsp;
+                        {{/if}}
+                        {{if project.projectLocation.city && project.projectLocation.city!=''}}
+                            {{project.projectLocation.city}}&nbsp;&nbsp;
+                        {{/if}}
+                        {{if project.projectLocation.county && project.projectLocation.county!=''}}
+                            {{project.projectLocation.county}}&nbsp;&nbsp;
+                        {{/if}}
+                        {{if project.projectLocation.detailAddress && project.projectLocation.detailAddress!=''}}
+                            {{project.projectLocation.detailAddress}}
+                        {{/if}}
+                    {{/if}}
+                </a>
+            {{/if}}
+        </span>
+    </td>
+</tr>

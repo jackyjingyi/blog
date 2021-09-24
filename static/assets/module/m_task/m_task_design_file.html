@@ -1,0 +1,111 @@
+<div class="m-task-design-file task-list-box">
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>任务</th>
+            <th>
+                <label class="i-checks fw-normal m-b-none dp-inline-block">
+                    <input name="taskFileCk" type="checkbox" value="" />
+                    <span class="i-checks-span"></span>
+                </label>
+                <div class="list-action-box dp-inline-block">
+                    <div class="btn-group batchOperation" id="batchAllOperation">
+                        <button type="button" class="btn btn-default btn-xs dropdown-toggle action-button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="批量操作">
+                            <span class="ic-operation-batch"></span>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="javascript:void(0);" class="" data-action="batchStateFlow" data-canbedelete="">批量流转</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <span>图名</span>
+            </th>
+            <th>状态</th>
+            <th>处理人</th>
+            <th>创建时间</th>
+            <th>修改时间</th>
+            <th>大小</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{if dataList!=null && dataList.length>0}}
+        {{each dataList as p i}}
+            {{if p.fileList && p.fileList.length>0}}
+                {{each p.fileList as d di}}
+                    <tr data-i="{{di}}" data-pi="{{i}}" data-id="{{d.id}}" data-pid="{{p.id}}">
+                        {{if di==0}}
+                        <td rowspan="{{p.fileList&&p.fileList.length>1?p.fileList.length:'1'}}" class="v-middle">
+                            {{p.taskName}}
+                        </td>
+                        {{/if}}
+                        <td>
+                            <label class="i-checks fw-normal m-b-none dp-inline-block">
+                                <input name="taskFileCk" type="checkbox" value="{{d.id}}" data-status="{{d.fileStatus}}"/>
+                                <span class="i-checks-span"></span>
+                            </label>
+                            <span class="file-name">
+                                <a href="javascript:void(0);" data-action="filePreview" class="btn btn-link fc-dark-blue no-padding">{{d.fileName}}</a>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="show-span">
+                                {{if !_isNullOrBlank(d.fileStatusName)}}
+                                    <button class="btn btn-white btn-rounded btn-status no-hover selected">{{d.fileStatusName}}</button>
+                                {{else}}
+                                    <span class="fc-v1-grey">未设置</span>
+                                {{/if}}
+                            </span>
+                            <a href="javascript:void(0);" class="btn-edit"  data-action="xeditableByDesignClick" data-key="fileStatus" data-value="{{d.fileStatus}}" data-type="5" style="visibility: hidden;">
+                                <i class="icon iconfont icon-bianji"></i>
+                            </a>
+                        </td>
+                        <td>
+                            <span class="show-span">
+                            {{if d.handlerUser && d.handlerUser.userList && d.handlerUser.userList.length>0}}
+                                {{each d.handlerUser.userList as u ui}}
+                                    {{if ui < d.handlerUser.userList.length-1}}
+                                        {{u.userName}},
+                                    {{else}}
+                                        {{u.userName}}
+                                    {{/if}}
+                                {{/each}}
+                            {{else}}
+                                <span class="fc-v1-grey">未设置</span>
+                            {{/if}}
+                             </span>
+                            <a href="javascript:void(0);" class="btn-edit"  data-action="xeditableUserByDesign" data-key="handler" style="visibility: hidden;">
+                                <i class="icon iconfont icon-bianji"></i>
+                            </a>
+                        </td>
+                        <td>{{_momentFormat(d.createTime,'YYYY/MM/DD HH:ss')}}</td>
+                        <td>{{_momentFormat(d.updateDate,'YYYY/MM/DD HH:ss')}}</td>
+                        <td>{{_fileSizeFormat(d.fileSize)}}</td>
+                    </tr>
+                {{/each}}
+            {{else}}
+                <tr>
+                    <td>{{p.taskName}}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            {{/if}}
+        {{/each}}
+        {{else}}
+        <tr class="no-data">
+            <td colspan="7" class="text-center v-middle">
+                <div class="m-b-xl m-t-md">
+                    <img src="{{_url('/img/default/without_data.png')}}">
+                    <span class="fc-dark-blue dp-block">暂无相关数据</span>
+                </div>
+            </td>
+        </tr>
+        {{/if}}
+        </tbody>
+    </table>
+</div>

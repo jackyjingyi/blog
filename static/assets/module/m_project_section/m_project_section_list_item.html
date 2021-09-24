@@ -1,0 +1,16 @@
+{{each dataList as p i}}
+<div class="cbp-item" data-i="{{i}}" data-id="{{p.id}}" data-type="{{p.type}}" data-action="departAction"  data-value="{{businessType==1?p.fieldName:p.departName}}" data-key="{{p.id}}" >
+    <div class="cbp-caption">
+        <div class="cbp-caption-defaultWrap" >
+            {{if p.fileFullPath!=null && p.fileFullPath!=''}}
+                <img src="{{p.fileFullPath}}" onerror=javascript:this.src="{{_url('/img/depart_introduction_default_img.png')}}" >
+            <!--<div class="cbp-l-caption-title" style="position: absolute;bottom: 10px;left: 10px;">{{p.supportTypeName}}</div>-->
+            {{else}}
+            <div class="img-group">  
+                <img src="{{_url('/img/depart_introduction_default_img.png')}}" >
+                <div class="img-tip">{{businessType==1?p.fieldName:p.departName}}</div></div>
+            {{/if}}
+        </div>
+    </div>
+</div>
+{{/each}}

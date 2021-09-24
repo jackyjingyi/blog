@@ -1,0 +1,30 @@
+<table class="table table-bordered table-hover m-b-xs">
+    <thead>
+    <tr>
+        <th width="40%">单位名称</th>
+        <th width="20%">合同名称</th>
+        <th width="20%">合同金额</th>
+        <th width="20%">签订日期</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{each dataList as p}}
+    <tr>
+        <td>{{p.outerCompany}}</td>
+        <td>{{p.contractName}}</td>
+        <td>{{_expNumberFilter(p.fee)}}</td>
+        <td>{{_momentFormat(p.signDate,'YYYY/MM/DD')}}</td>
+    </tr>
+    {{/each}}
+    {{if dataList==null || dataList.length==0}}
+    <tr class="no-data">
+        <td colspan="4" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">您还没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

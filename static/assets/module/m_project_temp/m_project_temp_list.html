@@ -1,0 +1,24 @@
+<div class="list-group list-hover">
+    {{if dataList && dataList.length>0}}
+    {{each dataList as p i}}
+    <li class="list-group-item " data-id="{{p.id}}" data-relation-id="{{p.relationId}}">
+        <span class="show-span pt-relative  text-ellipsis"> {{p.fieldName}}</span>
+        {{if type==1}}
+        <a href="javascript:void(0);" data-action="xeditable" data-value="{{p.fieldName}}" data-key="fieldName"  data-placeholder="编辑项目类型" data-type="1" data-valid="1"
+           data-max-length="50" style="visibility: hidden;">
+            <i class="icon iconfont icon-bianji"></i>
+        </a>
+        {{/if}}
+    </li>
+    {{/each}}
+    {{else}}
+    <div class="row no-margin">
+        <div class="text-center col-md-12">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}" width="100">
+                <span class="fc-dark-blue dp-block">请设置项目类型！</span>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+</div>

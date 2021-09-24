@@ -1,0 +1,23 @@
+{{each dataList as t ti}}
+<div class="row">
+    <div class="col-24-md-24 col-xl-12 notice-list-content m-t">
+        <div class="feed-element"  data-action="fileAction" data-src="{{t.fileFullPath}}" >
+
+            <div class="media-body ">
+
+                <div class="col-24-md-22 msg-content-box">
+                    <div class="msg-content">{{t.content}}
+                        <a href="javascript:void(0);" class="roleControl" roleCode="10000603"  data-action="xDelete" data-value="{{t.id}}"   data-placeholder="删除" data-type="1" data-valid="1" style="visibility: hidden;">
+                            <i class="fa fa-times fc-red"></i>
+                    </a>
+                    </div>
+
+                </div>
+                <div class="col-24-md-2 text-right m-t" >
+                    {{_momentFormat(t.createDate,'YYYY/MM/DD')}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{/each}}

@@ -1,0 +1,33 @@
+.m-approval-mgt-grid .grid-content .grid-item{
+    float: left;
+    width: 230px;
+    padding: 10px;
+    margin: 5px;
+    border: solid 1px #ccc;
+    border-radius: 5px;
+}
+.m-approval-mgt-grid .icon-circle{
+    border-radius: 10px;
+}
+.m-approval-mgt-grid .text-ellipsis{
+    width: 92px;
+    text-align: left;
+}
+.m-approval-mgt-form-edit .icon-circle,
+.m-approval-mgt .icon-circle{
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+}
+.m-approval-mgt-form-edit .icon-circle .icon,
+.m-approval-mgt .icon-circle .icon{
+    font-size: 15px;
+}
+.m-approval-mgt-form-edit .icon-circle-out.active{
+    height: 34px;
+    width: 34px;
+}
+.m-approval-mgt-form-edit .row.disabled .icon-circle{
+    cursor: no-drop !important;
+}

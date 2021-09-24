@@ -1,0 +1,178 @@
+<form class="form-horizontal p-sm overflow-y-auto m-dialog-resize">
+    {{if audit && audit.expNo}}
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">审批编号：</label>
+        <div class="col-24-xs-21">
+            {{audit.expNo}}
+        </div>
+    </div>
+    {{/if}}
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">发起人：</label>
+        <div class="col-24-xs-21">
+            {{costPayDetail.userName}}
+        </div>
+    </div>
+    {{if auditList && auditList.length>0}}
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">发起时间：</label>
+        <div class="col-24-xs-21">
+            {{_momentFormat(auditList[0].approveDate,'YYYY/MM/DD')}}
+        </div>
+    </div>
+    {{/if}}
+    <h4 class="title-line m-l-sm">审批详情</h4>
+    <div class="hr-line-dashed m-t-none m-b-sm"></div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">收款方：</label>
+        <div class="col-24-xs-21">
+            {{costPayDetail.toCompanyName}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">关联项目：</label>
+        <div class="col-24-xs-21">
+            {{costPayDetail.projectName}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">关联节点：</label>
+        <div class="col-24-xs-21">
+            {{costPayDetail.feeDescription}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">节点金额：</label>
+        <div class="col-24-xs-21">
+            {{_expNumberFilter(costPayDetail.pointFee)}} 元
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">付款金额：</label>
+        <div class="col-24-xs-21">
+            {{_expNumberFilter(costPayDetail.fee)}} 元
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">描述：</label>
+        <div class="col-24-xs-21">
+            {{costPayDetail.pointDetailDescription}}
+        </div>
+    </div>
+    {{if !_isNullOrBlank(deleteReason)}}
+        <div class="form-group">
+            <label class="col-24-xs-3 text-right">删除原因：</label>
+            <div class="col-24-xs-21">
+                {{deleteReason}}
+            </div>
+        </div>
+    {{/if}}
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">附件：</label>
+        <div class="col-24-xs-21">
+            {{if attachList!=null && attachList.length>0}}
+                {{each attachList as a i}}
+                     <span class="label m-r-xs" style="background: #ecf0f1;padding: 5px 10px;">
+                         <a href="javascript:void(0)" data-action="preview" data-file-ext="{{a.fileExtName}}" data-net-file-id="{{a.id}}"  data-src="{{a.fileFullPath}}" data-name="{{a.fileName}}">
+                            {{a.fileName}}
+                         </a>
+                     </span>
+                {{/each}}
+            {{/if}}
+        </div>
+    </div>
+    <h4 class="title-line m-l-sm">审批流程</h4>
+    <div class="hr-line-dashed m-t-none m-b-sm" ></div>
+    <div class="form-group">
+        <div class="col-sm-12 p-w-md">
+            <table class="table table-hover table-bordered m-b-xs" >
+                <thead>
+                <tr>
+                    <th width="40%">审批</th>
+                    <th width="40%">操作</th>
+                    <th width="20%">审批时间</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{if auditList!=null && auditList.length>0}}
+                {{each auditList as s i}}
+                <tr>
+                    <td>
+                        {{if _isNullOrBlank(s.fileFullPath)}}
+                        <img alt="image" class="img-circle img-responsive dp-inline-block vertical-top" src="{{_url('/img/head_default.png')}}" width="30"/>
+                        {{else}}
+                        <img alt="image" class="img-circle img-responsive dp-inline-block vertical-top" src="{{s.fileFullPath}}" onerror=javascript:this.src="{{_url('/img/head_default.png')}}" width="30" >
+                        {{/if}}
+                        <span class="dp-inline-block">
+                            <p class="m-b-none">{{s.userName}}</p>
+                            <p class="m-b-none fc-v1-grey">{{s.companyName}}</p>
+                        </span>
+                    </td>
+                    <td>
+                        {{if s.approveStatus=='1'}}
+                        <p class="text-success m-b-none">{{s.approveStatusName}}</p>
+                        {{else if s.approveStatus=='2' || s.approveStatus=='3'}}
+                        <p class="text-danger m-b-none">{{s.approveStatusName}}</p>
+                        {{else}}
+                        <p class="m-b-none">{{s.approveStatusName}}</p>
+                        {{/if}}
+                        {{if s.approveStatusName=='发起申请' && !_isNullOrBlank(s.remark)}}
+                        <p class="fc-v1-grey m-b-none">{{typeStr}}备注：{{s.remark}}</p>
+                        {{/if}}
+                        {{if s.approveStatusName=='退回'  && !_isNullOrBlank(s.auditMessage)}}
+                        <p class="fc-v1-grey m-b-none">退回原因：{{s.auditMessage}}</p>
+                        {{else if !_isNullOrBlank(s.auditMessage)}}
+                        <p class="fc-v1-grey m-b-none">审批意见：{{s.auditMessage}}</p>
+                        {{/if}}
+                    </td>
+                    <td>
+                        {{_momentFormat(s.approveDate,'YYYY/MM/DD')}}
+                    </td>
+                </tr>
+                {{/each}}
+                {{else}}
+                <tr>
+                    <td colspan="3" class="text-center">暂无数据</td>
+                </tr>
+                {{/if}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{if ccCompanyUserList!=null && ccCompanyUserList.length>0}}
+    <h4 class="title-line m-l-sm">抄送人</h4>
+    <div class="hr-line-dashed m-t-none m-b-sm"></div>
+    <div class="form-group">
+        <div class="col-sm-12 p-w-md approval-out-box">
+            {{each ccCompanyUserList as u ui}}
+            <div class="approver-outbox">
+                <div class="approver-box ">
+                    <div class="img-circle">
+                        <img alt="image" class="img-circle" src="{{_isNullOrBlank(u.fileFullPath)?_url('/img/head_default.png'):u.fileFullPath}}"
+                             onerror=javascript:this.src="{{_url('/img/head_default.png')}}" width="30" height="30">
+                    </div>
+                    <div class="m-t-xs">{{u.userName}}</div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+    {{/if}}
+</form>
+<div class="footer border-b-radius text-right">
+    {{if isView}}
+        <button class="btn btn-default" data-action="cancel">关闭</button>
+    {{else}}
+        <button class="btn btn-default" data-action="cancel">{{auditFlag!=null && auditFlag=='1'?'取消':'关闭'}}</button>
+        {{if auditFlag!=null && auditFlag=='1'}}
+            <button class="btn btn-primary" data-action="agree">同意</button>
+            <button class="btn btn-success" data-action="returnBack">退回</button>
+        {{/if}}
+        {{if currentCompanyUserId==audit.companyUserId && (approveStatus=='0' || approveStatus=='5')}}
+        <button class="btn btn-warning" data-action="remind">提醒</button>
+        {{/if}}
+    {{/if}}
+
+</div>
+
+

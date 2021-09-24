@@ -1,0 +1,93 @@
+<div class="m m-backstage-index">
+    <h4>{{userName}},欢迎使用卯丁，您所在的是“{{companyName}}”的管理后台。</h4>
+    <div class="row">
+        <div class="col-24-md-12 ">
+            <div class="panel panel-default box-shadow-1">
+                <div class="panel-body">
+                    <div class="col-xs-6">
+                        <div id="chartArea1" class="chartjs-render-monitor m-t-lg" ></div>
+                        <div class="chart-content" >
+                            <p class="font-bold">剩余可用</p>
+                            <p class="m-t-md"><span class="font-bold">{{companyVersion=='03'?'--':usableCount+'个'}}</span></p>
+                        </div>
+                        <p class="text-center">当前版本：{{if companyVersion=='01'}}企业版{{else if companyVersion=='02'}}专业版{{else}}免费版{{/if}}</p>
+                    </div>
+                    <div class="col-xs-6 chart-info-content">
+                        <a href="javascript:void(0);" class="absolute-top-right" data-action="viewAccountChart" ><i class="fa fa-bar-chart-o"></i></a>
+                        <h4 class="fc-dark-grey">账号使用概览</h4>
+                        <p>账号总数：{{companyVersion=='03'?'--':accountCount}}</p>
+                        <p>已使用数量：{{useCount}}</p>
+                        {{if companyVersion!='03'}}
+                        <p>下属组织使用数量：{{companyVersion=='03'?'--':subsidiaryOrgUsedCount}}</p>
+                        {{/if}}
+                        <p>剩余可用数量：{{companyVersion=='03'?'--':usableCount}}</p>
+                        <p>
+                            有效时间:
+                            {{if _isNullOrBlank(accountEffectStartTime) && _isNullOrBlank(accountEffectEndTime)}}
+                                --
+                            {{else}}
+                                {{_momentFormat(accountEffectStartTime,'YYYY/MM/DD')}}-{{_momentFormat(accountEffectEndTime,'YYYY/MM/DD')}}
+                            {{/if}}
+                        </p>
+                    </div>
+                    <div class="col-xs-12 text-center btn-purchase-col">
+                        {{if isRootCompany == 1}}
+                        <a href="#/backstageMgt/purchase?type=1" class="btn btn-primary roleControl" roleCode="10000101" flag="2" data-action="purchaseVersionSpace">版本及账号购买</a>
+                        {{/if}}
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-24-md-12 p-l-none">
+            <div class="panel panel-default box-shadow-1">
+                <div class="panel-body">
+                    <div class="col-xs-6">
+                        <div id="chartArea2" class="chartjs-render-monitor m-t-lg" style="display: block; width: 100%; height: 200px;"></div>
+                        <div class="chart-content" >
+                            <p class="font-bold">剩余可用</p>
+                            <p class="m-t-md"><span class="font-bold">{{_storageMToG(freeSize)}}</span></p>
+                        </div>
+                    </div>
+                    <div class="col-xs-6 chart-info-content">
+                        <a href="javascript:void(0);" class="absolute-top-right" data-action="viewSpaceChart" ><i class="fa fa-bar-chart-o"></i></a>
+                        <h4 class="fc-dark-grey">存储空间使用概览</h4>
+                        <p>存储空间总容量：{{_storageMToG(totalSize)}}</p>
+                        <p>免费空间：5G</p>
+                        <p>付费空间：{{_storageMToG(totalSize-5)}}</p>
+                        <p>已使用空间：{{_storageMToG(useSize)}}</p>
+                        {{if companyVersion!='03'}}
+                        <p>下属组织使用空间容量：{{_storageMToG(subsidiaryOrgUsedSize)}}</p>
+                        {{/if}}
+                        <p>剩余空间容量：{{_storageMToG(freeSize)}}</p>
+                        <p>
+                            付费空间有效时间:
+                            {{if _isNullOrBlank(spaceEffectStartTime) && _isNullOrBlank(spaceEffectEndTime)}}
+                                --
+                            {{else}}
+                                {{_momentFormat(spaceEffectStartTime,'YYYY/MM/DD')}}-{{_momentFormat(spaceEffectEndTime,'YYYY/MM/DD')}}
+                            {{/if}}
+                        </p>
+                    </div>
+                    <div class="col-xs-12 text-center btn-purchase-col">
+                        {{if isRootCompany == 1}}
+                        <a href="#/backstageMgt/purchase?type=3" class="btn btn-primary roleControl" roleCode="10000101" flag="2" data-action="purchaseVersionSpace">存储空间购买</a>
+                        {{/if}}
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-24-md-24">
+            <h4 class="title-line fc-dark-grey">购买记录</h4>
+            <div class="data-list-box">
+                <div class="data-list-container"></div>
+                <div>
+                    <div id="data-pagination-container" class="m-pagination pull-right "></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

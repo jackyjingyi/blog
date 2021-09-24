@@ -1,0 +1,41 @@
+<div class="m">
+    <div class="text-center">
+        <img src="{{_url('/img/project/project_approval_1.png')}}" width="60"/>
+    </div>
+    <div class="p-sm">
+        {{if doType==1}}
+            {{if businessType ==1}}
+                项目信息填写完成后，需发布项目以便进行下一步的项目工作。
+            {{else}}
+                课题信息填写完成后，需发布课题以便进行下一步的项目工作。
+            {{/if}}
+        {{else doType==2}}
+        {{if businessType ==1}}
+            项目信息填写完成后，需提交相关人员审批，审批通过后才可以进行下一步的项目工作。
+        {{else}}
+            课题信息填写完成后，需提交相关人员审批，审批通过后才可以进行下一步的课题工作。
+        {{/if}}
+
+        {{/if}}
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <label class="i-checks i-checks-label m-l">
+                <input name="itemCk" type="checkbox"/>
+                <span class="i-checks-span fc-dark-gray">以后不再提示</span>
+            </label>
+        </div>
+        <div class="col-sm-6 text-center">
+            <button class="btn btn-primary" data-action="knowIt">知道了</button>
+        </div>
+    </div>
+    <div style="position: absolute;top: 20px;right: -100px;">
+       <span class="ic-tip-arrow"></span>
+    </div>
+</div>
+<script>
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green'
+    });
+</script>

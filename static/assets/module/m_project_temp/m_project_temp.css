@@ -1,0 +1,29 @@
+.m-project-temp .absolute-top-right.r-10{
+    right: 10px;
+}
+.m-project-temp .absolute-top-right.t-8{
+    top:8px;
+}
+.m-project-temp .list-group-item .text-ellipsis {
+    width: auto;
+    max-width: 92%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -webkit-text-overflow: ellipsis;
+    -moz-text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    line-height: 14px;
+}
+
+.m-project-temp-mult-edit .i-checks-span-default.text-ellipsis {
+    width: 160px;
+}
+.m-project-temp-mult-edit[data-type="3"] .i-checks-span-default.text-ellipsis {
+    width: 155px;
+}
+.m-project-temp-edit[data-type="3"] .i-checks-span.text-ellipsis{
+    max-width: 70px;
+}
+

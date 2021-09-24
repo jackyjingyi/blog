@@ -1,0 +1,188 @@
+.task-temp-box{
+    display: block;
+    width: 216px;
+    float: left;
+    margin: 15px 0 0 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    overflow: hidden;
+    transform: translateZ(0);
+    transition-duration: 300ms;
+    transition-property: all;
+    transition-timing-function: ease;
+}
+.task-temp-box .task-temp-container{
+    height: 0;
+    padding-bottom: 56.88%;
+    position: relative;
+}
+.task-temp-box .task-temp-main{
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 4px;
+    padding: 12px 16px;
+}
+.task-temp-box .task-temp-cover{
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.task-temp-box .task-temp-mask{
+    background: linear-gradient(0deg,rgba(55,55,55,0.8),transparent);
+    transition-duration: 300ms;
+    transition-property: all;
+    transition-timing-function: ease;
+}
+.task-temp-box .task-temp-header{
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    padding: 12px 16px;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -webkit-align-items: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+}
+.task-temp-box .task-temp-content{
+    position: absolute;
+    bottom: 12px;
+    left: 16px;
+    right: 16px;
+}
+.task-temp-box .task-temp-name{
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    font-weight: 500;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.task-temp-box .task-temp-namewrap{
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    text-shadow: 0 1px 2px hsla(0,0%,41.2%,0.3);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.task-temp-box .task-temp-tags{
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-justify-content: flex-end;
+    -ms-flex-pack: end;
+    justify-content: flex-end;
+}
+.task-temp-box .task-temp-desc{
+    font-size: 12px;
+    max-height: 0;
+    opacity: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    white-space: normal;
+    -webkit-box-orient: vertical;
+}
+.task-temp-box:hover .task-temp-desc {
+    opacity: 1;
+    max-height: 40px;
+    margin-top: 4px;
+}
+.task-temp-box .task-temp-desc, .task-temp-box .task-temp-name {
+    overflow: hidden;
+    transition-duration: 300ms;
+    transition-property: all;
+    transition-timing-function: ease;
+}
+.task-temp-box{
+    color: #fff;
+}
+.task-temp-box .task-temp-cover, .task-temp-box .task-temp-cover:after, .task-temp-box .task-temp-cover:before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+}
+.task-temp-box .task-temp-cover:before {
+    background: linear-gradient(0deg,rgba(55,55,55,0.8),transparent);
+}
+.task-temp-box .task-temp-cover:after {
+    opacity: 0;
+    background: rgba(55,55,55,0.6);
+}
+.task-temp-box .task-temp-cover:after, .task-temp-box .task-temp-cover:before {
+    content: "";
+    display: block;
+    transition-duration: 300ms;
+    transition-property: all;
+    transition-timing-function: ease;
+}
+.task-temp-box :hover .task-temp-cover:after, .task-temp-box :hover .task-temp-creator {
+    opacity: 1;
+}
+.task-temp-box .task-temp-creator {
+    opacity: 0;
+    display: inline-block;
+    background: rgba(55,55,55,0.54);
+    border-radius: 4px;
+    padding: 2px 4px;
+    max-width: 100%;
+    font-size: 12px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.task-temp-box.task-temp-box-1{
+    background: #f7f7f7;
+    color: grey;
+}
+.task-temp-box.task-temp-box-1 .task-temp-namewrap{
+    text-shadow:none;
+}
+.task-temp-box.task-temp-box-1:hover {
+    background: #bfbfbf
+}
+
+.task-temp-box.task-temp-box-1:hover .task-temp-content,.task-temp-box.task-temp-box-1:hover .task-temp-plus {
+    color: #fff
+}
+.task-temp-box .task-temp-handler {
+    display: none;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    margin-left: 8px;
+    position: absolute;
+    right: 25px;
+}
+.task-temp-box .task-temp-handler button:hover{
+    color: #fff;
+}
+.task-temp-box .task-temp-handler span{
+    font-size: 18px;
+}
+.task-temp-box:hover .task-temp-handler{display:block}
+
+.m-light-project-temp-select .temp-title-box,
+.m-light-project-temp-select .temp-list-box{
+    overflow: auto;
+    max-height: 480px;
+}

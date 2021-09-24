@@ -1,0 +1,256 @@
+
+<table class="table table-bordered" style="table-layout : fixed ;width: 2310px">
+    <thead>
+        <tr>
+            <th width="40px" rowspan="2" class="text-center v-middle">序号</th>
+            <th width="100px" rowspan="2" class="text-center v-middle">编号</th>
+            <th width="100px"  rowspan="2" class="text-center v-middle" >项目类型</th>
+            <th width="120px"  rowspan="2"  class="text-center v-middle" >分管院长、项目负责人</th>
+            <th width="280px"  rowspan="2"  class="text-center v-middle" >项目名称</th>
+
+            <th width="130px"  rowspan="2" class="text-center v-middle">甲方</th>
+
+            <th width="550px" colspan="5"  class="text-center v-middle">主合同</th>
+            <th width="990px" colspan="9"  class="text-center v-middle">外协合同</th>
+        </tr>
+        <tr>
+            <th   class="text-center v-middle">合同日期</th>
+            <th   class="text-center v-middle">合同总额</th>
+            <th  class="text-center v-middle">收款金额</th>
+            <th   class="text-center v-middle">收款日期</th>
+            <th  class="text-center v-middle">余额</th>
+            <th  class="text-center v-middle">外协成本预算</th>
+            <th  class="text-center v-middle">预算分包率</th>
+            <th  class="text-center v-middle">合同编号</th>
+            <th colspan="2" class="text-center v-middle">合同名称</th>
+            <th  class="text-center v-middle">合同日期</th>
+            <th  class="text-center v-middle">合同总额</th>
+            <th  class="text-center v-middle">付款金额</th>
+            <th  class="text-center v-middle"> 付款日期</th>
+
+        </tr>
+    </thead>
+    <tbody>
+    {{if dataList != null && dataList.length > 0}}
+    {{each dataList as data i}}
+
+        <tr data-id="{{data.id}}" data-i="{{i}}" class="curp" style="height:{{data.maxCount*40}}px">
+            <td style="vertical-align: middle; text-align: center">{{data.index}}</td>
+            <td style="vertical-align: middle; text-align: center">{{data.projectNo}}</td>
+            <td style="text-overflow: ellipsis ;vertical-align: middle; text-align: center">{{data.projectType}}</td>
+            <td style="text-overflow: ellipsis ;vertical-align: middle; text-align: center">{{data.leaderName}}</td>
+            <td style="text-overflow: ellipsis ;vertical-align: middle; text-align: center">{{data.projectName}}</td>
+            <td style="text-overflow: ellipsis ;vertical-align: middle; text-align: center">{{data.constructCompany}}</td>
+            <td style="vertical-align: middle; text-align: center">{{_momentFormat(data.contractDate,'YYYY/MM/DD')}}</td>
+            <td style="vertical-align: middle; text-align: center">{{_expNumberFilter(data.totalContractAmount)}}</td>
+            <td class="no-padding viewTemplateTd">
+                {{if data.proceedsList != null && data.proceedsList.length > 0}}
+                <div class="item-box" style="height:100%">
+                    {{each data.proceedsList as proData j}}
+                    {{if j != data.proceedsList.length - 1}}
+                    <div class="row no-margin  border-bottom  dp-flex " >
+                        <div class="col-sm-2 p-xs  hover-event text-center2" style=" display: table; text-align: center; width: 110px;  height:{{data.maxCount/data.processCount * 39}}px ;vertical-align: center">
+
+                            <div style="display: table-cell;vertical-align: middle"> {{proData!=null&&proData.profitFee!=null?_expNumberFilter(proData.profitFee):''}}</div>
+
+                        </div>
+                    </div>
+                    {{else}}
+                    <div class="row no-margin   dp-flex ">
+                        <div class="col-sm-2 p-xs  hover-event text-center2" style="display: table;text-align: center; width: 110px;height: {{data.maxCount/data.processCount * 40}}px ;vertical-align: center">
+
+                            <div style="display: table-cell;vertical-align: middle"> {{proData!=null&&proData.profitFee!=null?_expNumberFilter(proData.profitFee):''}}</div>
+
+                        </div>
+                    </div>
+                    {{/if}}
+
+                    {{/each}}
+                </div>
+                {{/if}}
+            </td>
+            <td class="no-padding viewTemplateTd">
+                {{if data.proceedsList != null && data.proceedsList.length > 0}}
+                <div class="item-box" style="height: 100%">
+                    {{each data.proceedsList as proData j}}
+                    {{if j != data.proceedsList.length - 1}}
+                    <div class="row no-margin  border-bottom  dp-flex ">
+                        <div class="col-sm-2 p-xs  hover-event text-center2" style="display: table;text-align: center; width: 110px; height: {{data.maxCount/data.processCount  * 39}}px ;vertical-align: center" >
+                            {{if proData!=null&&proData.profitDate!=null}}
+                            <div style="display: table-cell;vertical-align: middle"> {{_momentFormat(proData.profitDate,'YYYY/MM/DD')}}</div>
+                            {{else}}
+                            <div style="display: table-cell;vertical-align: middle">  </div>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{else}}
+                    <div class="row no-margin   dp-flex ">
+                        <div class="col-sm-2 p-xs  hover-event text-center2" style="display: table;text-align: center; width: 110px; height: {{data.maxCount/data.processCount  * 40}}px ;vertical-align: center">
+                            {{if proData!=null&&proData.profitDate!=null}}
+                            <div style="display: table-cell;vertical-align: middle"> {{_momentFormat(proData.profitDate,'YYYY/MM/DD')}}</div>
+                            {{else}}
+                            <div style="display: table-cell;vertical-align: middle">  </div>
+                            {{/if}}
+                        </div>
+                    </div>
+                    {{/if}}
+                    {{/each}}
+                </div>
+                {{/if}}
+            </td>
+
+            <td style="vertical-align: middle; text-align: center">{{_expNumberFilter(data.balance)}}</td>
+            <td style="vertical-align: middle; text-align: center">{{_expNumberFilter(data.investmentEstimation)}}</td>
+            {{if data.investmentEstimationRatio != null}}
+            <td style="vertical-align: middle; text-align: center">{{data.investmentEstimationRatio}} % </td>
+            {{else}}
+            <td style="vertical-align: middle; text-align: center"> </td>
+            {{/if}}
+
+            {{if data.paymentList != null && (data.paymentList.length > 1 || data.payListCount > 1) }}
+            <td colspan="7" class="no-padding viewTemplateTd">
+                <div class="item-box" style="height: 100% ;width: 770px">
+                    {{each data.paymentList as payData j}}
+                    {{if j != data.paymentList.length - 1}}
+                    <div class="row no-margin no-padding border-bottom  dp-flex " >
+                        <div class="col-sm-2 p-xs  border-right  text-center2" style="display: table;text-align: center; width: 110px ; height: {{data.maxCount/data.payListCount * payData.listCount * 39}}px ;vertical-align: center">
+                            <div style="display: table-cell;vertical-align: middle ; text-overflow: ellipsis ;height: {{data.maxCount/data.payListCount * payData.listCount * 39}}px"> {{payData.contractNo}}</div>
+                        </div>
+                        <div class="col-sm-2 p-xs  border-right  text-center2" style="display: table;text-align: center; width: 220px ; height: {{data.maxCount/data.payListCount * payData.listCount * 39}}px ;vertical-align: center">
+                            <div style="display: table-cell;vertical-align: middle ; text-overflow: ellipsis ;height: {{data.maxCount/data.payListCount * payData.listCount * 39}}px"> {{payData.contractName}}</div>
+                        </div>
+                        <div class="col-sm-2 p-xs border-right  text-center2"style="display: table;text-align: center; width: 110px; height: {{data.maxCount/data.payListCount * payData.listCount * 39}}px ;vertical-align: center">
+                            <div style="display: table-cell;vertical-align: middle">{{_momentFormat(payData.contractDate,'YYYY/MM/DD')}}</div>
+                        </div>
+                        <div class="col-sm-2 p-xs border-right  text-center2" style="display: table;text-align: center; width: 110px ;height: {{data.maxCount/data.payListCount * payData.listCount * 39}}px ;vertical-align: center">
+                            <div style="display: table-cell;vertical-align: middle">{{_expNumberFilter(payData.costFee)}}</div>
+                        </div>
+                        {{if payData.list != null && payData.list.length > 0}}
+                        <div class="item-box" style="width: 220px">
+                           {{each payData.list as liData k}}
+                            {{if k != payData.list.length - 1}}
+                             <div class="row no-margin  border-bottom  dp-flex " >
+                                <div class="col-sm-2 p-xs border-right  text-center2" style="display: table;text-align: center; width: 110px; height: {{data.maxCount/data.payListCount  * 39}}px ;vertical-align: center">
+                                    <div style="display: table-cell;vertical-align: middle">{{_expNumberFilter(liData.payFee)}}</div>
+                                </div>
+                                <div class="col-sm-2 p-xs text-center2" style="display: table;text-align: center; width: 110px ; height: {{data.maxCount/data.payListCount  * 39}}px ;vertical-align: center">
+                                    <div style="display: table-cell;vertical-align: middle">{{_momentFormat(liData.profitDate,'YYYY/MM/DD')}}</div>
+                                </div>
+                             </div>
+                            {{else}}
+                            <div class="row no-margin   dp-flex " >
+                                <div class="col-sm-2 p-xs border-right  text-center2" style="display: table;text-align: center; width: 110px ; height: {{data.maxCount/data.payListCount  * 40}}px ;vertical-align: center">
+                                    <div style="display: table-cell;vertical-align: middle">{{_expNumberFilter(liData.payFee)}}</div>
+                                </div>
+                                <div class="col-sm-2 p-xs text-center2" style="display: table;text-align: center; width: 110px ; height: {{data.maxCount/data.payListCount  * 40}}px ;vertical-align: center">
+                                    <div style="display: table-cell;vertical-align: middle">{{_momentFormat(liData.profitDate,'YYYY/MM/DD')}}</div>
+                                </div>
+                            </div>
+                            {{/if}}
+
+                           {{/each}}
+                        </div>
+                        {{else}}
+                        <div class="col-sm-2 p-xs border-right hover-event text-center2" style="width: 110px ;height: {{data.maxCount/data.payListCount * payData.listCount * 40}}px ;vertical-align: center">
+
+                        </div>
+                        <div class="col-sm-2 p-xs" style="width: 110px ;height: {{data.maxCount/data.payListCount * payData.listCount * 40}}px ;vertical-align: center">
+
+                        </div>
+                        {{/if}}
+                    </div>
+                    {{else}}
+                    <div class="row no-margin no-padding  dp-flex ">
+                        <div class="col-sm-2 p-xs  border-right  text-center2" style="display: table;text-align: center;width: 110px ; height: {{data.maxCount/data.payListCount * payData.listCount * 40}}px ;vertical-align: center">
+                            <div style="display: table-cell;vertical-align: middle ; text-overflow: ellipsis ; height: {{data.maxCount/data.payListCount * payData.listCount * 40}}px">
+                                {{payData.contractNo}}
+                            </div>
+                        </div>
+                        <div class="col-sm-2 p-xs  border-right  text-center2" style="display: table;text-align: center;width: 220px ; height: {{data.maxCount/data.payListCount * payData.listCount * 40}}px ;vertical-align: center">
+                            <div style="display: table-cell;vertical-align: middle ; text-overflow: ellipsis ; height: {{data.maxCount/data.payListCount * payData.listCount * 40}}px">
+                                {{payData.contractName}}
+                            </div>
+                        </div>
+                        <div class="col-sm-2 p-xs border-right  text-center2"style="display: table;text-align: center; width: 110px; height: {{data.maxCount/data.payListCount * payData.listCount * 40}}px ;vertical-align: center">
+                            <div style="display: table-cell;vertical-align: middle">{{_momentFormat(payData.contractDate,'YYYY/MM/DD')}}</div>
+                        </div>
+                        <div class="col-sm-2 p-xs border-right  text-center2" style="display: table;text-align: center; width: 110px ;height: {{data.maxCount/data.payListCount * payData.listCount * 40}}px ;vertical-align: center">
+                            <div style="display: table-cell;vertical-align: middle">{{_expNumberFilter(payData.costFee)}}</div>
+                        </div>
+                        {{if payData.list != null && payData.list.length > 0}}
+                        <div class="item-box" style="width: 220px">
+                            {{each payData.list as liData k}}
+                            {{if k != payData.list.length - 1}}
+                            <div class="row no-margin  border-bottom  dp-flex " >
+                                <div class="col-sm-2 p-xs border-right  text-center2" style="display: table;text-align: center; width: 110px; height: {{data.maxCount/data.payListCount  * 39}}px ;vertical-align: center">
+                                    <div style="display: table-cell;vertical-align: middle">{{_expNumberFilter(liData.payFee)}}</div>
+                                </div>
+                                <div class="col-sm-2 p-xs text-center2" style="display: table;text-align: center; width: 110px ; height: {{data.maxCount/data.payListCount  * 39}}px ;vertical-align: center">
+                                    <div style="display: table-cell;vertical-align: middle">{{_momentFormat(liData.profitDate,'YYYY/MM/DD')}}</div>
+                                </div>
+                            </div>
+                            {{else}}
+                            <div class="row no-margin   dp-flex " >
+                                <div class="col-sm-2 p-xs border-right  text-center2" style="display: table;text-align: center; width: 110px ; height: {{data.maxCount/data.payListCount  * 40}}px ;vertical-align: center">
+                                    <div style="display: table-cell;vertical-align: middle">{{_expNumberFilter(liData.payFee)}}</div>
+                                </div>
+                                <div class="col-sm-2 p-xs text-center2" style="display: table;text-align: center; width: 110px ; height: {{data.maxCount/data.payListCount  * 40}}px ;vertical-align: center">
+                                    <div style="display: table-cell;vertical-align: middle">{{_momentFormat(liData.profitDate,'YYYY/MM/DD')}}</div>
+                                </div>
+                            </div>
+                            {{/if}}
+
+                            {{/each}}
+                        </div>
+                        {{else}}
+                        <div class="col-sm-2 p-xs border-right hover-event text-center2" style="width: 110px ;height: {{data.maxCount/data.payListCount * payData.listCount * 40}}px ;vertical-align: center">
+
+                        </div>
+                        <div class="col-sm-2 p-xs" style="width: 110px ;height: {{data.maxCount/data.payListCount * payData.listCount * 40}}px ;vertical-align: center">
+
+                        </div>
+                        {{/if}}
+                    </div>
+                    {{/if}}
+                    {{/each}}
+
+                </div>
+            </td>
+            {{else if  data.paymentList != null && data.paymentList.length == 1 && data.paymentList[0].list.length == 1 }}
+            <td style=" text-overflow: ellipsis;vertical-align: middle;text-align: center">{{data.paymentList[0].contractNo}}</td>
+            <td colspan="2" style=" text-overflow: ellipsis;vertical-align: middle;text-align: center">{{data.paymentList[0].contractName}}</td>
+            <td style="vertical-align: middle;text-align: center">{{_momentFormat(data.paymentList[0].contractDate,'YYYY/MM/DD')}}</td>
+            <td style="vertical-align: middle;text-align: center">{{_expNumberFilter(data.paymentList[0].costFee)}} </td>
+            <td style="vertical-align: middle;text-align: center">{{_expNumberFilter(data.paymentList[0].list[0].payFee)}}</td>
+            <td style="vertical-align: middle;text-align: center">{{_momentFormat(data.paymentList[0].list[0].profitDate,'YYYY/MM/DD')}}</td>
+            {{else if  data.paymentList != null && data.paymentList.length == 1 }}
+            <td  style=" text-overflow: ellipsis;vertical-align: middle;text-align: center">{{data.paymentList[0].contractNo}}</td>
+            <td colspan="2" style=" text-overflow: ellipsis;vertical-align: middle;text-align: center">{{data.paymentList[0].contractName}}</td>
+            <td style="vertical-align: middle;text-align: center">{{_momentFormat(data.paymentList[0].contractDate,'YYYY/MM/DD')}}</td>
+            <td style="vertical-align: middle;text-align: center">{{_expNumberFilter(data.paymentList[0].costFee)}} </td>
+            <td style="vertical-align: middle;text-align: center"></td>
+            <td style="vertical-align: middle;text-align: center"></td>
+            {{else}}
+            <td></td>
+            <td colspan="2"></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            {{/if}}
+
+        </tr>
+
+    {{/each}}
+    {{else}}
+        <tr class="no-data">
+            <td colspan="8" class="text-center v-middle">
+                <div class="m-b-xl m-t-md">
+                    <img src="{{_url('/img/default/without_data.png')}}">
+                    <span class="fc-dark-blue dp-block">没有相关数据</span>
+                </div>
+            </td>
+        </tr>
+    {{/if}}
+    </tbody>
+</table>

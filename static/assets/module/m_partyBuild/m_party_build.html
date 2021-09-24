@@ -1,0 +1,77 @@
+<div class="ibox">
+    <div class="ibox-title secondary-menu-outbox">
+        <div class="row">
+            <div class="col-md-12" id="secondary-menu">
+                <!-- 面包屑 -->
+                <div class="pull-left" id="breadcrumb">
+                    <div class="no-margin p-h-sm breadcrumb-box" >
+
+
+                        <ol class="breadcrumb">
+                            <li>
+                                信息动态
+                            </li>
+                            <li class="active fa fa-angle-right">
+                                <strong>党史学习教育</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <form role="form" class="form-horizontal filter-form">
+            <div class="row" id="filterBox">
+                <div class="col-md-12 m-t-xs" id="timeSelect">
+
+                </div>
+                <div class="col-md-12 m-t-xs">
+                    <div class="">
+                        <label class="inline">搜&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;索：</label>
+                        <input class="form-control input-sm width-300 inline v-middle" type="text" name="keyword" placeholder="请输入关键字">
+                    </div>
+                </div>
+                <div class="col-md-12 m-t border-bottom"  style="margin-left: 1%;width: 94%;padding: 0px;">
+                    <div class=" col-md-8  p-b-sm" style="padding-left: 0px">
+                        <button class="btn btn-primary" data-action="search">查询</button>
+                        <button class="btn btn-default" data-action="refreshBtn">重置条件</button>
+                    </div>
+                    <div class=" col-md-4  p-b-sm text-right" style="padding-right: 0px;">
+                        <button class="btn btn-primary roleControl"  roleCode="10000605" flag="2" data-action="addDynamicsNotice">添加党史学习教育</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-t-xs p-t-sm">
+                    <div class=" col-md-9 filter-result-col ">
+                        <span>筛选条件： 共 <span id="totalBySearch">0</span> 项 &nbsp;</span>
+                    </div>
+
+                <div class="col-md-3 text-right">
+
+                </div>
+            </div>
+        </form>
+        <div class="m-project-dynamics p-t-sm">
+            <div id="vertical-timeline" class="vertical-container dark-timeline center-orientation">
+                <div class="project-notice">
+                </div>
+            </div>
+            <div class="margin-bottom-30 m-t-xl no-data text-center" style="display: none;">
+                <div class="">
+                    <img src="{{_url('/img/default/without_message.png')}}">
+                </div>
+                <span class="fc-dark-blue p-l-md">暂无党史学习教育内容</span>
+            </div>
+            <div class="row margin-bottom-30">
+                <div class="col-md-12 text-center m-t-sm">
+                    <button class="btn btn-default btn-xs" data-action="btnPageNext" href="javascript:void(0)" style="display: none;">加载更多</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+

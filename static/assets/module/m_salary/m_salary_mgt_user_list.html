@@ -1,0 +1,43 @@
+<table class="table table-bordered table-responsive m-salary-mgt-user-list">
+    <thead>
+    <tr>
+        <th width="16%">姓名</th>
+        <th width="15%">手机号</th>
+        <th width="17%">岗位</th>
+        <th width="13%">工资</th>
+        <th width="13%">奖金</th>
+        <th width="13%">五险一金</th>
+        <th width="13%">合计</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList && dataList.length>0}}
+        {{each dataList as d}}
+        <tr class="curp" data-id="{{d.id}}" data-company-id="{{d.companyId}}">
+            <td>{{d.userName}}</td>
+            <td>{{d.cellphone}}</td>
+            <td>
+                {{if d.positionType == '1'}}
+                    管理人员
+                {{else if d.positionType == '2'}}
+                    技术人员
+                {{/if}}
+            </td>
+            <td>{{d.salaryOrg}}</td>
+            <td>{{d.bonusOrg}}</td>
+            <td>{{d.fiveInsuranceAndFundOrg}}</td>
+            <td>{{d.total}}</td>
+        </tr>
+        {{/each}}
+    {{else}}
+    <tr class="no-data">
+        <td colspan="7" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

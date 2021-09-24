@@ -1,0 +1,68 @@
+<div class="ibox m_organizational no-margins">
+    <!-- 组织－组织架构- 编辑课题介绍 预览-->
+
+    <div class="ibox-content no-padding">
+
+
+        <a class="close-btn" href="javascript:void(0)"  data-action="backToLast" title="退出预览">
+            <i class="fa fa-times fc-red"></i>
+        </a>
+
+
+        <div class="col-md-12">
+            <div class="row">
+                <div class="{{_styleType(styleType,'1')}}">
+                    <div   style="padding:0px;margin:0px; line-height: 25px;letter-spacing: 0px;word-break: break-all;">
+                        <div>
+                            <p>
+                                {{#leftExplainDesc}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="middleLine col-custom-2" style="width:1px;height:750px;background:#e2e2e2;float:left;position:relative"></div>
+                <div class="{{_styleTypeEdit(styleType,'2')}} p-l-none l-h-18">
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label m-t-xs f-s-m-v1">课题名称</label>
+                        <div class="col-sm-12">
+                            <p class="line-feed f-s-m-v1">{{data.projectName}}</p>
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label m-t-xl f-s-m-v1">课题目标</label>
+                        <div class="col-sm-12">
+                            <p class="line-feed f-s-m-v1">{{data.projectTarget}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label m-t-xl f-s-m-v1">课题内容</label>
+                        <div class="col-sm-12">
+                            <p class="line-feed f-s-m-v1">{{data.projectContent}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label m-t-xl f-s-m-v1">课题成果</label>
+                        <div class="col-sm-12">
+                            <p class="line-feed f-s-m-v1">{{data.projectResult}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label m-t-xl f-s-m-v1">荣&nbsp; &nbsp; &nbsp; &nbsp;誉</label>
+                        <div class="col-sm-12">
+                            <p class="line-feed f-s-m-v1">{{data.projectHonour}}</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label m-t-xl f-s-m-v1">团队成员</label>
+                        <div class="col-sm-12">
+                            <p class="line-feed f-s-m-v1">{{data.projectMember}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

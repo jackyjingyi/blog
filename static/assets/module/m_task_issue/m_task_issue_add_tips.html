@@ -1,0 +1,28 @@
+<div class="m">
+  <div class="text-center">
+        <img src="{{_url('/img/project/project_approval_1.png')}}" width="60"/>
+    </div>
+    <div class="p-sm">
+            工作内容填写完成后，需发布以便进行下一步的工作。
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <label class="i-checks i-checks-label m-l">
+                <input name="itemCk" type="checkbox"/>
+                <span class="i-checks-span fc-dark-gray">以后不再提示</span>
+            </label>
+        </div>
+        <div class="col-sm-6 text-center">
+            <button class="btn btn-primary" data-action="knowIt">知道了</button>
+        </div>
+    </div>
+    <div style="position: absolute;top: 0px;left:-80px;">
+        <span class="ic-tip-arrow-right"></span>
+    </div>
+</div>
+<script>
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green'
+    });
+</script>

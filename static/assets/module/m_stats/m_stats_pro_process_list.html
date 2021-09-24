@@ -1,0 +1,51 @@
+<table class="table table-bordered table-hover m-b-none m-stats-pro-process-list dataTable">
+    <thead>
+    {{if businessType==1}}
+    <tr class="project">
+        <th  width="200px" data-type="1" rowspan="2" style="padding-top: 25px" class="sorting_desc w-100" data-action="sort" data-code="projectNo">项目编号</th>
+        <th data-type="2" rowspan="2" style="padding-top: 25px">委托单位</th>
+        <th data-type="1" rowspan="2" style="padding-top: 25px">项目名称</th>
+        <th rowspan="2" style="padding-top: 25px">类型</th>
+        <th data-type="1" colspan="2" style="text-align: center; width: 40%">项目进度</th>
+    </tr>
+    <tr>
+        <th data-type="1" style="width: 20%">回款率</th>
+        <th data-type="1" style="width: 20%">工作完成率</th>
+    </tr>
+    {{else}}
+    <tr>
+        <th width="200px" data-type="1" class="sorting_desc w-100" data-action="sort" data-code="projectNo">课题编号</th>
+        <th data-type="1">课题名称</th>
+        <th>类型</th>
+        <th data-type="1">项目进度（工作完成率）</th>
+    </tr>
+    {{/if}}
+    </thead>
+    <tbody>
+    {{if dataList!=null && dataList.length>0}}
+    {{each dataList as p i}}
+        <tr class="curp" data-id="{{p.id}}">
+            <td data-type="1">{{p.projectNo}}</td>
+            {{if businessType==1}}
+            <td data-type="2">{{p.constructCompany}}</td>
+            {{/if}}
+            <td data-type="1">{{p.projectName}}</td>
+            <td>{{p.projectType}}</td>
+            {{if businessType==1}}
+            <td data-type="1">{{p.taskProgressRatio?p.progressRate+'%':''}}</td>
+            {{/if}}
+            <td data-type="1">{{p.taskProgressRatio?p.taskProgressRatio+'%':''}}</td>
+        </tr>
+    {{/each}}
+    {{else}}
+    <tr class="no-data-tr">
+        <td colspan="10" class="text-center ">
+            <div>
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

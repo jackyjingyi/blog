@@ -1,0 +1,43 @@
+<form class="form-horizontal m">
+    <div class="form-group m-b-none">
+        <input class="form-control" name="taskName" placeholder="输入新工作项标题"/>
+    </div>
+    <div class="form-group m-b-xs" id="tagsBox">
+
+    </div>
+    <div class="form-group m-b-xs">
+        <span class="glyphicon glyphicon-time dp-inline-block"></span>
+        {{if doType==1 && fromType!=2}}
+        <a class="dp-inline-block input-time" data-action="selectTime" data-start-time="" data-end-time="">
+            <span class="fc-dark-gray">设置时间</span>
+        </a>
+        {{else}}
+        <a class="dp-inline-block btn btn-link input-time" disabled="disabled">
+            <span class="fc-dark-gray">设置时间</span>
+        </a>
+        {{/if}}
+    </div>
+    <div class="form-group m-b-none">
+        <span class="glyphicon glyphicon-user dp-inline-block"></span>
+        {{if doType==1 && fromType!=2}}
+        <a class="btn btn-link select-user" data-action="selectUser" data-type="12" data-key="principalUsrId" data-value=""
+           data-cookies="0" data-url-type="3" data-multiple="0" data-is-clear="1">
+            <span class="fc-dark-gray">负责人</span>
+        </a>
+        {{else}}
+        <a class="btn btn-link select-user" disabled="disabled" data-action="">
+            <span class="fc-dark-gray">负责人</span>
+        </a>
+        {{/if}}
+
+    </div>
+    <div class="form-group border-top p-t m-t-sm">
+        <div class="col-sm-6">
+            <button class="btn btn-link no-padding" data-action="addTags">添加优先级</button>
+        </div>
+        <div class="col-sm-6 text-right">
+            <button class="btn btn-default btn-xs" data-action="cancelAddTask">取消</button>
+            <button class="btn btn-primary btn-xs" data-action="saveAddTask">确定</button>
+        </div>
+    </div>
+</form>

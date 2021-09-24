@@ -1,0 +1,211 @@
+<form class="form-horizontal m">
+    <div class="form-group">
+        <label class="col-sm-3 text-right">订单内容：</label>
+        <div class="col-sm-9">
+            {{title}}
+        </div>
+    </div>
+    {{if productContentType==2}}
+    <div class="form-group">
+        <label class="col-sm-3 text-right">扩充账号数：</label>
+        <div class="col-sm-9">
+            {{orderCount}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">当前版本：</label>
+        <div class="col-sm-9">
+            {{if version=='03'}}
+            基础版
+            {{else if version=='02'}}
+            专业版
+            {{else if version=='01'}}
+            企业版
+            {{/if}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">当前版本购买账号数：</label>
+        <div class="col-sm-9">
+            {{oldPurchasedNum}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">扩充后版本账号数：</label>
+        <div class="col-sm-9">
+            {{purchasedNum}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">当前有效时间：</label>
+        <div class="col-sm-9">
+            {{currentEffectTimeStr}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">扩充后有效时间：</label>
+        <div class="col-sm-9">
+            {{currentEffectTimeStr}}
+        </div>
+    </div>
+
+    {{else if productContentType==3}}
+    <div class="form-group">
+        <label class="col-sm-3 text-right">续费版本：</label>
+        <div class="col-sm-9">
+            {{if version=='03'}}
+            基础版
+            {{else if version=='02'}}
+            专业版
+            {{else if version=='01'}}
+            企业版
+            {{/if}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">续费时长：</label>
+        <div class="col-sm-9">
+            {{serviceTime}}年
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">续费账号数：</label>
+        <div class="col-sm-9">
+            {{oldPurchasedNum}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">当前有效时间：</label>
+        <div class="col-sm-9">
+            {{currentEffectTimeStr}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">续费后有效时间：</label>
+        <div class="col-sm-9">
+            {{serviceTimeStr}}
+        </div>
+    </div>
+
+    {{else if productContentType==4}}
+    <div class="form-group">
+        <label class="col-sm-3 text-right">购买存储空间：</label>
+        <div class="col-sm-9">
+            {{orderCount}}G
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">当前存储空间：</label>
+        <div class="col-sm-9">
+            {{oldSpaceCapacity}}G
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">扩充后存储空间：</label>
+        <div class="col-sm-9">
+            {{purchasedNum}}G
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">存储空间有效时间：</label>
+        <div class="col-sm-9">
+            {{currentEffectTimeStr}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">扩充后有效时间：</label>
+        <div class="col-sm-9">
+            {{currentEffectTimeStr}}
+        </div>
+    </div>
+    {{else if productContentType==5}}
+
+    <div class="form-group">
+        <label class="col-sm-3 text-right">续费时长：</label>
+        <div class="col-sm-9">
+            {{serviceTime}}年
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">当前存储空间：</label>
+        <div class="col-sm-9">
+            {{oldSpaceCapacity}}G
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">当前有效时间：</label>
+        <div class="col-sm-9">
+            {{currentEffectTimeStr}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">续费后有效时间：</label>
+        <div class="col-sm-9">
+            {{serviceTimeStr}}
+        </div>
+    </div>
+
+    {{else}}
+
+    <div class="form-group">
+        <label class="col-sm-3 text-right">购买账号数：</label>
+        <div class="col-sm-9">
+            {{orderCount?orderCount:oldPurchasedNum}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">当前版本：</label>
+        <div class="col-sm-9">
+            {{if version=='03'}}
+            基础版
+            {{else if version=='02'}}
+            专业版
+            {{else if version=='01'}}
+            企业版
+            {{/if}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">购买版本：</label>
+        <div class="col-sm-9">
+            {{if productCode=='02'}}
+            专业版
+            {{else if productCode=='01'}}
+            企业版
+            {{/if}}
+        </div>
+    </div>
+    {{if purchaseTime}}
+    <div class="form-group">
+        <label class="col-sm-3 text-right">购买时长：</label>
+        <div class="col-sm-9">
+            {{purchaseTime}}年
+        </div>
+    </div>
+    {{/if}}
+    <div class="form-group">
+        <label class="col-sm-3 text-right">当前版本有效时间：</label>
+        <div class="col-sm-9">
+            {{currentEffectTimeStr}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-3 text-right">购买后有版本效时间：</label>
+        <div class="col-sm-9">
+            {{purchaseTimeStr}}
+        </div>
+    </div>
+
+    {{/if}}
+
+
+
+
+
+    <div class="form-group">
+        <label class="col-sm-3 text-right">订单价格合计：</label>
+        <div class="col-sm-9">
+            {{orderAmount}}元
+        </div>
+    </div>
+</form>

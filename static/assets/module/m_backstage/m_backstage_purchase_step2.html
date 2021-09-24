@@ -1,0 +1,112 @@
+<div class="panel panel-default ">
+    <div class="panel-heading">
+        <h4>订单详情</h4>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal col-md-10 col-md-offset-1">
+            <div class="form-group">
+                <label class="col-md-3 col-xl-2 ">组织名称：</label>
+                <div class="col-md-9 col-xl-10">
+                    {{companyName}}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 col-xl-2 ">手机号码：</label>
+                <div class="col-md-9 col-xl-10">
+                    <span class="order-cellphone">{{list && list.length>0?list[0].cellphone:''}}</span>
+                    <a href="javascript:void(0);" class="editable-click" data-action="editCellphone" data-key="cellphone"  data-placeholder="请输入手机号" data-type="1" data-valid="1" data-max-length="11" title="更改联系人手机号码">
+                        <i class="icon iconfont icon-bianji"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    <table class="table table-hover border m-b-none" >
+                        <thead>
+                        <tr>
+                            <th>订单编号</th>
+                            <th>订单内容</th>
+                            <th>单价</th>
+                            <th>数量</th>
+                            <th>有效时间</th>
+                            <th>小计</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            {{each list as p i}}
+                            <tr>
+                                <td>{{p.orderNo}}</td>
+                                <td>
+                                    <!--{{p.productName}}-->
+                                    {{if p.productContentType=='2'}}
+                                    账号扩充・{{p.productName}}
+                                    {{else if p.productContentType=='3'}}
+                                    版本续费・{{p.productName}}
+                                    {{else if p.productContentType=='4'}}
+                                    存储空间扩容
+                                    {{else if p.productContentType=='5'}}
+                                    存储空间续费
+                                    {{else}}
+                                    版本升级・{{p.productName}}
+                                    {{/if}}
+                                </td>
+                                <td>{{p.costPerUnit}}{{p.productType=='0'?'元/G/年':'/人/年'}}</td>
+                                <td>{{p.orderCount}}{{p.productType=='0'?'G':''}}</td>
+                                <td>
+                                    {{if _isNullOrBlank(p.effectStartTime) && _isNullOrBlank(p.effectEndTime)}}
+                                    --
+                                    {{else}}
+                                    {{_momentFormat(p.effectStartTime,'YYYY/MM/DD')}}-{{_momentFormat(p.effectEndTime,'YYYY/MM/DD')}}
+                                    {{/if}}
+                                </td>
+                                <td>{{p.orderAmount}}</td>
+                            </tr>
+                            {{/each}}
+                            <tr>
+                                <td colspan="5"></td>
+                                <td>总计：<span class="fc-red">{{total}}</span>元</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div class="form-group">
+                <p class="m-l m-r fc-v2-grey">目前仅支持对公转账，您当前待支付的金额为<span class="fc-red">{{total}}</span>元,请将费用付款至以下银行账户，在订单支付完成后，请联系在线客服开通。</p>
+            </div>
+            <div class="form-group">
+                <label class="col-md-12">开户名称：深圳市卯丁技术有限公司</label>
+                <label class="col-md-12">开户银行：中国工商银行深圳益田支行</label>
+                <label class="col-md-12">账&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号：4000032309200182427</label>
+            </div>
+            <div class="hr-line-dashed"></div>
+            <div class="form-group">
+                <div class="col-md-12 fc-v2-grey m-b-xs">在线客服QQ：1915772554</div>
+                <div class="col-md-12 fc-v2-grey m-b-xs">联系电话：400-900-6299</div>
+                <div class="col-md-12 fc-v2-grey m-b-xs">办公时间：法定工作日 09:00 - 18:00</div>
+            </div>
+            <!--<div class="form-group">
+                <label class="col-md-12">选择支付方式：</label>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-12">
+                    <div class="payment-option active">
+                        <img class="m-t-sm" src="{{_url('/img/common/zhifubao.png')}}" width="110">
+                        <div class="checked"><span class="fa fa-check "></span></div>
+                    </div>
+                    <div class="payment-option">
+                        <img class="m-t-sm" src="{{_url('/img/common/yinlian.png')}}" width="110">
+                        <div class="checked"><span class="fa fa-check "></span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-3 col-xl-2 "></label>
+                <div class="col-md-9 col-xl-10 text-right">
+                    <span class="font-bold f-s-xl v-middle m-r-xs">总计：<span class="fc-red">7978</span></span>
+                    <button class="btn btn-primary">立即支付</button>
+                </div>
+            </div>-->
+        </form>
+    </div>
+</div>

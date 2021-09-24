@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html class="ie8"> <![endif]-->
+<!--[if IE 9]> <html class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en"> <!--<![endif]-->
+<head>
+    <title>华侨城创新研究院</title>
+    <template src="lib_header.html" lib_header></template>
+</head>
+<body class="top-navigation bg-white">
+<div id="wrapper">
+    <div id="page-wrapper" class="white-bg">
+        <!--头部信息-->
+        <div id="m_top" class="row white-bg">
+            <nav class="navbar navbar-static-top" role="navigation">
+                <div class="navbar-header">
+                    <a href="@serverPath@" class="navbar-brand">
+                        <img src="@rootPath@/img/logo_white.png" style="height: 35px;">
+                    </a>
+                </div>
+            </nav>
+        </div>
+        <div class="wrapper wrapper-content" style="padding: 10px 0;">
+            <div class="container-fluid" style="padding: 0;">
+                <div class="row">
+                    <div class="div-invite-bPaner col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6 col-xl-offset-4 col-xl-4">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<template src="lib_footer.html" lib_footer></template>
+<script type="text/javascript">
+
+    $(function () {
+
+        var currentUrl = window.location.href;
+        var invitedId = currentUrl.substring(currentUrl.lastIndexOf('/')+1,currentUrl.length);
+        var option = {};
+        option.url = restApi.url_getInvitedInfo+'/'+invitedId;
+        m_ajax.get(option, function (response) {
+            if (response.code == '0') {
+
+                if (response.data.type === '1'){
+
+                    $('.div-invite-bPaner').m_inviteBranch({invitedId:invitedId},true);
+
+                }else if(response.data.type === '3'){
+
+                    $('.div-invite-bPaner').m_inviteCooperation({invitedId:invitedId},true);
+
+                }else{
+                    $('.div-invite-bPaner').m_inviteBPartner({invitedId:invitedId},true);
+                }
+
+            } else {
+                S_layer.error(response.info);
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<div class="m_feeEntry_settings" >
+    <table class="table table-bordered table-responsive">
+        <thead>
+            <tr>
+                <th width="20%">收支分类</th>
+                <th width="70%" class="no-padding">
+                    <div class="row no-margin">
+                        <div class="col-sm-6 p-xs border-right">收支分类子项</div>
+                        <div class="col-sm-6 p-xs">数据来源</div>
+                    </div>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        {{each feeEntryFieldList as f i}}
+            <tr>
+                <td class="gray-bg v-middle">
+                    <div class="dp-inline-block">
+                        <label class="i-checks i-checks-label m-b-none">
+                            {{if isEdit==1}}
+                                <input name="itemCk" type="checkbox" data-code="{{f.code}}"  data-pid="{{f.pid}}" data-id="{{f.id}}"/>
+                            {{else}}
+                                <input name="itemCk" type="checkbox" data-code="{{f.code}}"  data-pid="{{f.pid}}" data-id="{{f.id}}" disabled/>
+                            {{/if}}
+                            <span class="i-checks-span">{{f.name}}</span>
+                        </label>
+                    </div>
+                </td>
+                <td class="no-padding l-h-14">
+                    <div class="item-box">
+                        {{each f.childList as c ci}}
+                        <div class="row no-margin {{ci==f.childList.length-1 && isEdit!=1?'':'border-bottom'}}">
+                            <div class="col-sm-6 p-xs border-right">
+                                <div class="dp-inline-block">
+                                    <label class="i-checks i-checks-label m-b-none">
+                                        {{if c.showStatus==1}}
+                                        {{if c.disabled==true || isEdit==0}}
+                                        <input name="itemCk" type="checkbox" data-code="{{c.code}}"  data-pid="{{c.pid}}" data-id="{{c.id}}" checked disabled/>
+                                        {{else}}
+                                        <input name="itemCk" type="checkbox" data-code="{{c.code}}"  data-pid="{{c.pid}}" data-id="{{c.id}}" checked/>
+                                        {{/if}}
+                                        {{else}}
+                                        {{if c.disabled==true || isEdit==0}}
+                                        <input name="itemCk" type="checkbox" data-code="{{c.code}}"  data-pid="{{c.pid}}" data-id="{{c.id}}" disabled/>
+                                        {{else}}
+                                        <input name="itemCk" type="checkbox" data-code="{{c.code}}"  data-pid="{{c.pid}}" data-id="{{c.id}}"/>
+                                        {{/if}}
+
+                                        {{/if}}
+                                        <span class="i-checks-span">{{c.name}}</span>
+                                    </label>
+                                </div>
+                                {{if c.isDefaulted !=1 && isEdit==1}}
+                                <a href="javascript:void(0);" data-action="editName" data-id="{{c.id}}" data-pid="{{f.id}}" data-name="{{c.name}}" data-category-type="{{c.categoryType}}" style="display: none;">
+                                    <i class="ic-edit"></i>
+                                </a>
+                                <a href="javascript:void(0);" data-action="delFeeField" data-id="{{c.id}}" style="display: none;">
+                                    <i class="glyphicon glyphicon-remove text-danger"></i>
+                                </a>
+                                {{/if}}
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="col-sm-6 p-xs">
+                                {{c.dataSource}}
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                    {{if isEdit==1}}
+                    <div class="row no-margin">
+                        <div class="col-sm-12 p-xs">
+                            <a class="btn btn-link btn-add" data-action="addFeeField" title="添加设计任务" data-id="{{f.id}}"><i class="fa fa-plus"></i></a>
+                            <a href="javascript:void(0);" class="absolute-top-right" data-action="expand" style="right: 8px;top: 5px;" title="展示或收起分类子项">
+                                <i class="fa fa-angle-double-up text-bold f-s-lg"></i>
+                            </a>
+                        </div>
+                    </div>
+                    {{/if}}
+                </td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+
+</div>

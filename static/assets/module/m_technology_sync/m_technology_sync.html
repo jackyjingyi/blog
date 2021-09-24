@@ -1,0 +1,181 @@
+<div class="ibox m_technology_sync">
+    <div class="ibox-title secondary-menu-outbox">
+        <div class="row">
+            <div class="col-md-12" id="secondary-menu">
+                <!-- 面包屑 -->
+                <div class="pull-left" id="breadcrumb">
+                    <div class="no-margin p-h-sm breadcrumb-box">
+                        <ol class="breadcrumb">
+                            <li>
+                                信息动态
+                            </li>
+                            <li class="active fa fa-angle-right">
+                                <strong>技术协同</strong>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6 p-r-xl p-l-0" >
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="head-row-item">
+                                    <span>华侨城创新研究院创新技术委员会</span>
+                                </div>
+                                <div class="head-row-item text-right">
+                                    <a href="javascript:void(0);" class="roleControl" roleCode="10000603" flag = '2' data-action="committeeDesc" data-placeholder="编辑" data-type="13" data-valid="1" select-type="4" data-max-length="50" data-container-class="select-sm" > <i class="icon iconfont color-light icon-bianji"></i> </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <span class="line-feed">{{dataInfo.committee.content}}</span>
+                        </div>
+                    </div>
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="head-row-item">
+                                    <span>委员成员</span>
+                                </div>
+                                <div class="head-row-item text-right">
+                                    <a href="javascript:void(0);"  class="roleControl" roleCode="10000603" flag = '2' data-action="committeeMember" data-placeholder="编辑" data-type="13" data-valid="1" select-type="4" data-max-length="50" data-container-class="select-sm" > <i class="icon iconfont color-light icon-bianji"></i> </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <span class="line-feed">{{dataInfo.member.content}}</span>
+                        </div>
+                    </div>
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="head-row-item">
+                                    <span>创新技术业务工作会会议纪要</span>
+                                </div>
+                                <div class="head-row-item text-right">
+                                    <a href="javascript:void(0);" class="roleControl" roleCode="10000603" flag = '2' data-action="addCommitteeRecord" data-placeholder="添加" data-type="13" data-valid="1" select-type="4" data-max-length="50" data-container-class="select-sm" >  <i class="fa fa-plus color-light f-s-xl" ></i> </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                           {{if dataInfo.summaryFiles!=null &&dataInfo.summaryFiles.length>0}}
+                            {{each dataInfo.summaryFiles as f ti}}
+                            <div class="row"  data-action="fileAction" data-src="{{f.fileFullPath}}">
+                                <div class="col-md-12">
+                                    <div class="content-row-item-left ">
+                                        <span
+                                           class="show-span pt-relative  text-ellipsis" >
+                                            {{f.content}}</span>
+                                        <a href="javascript:void(0);"  class="roleControl text-ellipsis" roleCode="10000603" flag = '2'  data-action="xEdit" data-key="summaryFile" data-value="{{f.id}}"   data-placeholder="编辑" data-type="1" data-valid="1" style="visibility: hidden;">
+                                            <i class="icon iconfont icon-bianji"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" class="roleControl text-ellipsis" roleCode="10000603" flag = '2' data-action="xDelete" data-key="summaryFile" data-value="{{f.id}}"   data-placeholder="删除" data-type="1" data-valid="1" style="visibility: hidden;">
+                                        <i class="fa fa-times fc-red"></i>
+                                    </a>
+
+                                    </div>
+                                    <div class="content-row-item-right text-right" STYLE="color:#AEAEAE">
+                                        {{_momentFormat(f.createDate,'YYYY/MM/DD')}}
+                                    </div>
+                                </div>
+                            </div>
+                            {{/each}}
+                            {{/if}}
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 p-l-xl" >
+                    <div class="panel panel-default">
+                        <div class="panel-heading"  style="margin-top:0px">
+                            <div class="row">
+                                <div class="head-row-item">
+                                    <span>创新技术委员会信息动态</span>
+                                </div>
+                                <div class="head-row-item text-right">
+                                    <a href="javascript:void(0);"  class="roleControl" roleCode="10000603" flag = '2' data-action="addDynamics" data-placeholder="添加" data-type="13" data-valid="1" select-type="4" data-max-length="50" data-container-class="select-sm" >  <i class="fa fa-plus color-light f-s-xl" ></i> </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            {{if dataInfo.dynamicsList!=null &&dataInfo.dynamicsList.length>0}}
+                            {{each dataInfo.dynamicsList as p ti}}
+                            <div class="vertical-timeline-block" data-id="{{p.id}}">
+                                <div class="vertical-timeline-icon navy-bg">
+                                    <i class="fa fa-comments"></i>
+                                </div>
+                                <div class="vertical-timeline-content" data-action="dynamicsAction"  data-content="{{p.content}}"  data-title="{{p.title}}" data-date="{{_momentFormat(p.publishDate,'YYYY/MM/DD')}}">
+                                    <h4 data-value="{{p.title}}" style="text-overflow: ellipsis;overflow: hidden;">
+                                        {{p.title}}
+                                        <a href="javascript:void(0);" class="roleControl pull-right" data-action="editProjectNotice" roleCode="10000603" flag = '2'  title="编辑动态" style="display: none;">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" class="roleControl pull-right m-r-xs" data-action="delProjectNotice" roleCode="10000603" flag = '2'  title="删除动态" style="display: none;">
+                                            <i class="fa fa-times"></i>
+                                        </a>
+                                    </h4>
+                                    <p class="noticeContent" style="text-overflow: ellipsis;overflow: hidden;">
+                                        {{p.content}}
+                                    </p>
+                                    <p class="noticePublishdate" data-value="{{p.publishDate}}">{{_momentFormat(p.publishDate,'YYYY/MM/DD')}}</p>
+                                </div>
+                            </div>
+                            {{/each}}
+                            {{/if}}
+
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="head-row-item">
+                                    <span>获奖情况</span>
+                                </div>
+                                <div class="head-row-item text-right">
+                                    <a href="javascript:void(0);"  class="roleControl" roleCode="10000603" flag = '2'  data-action="addAward" data-placeholder="添加" data-type="13" data-valid="1" select-type="4" data-max-length="50" data-container-class="select-sm" >  <i class="fa fa-plus color-light f-s-xl" ></i> </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            {{if dataInfo.awardsList!=null &&dataInfo.awardsList.length>0}}
+                            {{each dataInfo.awardsList as t ti}}
+                            <div class="row" data-action="dynamicsAction" data-content="{{t.content}}" data-type="4" data-date="{{_momentFormat(t.createDate,'YYYY/MM/DD')}}">
+                                <div class="col-md-12">
+                                  <div class="content-row-item-left ">
+                                      <span
+                                         class="show-span pt-relative  text-ellipsis" >
+                                          {{t.content}}</span>
+                                      <a href="javascript:void(0);"  class="roleControl text-ellipsis" roleCode="10000603" flag = '2'  data-action="xEdit" data-key="awards" data-value="{{t.id}}"   data-placeholder="编辑" data-type="1" data-valid="1" style="visibility: hidden;">
+                                          <i class="icon iconfont icon-bianji"></i>
+                                      </a>
+                                      <a href="javascript:void(0);"  class="roleControl text-ellipsis" roleCode="10000603" flag = '2'  data-action="xDelete" data-key="awards" data-value="{{t.id}}"   data-placeholder="删除" data-type="1" data-valid="1" style="visibility: hidden;">
+                                      <i class="fa fa-times fc-red"></i>
+                                     </a>
+
+                                  </div>
+                                  <div class="content-row-item-right text-right" STYLE="color:#AEAEAE">
+                                    {{_momentFormat(t.createDate,'YYYY/MM/DD')}}
+                                  </div>
+                                </div>
+                            </div>
+
+                            {{/each}}
+                            {{/if}}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

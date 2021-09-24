@@ -1,0 +1,30 @@
+<div class="ibox m-production-process-settings-list">
+    <!-- 生产流程选择 -->
+    {{if fromType==1}}
+        <div class="ibox-title secondary-menu-outbox">
+            <div class="row">
+                <!-- 面包屑 -->
+                <div class="col-md-12" id="breadcrumb"></div>
+            </div>
+        </div>
+        <div class="ibox-content {{fromType==1?'':'no-borders no-padding'}}">
+            <h4 class="font-normal">工作流设置</h4>
+            <p class="fc-v1-grey">定义任务流转的状态变更，用户可以为每个状态配置不同的需求显示字段，并且可以设置流转时的效果。</p>
+            <div id="tableBox">
+
+            </div>
+        </div>
+
+    <!-- 流程配置 -->
+    {{else}}
+        <div class="row">
+            <div class="col-sm-12 text-right m-b-sm">
+                <button class="btn btn-primary btn-sm roleControl" roleCode="10000602" flag="2" data-action="addWorkflow"><i class="fa fa-plus f-s-m" ></i>&nbsp;增加工作流</button>
+            </div>
+            <div class="col-sm-12" id="tableBox">
+
+            </div>
+        </div>
+    {{/if}}
+</div>
+

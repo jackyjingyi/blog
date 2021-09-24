@@ -1,0 +1,16 @@
+.m-production-process-workflow-route #contentLeft{
+    width:calc(70% - 5px);
+    float:left;
+}
+
+.m-production-process-workflow-route #contentResize{
+    width:5px;
+    cursor: w-resize;
+    float:left;
+    background: #ccc;
+}
+
+.m-production-process-workflow-route #contentRight{
+    float:right;
+    width:30%;
+}

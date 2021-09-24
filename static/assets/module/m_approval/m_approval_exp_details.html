@@ -1,0 +1,53 @@
+<form class="form-horizontal p-m m-b-lg overflow-y-auto m-dialog-resize">
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right p-l-none">收款方<span class="fc-red">*</span>：</label>
+        <div class="col-24-xs-21">
+            {{dataInfo?dataInfo.enterpriseId:''}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right p-l-none">付款方<span class="fc-red">*</span>：</label>
+        <div class="col-24-xs-21">
+            {{dataInfo?dataInfo.fromCompanyId:''}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">类型：</label>
+        <div class="col-24-xs-21">
+            {{dataInfo?dataInfo.expName:''}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">用途说明：</label>
+        <div class="col-24-xs-21">
+            {{dataInfo?dataInfo.remark:''}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">金额<span class="fc-red">*</span>：</label>
+        <div class="col-24-xs-21">
+            {{dataInfo?_expNumberFilter(dataInfo.sumExpAmount):''}}
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">付款方式：</label>
+        <div class="col-24-xs-21">
+            {{dataInfo?dataInfo.expType:''}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">附件：</label>
+        <div class="col-24-xs-21">
+            {{if dataInfo.attachList!=null && dataInfo.attachList.length>0}}
+            {{each dataInfo.attachList as a i}}
+            <span class="label m-r-xs" style="background: #ecf0f1;padding: 5px 10px;">
+                 <a href="javascript:void(0)" data-action="preview" data-file-ext="{{a.fileExtName}}" data-net-file-id="{{a.id}}"  data-src="{{a.fileFullPath}}" data-name="{{a.fileName}}">
+                    {{a.fileName}}
+                 </a>
+             </span>
+            {{/each}}
+            {{/if}}
+        </div>
+    </div>
+</form>

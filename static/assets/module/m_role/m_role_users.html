@@ -1,0 +1,60 @@
+<div class="row m-b-xs">
+    <div class="col-md-6">
+        <span>全部成员，共{{userList?userList.length:0}}人</span>
+    </div>
+    <div class="col-md-6 text-right">
+        {{if role.id!='10001'}}
+            <a href="javascript:void(0);" class="btn btn-link no-padding roleControl" roleCode="10000401" flag="2" data-action="delRoleUser">批量删除</a>
+            <a href="javascript:void(0);" class="btn btn-link no-padding roleControl" roleCode="10000401" flag="2" data-action="addRoleUser">添加人员</a>
+        {{else if userList!=null && userList.length>0  && userList[0].companyUserId==companyUserId && role.id=='10001'}}
+            <a href="javascript:void(0);" class="btn btn-link no-padding" data-action="transferSys">移交负责人</a>
+        {{/if}}
+    </div>
+</div>
+<table class="table table-hover table-bordered table-responsive" id="table-role-users">
+    <thead>
+    <tr>
+        {{if role.id!='10001' && role.id!='departManager'}}
+        <th width="6%">
+            <label class="i-checks fw-normal m-b-none">
+                <input name="userAllCK" type="checkbox" />
+                <span class="i-checks-span"></span>
+            </label>
+        </th>
+        {{/if}}
+        <th width="29%">姓名</th>
+        <th width="20%">手机号码</th>
+        <!--<th width="20%">办公电话</th>-->
+        <!--<th width="25%">邮箱</th>-->
+    </tr>
+    </thead>
+    <tbody>
+    {{if userList!=null && userList.length>0}}
+    {{each userList as u ui}}
+    <tr data-id="{{u.companyUserId}}" data-name="{{u.userName}}">
+        {{if role.id!='10001' && role.id!='departManager'}}
+        <td>
+            <label class="i-checks fw-normal m-b-none">
+                <input name="userCK" type="checkbox" />
+                <span class="i-checks-span"></span>
+            </label>
+        </td>
+        {{/if}}
+        <td>{{u.userName}}</td>
+        <td>{{u.cellphone}}</td>
+        <!--<td>{{u.phone}}</td>-->
+        <!--<td>{{u.email}}</td>-->
+    </tr>
+    {{/each}}
+    {{else}}
+    <tr class="no-data">
+        <td colspan="{{role.id!='10001' && role.id!='departManager'?5:4}}" class="text-center ">
+            <div>
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关人员</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

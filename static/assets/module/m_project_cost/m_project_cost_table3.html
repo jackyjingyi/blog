@@ -1,0 +1,45 @@
+<div class="m-project-cost">
+    <form role="form" class="form-inline m-b-sm">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="z-index-1">
+                    <label class="inline">当前组织：</label>
+                    <div class="btn-group" id="selectOrg">
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12" id="timeSelect">
+
+            </div>
+            <div class="col-md-12" id="statusSelect">
+
+            </div>
+            <div class="col-md-12" id="signDateStatusSelect">
+
+            </div>
+            <div class="col-md-12">
+                <div class="border-bottom p-b-sm">
+                    <button class="btn btn-primary" data-action="search">查询</button>
+                    <button class="btn btn-default" data-action="refreshBtn">重置条件</button>
+                </div>
+            </div>
+        </div>
+        <div class="row m-b-sm m-t-xs p-t-sm">
+            <div class="col-md-9 filter-result-col">
+                <span>筛选条件： 共 <span id="totalBySearch">0</span> 项 &nbsp;</span>
+            </div>
+            <div class="col-md-3 text-right">
+                <button class="btn btn-primary btn-sm" data-action="collectionPlan">收款计划</button>
+                <button class="btn btn-white btn-sm" data-action="paymentPlan">付款计划</button>
+                <button class="btn btn-white btn-sm roleControl"  data-action="exportDetails">导出</button>
+            </div>
+        </div>
+    </form>
+    <div class="data-list-box">
+        <div class="data-list-container"></div>
+        <!--<div class="p-w-sm">
+            <div id="data-pagination-container" class="m-pagination pull-right "></div>
+        </div>-->
+    </div>
+</div>

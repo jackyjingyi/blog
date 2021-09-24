@@ -1,0 +1,36 @@
+<h3 class="p-t p-b-none" id="roleTitle">{{selectedRole.name}}</h3>
+<span id="roleDescription">{{selectedRole.description}}</span>
+<div class="tabs-container m-t-sm">
+    <ul class="nav nav-tabs">
+        <li class="active">
+            <a data-toggle="tab" href="#tab-1" aria-expanded="true">{{doType==2?'部门成员':'角色成员'}}</a>
+        </li>
+        {{if selectedRole.id!='0'}}
+        <li class="">
+            <a data-toggle="tab" href="#tab-2" aria-expanded="false">{{doType==2?'部门权限':'功能权限'}}</a>
+        </li>
+        {{/if}}
+        <li class="pull-right">
+            <!--{{if selectedRole.name=='商务秘书'}}
+                <button class="btn btn-primary" data-action="setRule" data-type="1">规则设置</button>
+            {{else if selectedRole.name=='设计负责人'}}
+                <button class="btn btn-primary" data-action="setRule" data-type="2">规则设置</button>
+            {{/if}}-->
+        </li>
+    </ul>
+    <div class="tab-content p-b-md">
+        <div id="tab-1" class="tab-pane active">
+            <div class="panel-body" id="role-users-box">
+
+            </div>
+        </div>
+        {{if selectedRole.id!='0'}}
+        <div id="tab-2" class="tab-pane">
+            <div class="panel-body" id="role-view-box">
+
+            </div>
+        </div>
+        {{/if}}
+
+    </div>
+</div>

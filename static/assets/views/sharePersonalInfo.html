@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<!--[if IE 8]> <html class="ie8"> <![endif]-->
+<!--[if IE 9]> <html class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en"> <!--<![endif]-->
+<head>
+    <title>个人信息</title>
+    <template src="lib_header.html" lib_header></template>
+    <style>
+        .user-info-box{
+            border: solid 1px #d4d4d4;
+            border-radius: 5px;
+            min-height: 160px;
+            box-shadow: 2px 4px 10px 4px #d4d4d4;
+        }
+        .company-name{
+            text-align: left;
+            font-size: 14px;
+            font-family: "微软雅黑";
+            color: #a9a9a9;
+        }
+        .user-name{
+            text-align: left;
+            color: #212121;
+            margin-top: 50px;
+            font-size: 20px;
+        }
+        .cellphone{
+            text-align: left;
+            color: #8c8c8c;
+        }
+        .img-circle{
+            width: 55px;height: 55px;margin-top: 20px;margin-right: 5px;
+        }
+        .btn-box a{
+            width: 100%; text-align: center;margin-top: 35px;height: 48px;padding: 13px;
+        }
+        .col-md-8{
+            width: 67%;
+            float: left;
+        }
+        .col-md-4{
+            width: 33%;
+            float: left;
+        }
+    </style>
+</head>
+<body class="bg-v1">
+
+    <input type="hidden" id="serverUrl" value="@serverPath@" />
+    <div class="container content shareRegisterOBox">
+        <div id="step1" class="row">
+            <div class="" id="shareStep1">
+                <div class="middle-box text-center loginscreen  animated fadeInDown">
+                    <div class="white-bg user-info-box">
+                        <div class="col-md-8">
+                            <p class="m-t company-name"></p>
+                            <p class="user-name"></p>
+                            <p class="cellphone"></p>
+                        </div>
+                        <div class="col-md-4">
+                            <img alt="image" class="img-circle m-t-n-xs" src="${fastdfsUrl}${userInfo.headImg}" >
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="maoding-footer-box"></div>
+
+<template src="lib_footer.html" lib_footer></template>
+<script type="text/javascript">
+    $(function(){
+
+        var currentUrl = window.location.href;
+        var urlArr = currentUrl.split('/');
+        var companyId = urlArr[urlArr.length-2];
+        var userId = urlArr[urlArr.length-1];
+        var option = {};
+        option.url = restApi.url_getSharePersonalInfo+'/'+companyId+'/'+userId;
+        m_ajax.get(option, function (response) {
+            if (response.code == '0') {
+
+                if(response.data && response.data.companyInfo){
+                    $('p.company-name').html(response.data.companyInfo.companyName);
+                }
+                if(response.data && response.data.userInfo){
+                    $('p.user-name').html(response.data.userInfo.companyUserName);
+                    $('p.cellphone').html(response.data.userInfo.cellphone);
+                }
+
+            } else {
+                S_layer.error(response.info);
+            }
+        });
+        var serverUrl = $('#serverUrl').val();
+        var u = navigator.userAgent;
+        var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Linux') > -1; //android终端或者uc浏览器
+        var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+
+        function android(){
+            window.location.href = "maoding://com.tyrbl.wjtr"; /***打开app的协议，有安卓同事提供***/
+            window.setTimeout(function(){
+                window.location.href = serverUrl+"android/index.html"; /***打开app的协议，有安卓同事提供***/
+            },2000);
+
+        };
+        function ios(){
+            window.location.href = "iOSSharePersonDesignPlusAPP://"; /***打开app的协议，有ios同事提供***/
+            window.setTimeout(function(){
+                window.location.href = "https://www.pgyer.com/TsDw"; /***下载app的地址***/
+            },2000);
+        };
+
+        $('.btn-box a').on('click',function () {
+            if(isAndroid){
+                android()
+            }else if(isiOS){
+                ios()
+            }
+        });
+
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<div class="m-production-add-mult">
+    <div class="col-md-6">
+        <div class="ibox">
+            <div class="ibox-title no-borders p-h-sm min-h-50">数据模板</div>
+            <div class="ibox-content border-darker-grey box-left">
+                {{if tempItemList!=null && tempItemList.length>0}}
+                <h4>模板标签库</h4>
+                <div class="m-b-sm">
+                    <label class="i-checks i-checks-label fw-normal">
+                        <input name="itemCk" type="checkbox" value=""/>
+                        <span class="i-checks-span">全选</span>
+                    </label>
+                </div>
+                <div class="row" id="tempItemBox">
+                    {{each tempItemList as p}}
+                    <div class="col-md-6 p-r-none">
+                        <label class="i-checks i-checks-label fw-normal">
+                            <input name="itemCk" type="checkbox" value="{{p.id}}" data-name="{{p.name}}" data-is-custom="0"/>
+                            <span class="i-checks-span">{{p.name}}</span>
+                        </label>
+                    </div>
+                    {{/each}}
+                    <div class="clearfix"></div>
+                </div>
+                {{/if}}
+                <h4>自定义添加</h4>
+                <div class="row">
+                    <form class="addItemForm">
+                        <div class="col-md-10">
+                            <input class="form-control p-r-none" type="text" name="itemName">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-primary btn-sm" data-action="addItemBtn">添加</button>
+                        </div>
+                        <div class="col-md-12"></div>
+                        <div class="clearfix"></div>
+                    </form>
+                </div>
+                <div class="row m-t-sm" id="customItemBox">
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="ibox">
+            <div class="ibox-title no-borders p-h-sm min-h-50">已选择项 (拖拽进行调整顺序)</div>
+            <div class="ibox-content border-darker-grey box-right">
+                <div class="row list-group" id="selectedItemBox">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

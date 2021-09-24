@@ -1,0 +1,39 @@
+<table class="tree table table-hover table-bordered m-b-none dataTable">
+    <thead>
+    <tr>
+        <th>单位</th>
+        <th class="sorting_desc w-100" data-action="sort" data-code="projectCount">合同数量</th>
+        <th class="sorting_desc w-100" data-action="sort" data-code="projectCountRatio">合同数量占比</th>
+        <th class="sorting_desc w-100" data-action="sort" data-code="totalContractAmount">合同总额</th>
+        <th class="sorting_desc w-100" data-action="sort" data-code="contractAmountRatio">合同额占比</th>
+        <th class="sorting_desc w-100" data-action="sort" data-code="investmentEstimation">外协预算</th>
+        <th class="sorting_desc w-100" data-action="sort" data-code="receiveRatio">回款率</th>
+        <th class="sorting_desc w-100" data-action="sort" data-code="investmentEstimationRatio">外协率</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList!=null && dataList.length>0}}
+    {{each dataList as p i}}
+        <tr data-member-type="{{p.memberType}}">
+            <td>{{p.zoneName}}</td>
+            <td>{{p.projectCount}}</td>
+            <td>{{p.projectCountRatio?p.projectCountRatio+'%':''}}</td>
+            <td>{{_expNumberFilter(p.totalContractAmount)}}</td>
+            <td>{{p.contractAmountRatio?p.contractAmountRatio+'%':''}}</td>
+            <td>{{_expNumberFilter(p.investmentEstimation)}}</td>
+            <td>{{p.receiveRatio?p.receiveRatio+'%':''}}</td>
+            <td>{{p.investmentEstimationRatio?p.investmentEstimationRatio+'%':''}}</td>
+        </tr>
+    {{/each}}
+    {{else}}
+    <tr class="no-data-tr">
+        <td colspan="8" class="text-center ">
+            <div>
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

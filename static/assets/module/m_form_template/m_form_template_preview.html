@@ -1,0 +1,25 @@
+<div class="m-form-template-preview p-sm overflow-y-auto m-dialog-resize">
+    <form class="form-horizontal">
+        {{if dataInfo && dataInfo.isSystem!=1}}
+        <div class="col-xs-12 form-item " data-type="2" data-field-id="{{fieldId}}">
+            <div class="form-group">
+                <label class="col-xs-2 control-label">
+                    申请人<span class="fc-red">*</span>：
+                </label>
+                <div class="col-xs-10">
+                    <select class="form-control" name="applyUserId"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-xs-2 control-label">
+                    部门<span class="fc-red">*</span>：
+                </label>
+                <div class="col-xs-10">
+                    <select class="form-control" name="departId"></select>
+                </div>
+            </div>
+        </div>
+        {{/if}}
+    </form>
+</div>
+

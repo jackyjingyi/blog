@@ -1,0 +1,38 @@
+<div class="ibox no-margins">
+    <div class="ibox-title secondary-menu-outbox">
+        <div class="row">
+            <div class="col-md-12" id="secondary-menu">
+                <!-- 面包屑 -->
+                <div class="pull-left" id="breadcrumb"></div>
+                <div class="pull-right">
+                    <ul class="secondary-menu-ul pull-right">
+                        <li  class="active" id="ledger">
+                            <a href="#/paymentsDetail/ledger">收支明细</a>
+                        </li>
+                        <li  class="" id="ledger2">
+                            <a href="#/paymentsDetail/ledger2">分类统计</a>
+                        </li>
+                        {{if isHasChildOrg=='1'}}
+                        <li  class="" id="ledger3">
+                            <a href="#/paymentsDetail/ledger3">部门帐期收支</a>
+                        </li>
+                        <li  class="" id="ledger4">
+                            <a href="#/paymentsDetail/ledger4">部门分类收支</a>
+                        </li>
+                        {{/if}}
+                        <!--<li id="receivable">
+                            <a href="#/paymentsDetail/receivable">应收</a>
+                        </li>
+                        <li id="payable" >
+                            <a href="#/paymentsDetail/payable">应付</a>
+                        </li>-->
+                    </ul>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="ibox-content p-b-none" id="content-box">
+
+    </div>
+</div>

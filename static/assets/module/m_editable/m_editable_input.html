@@ -1,0 +1,9 @@
+<div class="{{inputGroupClass}} {{_isNullOrBlank(inputGroupClass) && !_isNullOrBlank(unit)?'input-group':''}}">
+    <input type="text" class="form-control {{controlClass}} p-r-md" placeholder="{{placeholder}}" value="{{value}}" name="{{key}}">
+    {{if unit}}
+    <span class="m-editable-clear" style="right: 42px;"><i class="fa fa-times-circle"></i></span>
+    <span class="input-group-addon">{{unit}}</span>
+    {{else}}
+    <span class="m-editable-clear"><i class="fa fa-times-circle"></i></span>
+    {{/if}}
+</div>

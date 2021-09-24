@@ -1,0 +1,194 @@
+<div class="ibox m-projectBasicInfo {{isView==true?'min-h':''}}">
+    <div class="ibox-title secondary-menu-outbox {{isView==true?'hide':''}}">
+        <div class="row">
+            <div class="col-md-12" id="breadcrumb">
+                <!--面包屑-->
+
+            </div>
+
+        </div>
+    </div>
+    <div class="ibox-content p-b-none no-borders">
+        <form class="sky-form no-margins">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>
+                        基本信息
+                    </h4>
+                </div>
+                <div class="col-md-6 text-right">
+                    {{if doType==1 && editFlag}}
+                        {{if project.status==4}}
+                        <a type="button" class="btn btn-primary btn-sm m-t-n-xs" data-action="publishProject">
+                            {{if project.businessType==1}}
+                            发布项目信息
+                            {{else}}
+                            发布课题信息
+                            {{/if}}
+                        </a>
+                        {{/if}}
+                    {{/if}}
+                    {{if doType==1 && deleteFlag==1 && isView==false}}
+                        <a class="btn btn-default btn-sm m-r-none m-t-n-xs fc-red" data-toggle="tooltip" data-placement="top"
+                           data-action="deleteProject"  data-id="{{project.id}}" title="删除"><span>
+                               {{if project.businessType==1}}
+                            删除项目
+                            {{else}}
+                            删除课题
+                            {{/if}}
+                        </span>
+                        </a>
+                    {{/if}}
+                </div>
+            </div>
+            <table class="table table-bordered info m-b-xs">
+                <tbody>
+                {{if project.businessType==1}}
+                    {{#_include('m_project/m_projectBasicInfo_field_1',{project:project,updateProjectStatus:updateProjectStatus})}}
+                {{else}}
+                    {{#_include('m_project/m_projectBasicInfo_field_2',{project:project,updateProjectStatus:updateProjectStatus})}}
+                {{/if}}
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 class="pull-left">
+                        <span class="dp-block m-t-xs">
+                            {{project.businessType==1?'主合同信息':'课题研究信息'}}
+                        </span>
+                    </h4>
+                </div>
+                <div class="col-md-6 text-right p-b-xs">
+
+                </div>
+            </div>
+            <table class="table table-bordered info m-b-xs">
+                <tbody>
+                <tr>
+                    <td width="12%"><b>{{project.businessType==1?'合同签订':'启动时间'}}</b></td>
+                    <td width="37%">
+                        {{if editFlag}}
+                        <a href="javascript:void(0);" id="editSignDate" data-action="edit_signDate" class="editable editable-click {{(project.contractDate!=null && project.contractDate!='')?'':'unSign'}}">
+                        {{if project.contractDate!=null && project.contractDate!=''}}
+                        {{_momentFormat(project.contractDate,'YYYY/MM/DD')}}
+                        {{else}}
+                         未签订</a>
+                        {{/if}}
+                        {{else}}
+                        <span>{{project.contractDate!=null && project.contractDate!=''?_momentFormat(project.contractDate,'YYYY/MM/DD'):'未签订'}}</span>
+                        {{/if}}
+                    </td>
+                    <td width="12%"><b>{{project.businessType==1?'合同金额':'研究经费'}}</b></td>
+                    <td>
+                        <a href="javascript:void(0);" class="editable-click"  data-action="xeditable" data-placeholder="请输入合同金额" data-key="totalContractAmount" data-type="1" data-unit="元"
+                           data-value="{{project.totalContractAmount}}">
+
+                            {{if !_isNullOrBlank(project.totalContractAmount+'')}}
+                                {{_expNumberFilter(project.totalContractAmount)}}
+                            {{else}}
+                                <span class="fc-v1-grey">未设置</span>
+                            {{/if}}
+
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>{{project.businessType==1?'外协预算':'外部合作预算'}}</b></td>
+                    <td>
+                        <a  href="javascript:void(0);" class="editable-click"  data-action="xeditable" data-placeholder="{{project.businessType==1?'请输入外协预算':'请输入外部合作预算'}}" data-key="investmentEstimation" data-type="1" data-unit="元"
+                           data-value="{{project.investmentEstimation}}">
+                            {{if !_isNull(project.investmentEstimation+'')}}
+                                {{_expNumberFilter(project.investmentEstimation)}}
+                            {{else}}
+                                <span class="fc-v1-grey">未设置</span>
+                            {{/if}}
+                        </a>
+                    </td>
+                    <td><b>{{project.businessType==1?'外协率':'占比'}}</b></td>
+                    <td>
+                            {{if !_isNull(project.investmentEstimationRatio)}}
+                                {{_expNumberDecimalFilter(project.investmentEstimationRatio)}}%
+                            {{else}}
+                                <span class="fc-v1-grey">未设置</span>
+                            {{/if}}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 class="pull-left">
+                        <span class="dp-block m-t-xs">
+                            院内团队协同
+                        </span>
+                    </h4>
+                </div>
+                <div class="col-md-6 text-right p-b-xs">
+
+                </div>
+                <div class="col-sm-12" id="listTaskOrder">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 class="pull-left">
+                        <span class="dp-block m-t-xs">
+                            {{project.businessType==1?'外部协作单位':'外部合作单位'}}
+                             {{if doType==1 && editFlag}}
+                            <a href="javascript:void(0);" data-action="editProjectPartner" title=" {{project.businessType==1?'编辑外部协作单位':'编辑外部合作单位'}}">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                            {{/if}}
+                        </span>
+                    </h4>
+                </div>
+                <div class="col-md-6 text-right p-b-xs">
+
+                </div>
+                <div class="col-sm-12" id="projectPartner">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 class="pull-left">
+                        <span class="dp-block m-t-xs">
+                          {{project.businessType==1?'项目进度':'课题进度'}}
+                     <!--       {{if doType==1 && editFlag}}
+                            <a href="javascript:void(0);" data-action="editProjectProcess" title="编辑项目进度">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                            {{/if}}-->
+                        </span>
+                    </h4>
+                </div>
+                <div class="col-md-6 text-right p-b-xs">
+
+                </div>
+                <div id="projectProcess">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 class="pull-left">
+                        <span class="dp-block m-t-xs">
+                             {{project.businessType==1?'项目动态':'课题动态'}}
+                            <a href="javascript:void(0);" class="roleControl" roleCode="10000604" flag="2" data-action="addProjectNotice" title="添加动态">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                        </span>
+                    </h4>
+                </div>
+                <div class="col-md-6 text-right p-b-xs">
+
+                </div>
+                <div class="col-sm-12" id="projectNotice">
+
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>

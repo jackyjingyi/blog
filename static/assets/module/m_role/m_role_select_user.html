@@ -1,0 +1,47 @@
+<form class="form-horizontal rounded-bottom taskProgressOBox noborder">
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="userListBox">
+                <table class="table table-striped table-hover table-responsive m-b-none" >
+                    <thead>
+                    <tr>
+                        <th>{{type==1?'姓名':'名称'}}</th>
+                        {{if type==1}}<th>手机号</th>{{/if}}
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{each orgUserList as p}}
+                    <tr data-id="{{p.id}}">
+                        <td>
+                            {{type==1?p.userName:p.name}}
+                        </td>
+                        {{if type==1}}
+                        <td>
+                            {{p.cellphone}}
+                        </td>
+                        {{/if}}
+                        <td>
+                            {{if selectedUserList.indexOf(p.id) > -1}}
+                                <a href="javascript:void(0)" data-company-user-id="{{p.id}}" data-user-id="{{p.userId}}"
+                                   class="btn-u btn-u-default btn-u-xs rounded {{type==1?'no-hover':''}}" data-action="{{type==1?'':'choseUser'}}">选择</a>
+                            {{else}}
+                                <a href="javascript:void(0)" data-action="choseUser" data-company-user-id="{{p.id}}" data-user-id="{{p.userId}}"
+                                   class="btn-u btn-u-primany btn-u-xs rounded">选择</a>
+                            {{/if}}
+                        </td>
+                    </tr>
+                    {{/each}}
+                    {{if orgUserList==null || orgUserList.length==0}}
+                    <tr>
+                        <td colspan="{{type==1?3:2}}" align="center">暂无数据</td>
+                    </tr>
+                    {{/if}}
+                    </tbody>
+                    <tfoot><tr><td colspan="3" id="userList"></td></tr></tfoot>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</form>

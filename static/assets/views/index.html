@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" class="font-primary">
+<head>
+    <title>华侨城创新研究院</title>
+    <template src="lib_home_header.html" lib_home_header></template>
+    <link rel="stylesheet" href="@rootPath@/lib/icheck-1.x/skins/square/green.min.css">
+    <script type="text/javascript" src="@rootPath@/lib/crypto-js.min.js"></script>
+</head>
+<body>
+
+<main>
+    <!-- Header -->
+    <header class="website-header"></header>
+    <!-- End Header -->
+
+    <div class="home-wrapper" id="wrapper"></div>
+
+    <!-- Footer -->
+    <footer class="website-footer"></footer>
+    <!-- End Footer -->
+</main>
+
+<template src="lib_home_footer.html" lib_home_footer></template>
+</body>
+
+
+<script>
+    $(document).on('ready', function () {
+        _.mixin(s.exports());
+        home_common.init();
+    });
+</script>
+
+</html>

@@ -1,0 +1,32 @@
+<form class="form-horizontal m">
+    <div class="form-group">
+        <label class="col-sm-2 control-label p-r-none">模版名称<span class="fc-red">*</span>：</label>
+        <div class="col-sm-10">
+            <input placeholder="请输入任务名称" class="form-control" type="text" name="projectName" value="{{dataInfo?dataInfo.projectName:''}}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label p-r-none">模板分组：</label>
+        <div class="col-sm-9 p-r-none">
+            <select class="form-control" name="groupId"></select>
+        </div>
+        <div class="col-sm-1 no-padding">
+            <button class="btn btn-link" data-action="editGroup" title="创建分组">
+                <i class="fa fa-plus f-s-md"></i>
+            </button>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label p-r-none">模版封面：</label>
+        <div class="col-sm-10 p-t-xs">
+            <a href="javascript:void(0)" id="filePicker" name="recordAttach" class="upload-icon" title="请上传封面"></a>
+            <div class="m-t-sm">
+                {{if !_isNullOrBlank(coverPath) }}
+                <img class="rounded-5 project-temp-cover" src="{{dataInfo.coverPath}}" width="216" height="122" title="默认封面"/>
+                {{else}}
+                <img class="rounded-5 project-temp-cover" src="{{_url('/img/project/light_project_temp_bg_'+bgNum+'.png')}}" width="216" height="122" title="默认封面"/>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,43 @@
+<table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th width="50%">任务模版名称</th>
+        <th>适用范围</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList!=null && dataList.length>0}}
+    {{each dataList as t ti}}
+    <tr class="" data-id="{{t.id}}" data-i="{{ti}}" >
+        <td>{{t.templateName}}</td>
+        <td>
+            <button class="btn btn-link no-padding" data-action="setRange">
+                {{if t.isDesign==1}}
+                <span class="fc-dark-blue">已设置</span>
+                {{else}}
+                <span class="fc-v1-grey">未设置</span>
+                {{/if}}
+            </button>
+        </td>
+        <td>
+            {{if t.companyId!=0}}
+            <button class="btn btn-primary btn-xs roleControl" roleCode="10000602" flag="2" data-action="editTaskTemp">编辑</button>
+            <button class="btn btn-danger btn-xs roleControl" roleCode="10000602" flag="2" data-action="delTaskTemp">删除</button>
+            {{/if}}
+            <button class="btn btn-info btn-xs" data-action="viewTaskTemp">查看</button>
+        </td>
+    </tr>
+    {{/each}}
+    {{else}}
+    <tr class="no-data">
+        <td colspan="3" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">暂无相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

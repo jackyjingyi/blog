@@ -1,0 +1,41 @@
+.m-projectBasicInfo form.sky-form {
+    border: none;
+    margin-bottom: 40px;
+}
+
+.m-projectBasicInfo table.info tbody tr td {
+    height: 47px;
+    min-height: 47px;
+    vertical-align: middle;
+}
+.m-projectBasicInfo.min-h table.info tbody tr td {
+    height: 28px;
+    min-height: 28px;
+    vertical-align: middle;
+}
+
+.m-projectBasicInfo table.info tbody tr td:nth-child(odd) {
+    background: #f4f4f4;
+    text-align: right;
+}
+.m-projectBasicInfo table.info tbody tr td.bg-v1-grey{
+    background-color: #F4F4F4;
+    color: #676a6c;
+}
+
+.m-projectBasicInfo .no-float {
+    float: none;
+}
+.m-projectBasicInfo .unSign{
+     color:#ccc;font-style:normal;
+}
+
+.m-projectBasicInfo .editable-click, .m-projectBasicInfo a.editable-click, .m-projectBasicInfo .editable-click:hover {
+    border: none
+}
+
+@media (max-width: 1366px) {
+    .m-projectBasicInfo .popover.m-floating-popover{
+        max-width: 250px;
+    }
+}

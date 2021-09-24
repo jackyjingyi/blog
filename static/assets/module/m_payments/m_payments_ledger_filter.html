@@ -1,0 +1,81 @@
+<!-- 项目收支 -->
+{{if doType==3}}
+{{ if isMyDataFlag == 2}}
+<div class="col-md-12">
+    <div class="z-index-1">
+        <label class="inline">当前组织：</label>
+        <div class="dp-inline-block vertical-middle p-l-sm">
+            <label class="i-checks i-checks-label fw-normal dp-inline-block roleControl"  style="width: auto;" >
+                <input type="radio"  name="isMyData" value="0" checked/>
+            </label>
+            <div class="btn-group vertical-baseline roleControl"  id="selectOrg" >
+
+            </div>
+            <label class="i-checks i-checks-label fw-normal dp-inline-block roleControl"  >
+                <input type="radio"  name="isMyData" value="1"/>
+                <span class="i-checks-span">我负责的项目</span>
+            </label>
+        </div>
+    </div>
+</div>
+{{else if isMyDataFlag == 0}}
+<div class="col-md-12">
+    <div class="z-index-1">
+        <label class="inline">当前组织：</label>
+        <div class="btn-group" id="selectOrg">
+
+        </div>
+    </div>
+</div>
+{{/if}}
+
+<!-- 财务报表- 收支明细 -->
+{{else}}
+<div class="col-md-12">
+    <div class="z-index-1">
+        <label class="inline">当前组织：</label>
+        <div class="btn-group" id="selectOrg">
+
+        </div>
+    </div>
+</div>
+{{/if}}
+
+<div class="col-md-12" id="timeSelect">
+
+</div>
+{{if doType==3}}
+<div class="col-md-12" id="projectStatusSelect">
+
+</div>
+<div class="col-md-12" id="signDateStatusSelect">
+
+</div>
+{{/if}}
+<div class="col-md-12">
+    <div class="z-index-1 p-t-xs">
+        <label class="inline">选择分类：</label>
+        <div class="dp-inline-block vertical-text-top p-l-sm">
+            <label class="i-checks i-checks-label fw-normal width-160">
+                <input type="radio"  name="feeSelectType" value="1" checked/>
+                <span class="i-checks-span">收支分类</span>
+            </label>
+            <label class="i-checks i-checks-label fw-normal ">
+                <input type="radio"  name="feeSelectType" value="2"/>
+                <span class="i-checks-span">分类子项</span>
+            </label>
+        </div>
+    </div>
+</div>
+<div class="col-md-12 fee-type-parent-box">
+
+</div>
+<div class="col-md-12 fee-type-box hide">
+
+</div>
+<div class="col-md-12">
+    <div class="border-bottom p-b-sm">
+        <button class="btn btn-primary" data-click-action="search">查询</button>
+        <button class="btn btn-default" data-click-action="refreshBtn">重置条件</button>
+    </div>
+</div>

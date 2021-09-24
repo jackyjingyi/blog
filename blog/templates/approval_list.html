@@ -29,26 +29,22 @@
 
         }
     </style>
-    <h3>审批列表</h3>
-    {#    如果该用户已经审批过#}
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="approving-tab" data-bs-toggle="tab" data-bs-target="#approving"
-                    type="button"
-                    role="tab" aria-controls="approving" aria-selected="true">待审批
-            </button>
-        </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" id="approved-tab" data-bs-toggle="tab" data-bs-target="#approved" type="button"
-                    role="tab" aria-controls="approved" aria-selected="false">我审批的
-            </button>
-        </li>
 
-    </ul>
+    <div class="row" style="margin:10px">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#approving" aria-controls="approving" role="tab"
+                                                      data-toggle="tab" type="button">待审批</a>
+            </li>
+            <li role="presentation"><a href="#approved" aria-controls="approved" role="tab" data-toggle="tab"
+                                       type="button">我审批的</a>
 
-    <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="approving" role="tabpanel" aria-labelledby="approving-tab">
-            {% if object_list %}
+            </li>
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content" id="myTabContent">
+            <div role="tabpanel" class="tab-pane fade in active" id="approving"> {% if object_list %}
                 <br>
                 <small>
                     共{{ object_list.count }}篇
@@ -140,10 +136,8 @@
                 </table>
             {% else %}
                 暂无
-            {% endif %}
-        </div>
-        <div class="tab-pane fade" id="approved" role="tabpanel" aria-labelledby="approved-tab">
-            {% if approved_list_by_user.count > 0 %}
+            {% endif %}</div>
+            <div role="tabpanel" class="tab-pane fade" id="approved">{% if approved_list_by_user.count > 0 %}
                 <small>共{{ approved_list_by_user.count }}篇</small>
                 <table class="table table-bordered">
                     <thead>
@@ -196,13 +190,17 @@
 
             {% else %}
                 暂无
-            {% endif %}
+            {% endif %}</div>
         </div>
+
     </div>
 
     <script>
-
         {#全选#}
+
+        $('#secondaryMenu').append(
+            "<li class='fa fa-angle-right active fw-bold'>" + "审批列表" + "</li>"
+        )
 
         function select_all(selectall, selectones) {
             for (let i = 0; i < selectones.length; i++) {

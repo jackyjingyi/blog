@@ -1,0 +1,198 @@
+.task-list-box .table>thead>tr>th,
+.task-list-box .table>thead>tr>td{
+    vertical-align: middle;
+    white-space:nowrap;
+}
+.task-list-box .table>tbody>tr>td{
+    white-space:nowrap;
+}
+.task-list-box table>tbody>tr.chose-operable{
+    background-color:#F8FAFC;
+}
+.task-list-box table>tbody>tr td.p-t-9{
+    padding-top: 9px;
+}
+.task-list-box table>tbody>tr td a.task-name{
+    vertical-align: text-bottom;
+}
+.task-list-box button.action-button,
+.task-list-box button.action-button:hover,
+.task-list-box button.action-button:focus,
+.task-list-box .open button.action-button.dropdown-toggle.btn-default,
+.task-list-box .open button.action-button.dropdown-toggle.btn-default:hover{
+    line-height: 14px;
+    margin-top: -1px;
+    padding:0;
+    border: none;
+    background: none;
+}
+.task-list-box .panel-default>.panel-heading{
+    background-color: #e5f2ea;
+}
+.task-list-box td .treegrid-indent{
+    height: 16px;
+}
+
+.m-task-issue-details .tab-content .panel-body .task-remark{
+    overflow: hidden;
+}
+.m-task-issue-details .tab-content .panel-body .task-remark img{
+    max-width: 100%;
+}
+.m-task-issue-details .tab-content .panel-body .task-remark img{
+    max-width: 100%;
+}
+.m-task-issue-details #selectTaskNav{
+    max-height: 80%;
+}
+
+
+
+.task-list-box button[data-action=addSubTask],
+.task-list-box button[data-action=addMultipleSubTask]{
+    margin-top: -1px;
+    padding: 0 5px;
+    height: 20px;
+    overflow: hidden;
+    vertical-align: top;
+}
+.task-list-box tr.task-add-row.content-row-edit td form .row-edit-item:nth-child(1){
+    width: 30%;
+}
+.task-list-box tr.task-add-row.content-row-edit td form .row-edit-item:nth-child(2){
+    width: 15%;
+}
+.task-list-box tr.task-add-row.content-row-edit td form .row-edit-item:nth-child(3){
+    width: 15%;
+}
+.task-list-box tr.task-add-row.content-row-edit td form .row-edit-item:nth-child(4){
+    width: 15%;
+}
+.task-list-box tr.task-add-row.content-row-edit td form .row-edit-item:nth-child(5),
+.task-list-box tr.task-add-row.content-row-edit td form .row-edit-item:nth-child(6){
+    width: 13.5%;
+}
+.m-production .task-list-box tr.task-add-row.content-row-edit td form .row-edit-item:nth-child(1){
+    width: 31%;
+}
+.m-production .task-list-box tr.task-add-row.content-row-edit td form .row-edit-item:nth-child(2),
+.m-production .task-list-box tr.task-add-row.content-row-edit td form .row-edit-item:nth-child(3){
+    width: 16%;
+}
+
+
+
+.task-list-box .tooltip *{
+    word-wrap:break-word
+}
+.task-list-box td.treeTd {
+    padding: 0 !important;
+    vertical-align: middle !important;
+}
+
+.task-list-box .list-action-box{
+    display: block;
+    width: 20px;
+    margin: 0 auto;
+}
+
+.task-list-box .list-action-box .btn-group .dropdown-menu>li>a{
+    padding: 2px 13px;
+    margin: 0;
+}
+.task-list-box .list-check-box{
+    display: inline-block;
+}
+.task-list-box .b-r-none{
+    border-right:none ;
+}
+.task-list-box .b-l-none{
+    border-left:none ;
+}
+.task-list-box .b-t-none{
+    border-top:none ;
+}
+.task-list-box .b-m-none{
+    border-bottom:none ;
+}
+
+.task-list-box table > tbody > tr.tr-hover {
+    background-color: #f5f5f5;
+}
+.task-list-box .treeTd span.treegrid-indent,
+.task-list-box .treeTd span.treegrid-expander,
+.task-list-box .treeTd span.show-span{
+    float: left;
+}
+.task-list-box .treeTd .fa-minus-square-o,
+.task-list-box .treeTd .fa-plus-square-o{
+    font-size: 21px;
+    margin-top: 3px;
+    color: #999;
+}
+.task-list-box .treeTd .icon-iconfontttpodicon2{
+    font-size: 18px;
+    margin-top: 0px;
+    color: #999;
+}
+
+.m-task-issue .text-ellipsis{
+    width:90%;
+}
+.task-list-box .treeTd .icon-shouqi{
+    font-size: 20px;
+    margin-top: -1px;
+    margin-left: 9px;
+    margin-right: 1px;
+    color: #999;
+}
+.task-list-box .treeTd .tree-td-a{
+    margin: 5px 0px 0 2px;
+    float: left;
+}
+
+.task-list-box button[data-action="addDesignTask"]{
+    margin-top: -1px;
+    padding: 0 5px;
+}
+.task-list-box a.tree-td-a.editable{
+    border-bottom:none;
+}
+#content-right .task-list-box .table>thead>tr>th.l-h-14,
+#content-right .task-list-box .table>tbody>tr>td.l-h-14{
+    line-height: 14px;
+}
+.task-list-box .dropdown-menu>li>a.p-r-lg{
+    padding-right: 30px;
+}
+.m-task-issue.ibox>.ibox-content>.panel{
+    border-color: #cfe7dc;
+}
+.m-task-issue.ibox>.ibox-content>.panel>.panel-heading{
+    background-color: #dff3eb;
+}
+table.m-task-issue-details-history tr td{
+    word-break: break-all;
+}
+.form-horizontal.details-edit .details-dataInfo-box{
+    max-width: 360px;
+}
+.m-task-issue.ibox .task-list-box .p-task-name span.show-span{
+    width: auto;
+    max-width: 80%;
+    line-height: unset;
+    vertical-align: middle;
+}
+@media (max-width: 1366px) {
+    #content-right .task-list-box .table>thead>tr>th,
+    #content-right .task-list-box tr.content-row td,
+    #content-right .task-list-box tr.content-row-edit td{
+        padding: 8px 4px;
+    }
+    .form-horizontal.details-edit .details-dataInfo-box{
+        max-width: 205px;
+    }
+    .m-task-issue.ibox .task-list-box .p-task-name a.show-span{
+        max-width: 68%;
+    }
+}

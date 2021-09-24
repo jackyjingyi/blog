@@ -1,0 +1,73 @@
+<div class="ibox m_organizational no-margins">
+    <!-- 组织－组织架构- 编辑课题介绍-->
+    <div class="ibox-content no-padding">
+
+        <div class="col-24-md-24">
+            <div class="row text-right p-xs">
+                <a class="btn btn-default btn-sm" href="javascript:void(0);" data-action="backToLast">返回</a>
+                <a class="btn btn-primary btn-sm" href="javascript:void(0);" data-action="switchMode">切换展示模式</a>
+                <a class="btn btn-primary btn-sm" href="javascript:void(0);" data-action="preview">预览</a>
+                <a class="btn btn-primary btn-sm" href="javascript:void(0);" data-action="saveDetails">保存</a>
+            </div>
+        </div>
+
+
+
+        <div class="col-md-12">
+            <form class="form-horizontal p-w-xs" id="basicInfo">
+            <div class="row">
+                <div class="{{_styleTypeEdit(styleType,'1')}}" >
+                    <div   id="remarkEditorLeft"></div>
+                </div>
+                <div class="{{_styleTypeEdit(styleType,'2')}} p-l-none" >
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label m-t-xs f-s-m-v1" style="text-align: left;height: 29px ;padding-top: 0px ;margin-top: 0px">课题名称</label>
+                        <div class="col-sm-12">
+                            <textarea placeholder="请输入课题名称" class="form-control f-s-m-v1" maxlength="200" style="min-height: 150px;padding: 0px"  type="text" name="projectName" id="projectName" >{{data.projectName}}</textarea>
+                            <div id = "projectNameCount">{{data.projectName==null?'0':data.projectName.length}} /200</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label m-t-xl f-s-m-v1" style="text-align: left ;height: 36px">课题目标</label>
+                        <div class="col-sm-12">
+                            <textarea placeholder="请输入课题目标" class="form-control f-s-m-v1" maxlength="500" style="min-height: 200px;padding: 0px" type="text" name="projectTarget" id="projectTarget">{{data.projectTarget}}</textarea>
+                            <div id = "projectTargetCount">{{data.projectTarget==null?'0':data.projectTarget.length}} /500</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label m-t-xl f-s-m-v1" style="text-align: left;height: 36px">课题内容</label>
+                        <div class="col-sm-12">
+                            <textarea placeholder="请输入课题内容" class="form-control f-s-m-v1" maxlength="500" style="min-height: 200px;padding: 0px" type="text" name="projectContent" id="projectContent">{{data.projectContent}}</textarea>
+                            <div id = "projectContentCount">{{data.projectContent==null?'0':data.projectContent.length}} /500</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label m-t-xl f-s-m-v1" style="text-align: left;height: 36px">课题成果</label>
+                        <div class="col-sm-12">
+                            <textarea placeholder="请输入课题成果" class="form-control f-s-m-v1" maxlength="500" style="min-height: 200px;padding: 0px" type="text" name="projectResult" id="projectResult">{{data.projectResult}}</textarea>
+                            <div id = "projectResultCount">{{data.projectResult==null?'0':data.projectResult.length}} /500</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label m-t-xl f-s-m-v1" style="text-align: left;height: 36px">荣&nbsp; &nbsp; &nbsp; &nbsp;誉</label>
+                        <div class="col-sm-12">
+                            <textarea placeholder="请输入荣誉" class="form-control f-s-m-v1" maxlength="500" style="min-height: 200px;padding: 0px" type="text" name="projectHonour" id="projectHonour">{{data.projectHonour}}</textarea>
+                            <div id = "projectHonourCount">{{data.projectHonour==null?'0':data.projectHonour.length}} /500</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label m-t-xl f-s-m-v1" style="text-align: left;height: 36px">团队成员</label>
+                        <div class="col-sm-12">
+                            <textarea placeholder="请输入团队成员" class="form-control f-s-m-v1" maxlength="200" style="min-height: 200px;padding: 0px" type="text" name="projectMember" id="projectMember">{{data.projectMember}}</textarea>
+                            <div id = "projectMemberCount">{{data.projectMember==null?'0':data.projectMember.length}}/200</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </form>
+        </div>
+
+
+    </div>
+
+</div>

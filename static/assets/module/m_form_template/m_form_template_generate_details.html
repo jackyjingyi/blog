@@ -1,0 +1,225 @@
+<form class="form-horizontal m-form-template-generate-details p-sm overflow-y-auto m-dialog-resize">
+    {{if dataInfo.dynamicAudit && dataInfo.dynamicAudit.baseAuditData && dataInfo.dynamicAudit.baseAuditData.expNo}}
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">审批编号：</label>
+        <div class="col-24-xs-21">
+            {{dataInfo.dynamicAudit.baseAuditData.expNo}}
+        </div>
+    </div>
+    {{/if}}
+    {{if dataInfo.dynamicAudit && dataInfo.dynamicAudit.baseAuditData.userName}}
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">申请人：</label>
+        <div class="col-24-xs-21">
+            {{dataInfo.dynamicAudit.baseAuditData.userName}}
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">申请时间：</label>
+        <div class="col-24-xs-21">
+            {{_momentFormat(dataInfo.dynamicAudit.baseAuditData.expDate,'YYYY/MM/DD')}}
+        </div>
+    </div>
+    {{/if}}
+    {{if dataInfo.dynamicAudit && dataInfo.dynamicAudit.baseAuditData && dataInfo.dynamicAudit.baseAuditData.companyName}}
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">所在组织：</label>
+        <div class="col-24-xs-21">
+            {{dataInfo.dynamicAudit.baseAuditData.companyName}}
+        </div>
+    </div>
+    {{/if}}
+    {{if dataInfo.dynamicAudit && dataInfo.dynamicAudit.baseAuditData && dataInfo.dynamicAudit.baseAuditData.departName}}
+    <div class="form-group">
+        <label class="col-24-xs-3 text-right">部门：</label>
+        <div class="col-24-xs-21">
+            {{dataInfo.dynamicAudit.baseAuditData.departName}}
+        </div>
+    </div>
+    {{/if}}
+    <h4 class="title-line m-l-sm">审批详情</h4>
+    <div class="hr-line-dashed m-t-none m-b-sm m-l m-r"></div>
+    {{if dataInfo && dataInfo.dynamicAudit && dataInfo.dynamicAudit.fieldList}}
+        {{if dataInfo.dynamicAudit.type=='projectSetUp' || dataInfo.dynamicAudit.type=='contractAudit' || dataInfo.dynamicAudit.type=='expApply' || dataInfo.dynamicAudit.type=='verification' || dataInfo.dynamicAudit.type=='singleFundChange'}}
+            <div id="approvalDetailsBox"></div>
+        {{else}}
+
+            {{each dataInfo.dynamicAudit.fieldList as p i}}
+                {{if p.fieldType!=10 &&  p.fieldType!=9}}
+                    <div class="form-group">
+                        <label class="col-24-xs-3 text-right">{{p.fieldTitle?p.fieldTitle:'标题'}}：</label>
+                        <div class="col-24-xs-21" data-statistics="{{p.isStatistics?p.isStatistics:''}}" data-value="{{p.fieldValueText?p.fieldValueText:''}}" data-field-unit="{{p.fieldUnit?p.fieldUnit:''}}">
+                            {{if p.fieldType==4}}
+                                {{_momentFormat(p.fieldValueText,'YYYY/MM/DD')}}
+                            {{else if p.fieldType==5 && (p.fieldUnit=='元' || p.fieldUnit=='万元')}}
+                                {{_expNumberFilter(p.fieldValueText)}}
+                            {{else}}
+                                {{p.fieldValueText?p.fieldValueText:''}}
+                            {{/if}}
+                        </div>
+                    </div>
+                {{/if}}
+                {{if p.fieldType==10 && dataInfo && dataInfo.dynamicAudit && dataInfo.dynamicAudit.attachList!=null && dataInfo.dynamicAudit.attachList.length>0}}
+                    <div class="form-group">
+                        <label class="col-24-xs-3 text-right">{{p.fieldTitle?p.fieldTitle:'附件'}}：</label>
+                        <div class="col-24-xs-21">
+                            {{each dataInfo.dynamicAudit.attachList as a i}}
+                            <span class="label m-r-xs" style="background: #ecf0f1;padding: 5px 10px;">
+                                 <a href="javascript:void(0)" data-action="preview" data-file-ext="{{a.fileExtName}}" data-net-file-id="{{a.id}}" data-index="{{i}}"  data-src="{{a.fileFullPath}}" data-name="{{a.fileName}}">
+                                    {{a.fileName}}
+                                 </a>
+                             </span>
+                            {{/each}}
+                        </div>
+                    </div>
+                {{/if}}
+                {{if p.detailFieldList && p.detailFieldList.length>0}}
+                    {{each p.detailFieldList as c ci}}
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <h4 class="title-line">
+                                明细(<span data-action="panelIndex">{{ci+1}}</span>)
+                            </h4>
+                            {{each c as cc cci}}
+                            <div class="form-group">
+                                <label class="col-24-xs-3 text-right">{{cc.fieldTitle?cc.fieldTitle:'标题'}}：</label>
+                                <div class="col-24-xs-21" data-statistics="{{cc.isStatistics?cc.isStatistics:''}}" data-value="{{cc.fieldValueText?cc.fieldValueText:''}}" data-field-unit="{{cc.fieldUnit?cc.fieldUnit:''}}">
+                                    {{if cc.fieldType==4}}
+                                        {{_momentFormat(cc.fieldValueText,'YYYY/MM/DD')}}
+                                    {{else if cc.fieldType==5 && (cc.fieldUnit=='元' || cc.fieldUnit=='万元')}}
+                                        {{_expNumberFilter(cc.fieldValueText)}}
+                                    {{else}}
+                                        {{cc.fieldValueText?cc.fieldValueText:''}}
+                                    {{/if}}
+                                </div>
+                            </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                    {{/each}}
+                {{/if}}
+            {{/each}}
+        {{/if}}
+    {{/if}}
+
+    <div id="isShowStatistics" style="display: none;">
+        <div class="form-group">
+            <label class="col-24-xs-3 control-label">总计：</label>
+            <div class="col-24-xs-21 p-t-7">
+                <span id="expAmount">{{dataInfo?dataInfo.totalExpAmount:'0'}}</span>
+            </div>
+        </div>
+    </div>
+
+
+    <h4 class="title-line m-l-sm">审批流程</h4>
+    <div class="hr-line-dashed m-t-none m-b-sm m-l m-r" ></div>
+    <div class="form-group">
+        <div class="col-sm-12 p-w-md">
+            <table class="table table-hover table-bordered m-b-xs" >
+                <thead>
+                    <tr>
+                        <th width="40%">审批</th>
+                        <th width="40%">操作</th>
+                        <th width="20%">审批时间</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {{if dataInfo && dataInfo.dynamicAudit &&  dataInfo.dynamicAudit.auditList!=null && dataInfo.dynamicAudit.auditList.length>0}}
+                {{each dataInfo.dynamicAudit.auditList as s i}}
+                    <tr>
+                        <td>
+                            {{if _isNullOrBlank(s.fileFullPath)}}
+                                <img alt="image" class="img-circle img-responsive dp-inline-block vertical-top" src="{{_url('/img/head_default.png')}}" width="30"/>
+                            {{else}}
+                                <img alt="image" class="img-circle img-responsive dp-inline-block vertical-top" src="{{s.fileFullPath}}" onerror=javascript:this.src="{{_url('/img/head_default.png')}}" width="30" >
+                            {{/if}}
+                            <span class="dp-inline-block">
+                                <p class="m-b-none">{{s.userName}}</p>
+                                <p class="m-b-none fc-v1-grey">{{s.companyName}}</p>
+                            </span>
+                        </td>
+                        <td>
+                            {{if s.approveStatus=='1'}}
+                                <p class="text-success m-b-none">{{s.approveStatusName}}</p>
+                            {{else if s.approveStatus=='2' || s.approveStatus=='3'}}
+                                <p class="text-danger m-b-none">{{s.approveStatusName}}</p>
+                            {{else}}
+                                <p class="m-b-none">
+                                    {{if dataInfo.dynamicAudit.type=='singleFundChange' && s.approveStatusName=='已拨款'}}
+                                        已确认
+                                    {{else if dataInfo.dynamicAudit.type=='singleFundChange' && s.approveStatusName=='等待财务拨款'}}
+                                        等待财务确认
+                                    {{else}}
+                                        {{s.approveStatusName}}
+                                    {{/if}}
+                                </p>
+                            {{/if}}
+                            {{if s.approveStatusName=='发起申请' && !_isNullOrBlank(s.remark)}}
+                                <p class="fc-v1-grey m-b-none">{{typeStr}}备注：{{s.remark}}</p>
+                            {{/if}}
+                            {{if s.approveStatusName=='退回'  && !_isNullOrBlank(s.auditMessage)}}
+                                <p class="fc-v1-grey m-b-none">退回原因：{{s.auditMessage}}</p>
+                            {{else if !_isNullOrBlank(s.auditMessage)}}
+                                <p class="fc-v1-grey m-b-none">审批意见：{{s.auditMessage}}</p>
+                            {{/if}}
+                        </td>
+                        <td>
+                            {{_momentFormat(s.approveDate,'YYYY/MM/DD')}}
+                        </td>
+                    </tr>
+                {{/each}}
+                {{else}}
+                    <tr>
+                        <td colspan="3" class="text-center">暂无数据</td>
+                    </tr>
+                {{/if}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{if  dataInfo && dataInfo.dynamicAudit &&  dataInfo.dynamicAudit.ccCompanyUserList!=null && dataInfo.dynamicAudit.ccCompanyUserList.length>0}}
+    <h4 class="title-line m-l-sm">抄送人</h4>
+    <div class="hr-line-dashed m-t-none m-b-sm m-l m-r"></div>
+    <div class="form-group">
+        <div class="col-sm-12 p-w-md approval-out-box">
+            {{each dataInfo.dynamicAudit.ccCompanyUserList as u ui}}
+            <div class="approver-outbox">
+                <div class="approver-box ">
+                    <div class="img-circle">
+                        <img alt="image" class="img-circle" src="{{_isNullOrBlank(u.fileFullPath)?_url('/img/head_default.png'):u.fileFullPath}}" onerror=javascript:this.src="{{_url('/img/head_default.png')}}" width="30" height="30">
+                    </div>
+                    <div class="m-t-xs">{{u.userName}}</div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+    {{/if}}
+</form>
+{{if isShowBtn}}
+<div class="footer border-b-radius text-right">
+    {{if isView}}
+        <button class="btn btn-default" data-action="cancel">关闭</button>
+    {{else}}
+        <button class="btn btn-default" data-action="cancel">
+            {{if (dataInfo && dataInfo.dynamicAudit.auditFlag==1)
+                || (dataInfo && dataInfo.dynamicAudit.baseAuditData.companyUserId == currentCompanyUserId && dataInfo.dynamicAudit.baseAuditData.approveStatus == 0)}}
+                取消
+            {{else}}
+                关闭
+            {{/if}}
+        </button>
+        {{if dataInfo && dataInfo.dynamicAudit.auditFlag==1}}
+            <button class="btn btn-primary" data-action="agree">同意</button>
+            <button class="btn btn-success" data-action="returnBack">退回</button>
+        {{/if}}
+        {{if dataInfo && dataInfo.dynamicAudit.repealFlag == 1 }}
+            <button class="btn btn-danger" data-action="cancellation">撤销</button>
+        {{/if}}
+        {{if currentCompanyUserId==dataInfo.dynamicAudit.baseAuditData.companyUserId && (dataInfo.dynamicAudit.baseAuditData.approveStatus=='0' || dataInfo.dynamicAudit.baseAuditData.approveStatus=='5')}}
+        <button class="btn btn-warning" data-action="remind">提醒</button>
+        {{/if}}
+    {{/if}}
+</div>
+{{/if}}

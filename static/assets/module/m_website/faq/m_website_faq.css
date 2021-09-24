@@ -1,0 +1,80 @@
+.m-website-faq .index-banner .banner-img{
+    width: 100%;
+    position: relative;
+    max-height: 250px;
+    margin: 0 auto;
+}
+.m-website-faq .index-banner .banner-content{
+    width: 80%;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    position: absolute;
+    left: 10%;
+    top: 90px;
+    z-index: 2;
+}
+.m-website-faq p{
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+.m-website-faq .m-website-faq-menu .fa.fa-angle-right{
+    display: none;
+}
+.m-website-faq .products-icon{
+    width: 40px;
+    margin-top: -4px;
+    margin-left: -10px;
+    display: none;
+}
+@media (max-width: 768px){
+    .m-website-faq #faqContent.p-t-100{
+        padding-top: 0px;
+        background: #fff;
+    }
+    .m-website-faq #faqContent #rightContent{
+        padding-top: 60px;
+    }
+
+    .m-website-faq .m-website-faq-menu .fa.fa-angle-right{
+        display: block;
+    }
+    .m-website-faq .m-website-faq-menu .fa.fa-angle-right{
+        border: 0;
+    }
+    .m-website-faq .m-website-faq-menu.navbar-default.navbar-content .nav-second-level > li > a{
+        padding-left: 20px;
+    }
+    .m-website-faq .m-website-faq-menu .sidebar-collapse > .nav > li{
+        margin-bottom: 10px;
+        background: #fff;
+        border: 0;
+    }
+    .m-website-faq .m-website-faq-menu.border{
+        border: 0;
+    }
+    .m-website-faq .m-website-faq-menu.navbar-default.navbar-content .nav > li.active{
+        background: #fff;
+        border: 0;
+    }
+    .m-website-faq .m-website-faq-menu.navbar-default.navbar-content .nav  li  a:active,
+    .m-website-faq .m-website-faq-menu.navbar-default.navbar-content .nav  li  a:focus,
+    .m-website-faq .m-website-faq-menu.navbar-default.navbar-content .nav  li  a:hover{
+        background: #fff;
+    }
+    .m-website-faq .products-icon{
+        display: block;
+    }
+    .m-website-faq .phone-navbar-default{
+        padding: 15px 10px;
+        border-bottom: solid 1px #e0e0e0;
+        margin-left: -15px;
+        margin-right: -15px;
+        position: relative;
+        border-top: solid 1px #ccc;
+        box-shadow: -2px 8px 10px -6px #ccc inset
+    }
+    .m-website-faq .index-banner[data-type="1"]{
+        display: none;
+    }
+
+}

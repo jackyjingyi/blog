@@ -1,0 +1,15 @@
+{{if userList!=null && userList.length>0}}
+    {{each userList as p i}}
+        <div class="approver-outbox">
+            <div class="approver-box text-center">
+                <div class="img-circle">
+                    <img alt="image" class="img-circle" src="{{_isNullOrBlank(p.imgUrl)?_url('/img/head_default.png'):p.imgUrl}}" onerror=javascript:this.src="{{_url('/img/head_default.png')}}" width="50" height="50">
+                </div>
+                <div class="m-t-xs text-ellipsis full-width">{{p.name}}</div>
+                <a href="javascript:void(0);" class="approver-remove" data-action="removeCcUser" data-i="{{i}}" style="display: none;">
+                    <i class="glyphicon glyphicon-remove"></i>
+                </a>
+            </div>
+        </div>
+    {{/each}}
+{{/if}}

@@ -1,0 +1,96 @@
+<form class="form-horizontal m">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">任务状态：</label>
+        <div class="col-sm-10">
+            {{if ((isPanel==1 && doType==1) || doType==2) && (dataInfo.endStatus!=2 && dataInfo.companyId == currentCompanyId)}}
+        <!--    <div class="pull-left m-r-xs m-t-xs">
+                <label class="i-checks i-checks-label fw-normal">
+                    {{if dataInfo && dataInfo.endStatus==5}}
+                        <input type="radio" name="endStatus" value="5" checked/>
+                    {{else}}
+                        <input type="radio" name="endStatus" value="5"/>
+                    {{/if}}
+                    <span class="i-checks-span">提交验收</span>
+                </label>
+            </div>-->
+
+            <div class="pull-left m-r-xs m-t-xs">
+                <label class="i-checks i-checks-label fw-normal">
+                    {{if dataInfo && dataInfo.endStatus==2}}
+                    <input type="radio" name="endStatus" value="2" checked/>
+                    {{else}}
+                    <input type="radio" name="endStatus" value="2"/>
+                    {{/if}}
+                    <span class="i-checks-span">已完成</span>
+                </label>
+            </div>
+            {{/if}}
+            {{if (doType==2 || doType==1 ) && (dataInfo.endStatus==2 || dataInfo.endStatus==3  || dataInfo.endStatus==4)}}
+            <div class="pull-left m-r-xs m-t-xs">
+                <label class="i-checks i-checks-label fw-normal">
+                    {{if dataInfo && dataInfo.endStatus==1}}
+                    <input type="radio" name="endStatus" value="1" checked/>
+                    {{else}}
+                    <input type="radio" name="endStatus" value="1"/>
+                    {{/if}}
+                    <span class="i-checks-span">进行中</span>
+                </label>
+            </div>
+            {{/if}}
+       <!--     {{if doType==2}}
+            <div class="pull-left m-r-xs m-t-xs">
+                <label class="i-checks i-checks-label fw-normal">
+                    {{if dataInfo && dataInfo.endStatus==2}}
+                    <input type="radio" name="endStatus" value="2" checked/>
+                    {{else}}
+                    <input type="radio" name="endStatus" value="2"/>
+                    {{/if}}
+                    <span class="i-checks-span">已完成</span>
+                </label>
+            </div>
+            {{/if}}-->
+            {{if (doType==1 || doType==2) && dataInfo.fromCompanyId == currentCompanyId}}
+            <div class="pull-left m-r-xs m-t-xs">
+                <label class="i-checks i-checks-label fw-normal">
+                    {{if dataInfo && dataInfo.endStatus==3}}
+                        <input type="radio" name="endStatus" value="3" checked/>
+                    {{else}}
+                        <input type="radio" name="endStatus" value="3"/>
+                    {{/if}}
+                    <span class="i-checks-span">已暂停</span>
+                </label>
+            </div>
+            <div class="pull-left m-r-xs m-t-xs">
+                <label class="i-checks i-checks-label fw-normal">
+                    {{if dataInfo && dataInfo.endStatus==4}}
+                    <input type="radio" name="endStatus" value="4" checked/>
+                    {{else}}
+                    <input type="radio" name="endStatus" value="4"/>
+                    {{/if}}
+                    <span class="i-checks-span">已终止</span>
+                </label>
+            </div>
+            {{/if}}
+            <div class="row"><div class="col-sm-10"></div></div>
+        </div>
+    </div>
+    <div class="form-group {{dataInfo && dataInfo.endStatus==5?'':'hide'}} " data-type="5">
+        <label class="col-sm-2 control-label">描述：</label>
+        <div class="col-sm-10">
+            <textarea placeholder="请输入描述" class="form-control" type="text" name="remark" rows="5"></textarea>
+        </div>
+    </div>
+    <div class="form-group {{dataInfo && dataInfo.endStatus==5?'':'hide'}}" data-type="5">
+        <label class="col-sm-2 control-label">成果文件：</label>
+        <div class="col-sm-10">
+            <div class="row">
+                <div class="col-md-12 m-t-xs">
+                    <span id="showFileLoading"> </span>
+                </div>
+                <div class="col-md-12 m-b-sm">
+                    <span class="uploadmgrContainer"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

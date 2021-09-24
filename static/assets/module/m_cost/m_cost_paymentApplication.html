@@ -1,0 +1,54 @@
+<form class="form-horizontal m">
+    {{if isInnerCompany}}
+    <div class="form-group ">
+        <label class="col-24-xs-3 text-right">申请人：</label>
+        <div class="col-24-xs-21">
+            {{costPayDetail.userName}}
+        </div>
+    </div>
+    <div class="form-group ">
+        <label class="col-24-xs-3 text-right">申请金额：</label>
+        <div class="col-24-xs-21">
+            {{_expNumberFilter(costPayDetail.fee)}} 元
+        </div>
+    </div>
+    {{/if}}
+    <div class="form-group ">
+        <label class="col-24-xs-3 text-right">收款方：</label>
+        <div class="col-24-xs-21">
+            {{costPayDetail.toCompanyName}}
+        </div>
+    </div>
+    <div class="form-group ">
+        <label class="col-24-xs-3 text-right">关联节点：</label>
+        <div class="col-24-xs-21">
+            {{costPayDetail.feeDescription}}
+        </div>
+    </div>
+    <div class="form-group ">
+        <label class="col-24-xs-3 text-right">节点金额：</label>
+        <div class="col-24-xs-21">
+            {{_expNumberFilter(costPayDetail.pointFee)}} 元
+        </div>
+    </div>
+    <div class="hr-line-dashed m-t-none"></div>
+    <div class="form-group {{isInnerCompany?'hide':''}}">
+        <label class="col-24-xs-3 control-label">付款金额：</label>
+        <div class="col-24-xs-21">
+            <div class="input-group">
+                <input placeholder="金额" class="form-control pay-input" type="text" name="fee" value="{{costPayDetail.fee}}">
+                <span class="input-group-addon">元</span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-24-xs-3 control-label">备注：</label>
+        <div class="col-24-xs-21">
+            <textarea placeholder="请输入备注" class="form-control" type="text" name="pointDetailDescription"></textarea>
+        </div>
+    </div>
+    <div class="hr-line-dashed m-t-none"></div>
+    <div id="approverOutBox">
+
+    </div>
+</form>

@@ -1,0 +1,87 @@
+<div class="ibox m_projectAdd">
+    <div class="ibox-title secondary-menu-outbox">
+        <div class="row">
+            <div class="col-md-12" id="secondary-menu">
+                <div class="pull-left">
+                    <div class="no-margin p-h-sm breadcrumb-box" >
+                        <ol class="breadcrumb">
+                            <li class="active fw-bold">项目立项</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ibox-content addProjectOBox">
+        <form role="form " class="form-horizontal projectAddForm m-t-md">
+            <div class="form-group">
+                <label class="col-24-sm-4 col-24-lg-3 text-right m-t-sm p-l-none">项目类型<span class="fc-red">*</span>：</label>
+                <div class="col-24-sm-9 col-24-lg-8">
+                    <select class="form-control" name="projectTypeId"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-24-sm-4 col-24-lg-3 text-right m-t-sm p-l-none">所属组<span class="fc-red">*</span>：</label>
+                <div class="col-24-sm-9 col-24-lg-8">
+                    <input class="form-control" name="companyId" data-id="" readonly placeholder="请点击选择所属组"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-24-sm-4 col-24-lg-3 text-right m-t-sm p-l-none">所属公司<span class="fc-red">*</span>：</label>
+                <div class="col-24-sm-9 col-24-lg-8">
+                    <select class="form-control" name="orgId"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-24-sm-4 col-24-lg-3 text-right m-t-sm p-l-none">立项时间<span class="fc-red">*</span>：</label>
+                <div class="col-24-sm-9 col-24-lg-8">
+                    <input type="text" class="form-control" name="projectCreateDate" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" value="{{currentDate}}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-24-sm-4 col-24-lg-3 text-right m-t-sm"><span class="label-projectName">创新研究</span><span class="fc-red">*</span>：</label>
+                <div class="col-24-sm-9 col-24-lg-8">
+                    <input type="text" class="form-control" name="projectName" id="projectName" maxlength="50" placeholder="请输入创新研究">
+                </div>
+            </div>
+            <div class="form-group" data-type="1" style="display: none">
+                <label class="col-24-sm-4 col-24-lg-3 text-right m-t-sm p-l-none">甲方<span class="fc-red">*</span>：</label>
+                <div class="col-24-sm-9 col-24-lg-8">
+                    <input type="text" class="form-control" name="constructCompany" id="constructCompany"  placeholder="请输入甲方名称" autocomplete="off" data-id="">
+                </div>
+            </div>
+            <div class="form-group" data-type="1"  style="display: none">
+                <label class="col-24-sm-4 col-24-lg-3 text-right m-t-sm p-l-none" for="selectRegion">项目所在地<span class="fc-red">*</span>：</label></label>
+                <div class="col-24-sm-9 col-24-lg-8">
+                    <div class="input-group cityBox" id="selectRegion" name="selectRegion">
+                        <div class="dp-inline-block">
+                            <select class="prov form-control" name="province"></select>
+                        </div>
+                        <div class="dp-inline-block m-l-xs">
+                            <select class="city form-control" name="city" disabled="disabled" style="display: none;"></select>
+                        </div>
+                        <div  class="dp-inline-block m-l-xs">
+                            <select class="dist form-control" name="county" disabled="disabled" style="display: none;"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" data-type="1"  style="display: none">
+                <label class="col-24-sm-4 col-24-lg-3 text-right m-t-sm p-l-none" for="detailAddress">详细地址：</label>
+                <div class="col-24-sm-9 col-24-lg-8">
+                    <input type="text" class="input-autofill-selected form-control" style="width: 100%;" name="detailAddress" id="detailAddress" maxlength="255" value="{{$detailAddress?$detailAddress:''}}">
+                </div>
+            </div>
+            <!--<div id="approverOutBox">
+
+            </div>-->
+            <div class="row">
+                <div class="col-24-sm-9 col-24-lg-8 col-24-sm-offset-4 col-24-lg-offset-3">
+                    <a type="button" class="btn btn-primary btn-submit  " data-action="submit">保存</a>
+                    <a type="button" class="btn btn-default btn-cancel m-l-xs" data-action="cancel">取消</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

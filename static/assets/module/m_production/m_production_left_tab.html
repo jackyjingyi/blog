@@ -1,0 +1,70 @@
+<div class="m-product-left-tab border full-height">
+    {{if dataList && dataList.length>0}}
+    {{each dataList as p i}}
+        <div class="task-box" data-relation-id="{{p.taskRelationId}}">
+            <div class="p-xs bg-v5-grey">
+                <div class="row">
+                    <div class="col-sm-8 task-name">{{p.taskName}}</div>
+                    <div class="col-sm-4 text-right p-r-md">
+                        <div class="status-box">
+                            <!--根据状态改变样式-->
+                            {{if p.endStatus ==3 || p.endStatus ==4}}
+                            <span class="text-danger">{{p.stateHtml}}</span>
+                            {{else if p.endStatus ==2}}
+                            <span class="text-success">{{p.stateHtml}}</span>
+                            {{else}}
+                            <span>{{p.stateHtml}}</span>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{if p.childList && p.childList.length>0 }}
+            {{each p.childList as p1 i1}}
+                <div class="m-xs border">
+                    <ul class="list-group" data-relation-id="{{p1.taskRelationId}}">
+                        <li class="list-group-item" data-id="{{p1.id}}" data-relation-id="{{p1.taskRelationId}}" data-index="{{i1}}">
+                            <div class="profession dp-flex">
+                                <div class="profession-left">
+                                    <span class="label label-info label-circle dp-inline-block-1 pull-right m-t-xs" title="{{p1.designer.companyUserName}}">
+                                        {{if p1.designer==null || _isNullOrBlank(p1.designer.companyUserName)}}
+                                            空
+                                        {{else}}
+                                            {{_interceptName(p1.designer.companyUserName,2)}}
+                                        {{/if}}
+                                    </span>
+                                </div>
+                                <div class="profession-right m-l-xs of-hidden">
+                                    <div class="row m-l-none">
+                                        <div class="col-sm-8 p-h-xxs">
+                                            <span class="text-ellipsis full-width" title="{{p1.taskName}}">专业：{{p1.taskName}}</span>
+                                            <div class="row no-margin p-b-xs f-s-xxs">
+                                                <div class="width-40 pull-left"><span class="fc-v3-grey">{{p1.progressRate-0}}%</span></div>
+                                                <div class="progress pull-left">
+                                                    <div style="width: {{p1.progressRate-0}}%" aria-valuemax="100" aria-valuemin="0" class="progress-bar"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4 status-box text-right p-t-xs p-l-none">
+                                            <!--根据状态改变样式-->
+                                            {{if p1.endStatus ==3 || p1.endStatus ==4}}
+                                            <span class="text-danger">{{p1.stateHtml}}</span>
+                                            {{else if p1.endStatus ==2}}
+                                            <span class="text-success">{{p1.stateHtml}}</span>
+                                            {{else}}
+                                            <span>{{p1.stateHtml}}</span>
+                                            {{/if}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            {{/each}}
+            {{/if}}
+        </div>
+    {{/each}}
+    {{/if}}
+</div>

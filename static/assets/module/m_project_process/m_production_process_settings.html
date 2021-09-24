@@ -1,0 +1,26 @@
+<div class="ibox m-production-process-settings">
+    <div class="ibox-title secondary-menu-outbox">
+        <div class="row">
+            <!-- 面包屑 -->
+            <div class="col-md-12" id="breadcrumb"></div>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <div class="bg-v2-grey p-sm m-b-sm">
+            <h3>{{dataInfo.projectName}}</h3>
+            <p>立项时间：{{_momentFormat(dataInfo.projectCreateDate,'YYYY/MM/DD')}}</p>
+            <p>项目状态：{{dataInfo.projectStatus.content}}</p>
+        </div>
+        <h4 class="title-line">常用设置</h4>
+        <div class="row m-sm">
+            <div class="item-box p-t-sm">
+                <div class="col-sm-3"><i class="icon iconfont icon-houtaigunli f-s-xl-v1 fc-v1-grey"></i></div>
+                <div class="col-sm-9 fc-dark-grey p-t-xs">应用设置</div>
+                <div class="col-sm-9 col-sm-offset-3 p-t-xs"><a class="fc-v2-blue" href="#/project/production/processSettings/list?id={{query.id}}&projectName={{query.projectName}}&dataCompanyId={{query.dataCompanyId}}&processType=1">生产任务</a></div>
+                <div class="col-sm-9 col-sm-offset-3 p-t-sm"><a class="fc-v2-blue" href="#/project/production/processSettings/list?id={{query.id}}&projectName={{query.projectName}}&dataCompanyId={{query.dataCompanyId}}&processType=2">项目图纸</a></div>
+                <div class="col-sm-9 col-sm-offset-3 p-t-sm"><a class="fc-v2-blue" href="#/project/production/processSettings/list?id={{query.id}}&projectName={{query.projectName}}&dataCompanyId={{query.dataCompanyId}}&processType=3">校审意见</a></div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,29 @@
+<tr class="task-add-row content-row-edit" data-key="{{key}}">
+    <td colspan="{{colspan?colspan:'11'}}">
+        <form>
+            <div class="pull-left row-edit-item p-r-xs">
+                <textarea placeholder="请输入工作内容" class="form-control" type="text" name="taskName" style="width: 88%;display: inline-block;"></textarea>
+                <span><span class="wordCount">0</span>/<span>50</span></span>
+            </div>
+            <div class="pull-left row-edit-item p-r-xs">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="orgId" readonly placeholder="请选择团队">
+                    <span class="input-group-addon" onclick="javascript:$(this).prev().focus();">
+                        <i class="icon-append fa fa-caret-down"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="pull-left row-edit-item p-r-xs" id="orderDeanId">
+                <select class="form-control" name="orderDeanId" data-placeholder="请选择分管院长"></select>
+            </div>
+            <div class="pull-left row-edit-item p-r-xs" id="designerId">
+                <select class="form-control" name="designerId" data-placeholder="请选择负责人"></select>
+            </div>
+            <div class="pull-left row-edit-item">
+                <button class="btn btn-primary" data-action="submit">创建</button>
+                <button class="btn btn-default" data-action="cancel">取消</button>
+            </div>
+        </form>
+    </td>
+</tr>
+

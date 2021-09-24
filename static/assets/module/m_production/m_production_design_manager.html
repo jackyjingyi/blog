@@ -1,0 +1,32 @@
+
+{{if doType!=3}}
+<span class="">{{title}}：</span>
+{{/if}}
+<span class="m-r-sm">
+    {{projectManager?projectManager.companyUserName:''}}
+    {{if projectManager!=null && projectManager.isUpdateOperator==1 && currentCompanyId==dataCompanyId}}
+        <a href="javascript:void(0)" data-action="changeOperatorPerson" data-i="0" data-id="{{projectManager.companyUserId}}"
+           data-company-id="{{projectManager.companyId}}" data-user-name="{{projectManager.companyUserName}}" class="showTooltip" data-placement="top"
+           data-toggle="tooltip" data-original-title="更换{{title}}">
+            <i class="fa fa-retweet"></i>
+        </a>
+    {{/if}}
+</span>
+<!--
+<span>{{title}}助理：</span>
+<span class="m-r-sm">
+    {{assistant==null || assistant.companyUserName==null?'未设置':assistant.companyUserName}}
+    {{if  projectManager!=null && projectManager.companyUserId==currentCompanyUserId && currentCompanyId==dataCompanyId}}
+        {{if assistant!=null}}
+            <a href="javascript:void(0)" data-action="changeManagerPerson" data-i="0" data-id="{{assistant.companyUserId}}"
+               data-user-name="{{assistant.companyUserName}}" data-company-id="{{assistant.companyId}}"
+               class="showTooltip" data-placement="top" data-toggle="tooltip" data-original-title="更换{{title}}助理">
+                    <i class="fa fa-retweet"></i>
+            </a>
+        {{else}}
+            <a href="javascript:void(0)" data-action="changeManagerPerson" data-i="0" data-id="" data-user-name="" data-company-id="" class="showTooltip" data-placement="left" data-toggle="tooltip" data-original-title="更换助理">
+                <i class="fa fa-retweet"></i>
+            </a>
+        {{/if}}
+    {{/if}}
+</span>-->

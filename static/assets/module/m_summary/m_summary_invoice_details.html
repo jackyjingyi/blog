@@ -1,0 +1,108 @@
+<form class="form-horizontal p-sm overflow-y-auto m-dialog-resize">
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">日期：</label>
+        <div class="col-md-10">
+            {{_momentFormat(invoiceInfo.applyDate,'YYYY/MM/DD')}}
+        </div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">申请人：</label>
+        <div class="col-md-10">{{pointDetailInfo.userName}}</div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">开票金额：</label>
+        <div class="col-md-10">{{_expNumberFilter(invoiceInfo.invoiceAmount)}}</div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">到账金额：</label>
+        <div class="col-md-10">{{_expNumberFilter(pointDetailInfo.sumPaidFee)}}</div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">应收金额：</label>
+        <div class="col-md-10">{{_expNumberFilter(pointDetailInfo.notPaidFee)}}</div>
+    </div>
+    <div class="hr-line-dashed m-t-none m-b-sm" ></div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">关联项目：</label>
+        <div class="col-md-10">{{cost.projectName}}</div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">收款方：</label>
+        <div class="col-md-10">
+            {{if cost.toCompanyName!=null && cost.toCompanyName!=''}}
+                {{cost.toCompanyName}}
+            {{else}}
+                --
+            {{/if}}
+        </div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">收款节点：</label>
+        <div class="col-md-10">{{point.feeDescription}}</div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">比例：</label>
+        <div class="col-md-10">{{point.feeProportion}}%</div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">节点金额：</label>
+        <div class="col-md-10">{{_expNumberFilter(point.fee)}}</div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">申请人：</label>
+        <div class="col-md-10">{{pointDetailInfo.userName}}</div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">申请金额：</label>
+        <div class="col-md-10">{{_expNumberFilter(pointDetailInfo.fee)}}</div>
+    </div>
+    <div class="hr-line-dashed m-t-none m-b-sm" ></div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">发票类型：</label>
+        <div class="col-md-10">
+            {{if invoiceInfo.invoiceType==1}}
+                普票
+            {{else if invoiceInfo.invoiceType==2}}
+                专票
+            {{/if}}
+        </div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">发票号码：</label>
+        <div class="col-md-10">{{invoiceInfo.invoiceNo?invoiceInfo.invoiceNo:'--'}}</div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">收票方名称：</label>
+        <div class="col-md-10">{{invoiceInfo.relationCompanyName}}</div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">纳税人识别号：</label>
+        <div class="col-md-10">{{invoiceInfo.taxIdNumber}}</div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">开票内容：</label>
+        <div class="col-md-10">{{invoiceInfo.invoiceContent}}</div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">备注：</label>
+        <div class="col-md-10">{{invoiceInfo.invoiceRemark}}</div>
+    </div>
+    {{if invoiceInfo.invoiceType==2}}
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">地址：</label>
+        <div class="col-md-10">{{invoiceInfo.address}}</div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">电话：</label>
+        <div class="col-md-10">{{invoiceInfo.cellphone}}</div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">开户行：</label>
+        <div class="col-md-10">{{invoiceInfo.accountBank}}</div>
+    </div>
+    <div class="form-group m-b-xs">
+        <label class="col-md-2 text-right">账号：</label>
+        <div class="col-md-10">{{invoiceInfo.bankNo}}</div>
+    </div>
+    {{/if}}
+</form>

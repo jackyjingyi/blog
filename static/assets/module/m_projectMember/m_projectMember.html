@@ -1,0 +1,93 @@
+<div class="ibox">
+    <div class="ibox-title secondary-menu-outbox">
+        <div class="row">
+            <!-- 面包屑 -->
+            <div class="col-md-12" id="breadcrumb"></div>
+        </div>
+    </div>
+    <div class="ibox-content">
+        {{if parts && parts.length>0}}
+        {{each parts as p i}}
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th colspan="8">
+                    <div class="row">
+                        <div class="col-md-3">
+                            {{p.childTask?p.childTask.taskName:''}}
+                        </div>
+                        <div class="col-md-3">
+                            <span>所属年度：</span>
+                            <span>{{p.childTask?p.childTask.year:''}}</span>
+                        </div>
+                        <div class="col-md-3">
+                            <span>任务状态：</span>
+                            <span>{{p.childTask?p.childTask.stateHtml:''}}</span>
+                        </div>
+                    </div>
+                </th>
+            </tr>
+            <tr>
+                <th class="border-no-l">姓名</th>
+                <th>工作内容</th>
+                <th>工作占比</th>
+                <th>任务分配</th>
+                <th>任务占比</th>
+                <th>占比计算</th>
+                <th>效能值</th>
+               <!-- <th>产值结算</th>-->
+            </tr>
+            </thead>
+            <tbody class="border-no-t">
+            {{if p.personList && p.personList.length>0}}
+                {{each p.personList as d di}}
+                    {{if d.taskList && d.taskList.length>0}}
+                        {{each d.taskList as t ti}}
+                        <tr class="">
+                            {{if ti==0}}
+                            <td rowspan="{{d.taskList&&d.taskList.length>1?d.taskList.length:'1'}}" class="vertical-middle">
+                                {{d.userName}}
+                            </td>
+                            {{/if}}
+                            <td>{{t.contentName}}</td>
+                            <td>{{t.contentRatio?t.contentRatio+'%':''}}</td>
+                            <td>{{t.taskName}}</td>
+                            <td>{{t.taskRatio?t.taskRatio+'%':''}}</td>
+                            <td>{{t.personalRatio?t.personalRatio+'%':''}}</td>
+                            {{if ti==0}}
+                            <td rowspan="{{d.taskList&&d.taskList.length>1?d.taskList.length:'1'}}" class="vertical-middle">{{_expNumberFilter(d.personalRatio/100)}}</td>
+                           <!-- <td rowspan="{{d.taskList&&d.taskList.length>1?d.taskList.length:'1'}}" class="vertical-middle">{{_expNumberFilter(d.outPutValue)}}</td>-->
+                            {{/if}}
+                        </tr>
+                        {{/each}}
+                    {{else}}
+                    <tr class="">
+                        <td>{{d.userName}}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{d.personalRatio?d.personalRatio+'%':''}}</td>
+                       <!-- <td>{{_expNumberFilter(d.outPutValue)}}</td>-->
+                    </tr>
+                    {{/if}}
+                {{/each}}
+            {{else}}
+            <tr>
+                <td colspan="8" class="text-center">暂无数据</td>
+            </tr>
+            {{/if}}
+            </tbody>
+        </table>
+        {{/each}}
+        {{else}}
+        <div class="panel panel-default no-borders m-t-xs">
+            <div class="panel-body text-center no-borders">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </div>
+        {{/if}}
+    </div>
+</div>

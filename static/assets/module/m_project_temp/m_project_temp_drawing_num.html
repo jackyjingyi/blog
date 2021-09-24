@@ -1,0 +1,48 @@
+<div class="m-project-temp">
+    <div class="row">
+        <div class="col-sm-3 col-xl-2">
+            <div class="panel panel-default" data-type="1">
+                <div class="panel-heading">
+                    <h4 class="no-margins">
+                        设计分类
+                    </h4>
+                </div>
+                <div class="panel-body of-auto no-borders">
+                    <div class="list-group">
+                        {{if projectTypeList && projectTypeList.length>0}}
+                        {{each projectTypeList as p i}}
+                            <li class="list-group-item no-borders p-xxs {{i==0?'active':''}}" data-id="{{p.id}}" data-relation-id="{{p.relationId}}">
+                                <a href="javascript:void(0);" class="text-ellipsis item-name" data-action="selectItem"
+                                   data-toggle="tooltip" data-container="body" data-original-title="{{p.fieldName}}">{{p.fieldName}}</a>
+
+                            </li>
+                        {{/each}}
+                        {{else}}
+                            <div class="row no-data-tr">
+                                <div class="text-center col-md-12">
+                                    <div class="m-b-xl m-t-md">
+                                        <img src="{{_url('/img/default/without_data.png')}}" width="100">
+                                        <span class="fc-dark-blue dp-block">请设置设计分类！</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-9 col-xl-10">
+            <div class="panel panel-default" >
+                <div class="panel-heading">
+                    <h4 class="no-margins">
+                        图纸编号列表
+                        <a href="javascript:;" class="btn btn-primary btn-xs pull-right m-t-n-3" data-action="addDrawingNum"><i class="fa fa-plus f-s-m"></i>&nbsp;增加图纸编号规则</a>
+                    </h4>
+                </div>
+                <div class="panel-body of-auto no-borders" data-type="drawingNumberList">
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

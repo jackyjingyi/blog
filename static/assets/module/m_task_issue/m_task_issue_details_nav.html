@@ -1,0 +1,51 @@
+<div class="m-task-issue-details-nav">
+    <table class="tree table table-bordered m-b-none text-nowrap">
+        <thead>
+        <tr>
+            <th width="80%" class="th-btn border-no-b border-no-r">
+                <!--<button class="btn btn-default btn-xs">返回</button>-->
+                {{if fromType==3}}
+                <a href="#/myTask" class="btn btn-default btn-sm">返回</a>
+                {{else}}
+                <a href="#/project/production?id={{projectId}}&projectName={{projectNameCode}}&dataCompanyId={{dataCompanyId}}" class="btn btn-default btn-sm">返回</a>
+                {{/if}}
+            </th>
+            <th width="20%" class="vertical-middle border-no-b border-no-l p-l-none">任务状态</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="full-width of-auto max-h-500">
+        <table class="tree table table-striped m-b-none text-nowrap">
+            <tbody>
+            {{if dataList!=null && dataList.length>0}}
+            {{each dataList as t ti}}
+            <tr class="tree-box-tr treegrid-{{t.id}} {{if t.pid!=null && t.pid!=''}} treegrid-parent-{{t.pid}} {{/if}}" data-id="{{t.id}}" data-pid="{{t.pid}}"
+                data-isoperatertask="{{t.isOperaterTask}}" data-isonoff="{{t.isOnOff}}">
+
+                <td width="80%" class="tree-td pt-relative p-r-none p-l-none {{ti==0?'border-no-t':''}}" >
+                    {{if createCompanyId!=currentCompanyId && ti==0}}
+                        <span class="task-name" data-string="{{t.text}}">{{t.text}}</span>
+                    {{else}}
+                        <a class="task-name" data-string="{{t.text}}">{{t.text}}</a>
+                    {{/if}}
+                </td>
+                <td width="20%" class="{{ti==0?'border-no-t':''}}">
+                    {{t.stateName}}
+                </td>
+            </tr>
+            {{/each}}
+            {{else}}
+            <tr class="no-data-tr">
+                <td colspan="9" class="text-center ">
+                    <div>
+                        <img src="{{_url('/img/default/without_data.png')}}">
+                        <span class="fc-dark-blue dp-block">没有相关数据</span>
+                    </div>
+                </td>
+            </tr>
+            {{/if}}
+            </tbody>
+        </table>
+    </div>
+
+</div>

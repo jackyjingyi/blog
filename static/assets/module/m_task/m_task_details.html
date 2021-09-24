@@ -1,0 +1,136 @@
+<div class="ibox no-margins m-production-details">
+    <div class="ibox-title secondary-menu-outbox">
+        <div class="row">
+            <!-- 面包屑 -->
+            <div class="col-md-12" id="breadcrumb"></div>
+        </div>
+    </div>
+    <div class="ibox-content no-padding">
+        <div class="row no-margins p-t-xs">
+            <div class="col-md-8 p-t-xs">
+               <span class="font-bold">
+                    {{dataInfo.task.taskFullName}}
+                </span>
+            </div>
+            <div class="col-md-4 text-right">
+                <a href="javascript:;" data-action="returnBack" class="btn btn-default">返回</a>
+            </div>
+        </div>
+        <div class="border-bottom m-t-xs"></div>
+        <div class="">
+            <div class="col-md-9 p-t-sm p-l p-r-none border-right" id="leftBox">
+                <div class="tabs-container m-t">
+                    <ul class="nav nav-tabs">
+                      <!--  <li class="active"><a data-toggle="tab" href="#tab-3" aria-expanded="false">任务描述</a></li>-->
+                        <li class="active"><a data-toggle="tab" href="#tab-5" aria-expanded="false">分解任务</a></li>
+                        <li class=""><a data-toggle="tab" href="#tab-4" aria-expanded="false">变更历史</a></li>
+                    </ul>
+                    <div class="tab-content">
+                       <!-- <div id="tab-3" class="tab-pane active">
+                            <div class="panel-body">
+                                <form class="form-horizontal details-edit">
+                                    <div class="form-group ">
+                                        <label class="col-sm-12">
+                                            描      述：
+                                            <a href="javascript:void(0);" data-action="xeditable" data-type="11" data-key="taskRemark" data-target-ele="#task-remark-edit" data-is-picture="1" style="visibility: hidden;">
+                                                <i class="icon iconfont icon-bianji"></i>
+                                            </a>
+                                        </label>
+                                        <div class="col-sm-12">
+                                            <div class="show-span">{{#dataInfo.task.taskRemark}}</div>
+                                            <div id="task-remark-edit"></div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>-->
+                        <div id="tab-4" class="tab-pane " data-type="changeHistory">
+                            <div class="panel-body">
+                                <div class="data-list-box">
+                                    <div class="data-list-container"></div>
+                                    <div class="p-w-sm">
+                                        <div id="data-pagination-container" class="m-pagination pull-right "></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="tab-5" class="tab-pane active" data-type="subTask">
+                            <div class="panel-body">
+                                <div class="data-list-box">
+                                    <div class="data-list-container2"></div>
+                                    <div class="p-w-sm">
+                                        <div id="data-pagination-container2" class="m-pagination pull-right "></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 p-t-sm" id="rightBox">
+
+                <h4 class="title-line m-b-sm">基本信息</h4>
+                <div class="row m-b-sm">
+                    <label class="col-sm-5">任务状态：</label>
+                    <div class="col-sm-7">
+                        {{if !_isNullOrBlank(dataInfo.task.endStatusName)}}
+                        <button class="btn {{_getStatusColor(dataInfo.task.endStatus)}} btn-rounded btn-status  no-hover">{{dataInfo.task.endStatusName}}</button>
+                        {{else}}
+                        --
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="row m-b-sm">
+                    <label class="col-sm-5">占比：</label>
+                    <div class="col-sm-7">
+                        {{dataInfo.task.ratio?dataInfo.task.ratio+'%':'--'}}
+                    </div>
+                </div>
+                <div class="row m-b-sm">
+                    <label class="col-sm-5">团队：</label>
+                    <div class="col-sm-7">
+                        {{dataInfo.task.departName?dataInfo.task.departName:'--'}}
+                    </div>
+                </div>
+                <div class="row m-b-sm">
+                    <label class="col-sm-5">任务负责人：</label>
+                    <div class="col-sm-7">
+                        {{dataInfo.task.designer?dataInfo.task.designer.userName:'--'}}
+                    </div>
+                </div>
+                <div class="row m-b-sm">
+                    <label class="col-sm-5">开始时间：</label>
+                    <div class="col-sm-7">
+                        {{if _isNullOrBlank(dataInfo.task.startTime)}}
+                        --
+                        {{else}}
+                        {{_momentFormat(dataInfo.task.startTime,'YYYY/MM/DD')}}
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="row m-b-sm">
+                    <label class="col-sm-5">结束时间：</label>
+                    <div class="col-sm-7">
+                        {{if _isNullOrBlank(dataInfo.task.endTime)}}
+                        --
+                        {{else}}
+                        {{_momentFormat(dataInfo.task.endTime,'YYYY/MM/DD')}}
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="row m-b-sm">
+                    <label class="col-sm-5">完成时间：</label>
+                    <div class="col-sm-7">
+                        {{if _isNullOrBlank(dataInfo.task.completeDate)}}
+                        --
+                        {{else}}
+                        {{_momentFormat(dataInfo.task.completeDate,'YYYY/MM/DD')}}
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+

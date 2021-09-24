@@ -1,0 +1,58 @@
+<table class="table table-bordered table-responsive dataTable">
+    <thead>
+    <tr>
+        <th>
+            编号
+            <a class="icon-filter pull-right" id="filter_expNo" ><i class="icon iconfont icon-shaixuan"></i></a>
+        </th>
+        <th>金额（元）</th>
+        <th>部门</th>
+        <th class="">
+            经办人
+            <a class="icon-filter pull-right" id="filter_submitUserName"><i class="icon iconfont icon-shaixuan"></i></a>
+        </th>
+        <th>审批人</th>
+        <th>收款方</th>
+        <th>付款方</th>
+        <th>收支分类</th>
+        <th>分类子项</th>
+        <th class="" data-action="sort" data-code="expDate">
+            申请时间
+        </th>
+        <th class="" data-action="sort" data-code="approveDate">审批时间</th>
+        <th>付款时间</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList!=null && dataList.length>0}}
+    {{each dataList as p i}}
+    <tr class="curp" data-id="{{p.id}}" data-i="{{i}}">
+        <td>{{p.expNo}}</td>
+        <td>{{_expNumberFilter(p.sumExpAmount)}}</td>
+        <td>{{p.departName}}</td>
+        <td>{{p.submitUserName}}</td>
+        <td>{{p.auditPersonName}}</td>
+        <td>{{_emptyDisplay(p.enterpriseId)}}</td>
+        <td>{{_emptyDisplay(p.fromCompanyId)}}</td>
+        <td>{{p.expParentName}}</td>
+        <td>{{p.expName}}</td>
+        <td>{{_momentFormat(p.expDate,'YYYY/MM/DD')}}</td>
+        <td>{{_momentFormat(p.approveDate,'YYYY/MM/DD')}}</td>
+        <td>
+            {{_momentFormat(p.allocationDate,'YYYY/MM/DD')}}
+        </td>
+    </tr>
+    {{/each}}
+    {{else}}
+    <tr class="no-data">
+        <td colspan="12" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>
+

@@ -1,0 +1,65 @@
+<div class="ibox m_contractPayment">
+    <div class="ibox-title secondary-menu-outbox">
+        <div class="row">
+            <!-- 面包屑 -->
+            <div class="col-md-6" id="breadcrumb"></div>
+            <div class="col-md-6 text-right ">
+                {{if inviteOuterCooperation==1}}
+                <a href="javascript:void(0)" class="btn btn-primary btn-xs pull-right m-t roleControl" roleCode="20000501" flag="2"
+                   data-action="inviteExternalCooperation" >邀请合作设计组织</a>
+                {{/if}}
+            </div>
+            <div class="clearfix"></div>
+
+        </div>
+    </div>
+    <div class="ibox-content">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th class="text-center ">联系方式</th>
+                <th class="text-center ">合作组织</th>
+                <th class="text-center ">负责人</th>
+                <th class="text-center ">合作内容</th>
+                <th class="text-center ">经营负责人</th>
+                <th class="text-center ">操作</th>
+            </tr>
+            </thead>
+            <tbody class="border-no-t">
+            {{each projectPartnerList as p}}
+            <tr class="{{p.companyId!=null && p.companyId!=''?'':'gray-bg'}}">
+                <td class="text-center">{{p.phone}}</td>
+                <td class="text-center">{{p.companyName}}</td>
+                <td class="text-center">{{p.companyManagerName}}</td>
+                <td class="text-center">{{p.taskNameSplice}}</td>
+                <td class="text-center">{{p.projectManagerName}}</td>
+                <td class="text-center">
+                    {{if inviteOuterCooperation==1}}
+                    <a href="javascript:void(0);" class="btn btn-primary btn-xs m-r-xs autoMargin"
+                       data-action="relieveRelationship" data-id="{{p.id}}">解除合作</a>
+                    {{/if}}
+                    {{if p.companyId==null || p.companyId==''}}
+                    <span class="badge">未建立合作关系</span>
+                    {{if inviteOuterCooperation==1}}
+                    <a href="javascript:void(0);" class="btn btn-danger btn-xs pull-right m-r-xs autoMargin"
+                       data-action="resendSMS" data-id="{{p.id}}">重新推送短信</a>
+                    {{/if}}
+                    {{/if}}
+                </td>
+            </tr>
+            {{/each}}
+            {{if projectPartnerList==null || projectPartnerList.length==0}}
+            <tr class="no-data">
+                <td colspan="10" align="center">
+                    <div class="text-center">
+                        <img src="{{_url('/img/default/without_exp.png')}}">
+                    </div>
+                    <span style="color:#337b8e">暂无合作设计组织</span>
+                </td>
+            </tr>
+            {{/if}}
+            </tbody>
+
+        </table>
+    </div>
+</div>

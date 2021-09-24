@@ -1,0 +1,79 @@
+.task-list-box tr th,
+.task-list-box tr td{
+    vertical-align: middle;
+}
+.task-list-box .tree-td .popover.m-floating-popover{
+    display: inline-block;
+}
+.task-list-box .table>tbody>tr.complete-date-tr td,
+.task-list-box .table>tbody>tr.complete-date-tr td span,
+.task-list-box .table>tbody>tr.complete-date-tr td a,
+.task-list-box .table>tbody>tr.complete-date-tr .person-in-charge{
+    color: #ACB3C2;
+}
+.task-list-box .table>tbody>tr.complete-date-tr td .btn.selected{
+    background-color: #fff;
+    border-color: #acb3c2;
+    color: #acb3c2;
+}
+.m-production-content-row td .popover.m-floating-popover input[name="taskName"]{
+    width: 200px;
+}
+.m-production-details #selectTaskNav{
+    max-height: 80%;
+}
+.m-production .tabs-container li a.text-ellipsis{
+    width: auto;
+    max-width: 200px;
+}
+.m-production .task-list-box .panel .panel-heading a.task-full-name.text-ellipsis{
+    line-height: unset;
+    vertical-align: text-top;
+    width: 100%; position: absolute; padding-right: 80px;
+}
+.m-production .task-list-box .treegrid-expander{
+    vertical-align: text-bottom;
+    margin-top: 4px;
+}
+.m-production .m-product-left-tab .list-group .list-group-item{
+    /*padding: 5px 10px;*/
+    padding: 10px;
+}
+.m-production .m-product-left-tab .list-group .list-group-item:first-child{
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+}
+.m-production .m-product-left-tab .list-group .list-group-item:last-child{
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+.m-production .m-product-left-tab .list-group-item.active,
+.m-production .m-product-left-tab .list-group-item.active:hover,
+.m-production .m-product-left-tab .list-group-item.active:focus{
+    background-color: #ccc;
+    border-color: #ccc;
+}
+.m-production .m-product-left-tab .list-group .list-group-item .profession .profession-left{
+    width: 40px;
+    float: left;
+}
+.m-production .m-product-left-tab .list-group .list-group-item .profession .profession-right{
+    float: left;
+    width: 100%;
+    padding-right: 45px\9\0;
+}
+
+.m-production .m-product-left-tab .list-group-item .progress{
+    height: 6px;
+    border-radius: 2px;
+    margin: 6px 5px 0 0;
+    width: 75%;
+}
+
+
+
+@media (max-width: 1366px) {
+    .m-production-content-row td .popover.m-floating-popover input[name="taskName"]{
+        width: 150px;
+    }
+}

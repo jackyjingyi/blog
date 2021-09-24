@@ -1,0 +1,513 @@
+<table class="table table-bordered table-responsive">
+    <thead>
+    <tr>
+        <th colspan="22" class="">
+            <div class="col-sm-6 text-left {{doType==1?'':'p-t-7'}}">
+                {{if doType!=1}}
+                <span class="glyphicon glyphicon-star-empty fc-v1-grey"></span>
+                <span>未生成</span>
+                <span class="glyphicon glyphicon-star-empty fc-v1-yellow"></span>
+                <span>已生成</span>
+                <span class="glyphicon glyphicon-star-empty fc-v2-blue"></span>
+                <span>已生成有修改</span>
+                <span class="glyphicon glyphicon-star-empty fc-v2-green"></span>
+                <span>已保存</span>
+                {{/if}}
+            </div>
+            <div class="col-sm-6 text-left">
+                {{if isCreateSalaryReport==0}}
+                <span class="glyphicon glyphicon-star-empty fc-v1-grey" title="未生成"></span>
+                {{else if isCreateSalaryReport==2}}
+                <span class="glyphicon glyphicon-star-empty fc-v1-yellow" title="已生成"></span>
+                {{else if isCreateSalaryReport==3}}
+                <span class="glyphicon glyphicon-star-empty fc-v2-blue" title="已生成有修改"></span>
+                {{else if isCreateSalaryReport==1}}
+                <span class="glyphicon glyphicon-star-empty fc-v2-green" title="已保存"></span>
+                {{/if}}
+                <!-- 查看 -->
+                {{if doType==1}}
+                {{dataList && dataList.length>0 && dataList[0].month?_momentFormat(dataList[0].month,'YYYY年'):''}}工资数据录入综合表
+                {{else}}
+                <input type="text" class="form-control time-span" id="d12" readonly>
+                <span class="time-span curp" data-action="timeSelect">{{month}}</span>
+                <span class="caret curp" data-action="timeSelect"></span>
+                <button class="btn btn-link btn-sm pull-right" data-action="changeHistory">变更记录</button>
+                {{/if}}
+            </div>
+        </th>
+    </tr>
+    <tr>
+        <th rowspan="2">
+            {{if doType==1}}
+            月份
+            {{else}}
+            序号
+            {{/if}}
+        </th>
+        <th rowspan="2">
+            姓名
+            {{if doType!=1}}
+            <a class="icon-filter pull-right" id="filter_userName"><i class="icon iconfont icon-shaixuan"></i></a>
+            {{/if}}
+        </th>
+        <th rowspan="2">本月工资</th>
+        <th rowspan="2">本月奖金</th>
+        <th rowspan="2">扣考勤</th>
+        <th rowspan="2"></th>
+        <th rowspan="3">公积金</th>
+        <th rowspan="3">养老金</th>
+        <th rowspan="3">医疗险</th>
+        <th rowspan="3">失业险</th>
+        <th rowspan="3">工伤险</th>
+        <th rowspan="3">生育险</th>
+        <th colspan="6">专项附加扣除</th>
+        <th rowspan="2">企业年金</th>
+        <th rowspan="2">商业健康险</th>
+        <th rowspan="2">准予扣除的捐赠额</th>
+        <th rowspan="2">其他</th>
+    </tr>
+    <tr>
+        <th>子女教育</th>
+        <th>住房贷款利息</th>
+        <th>住房租金</th>
+        <th>赡养老人</th>
+        <th>继续教育</th>
+        <th>大病医疗</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList && dataList.length>0}}
+        {{each dataList as d i}}
+        <tr data-id="{{d.id}}" data-company-user-id="{{d.companyUserId}}" data-cellphone="{{d.cellphone}}">
+            <td rowspan="3">
+                {{if doType==1}}
+                    {{_momentFormat(d.month,'MM')-0}}月
+                {{else}}
+                    {{i+1+pageIndex*10}}
+                {{/if}}
+            </td>
+            <td rowspan="3">{{d.userName}}</td>
+            <td rowspan="3">
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.salary}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.salary}}" data-key="salary" data-type="1" data-valid="6" >
+                        {{if d.salary==null||d.salary==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.salary}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td rowspan="3">
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.bonus}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.bonus}}" data-key="bonus" data-type="1" data-valid="6" >
+                        {{if d.bonus==null||d.bonus==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.bonus}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td rowspan="3">
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.deductAttendance}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.deductAttendance}}" data-key="deductAttendance" data-type="1" data-valid="6" >
+                        {{if d.deductAttendance==null||d.deductAttendance==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.deductAttendance}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td>缴费基数</td>
+            <td>
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.providentFundBase}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.providentFundBase}}" data-key="providentFundBase" data-type="1" data-valid="6" >
+                        {{if d.providentFundBase==null||d.providentFundBase==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.providentFundBase}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td>
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.endowmentInsuranceBase}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.endowmentInsuranceBase}}" data-key="endowmentInsuranceBase" data-type="1" data-valid="6" >
+                        {{if d.endowmentInsuranceBase==null||d.endowmentInsuranceBase==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.endowmentInsuranceBase}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td>
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.medicalInsuranceBase}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.medicalInsuranceBase}}" data-key="medicalInsuranceBase" data-type="1" data-valid="6" >
+                        {{if d.medicalInsuranceBase==null||d.medicalInsuranceBase==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.medicalInsuranceBase}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td>
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.unemploymentInsuranceBase}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.unemploymentInsuranceBase}}" data-key="unemploymentInsuranceBase" data-type="1" data-valid="6" >
+                        {{if d.unemploymentInsuranceBase==null||d.unemploymentInsuranceBase==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.unemploymentInsuranceBase}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td>
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.workingInjuryInsuranceBase}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.workingInjuryInsuranceBase}}" data-key="workingInjuryInsuranceBase" data-type="1" data-valid="6" >
+                        {{if d.workingInjuryInsuranceBase==null||d.workingInjuryInsuranceBase==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.workingInjuryInsuranceBase}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td>
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.maternityInsuranceBase}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.maternityInsuranceBase}}" data-key="maternityInsuranceBase" data-type="1" data-valid="6" >
+                        {{if d.maternityInsuranceBase==null||d.maternityInsuranceBase==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.maternityInsuranceBase}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td rowspan="3">
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.specialDeductChildrenEducation}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.specialDeductChildrenEducation}}" data-key="specialDeductChildrenEducation" data-type="1" data-valid="6" >
+                        {{if d.specialDeductChildrenEducation==null||d.specialDeductChildrenEducation==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.specialDeductChildrenEducation}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td rowspan="3">
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.specialDeductHomeLoanTax}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.specialDeductHomeLoanTax}}" data-key="specialDeductHomeLoanTax" data-type="1" data-valid="6" >
+                        {{if d.specialDeductHomeLoanTax==null||d.specialDeductHomeLoanTax==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.specialDeductHomeLoanTax}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td rowspan="3">
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.specialDeductHouseRent}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.specialDeductHouseRent}}" data-key="specialDeductHouseRent" data-type="1" data-valid="6" >
+                        {{if d.specialDeductHouseRent==null||d.specialDeductHouseRent==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.specialDeductHouseRent}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td rowspan="3">
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.specialDeductSupportOld}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.specialDeductSupportOld}}" data-key="specialDeductSupportOld" data-type="1" data-valid="6" >
+                        {{if d.specialDeductSupportOld==null||d.specialDeductSupportOld==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.specialDeductSupportOld}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td rowspan="3">
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.specialDeductContinueEducation}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.specialDeductContinueEducation}}" data-key="specialDeductContinueEducation" data-type="1" data-valid="6" >
+                        {{if d.specialDeductContinueEducation==null||d.specialDeductContinueEducation==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.specialDeductContinueEducation}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td rowspan="3">
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.specialDeductSeriousDisease}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.specialDeductSeriousDisease}}" data-key="specialDeductSeriousDisease" data-type="1" data-valid="6" >
+                        {{if d.specialDeductSeriousDisease==null||d.specialDeductSeriousDisease==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.specialDeductSeriousDisease}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td rowspan="3">
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.enterpriseInRisk}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.enterpriseInRisk}}" data-key="enterpriseInRisk" data-type="1" data-valid="6" >
+                        {{if d.enterpriseInRisk==null||d.enterpriseInRisk==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.enterpriseInRisk}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td rowspan="3">
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.commercialHealthInsurance}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.commercialHealthInsurance}}" data-key="commercialHealthInsurance" data-type="1" data-valid="6" >
+                        {{if d.commercialHealthInsurance==null||d.commercialHealthInsurance==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.commercialHealthInsurance}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td rowspan="3">
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.allowDeductDonate}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.allowDeductDonate}}" data-key="allowDeductDonate" data-type="1" data-valid="6" >
+                        {{if d.allowDeductDonate==null||d.allowDeductDonate==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.allowDeductDonate}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td rowspan="3">
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.other}}
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.other}}" data-key="other" data-type="1" data-valid="6" >
+                        {{if d.other==null||d.other==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.other}}
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+        </tr>
+        <tr data-id="{{d.id}}" data-company-user-id="{{d.companyUserId}}" data-cellphone="{{d.cellphone}}">
+            <td>单位比例</td>
+            <td>
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.providentFundOrgRatio}}%
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.providentFundOrgRatio}}" data-key="providentFundOrgRatio" data-type="1" data-valid="7" data-unit="%" data-valid-title="比例">
+                        {{if d.providentFundOrgRatio==null||d.providentFundOrgRatio==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.providentFundOrgRatio}}%
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td>
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.endowmentInsuranceOrgRatio}}%
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.endowmentInsuranceOrgRatio}}" data-key="endowmentInsuranceOrgRatio" data-type="1" data-valid="7" data-unit="%" data-valid-title="比例">
+                        {{if d.endowmentInsuranceOrgRatio==null||d.endowmentInsuranceOrgRatio==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.endowmentInsuranceOrgRatio}}%
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td>
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.medicalInsuranceOrgRatio}}%
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.medicalInsuranceOrgRatio}}" data-key="medicalInsuranceOrgRatio" data-type="1" data-valid="7" data-unit="%" data-valid-title="比例">
+                        {{if d.medicalInsuranceOrgRatio==null||d.medicalInsuranceOrgRatio==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.medicalInsuranceOrgRatio}}%
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td>
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.unemploymentInsuranceOrgRatio}}%
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.unemploymentInsuranceOrgRatio}}" data-key="unemploymentInsuranceOrgRatio" data-type="1" data-valid="7" data-unit="%" data-valid-title="比例">
+                        {{if d.unemploymentInsuranceOrgRatio==null||d.unemploymentInsuranceOrgRatio==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.unemploymentInsuranceOrgRatio}}%
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td>
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.workingInjuryInsuranceOrgRatio}}%
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.workingInjuryInsuranceOrgRatio}}" data-key="workingInjuryInsuranceOrgRatio" data-type="1" data-valid="7" data-unit="%" data-valid-title="比例">
+                        {{if d.workingInjuryInsuranceOrgRatio==null||d.workingInjuryInsuranceOrgRatio==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.workingInjuryInsuranceOrgRatio}}%
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td>
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.maternityInsuranceOrgRatio}}%
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.maternityInsuranceOrgRatio}}" data-key="maternityInsuranceOrgRatio" data-type="1" data-valid="7" data-unit="%" data-valid-title="比例">
+                        {{if d.maternityInsuranceOrgRatio==null||d.maternityInsuranceOrgRatio==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.maternityInsuranceOrgRatio}}%
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+        </tr>
+        <tr data-id="{{d.id}}" data-company-user-id="{{d.companyUserId}}" data-cellphone="{{d.cellphone}}">
+            <td>个人比例</td>
+            <td>
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.providentFundPersonRatio}}%
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.providentFundPersonRatio}}" data-key="providentFundPersonRatio" data-type="1" data-valid="7" data-unit="%" data-valid-title="比例">
+                        {{if d.providentFundPersonRatio==null||d.providentFundPersonRatio==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.providentFundPersonRatio}}%
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td>
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.endowmentInsurancePersonRatio}}%
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.endowmentInsurancePersonRatio}}" data-key="endowmentInsurancePersonRatio" data-type="1" data-valid="7" data-unit="%" data-valid-title="比例">
+                        {{if d.endowmentInsurancePersonRatio==null||d.endowmentInsurancePersonRatio==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.endowmentInsurancePersonRatio}}%
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td>
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.medicalInsurancePersonRatio}}%
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.medicalInsurancePersonRatio}}" data-key="medicalInsurancePersonRatio" data-type="1" data-valid="7" data-unit="%" data-valid-title="比例">
+                        {{if d.medicalInsurancePersonRatio==null||d.medicalInsurancePersonRatio==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.medicalInsurancePersonRatio}}%
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td>
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.unemploymentInsurancePersonRatio}}%
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.unemploymentInsurancePersonRatio}}" data-key="unemploymentInsurancePersonRatio" data-type="1" data-valid="7" data-unit="%" data-valid-title="比例">
+                        {{if d.unemploymentInsurancePersonRatio==null||d.unemploymentInsurancePersonRatio==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.unemploymentInsurancePersonRatio}}%
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td>
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.workingInjuryInsurancePersonRatio}}%
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.workingInjuryInsurancePersonRatio}}" data-key="workingInjuryInsurancePersonRatio" data-type="1" data-valid="7" data-unit="%" data-valid-title="比例">
+                        {{if d.workingInjuryInsurancePersonRatio==null||d.workingInjuryInsurancePersonRatio==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.workingInjuryInsurancePersonRatio}}%
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+            <td>
+                {{if doType==1 || isCreateSalaryReport==1}}
+                    {{d.maternityInsurancePersonRatio}}%
+                {{else}}
+                    <a href="javascript:void(0);" class="editable-click" data-action="edit" data-value="{{d.maternityInsurancePersonRatio}}" data-key="maternityInsurancePersonRatio" data-type="1" data-valid="7" data-unit="%" data-valid-title="比例">
+                        {{if d.maternityInsurancePersonRatio==null||d.maternityInsurancePersonRatio==''}}
+                        <span class="fc-v1-grey">未设置</span>
+                        {{else}}
+                        {{d.maternityInsurancePersonRatio}}%
+                        {{/if}}
+                    </a>
+                {{/if}}
+            </td>
+        </tr>
+        {{/each}}
+    {{else}}
+    <tr class="no-data">
+        <td colspan="22" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

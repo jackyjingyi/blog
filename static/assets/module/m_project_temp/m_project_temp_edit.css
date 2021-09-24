@@ -1,0 +1,30 @@
+.m-project-temp-edit .box-left{
+    height: 475px;overflow: auto;padding-top: 17px;
+}
+.m-project-temp-edit .box-right{
+    height: 475px;overflow: auto;padding: 28px 34px;
+}
+.m-project-temp-edit .list-group-item{
+    border: none;
+    padding: 0px;
+}
+.m-project-temp-edit .item-span{
+    border-radius: 4px;
+    display: inline-block;
+    padding: 3px 8px;
+}
+.m-project-temp-edit .i-checks-span.text-ellipsis{
+    width: auto;
+    max-width: 100px;
+    vertical-align: text-top;
+}
+.m-project-temp-edit #customItemBox .i-checks-span{
+    margin-top: -2px;
+}
+.m-project-temp-edit .field-name.text-ellipsis{
+    line-height: 12px;
+    width: 146px;
+}
+.m-project-temp-edit .dropdown-menu > li > a.l-h-18{
+    line-height: 18px;
+}

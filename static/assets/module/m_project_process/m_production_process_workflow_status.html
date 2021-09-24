@@ -1,0 +1,92 @@
+<div class="m-production-process-workflow-status">
+    <!--<h4 class="title-line">状态定义</h4>
+    <p>支持添加、编辑和删除工作流程状态</p>-->
+    <div class="row">
+        <div class="col-md-12">
+            <button class="btn btn-primary" data-action="addWorkflowStatus"><i class="fa fa-plus f-s-m" ></i>&nbsp;增加状态</button>
+        </div>
+    </div>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th width="55%">状态名称</th>
+            <!--<th width="30%">状态说明</th>-->
+            <th width="15%">起始状态</th>
+            <th width="15%">结束状态</th>
+<!--            <th width="15%">对应项目角色</th>-->
+            <th width="15%">操作</th>
+        </tr>
+        </thead>
+        <tbody id="sortTr">
+        {{if dataList!=null && dataList.length>0}}
+        {{each dataList as t ti}}
+        <tr class="curp list-tr-item" data-id="{{t.id}}" data-sort-id="{{ti}}">
+            <td>
+                {{t.nodeName}}
+            </td>
+            <!--<td>{{t.description}}</td>-->
+            <td>
+                <label class="i-checks fw-normal m-b-none">
+                    {{if t.isStartNode==1}}
+                    <input name="staCk" type="radio"  value="" checked/>
+                    {{else}}
+                    <input name="staCk" type="radio"  value=""/>
+                    {{/if}}
+                    <span class="i-checks-span v-middle"></span>
+                </label>
+            </td>
+            <td>
+                <label class="i-checks fw-normal m-b-none">
+                    {{if t.isEndNode==1}}
+                    <input name="endCk" type="checkbox"  value="" checked/>
+                    {{else}}
+                    <input name="endCk" type="checkbox"  value=""/>
+                    {{/if}}
+                    <span class="i-checks-span v-middle"></span>
+                </label>
+
+                <button class="btn btn-link {{t.isEndNode==1?'':'hide'}}" data-action="setFlowProcessStart"><i class="fa fa-wrench"></i></button>
+            </td>
+       <!--     <td>
+                {{if t.roleType==4}}
+                设计人
+                {{else if t.roleType==5}}
+                校对人
+                {{else if t.roleType==6}}
+                审核人
+                {{else if t.roleType==14}}
+                审定人
+                {{/if}}
+            </td>-->
+            <td>
+                <button class="btn btn-primary btn-xs" data-action="editWorkflowStatus">编辑</button>
+                <button class="btn btn-danger btn-xs" data-action="delWorkflowStatus">删除</button>
+            </td>
+        </tr>
+        {{/each}}
+        {{else}}
+        <tr class="no-data">
+            <td colspan="4" class="text-center v-middle">
+                <div class="m-b-xl m-t-md">
+                    <img src="{{_url('/img/default/without_data.png')}}">
+                    <span class="fc-dark-blue dp-block">当前工作流还没有任何状态，请为工作流&nbsp;<button class="btn btn-link fw-bold" data-action="addWorkflowStatus">添加状态</button></span>
+                </div>
+            </td>
+        </tr>
+        {{/if}}
+        </tbody>
+    </table>
+    <!--<div>
+        <button class="btn btn-primary" data-action="save">保存&下一步</button>
+        <button class="btn btn-default" data-action="cancel">取消</button>
+    </div>-->
+</div>
+
+
+<!--<script>
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-blue',
+        radioClass: 'iradio_square-blue'
+    });
+</script>-->
+

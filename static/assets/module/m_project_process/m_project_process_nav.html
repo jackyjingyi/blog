@@ -1,0 +1,54 @@
+<div class="panel panel-default" data-type="1" data-key="projectTypeList">
+    <div class="panel-heading">
+        <h4 class="no-margins">
+            筛选分类
+        </h4>
+    </div>
+    <div class="panel-body of-auto no-borders no-padding">
+        <form>
+            <div class="row dp-flex no-margin border-bottom l-h-50">
+                <label class="col-sm-4 text-right no-margin border-right">设计分类：</label>
+                <div class="col-sm-8">
+                    <select class="form-control" name="projectType"  data-searchplaceholder="搜索设计分类">
+
+                    </select>
+                </div>
+            </div>
+            {{if type==1}}
+            <div class="row dp-flex no-margin border-bottom l-h-50">
+                <label class="col-sm-4 text-right no-margin border-right">功能分类：</label>
+                <div class="col-sm-8 no-padding">
+                    <div class="col-sm-12">
+                        <select class="form-control" name="functionType">
+
+                        </select>
+                    </div>
+                    {{if type==1}}
+                    <div class="col-sm-12 border-top">
+                        <select class="form-control" name="functionTypeChild">
+
+                        </select>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+            <div class="row dp-flex no-margin border-bottom l-h-50">
+                <label class="col-sm-4 text-right no-margin border-right">阶段设置：</label>
+                <div class="col-sm-8">
+                    <select class="form-control" name="stageDesign">
+
+                    </select>
+                </div>
+            </div>
+            <div class="row dp-flex no-margin l-h-50">
+                <label class="col-sm-4 text-right no-margin border-right">专业设置：</label>
+                <div class="col-sm-8">
+                    <select class="form-control" name="majorDesign">
+
+                    </select>
+                </div>
+            </div>
+            {{/if}}
+        </form>
+    </div>
+</div>

@@ -1,0 +1,58 @@
+<!-- 发起审批 STRAT-->
+<div class="ibox ibox_min_height">
+    <div class="ibox-title secondary-menu-outbox">
+        <div class="row">
+            <div class="col-md-6">
+                <!--面包屑-->
+                <div class="no-margin p-h-sm breadcrumb-box" >
+                    <ol class="breadcrumb">
+                        <li>
+                            审批管理
+                        </li>
+                        <li class="active fa fa-angle-right">
+                            <strong>发起审批</strong>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            <div class="col-md-6 text-right p-w-sm">
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+    <div class="ibox-content">
+        <div class="">
+            {{if dataList && dataList.length>0}}
+            {{each dataList as p i}}
+            {{if p.formList && p.formList.length>0}}
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h4 class="title-line">{{p.groupName}}</h4>
+                    <div class="row">
+                        {{if p.formList && p.formList.length>0}}
+                        {{each p.formList as c ci }}
+                        <div class="col-md-2 m-b-sm">
+                            <span class="pull-left icon-circle {{_getIconColor(c.iconKey?c.iconKey:'icon-zidingyibankuai')}}">
+                                <i class="icon iconfont {{c.iconKey?c.iconKey:'icon-zidingyibankuai'}}" ></i>
+                            </span>
+                            <div class="pt-absolute full-width p-l-xl m-l-xs">
+                                <a class="btn btn-link text-ellipsis full-width p-b-xs text-left {{_isNullOrBlank(c.documentation)?'m-t-sm':''}}" title="{{c.name}}" data-action="initiate" data-form-id="{{c.formId}}" data-issystem="{{c.isSystem}}">{{c.name}}</a>
+                                {{if !_isNullOrBlank(c.documentation)}}
+                                <span class="text-ellipsis-2 fc-v3-grey full-width p-l p-r-sm f-s-xxs" title="{{c.documentation}}">{{c.documentation}}</span>
+                                {{/if}}
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        {{/each}}
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            {{/if}}
+            {{/each}}
+            {{/if}}
+        </div>
+    </div>
+</div>
+<!-- 发起审批 END-->
+

@@ -1,0 +1,19 @@
+{{if customPropertyList!=null && customPropertyList.length>0 }}
+    {{each customPropertyList as s si}}
+        <div class="col-md-6 p-r-none m-b-xs">
+            <label class="i-checks i-checks-label fw-normal">
+                <input name="cusProjectFieldCk" type="checkbox"  value="{{s.id}}" data-field-name="{{s.fieldName}}" data-unit-name="{{s.unitName}}"/>
+                <span class="i-checks-span">
+                    <span class=" property-span m-r-xs bg-muted p-xxs f-s-xs" >
+                        <span class="field-name text-ellipsis" data-toggle="tooltip" data-container="body" data-original-title="{{s.fieldName}} {{s.unitName!=null&& s.unitName!=''?'('+s.unitName+')':''}}">
+                            {{s.fieldName}}&nbsp;
+                            {{s.unitName!=null&& s.unitName!=''?'('+s.unitName+')':''}}
+                        </span>
+                        <a class="curp" href="javascript:void(0)" data-id="{{s.id}}" data-index={{si}} data-field-name="{{s.fieldName}}" data-unit-name="{{s.unitName}}" data-action="delCusProperty">
+                            <i class="fa fa-times fc-red"></i></a>
+                    </span>
+                </span>
+            </label>
+        </div>
+    {{/each}}
+{{/if}}

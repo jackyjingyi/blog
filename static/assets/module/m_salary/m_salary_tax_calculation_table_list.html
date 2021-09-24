@@ -1,0 +1,134 @@
+<table class="table table-bordered table-responsive">
+    <thead>
+    <tr>
+        <th colspan="24" class="text-center">
+            <!-- 查看 -->
+            {{if doType==1}}
+                {{dataList && dataList.length>0 && dataList[0].month?_momentFormat(dataList[0].month,'YYYY年'):''}}个税计算及职工薪酬综合表
+            {{else}}
+                <input type="text" class="form-control time-span" id="d12" readonly>
+                <span class="time-span curp" data-action="timeSelect">{{month}}</span>
+                <span class="caret curp" data-action="timeSelect"></span>
+                <span>个税扣除预缴计算综合报表</span>
+            {{/if}}
+        </th>
+    </tr>
+    <tr>
+        <th rowspan="2">
+            {{if doType==1}}
+            月份
+            {{else}}
+            序号
+            {{/if}}
+        </th>
+        <th rowspan="2">
+            姓名
+            {{if doType!=1}}
+            <a class="icon-filter pull-right" id="filter_userName"><i class="icon iconfont icon-shaixuan"></i></a>
+            {{/if}}
+        </th>
+        <th rowspan="2">本月收入</th>
+        <th rowspan="2">扣考勤</th>
+        <th rowspan="2" width="60">累计收入</th>
+        <th colspan="2" width="60">本月专项扣除</th>
+        <th colspan="2" width="60">累计专项扣除</th>
+        <th rowspan="2" width="60">累计基本减除费用</th>
+        <th rowspan="2" width="60">本月专项附加扣除</th>
+        <th rowspan="2" width="60">累计专项附加扣除</th>
+        <th rowspan="2" width="70">累计依法可扣除的其他项目</th>
+        <th rowspan="2" width="70">累计预扣预缴应纳税所得额</th>
+        <th rowspan="2">适用税率</th>
+        <th rowspan="2">速算扣除数</th>
+        <th rowspan="2" width="70">累计应预扣预缴税额</th>
+        <th rowspan="2" width="60">已预扣预缴税额</th>
+        <th rowspan="2" width="70">本期实际应预扣预缴税额</th>
+        <th rowspan="2">实际到账</th>
+        <th colspan="4">公司实际支出</th>
+    </tr>
+    <tr>
+        <th>社保</th>
+        <th>公积金</th>
+        <th>社保</th>
+        <th>公积金</th>
+        <th>工资</th>
+        <th>奖金</th>
+        <th>五险一金</th>
+        <th>合计</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList && dataList.length>0}}
+    {{each dataList as d i}}
+        <tr class="detailTr">
+            <td>
+                {{if doType==1}}
+                    {{_momentFormat(d.month,'MM')-0}}月
+                {{else}}
+                    {{i+1+pageIndex*10}}
+                {{/if}}
+            </td>
+            <td>{{d.userName}}</td>
+            <td>{{d.income}}</td>
+            <td>{{d.deductAttendance}}</td>
+            <td>{{d.sumSalaryIncome}}</td>
+            <td>{{d.socialInsurance}}</td>
+            <td>{{d.providentFund}}</td>
+            <td>{{d.sumSocialInsurance}}</td>
+            <td>{{d.sumProvidentFund}}</td>
+            <td>{{d.sumBaseDeduct}}</td>
+            <td>{{d.specialDeduct}}</td>
+            <td>{{d.sumSpecialDeduct}}</td>
+            <td>{{d.sumOtherDeduct}}</td>
+            <td>{{d.sumTaxableIncome}}</td>
+            <td>{{d.taxRate?d.taxRate+'%':''}}</td>
+            <td>{{d.quickDeduction}}</td>
+            <td>{{d.prepayTax}}</td>
+            <td>{{d.payTax}}</td>
+            <td>{{d.actualPayTax}}</td>
+            <td>{{d.actualIncome}}</td>
+            <td>{{d.salaryOrg}}</td>
+            <td>{{d.bonusOrg}}</td>
+            <td>{{d.fiveInsuranceAndFundOrg}}</td>
+            <td>{{d.total}}</td>
+        </tr>
+    {{/each}}
+
+    <tr class="sumTr">
+        <td></td>
+        <td>合计</td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td class="notSum"></td>
+        <td class="notSum"></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+        <td ></td>
+    </tr>
+    {{else}}
+    <tr class="no-data">
+        <td colspan="24" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+
+    </tbody>
+</table>

@@ -1,0 +1,90 @@
+<form class="form-horizontal m">
+    <div class="form-group">
+        <div class="col-md-2 p-l-lg">
+            {{if dataList.headImg==null || dataList.headImg==''}}
+            <img alt="image" class="img-circle img-responsive dp-inline-block" src="{{_url('/img/head_default.png')}}" width="50"/>
+            {{else}}
+            <img alt="image" class="img-circle img-responsive dp-inline-block" src="{{dataList.headImg}}" width="50"/>
+            {{/if}}
+        </div>
+        <div class="col-md-10">
+            <h4>{{dataInfo.userName}}</h4>
+            <span class="fc-v1-grey">部门：{{dataInfo.departName}}</span>
+            <span>&nbsp;|&nbsp;</span>
+            <span class="fc-v1-grey">所属规则：{{dataInfo.ruleName}}</span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-sm-12 p-w-md">
+            <table class="table table-hover table-bordered m-b-xs" >
+                <thead>
+                <tr>
+                    <th width="15%">类型</th>
+                    <th width="15%">状态</th>
+                    <th width="20%">时间</th>
+                    <th width="25%">地点</th>
+                    <th width="25%">备注</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{if dataList.statementList!=null && dataList.statementList.length>0}}
+                {{each dataList.statementList as p i}}
+                <tr>
+                    <td>
+                        {{if p.clockType==1}}
+                            上班打卡
+                        {{else if p.clockType==2}}
+                            下班打卡
+                        {{else if p.clockType==3}}
+                            外出打卡
+                        {{/if}}
+                    </td>
+                    <td>
+                        {{if p.clockConditionType==0}}
+                        未打卡
+                        {{else if p.clockConditionType==1}}
+                        正常打卡
+                        {{else if p.clockConditionType==2}}
+                        迟到
+                        {{else if p.clockConditionType==3}}
+                        早退
+                        {{else if p.clockConditionType==4}}
+                        地点异常
+                        {{else if p.clockConditionType==5}}
+                        超时打卡
+                        {{/if}}
+                    </td>
+                    <td>{{_momentFormat(p.clockTime,'HH:mm')}}</td>
+                    <td>{{p.clockAddress}}</td>
+                    <td>{{p.remark}}</td>
+                </tr>
+                {{/each}}
+                {{else}}
+                <tr>
+                    <td colspan="5" class="text-center">暂无数据</td>
+                </tr>
+                {{/if}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {{if ccCompanyUserList!=null && ccCompanyUserList.length>0}}
+    <h4 class="title-line m-l-sm">抄送人</h4>
+    <div class="hr-line-dashed m-t-none m-b-sm"></div>
+    <div class="form-group">
+        <div class="col-sm-12 p-w-md approval-out-box">
+            {{each ccCompanyUserList as u ui}}
+            <div class="approver-outbox">
+                <div class="approver-box ">
+                    <div class="img-circle">
+                        <img alt="image" class="img-circle" src="{{_isNullOrBlank(u.fileFullPath)?_url('/img/head_default.png'):u.fileFullPath}}" width="30" height="30">
+                    </div>
+                    <div class="m-t-xs">{{u.userName}}</div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+    {{/if}}
+</form>
+

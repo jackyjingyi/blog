@@ -1,0 +1,6 @@
+.m-projectMember-add tr.active{
+    border: 2px solid #337b8e;
+}
+.m-projectMember-add .selectedUserBox{
+    padding: 3px 6px 6px;
+}

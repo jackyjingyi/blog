@@ -1,0 +1,33 @@
+<div class="m">
+    <div class="text-center">
+        <img src="{{_url('/img/project/project_approval_1.png')}}" width="60"/>
+    </div>
+    <div class="p-sm">
+        {{#option.tipsContent}}
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            {{if option.isShowCheck}}
+            <label class="i-checks i-checks-label m-l">
+                <input name="itemCk" type="checkbox"/>
+                <span class="i-checks-span fc-dark-gray">以后不再提示</span>
+            </label>
+            {{/if}}
+        </div>
+        <div class="col-sm-6 text-right no-padding" data-type="{{option.isShowCancel}}">
+            {{if option.isShowCancel==true}}
+            <a class="btn btn-link" data-action="cancel">{{option.cancelText?option.cancelText:'关闭'}}</a>
+            {{/if}}
+            <button class="btn btn-primary m-r-md" data-action="ok">{{option.okText?option.okText:'关闭'}}</button>
+        </div>
+    </div>
+    <div style="position: absolute;top: 20px;right: -100px;">
+       <span class="ic-tip-arrow"></span>
+    </div>
+</div>
+<script>
+    $('.i-checks').iCheck({
+        checkboxClass: 'icheckbox_square-green',
+        radioClass: 'iradio_square-green'
+    });
+</script>

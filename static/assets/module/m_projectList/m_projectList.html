@@ -1,0 +1,62 @@
+<div class="m_projectList">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="row">
+                {{if type==1||type==4}}
+                <div class="col-md-12">
+                    <div class="form-group z-index-1">
+                        <label  class="inline">项目范围：</label>
+                        <select class="from-control width-300 inline" name="listCompany"></select>
+                    </div>
+                </div>
+                {{/if}}
+                <div class="col-md-12" id="timeSelect">
+
+                </div>
+                <div class="col-md-12" id="statusSelect">
+
+                </div>
+                <div class="col-md-12" id="signDateStatusSelect">
+
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group z-index-1">
+                        <label class="inline">搜&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;索：</label>
+                        <input class="form-control input-sm width-300 inline v-middle" type="text" name="keyword" placeholder="请输入关键字">
+                    </div>
+                </div>
+                <div class="col-md-12">
+                    <div class="border-bottom p-b-sm">
+                        <button class="btn btn-primary" data-action="search">查询</button>
+                        <button class="btn btn-default" data-action="refreshBtn">重置条件</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-b-sm m-t-xs p-t-sm">
+                <div class="col-md-9 filter-result-col">
+                    <span>筛选条件： 共 <span id="totalBySearch">0</span> 个项目</span>
+
+                </div>
+                <div class="col-md-3 text-right">
+                    <button class="btn btn-white" data-action="exportDetails">导出</button>
+                    <button type="button" class="btn btn-primary" data-action="setField" title="设置字段">
+                        <span><i class="fa fa-list"></i> <span class="caret m-t-n-xs"></span></span>
+                    </button>
+                </div>
+            </div>
+            <div class="data-list-box">
+                <div class="data-list-container">
+                    <div class="project-list of-auto m-scroll-box">
+                        <table class="table table-bordered table-hover cell-border dataTable">
+                            <thead></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="p-w-xs">
+                    <div id="data-pagination-container" class="m-pagination pull-right "></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

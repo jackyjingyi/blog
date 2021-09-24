@@ -1,0 +1,185 @@
+.m-metismenu ul.metismenu>li:first-child{
+    height: 50px;
+    background-color: #fff;
+    border-bottom: none;
+}
+.m-metismenu ul.nav>li,
+.m-metismenu ul.nav-second-level>li{
+    border-bottom: solid 1px #d5d5d5 !important;
+
+}
+
+.m-metismenu .nav-third-level li a {
+    color: #666;
+    padding: 0px;
+    margin:0px;
+}
+
+.m-metismenu ul.nav>li .nav-label{
+    display: block;
+    margin: 0px 0px 0px 40px;
+    font-size: 16px;
+    color: #666;
+}
+.m-metismenu ul.nav-second-level>li>a{
+    display: block;
+    padding:0px;
+    font-size: 16px;
+    color: #666;
+}
+
+
+.m-metismenu ul.metismenu>li:first-child a{
+    padding: 13px 20px 12px 25px;
+}
+.m-metismenu .nav > li.active{
+    margin-left:0px;
+    background: #E7F1E8;
+    color:#666;
+}
+
+.m-metismenu .nav > li.active > a {
+    color: #666;
+}
+.m-metismenu ul .nav-third-level>li:first-child a{
+   border-top:1px solid #d5d5d5;
+}
+.m-metismenu .nav-third-level li:active a {
+    background-color: #E7F1E8;
+    color: #333;
+}
+
+.m-metismenu .nav-third-level > li.active > a{
+    background-color: #E7F1E8;
+    color: #333;
+}
+
+
+.m-metismenu .nav-second-level li a span {
+    margin-left:110px;
+    padding: 7px 10px 7px 0px;
+    display: block;
+}
+.m-metismenu .nav-third-level li a span {
+    margin-left:125px;
+}
+.m-metismenu li.selected .fa.arrow:before{
+    content: "\f107";
+}
+.m-metismenu ul>li.selected>a,
+.m-metismenu ul>li.selected>a:focus,
+.m-metismenu ul>li.selected>a:active{
+    border-bottom: solid 1px #d5d5d5;
+    background: #f3f3f3;
+    color: #666;
+}
+
+.m-metismenu ul>li.selected>a:focus,
+.m-metismenu ul>li.selected>a:hover{
+    background-color: #f3f3f3;
+    color: #333;
+}
+
+/*.navbar-default .nav > li > a:hover,
+.navbar-default .nav > li > a:focus {
+    background-color: #E7F1E8;
+    color: #666;
+}*/
+
+.mini-navbar .m-metismenu ul.nav-second-level>li{
+    min-width: 120px;
+}
+.mini-navbar .m-metismenu ul.nav-second-level>li a{
+    padding-left: 0px;
+}
+.mini-navbar .m-metismenu ul.nav>li.selected{
+    border-bottom: none !important;
+}
+
+ul.secondary-menu-ul{
+    list-style: none;
+}
+ul.secondary-menu-ul li{
+    float: left;
+    padding: 0px 20px;
+}
+ul.secondary-menu-ul li a{
+    color: #999;
+    font-size: 14px;
+    font-weight: bold;
+    display: block;
+    line-height: 46px;
+}
+ul.secondary-menu-ul li.active a{
+    color: #337b8e;
+    border-bottom: solid;
+}
+.secondary-menu-outbox{
+    padding: 0 15px;
+    min-height: 50px;
+    height: 50px;
+    background: #e3e3e3;
+    border-bottom: solid 1px #c7c7c7;
+}
+.secondary-menu-outbox h3{
+    line-height: 34px;
+}
+.secondary-menu-outbox .breadcrumb>li+li:before,
+.secondary-menu-outbox .breadcrumb>li.fa-angle-right:before,
+.path-breadcrumb .breadcrumb>li+li:before,
+.path-breadcrumb .breadcrumb>li.fa-angle-right:before{
+    content:"\f105";
+}
+.secondary-menu-outbox .breadcrumb-box{
+    margin-top: 0px;
+    background: #e3e3e3;
+}
+.secondary-menu-outbox .breadcrumb-box.p-h-sm{
+    padding: 15px 0 14px\9\0;
+}
+.secondary-menu-outbox .breadcrumb-box .breadcrumb{
+    background: #e3e3e3;
+}
+.m-metismenu .m-metismenu-icon,
+.m-metismenu .iconfont.icon-tianjia1,
+.m-metismenu .iconfont.icon-pc{
+    font-size: 18px;
+    color: #666;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    line-height: 24px;
+}
+.m-metismenu .iconfont.icon-pc{
+    font-size: 24px;
+}
+.m-metismenu .m-metismenu-icon:hover,
+.m-metismenu .iconfont.icon-tianjia1:hover,
+.m-metismenu .iconfont.icon-pc:hover{
+    color: #337b8e;
+}
+
+.m-metismenu.navbar-default .nav > li.navbar-minimalize > a:hover,
+.m-metismenu.navbar-default .nav > li.navbar-minimalize > a:focus {
+    background-color: inherit;
+    color: inherit;
+}
+.m-metismenu.navbar-default .nav > li > a.workbench{
+    display: block;padding: 13px 10px 10px 25px;float: left;
+}
+.m-metismenu.navbar-default .nav > li > a.maoding-yun{
+    display: block;float: left;padding: 0;margin: 10px 0px 0 30px;
+}
+.m-metismenu.navbar-default .nav > li > a.maoding-yun .iconfont{
+    font-size: 20px;
+}
+.mini-navbar .m-metismenu.navbar-default .nav > li > a.maoding-yun{
+    display: none;
+}
+/*
+.m-metismenu .nav > li > a{
+    padding: 7px 10px 7px 15px;
+}
+.m-metismenu .metismenu .arrow{
+    margin-top: 4px;
+}*/

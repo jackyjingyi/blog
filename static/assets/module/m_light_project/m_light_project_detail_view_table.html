@@ -1,0 +1,126 @@
+<table class="table table-hover table-bordered table-responsive dataTable" >
+    <thead>
+    <tr>
+        <th width="15%">标题</th>
+        <th width="10%">任务状态</th>
+        <th width="12%">所属板块</th>
+        <th width="10%">负责人</th>
+        <th width="12%">开始时间</th>
+        <th width="12%">结束时间</th>
+        <th width="8%">优先级</th>
+        <th>参与人员</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{each dataInfo.list as p}}
+    <tr class="curp" data-id="{{p.id}}" data-action="taskDetail">
+        <td>
+            <span class="show-span">{{p.taskName}}</span>
+            <a href="javascript:void(0);" data-action="xeditable" data-value="{{p.taskName}}" data-key="taskName"  data-placeholder="请输入任务名称" data-type="1" data-valid="1" data-max-length="50" style="visibility: hidden;">
+                <i class="icon iconfont icon-bianji"></i>
+            </a>
+        </td>
+        <td>
+            <span class="show-span">
+            {{if !_isNullOrBlank(p.completeDate)}}
+                已完成
+            {{else}}
+                进行中
+            {{/if}}
+            </span>
+            <a href="javascript:void(0);" data-action="xeditable" data-value="{{!_isNullOrBlank(p.completeDate)?1:0}}" data-key="isComplete" data-type="5" style="visibility: hidden;">
+                <i class="icon iconfont icon-bianji"></i>
+            </a>
+        </td>
+        <td>
+            {{p.groupName}}
+            <a href="javascript:void(0);" data-action="xeditable_moveTask" data-type="2" data-id="{{p.id}}" style="visibility: hidden;">
+                <i class="icon iconfont icon-bianji"></i>
+            </a>
+        </td>
+        <td>
+            <span class="show-span">
+            {{if p.principalUser}}
+                {{p.principalUser.userName}}
+            {{else}}
+                <span class="fc-v1-grey">未设置</span>
+            {{/if}}
+            </span>
+            <a href="javascript:void(0);"  data-action="xeditable" data-type="12" data-key="principalUsrId" data-url-type="3" data-cookies="0" data-multiple="0" style="visibility: hidden;">
+                <i class="icon iconfont icon-bianji"></i>
+            </a>
+        </td>
+        <td>
+            <span class="show-span">
+                {{if !_isNullOrBlank(p.startDate)}}
+                    {{_momentFormat(p.startDate,'YYYY/MM/DD')}}
+                {{else}}
+                    <span class="fc-v1-grey">未设置</span>
+                {{/if}}
+            </span>
+            <a href="javascript:void(0);" data-action="xeditable" data-value="{{_momentFormat(p.startDate,'YYYY-MM-DD')}}" data-type="10" data-key="startDate"
+               data-max-date="{{_momentFormat(p.endDate,'YYYY-MM-DD')}}" data-init-show="1" data-onpicked-save="1" style="visibility: hidden;">
+                <i class="icon iconfont icon-bianji"></i>
+            </a>
+        </td>
+        <td>
+            <span class="show-span">
+                {{if !_isNullOrBlank(p.endDate)}}
+                    {{_momentFormat(p.endDate,'YYYY/MM/DD')}}
+                {{else}}
+                    <span class="fc-v1-grey">未设置</span>
+                {{/if}}
+            </span>
+            <a href="javascript:void(0);" data-action="xeditable" data-value="{{_momentFormat(p.endDate,'YYYY-MM-DD')}}" data-type="10" data-key="endDate"
+               data-min-date="{{_momentFormat(p.startDate,'YYYY-MM-DD')}}" data-init-show="1" data-onpicked-save="1" style="visibility: hidden;">
+                <i class="icon iconfont icon-bianji"></i>
+            </a>
+        </td>
+        <td>
+            <span class="show-span">
+                {{if p.severity=='1'}}
+                    <label class="label label-danger" data-value="{{p.severity}}"><span>高</span></label>
+                {{else if p.severity=='2'}}
+                    <label class="label label-success" data-value="{{p.severity}}"><span>中</span></label>
+                {{else if p.severity=='3'}}
+                    <label class="label label-warning" data-value="{{p.severity}}"><span>低</span></label>
+                {{else}}
+                    <span class="fc-v1-grey">未设置</span>
+                {{/if}}
+            </span>
+            <a href="javascript:void(0);" data-action="xeditable" data-value="{{p.severity}}" data-key="severity" data-type="5" style="visibility: hidden;">
+                <i class="icon iconfont icon-bianji"></i>
+            </a>
+        </td>
+        <td>
+            <span class="show-span">
+                {{if p.memberList && p.memberList.length>0}}
+                {{each p.memberList as m mi}}
+                    {{if mi==p.memberList.length-1}}
+                        {{m.userName}}
+                    {{else}}
+                        {{m.userName}},
+                    {{/if}}
+                {{/each}}
+                {{else}}
+                    <span class="fc-v1-grey">未设置</span>
+                {{/if}}
+            </span>
+            <a href="javascript:void(0);"  data-action="xeditable" data-type="12" data-key="memberList" data-url-type="3" data-cookies="0" style="visibility: hidden;">
+                <i class="icon iconfont icon-bianji"></i>
+            </a>
+        </td>
+    </tr>
+    {{/each}}
+    {{if dataInfo.list==null || dataInfo.list.length==0}}
+    <tr class="no-data">
+        <td colspan="8" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">您还没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

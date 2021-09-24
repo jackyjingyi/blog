@@ -1,0 +1,55 @@
+<table class="table table-bordered table-responsive">
+    <thead>
+    <tr>
+        <th width="5%">序号</th>
+        <th width="20%">
+            设计任务
+        </th>
+        <th width="10%">角色</th>
+        <th width="10%">
+            状态
+        </th>
+        <th width="20%">
+            项目
+            <a class="icon-filter pull-right" id="filter_projectName"><i class="icon iconfont icon-shaixuan"></i></a>
+        </th>
+        <th width="12%">开始时间</th>
+        <th width="12%">
+            结束时间
+        </th>
+        <th width="11%">
+            完成时间
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    {{each dataList as d i}}
+    <tr data-id="{{d.id}}">
+        <td>{{i+1}}</td>
+        <td>
+            <a href="javascript:void(0);" data-action="toTaskContent">{{d.taskName}}</a>
+        </td>
+        <td>{{d.role}}</td>
+        <td>{{d.stateHtml}}</td>
+        <td>{{d.projectName}}</td>
+        <td>
+            {{_momentFormat(d.startTime,'YYYY/MM/DD')}}
+        </td>
+        <td>
+            {{_momentFormat(d.endTime,'YYYY/MM/DD')}}
+        </td>
+        <td>{{_momentFormat(d.completeDate,'YYYY/MM/DD')}}</td>
+    </tr>
+    {{/each}}
+    {{if !(dataList && dataList.length>0)}}
+    <tr class="no-data">
+        <td colspan="8" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

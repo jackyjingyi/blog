@@ -1,0 +1,38 @@
+<style>
+    .org-select-box .open-depart-btn{position: absolute;right: 0px;top: 0px;width: 30px;height: 30px;line-height: 25px;text-align: center;cursor: pointer;}
+    .org-select-box .btn-default{text-align: left;}
+    .org-select-box .dropdown-menu .dropdown-menu{display: none; position: relative;box-shadow: none;width: 100%;}
+    .org-select-box .dropdown-menu .dropdown-menu a{padding-left:25px;}
+</style>
+<div class="btn-group org-select-box full-width">
+    <button class="btn btn-default {{isBtnSm?'btn-sm':''}} dropdown-toggle full-width b-r-xs" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="company-name" data-company-id="{{dataInfo.companyId}}" data-depart-id="{{dataInfo&&dataInfo.departId?dataInfo.departId:''}}">
+            {{dataInfo.orgName}}
+        </span>
+        <span class="caret pull-right" style="margin-top: 8px;"></span>
+    </button>
+    <ul class="dropdown-menu full-width" style="max-height: 155px;overflow-y: auto;overflow-x: hidden;">
+        {{each allCompanyList as s}}
+        <li>
+            <a class="{{currentCompanyId == s.id && departList!=null && departList.length>1?'p-r-lg':''}}" href="javascript:void(0);"
+               data-action="choseOrg" data-type="{{s.companyType}}" data-chose-type="company" data-company-id="{{s.id}}">
+                {{s.companyName}}
+            </a>
+            {{if currentCompanyId == s.id && departList!=null && departList.length>1}}
+            <a class="open-depart-btn" title="选择部门">
+                <i class="fa fa-angle-double-down"></i>
+            </a>
+            <ul class="dropdown-menu">
+                {{each departList as d}}
+                {{if currentCompanyId!=d.id}}
+                <li>
+                    <a href="javascript:void(0);" data-action="choseOrg"  data-chose-type="depart" data-company-id="{{d.id}}">{{d.departName}}</a>
+                </li>
+                {{/if}}
+                {{/each}}
+            </ul>
+            {{/if}}
+        </li>
+        {{/each}}
+    </ul>
+</div>

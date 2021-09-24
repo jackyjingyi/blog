@@ -1,0 +1,44 @@
+<table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th width="8%">启用</th>
+        <th width="60%">编号规则名称</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{if dataList!=null && dataList.length>0}}
+    {{each dataList as t ti}}
+    <tr class="" data-id="{{t.id}}" data-i="{{ti}}" >
+        <td>
+            <label class="i-checks fw-normal m-b-none">
+                {{if t.isDesign==1}}
+                <input name="itemCk" type="radio" value="{{t.id}}" checked/>
+                {{else}}
+                <input name="itemCk" type="radio" value="{{t.id}}"/>
+                {{/if}}
+                <span class="i-checks-span"></span>
+            </label>
+        </td>
+        <td>{{t.templateName}}</td>
+        <td>
+            {{if t.companyId!=0}}
+            <button class="btn btn-primary btn-xs roleControl" roleCode="10000602" flag="2" data-action="editDrawingNum">编辑</button>
+            <button class="btn btn-danger btn-xs roleControl" roleCode="10000602" flag="2" data-action="delDrawingNum">删除</button>
+            {{/if}}
+            <button class="btn btn-info btn-xs" data-action="viewDrawingNum">查看</button>
+        </td>
+    </tr>
+    {{/each}}
+    {{else}}
+    <tr class="no-data">
+        <td colspan="3" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">暂无相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

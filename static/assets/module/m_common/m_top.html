@@ -1,0 +1,71 @@
+<nav class="navbar navbar-static-top m-top" role="navigation" style="margin-bottom: 0px;">
+    <!--卯丁logo-->
+    <div class="navbar-header">
+        <a href="{{_serverUrl('/')}}" class="navbar-brand svg" target="_blank">
+            <img class="maoding-logo pt-relative max-h-80" src="{{_url('/img/logo_white.png')}}"></img>
+        </a>
+    </div>
+    <!--卯丁logo end-->
+    <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-top-links navbar-left" style="padding: 0 25px 0 5px;">
+            <li class="pull-left roleControl" roleCode="100007,10000301,100001,10000101,100004,10000401,10000601,10000602" flag="2">
+                <a data-action="backstageMgt" title="后台管理"  style="padding: 65px 10px 0px 0px; ">
+                    <i class="fa fa-cog" style="margin-right: 9px;margin-left: 2px; color:black"></i>
+                </a>
+            </li>
+        </ul>
+        <!--对应每个入口的位置及链接地址 end -->
+        <ul class="nav navbar-top-links navbar-right {{companyInfo?'':'m-r-xxl'}}">
+            <li class="pull-left">
+                <div class="dropdown l-h-80 no-padding m-t">
+                    {{if userInfo}}
+                        {{if !_isNullOrBlank(userInfo.imgUrl)}}
+                            <img alt="image" class="img-circle" src="{{userInfo.imgUrl}}" onerror=javascript:this.src="{{_url('/img/head_default.png')}}" style="width: 40px;height: 40px;margin-right:5px;">
+                        {{else}}
+                            <img alt="image" class="img-circle" src="{{_url('/img/head_default.png')}}" style="width: 40px;height: 40px;margin-right:5px;">
+                        {{/if}}
+                        <a class="userInfo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-type="textUserName" href="javascript:void(0)">
+                            {{userInfo.userName}}
+                            <span class="caret"></span>
+                        </a>
+                    {{/if}}
+                    <ul class="dropdown-menu dropdown-menu-left dropdown-menu-new" style="z-index: 99999">
+                        {{if companyInfo}}
+                        <li><a href="javascript:void(0)" data-action="personalSettings">个人设置</a></li>
+                        <!--<li><a href="javascript:void(0)" data-action="createOrg">创建组织</a></li>-->
+                        <li class="divider"></li>
+                        <li><a href="javascript:void(0)" data-action="companyUserSettings">个人信息编辑</a></li>
+                        <!--<li><a href="javascript:void(0)" data-action="createOrg">创建组织</a></li>-->
+                        <li class="divider"></li>
+                        {{/if}}
+                        <li><a href="{{_serverUrl('/iWork/sys/logout')}}">退出登录</a></li>
+                    </ul>
+                </div>
+            </li>
+            {{if companyInfo}}
+       <!--     <li class="pull-left">
+                <a class="messageInfo" href="javascript:void(0);" data-action="announcement">
+                    <i class="fa fa-bell"></i>
+                    <span id="unReadNoticeCount" class="label label-warning">{{_isNullOrBlank(unReadNotice) || unReadNotice === 0?'':unReadNotice}}</span>
+                </a>
+            </li>-->
+            <li class="pull-left">
+                <a class="messageInfo" href="javascript:void(0);" data-action="messageCenter">
+                    <i class="fa fa-envelope"></i>
+                    <span id="unReadMessageCount" class="label label-warning">{{_isNullOrBlank(unReadMessage) || unReadMessage === 0?'':unReadMessage}}</span>
+                </a>
+            </li>
+            <li class="pull-left">
+                <a class="messageInfo" href="javascript:void(0);" data-action="myTodoList" style="padding-left: 0px;">
+                    <button class="btn btn-sm btn-outline no-padding btn-warning" >我的待办
+                        <span id="unReadTodoCount" class=" label-warning "
+                        >{{_isNullOrBlank(unReadTodoCount) || unReadTodoCount === 0?'':unReadTodoCount}}</span>
+                    </button>
+
+                </a>
+            </li>
+            {{/if}}
+        </ul>
+    </div>
+
+</nav>

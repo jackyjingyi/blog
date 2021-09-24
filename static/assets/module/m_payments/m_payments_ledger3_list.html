@@ -1,0 +1,49 @@
+<table class="table table-striped table-bordered table-hover text-nowrap" id="ledger3_list"　style="width:100%;">
+    {{if title!=null || all!=null}}
+    <thead>
+    <tr>
+        {{if all && all.list && all.list.length>0}}
+        <th ></th>
+        {{/if}}
+        <th ></th>
+        {{each title as p i}}
+        <th>{{p.expTypeParentName}}</th>
+        {{/each}}
+    </tr>
+    </thead>
+    {{/if}}
+    <tbody>
+    {{if all && all.list && all.list.length>0}}
+    <tr data-id="" data-i="{{i}}" >
+        {{if all && all.list && all.list.length>0}}
+        <td></td>
+        {{/if}}
+        <td>{{all.companyName}}</td>
+        {{each all.list as d di}}
+        <td>{{_expNumberFilter(d.paymentFee)}}</td>
+        {{/each}}
+    </tr>
+    {{/if}}
+    {{each list as p i}}
+    <tr data-id="" data-i="{{i}}" data-rowspan="{{list.length}}">
+        {{if all && all.list && all.list.length>0}}
+        <td data-rowspan="{{list.length}}">其中：</td>
+        {{/if}}
+        <td>{{p.companyName}}</td>
+        {{each p.list as d di}}
+        <td>{{_expNumberFilter(d.paymentFee)}}</td>
+        {{/each}}
+    </tr>
+    {{/each}}
+    {{if (all==null || all.list==null || all.list.length==0) && (list==null || list.length==0)}}
+    <tr class="no-data">
+        <td colspan="{{all&&all.list&&all.list.length>0?(title&&title.length>0?title.length+2:2):(title&&title.length>0?title.length+1:1)}}" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

@@ -1,0 +1,57 @@
+<ul class="list-group role-list">
+    {{if roleList!=null && roleList.length>0}}
+    {{each roleList as o i}}
+    <li class="list-group-item no-borders">
+        <div class="dp-block group-item {{(o.roleList!=null && o.roleList.length>0)?'':'p-l-l'}}" data-id="{{o.id}}">
+            {{if o.roleList!=null && o.roleList.length>0}}
+            <a href="javascript:void(0);" data-action="expand"><i class="fa fa-caret-down f-s-lg"></i></a>
+            {{/if}}
+            &nbsp;<a>{{o.groupName}}</a>
+            {{if o.groupName!='默认' && doType!=2}}
+                <div class="btn-group roleControl" style="display: none;" >
+                    <a type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                        <i class="fa fa-angle-double-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-v1" role="menu" style="top: 75%;">
+                        <li>
+                            <a href="javascript:void(0)" data-action="editRoleGroup">{{doType==1?'修改分组':'修改部门分组'}}</a>
+                        </li>
+                        {{if o.roleList==null || o.roleList.length==0}}
+                        <li>
+                            <a href="javascript:void(0)" data-action="delRoleGroup">{{doType==1?'删除分组':'删除部门分组'}}</a>
+                        </li>
+                        {{/if}}
+                    </ul>
+                </div>
+            {{/if}}
+        </div>
+        {{if o.roleList!=null && o.roleList.length>0}}
+        <ul class="list-group" role="menu">
+            {{each o.roleList as r ri}}
+            <li class="list-group-item  no-borders" >
+                <div class="dp-block role-item" data-id="{{r.id}}" >
+                    <a href="javascript:void(0);" class="role-name" data-action="selectedRole" data-container="body" data-toggle="tooltip" data-original-title="{{r.description}}">{{r.name}}</a>
+                    {{if r.isSystem!=1}}
+                    <div class="btn-group" style="display: none;">
+                        <a type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-angle-double-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-v1" style="top: 75%;">
+                            <li>
+                                <a href="javascript:void(0)" data-action="editRole">{{doType==1?'修改角色':'修改部门类型'}}</a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0)" data-action="delRole">{{doType==1?'删除角色':'删除部门类型'}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                    {{/if}}
+                </div>
+            </li>
+            {{/each}}
+        </ul>
+        {{/if}}
+    </li >
+    {{/each}}
+    {{/if}}
+</ul>

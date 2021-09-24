@@ -1,0 +1,26 @@
+.m-task-issue-add-mult .box-left{
+    height: 475px;overflow: auto;padding-top: 17px;
+}
+.m-task-issue-add-mult .box-right{
+    height: 475px;overflow: auto;padding: 28px 34px;
+}
+.m-task-issue-add-mult .list-group-item{
+    border: none;
+    padding: 0px;
+}
+
+.m-task-issue-add-mult .item-span .item-name{
+    width: auto;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -webkit-text-overflow: ellipsis;
+    -moz-text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    line-height: 12px;
+}
+.m-task-issue-add-mult .tooltip-inner{
+    max-width: 120px;word-break: break-all;text-align: left;
+}

@@ -1,0 +1,376 @@
+<div class="m-backstage-purchase-step1 m">
+    <h4 class="text-center">填写订单</h4>
+    <p>当前组织： {{dataInfo?dataInfo.companyName:''}}</p>
+    <div class="tabs-container" data-version={{version}}>
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">版本购买及续费</a></li>
+            {{if version=='02' || version=='01'}}
+            <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">账号扩充</a></li>
+            {{/if}}
+            <li class=""><a data-toggle="tab" href="#tab-3" aria-expanded="false">存储空间购买及续费</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active" data-type="versionPurchase">
+                <div class="panel-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 text-right">当前版本：</label>
+                            <div class="col-md-9 col-xl-10">
+                                {{if version=='03'}}
+                                基础版
+                                {{else if version=='02'}}
+                                专业版
+                                {{else if version=='01'}}
+                                企业版
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 text-right">当前使用账号数：</label>
+                            <div class="col-md-9 col-xl-10">
+                                {{dataInfo?dataInfo.useCount:'0'}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 text-right">当前已购买账号数：</label>
+                            <div class="col-md-9 col-xl-10" data-account-count="{{dataInfo?dataInfo.accountCount:'0'}}">
+                                {{dataInfo?dataInfo.accountCount:'0'}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 text-right">版本有效时间：</label>
+                            <div class="col-md-9 col-xl-10 current-effect-time">
+                                {{if _isNullOrBlank(dataInfo) || (_isNullOrBlank(dataInfo.accountEffectStartTime) && _isNullOrBlank(dataInfo.accountEffectEndTime))}}
+                                    --
+                                {{else}}
+                                    {{_momentFormat(dataInfo.accountEffectStartTime,'YYYY/MM/DD')}} - {{_momentFormat(dataInfo.accountEffectEndTime,'YYYY/MM/DD')}}
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 text-right">购买内容：</label>
+                            <div class="col-md-9 col-xl-10">
+                                {{if version=='03' || version=='02'}}
+                                <label class="i-checks i-checks-label fw-normal">
+                                    <input type="radio" name="productContentType" value="1" checked/>
+                                    <span class="i-checks-span">版本购买</span>
+                                </label>
+                                {{/if}}
+                                {{if version=='02' || version=='01'}}
+                                <label class="i-checks i-checks-label fw-normal">
+                                    {{if version=='01'}}
+                                        <input type="radio" name="productContentType" value="3" checked/>
+                                    {{else}}
+                                        <input type="radio" name="productContentType" value="3"/>
+                                    {{/if}}
+                                    <span class="i-checks-span">续费使用</span>
+                                </label>
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="content-box {{version=='01'?'hide':''}}" data-type="1">
+                            {{if version=='03' || version=='02'}}
+                            <div class="form-group">
+                                <label class="col-md-3 col-xl-2 text-right">购买版本：</label>
+                                <div class="col-md-9 col-xl-10">
+                                    {{if version=='03'}}
+                                    <label class="i-checks i-checks-label fw-normal">
+                                        <input type="radio" name="productCode" value="02" checked/>
+                                        <span class="i-checks-span">专业版</span>
+                                    </label>
+                                    {{/if}}
+                                    <label class="i-checks i-checks-label fw-normal">
+                                        {{if version=='02'}}
+                                            <input type="radio" name="productCode" value="01" checked/>
+                                        {{else}}
+                                            <input type="radio" name="productCode" value="01"/>
+                                        {{/if}}
+                                        <span class="i-checks-span">企业版</span>
+                                    </label>
+                                </div>
+                            </div>
+                            {{/if}}
+                            {{if version=='03'}}
+                            <div class="form-group">
+                                <label class="col-md-3 col-xl-2 control-label">购买名额：</label>
+                                <div class="col-md-9 col-xl-10">
+                                    <div class="input-group width-225">
+                                        <input placeholder="请输入账号数" class="form-control" type="text" name="orderCount" value="" data-type="1"
+                                               data-min-value="{{version=='03'?dataInfo.useCount:dataInfo.accountCount}}">
+                                    </div>
+                                </div>
+                            </div>
+                            {{/if}}
+                            <div class="form-group">
+                                <label class="col-md-3 col-xl-2 text-right">购买后已购账号数：</label>
+                                <div class="col-md-9 col-xl-10">
+                                    <span class="purchased-num">{{version=='03'?dataInfo.useCount:dataInfo.accountCount}}</span>
+                                </div>
+                            </div>
+                            {{if version=='03'}}
+                            <div class="form-group">
+                                <label class="col-md-3 col-xl-2 text-right">购买时长：</label>
+                                <div class="col-md-9 col-xl-10" data-start-time="{{_momentFormat(dataInfo.accountEffectStartTime,'YYYY-MM-DD')}}" data-end-time="{{_momentFormat(dataInfo.accountEffectEndTime,'YYYY-MM-DD')}}">
+                                    <label class="i-checks i-checks-label fw-normal">
+                                        <input type="radio" name="purchaseTime" value="1" checked/>
+                                        <span class="i-checks-span">1年</span>
+                                    </label>
+                                    <!--<label class="i-checks i-checks-label fw-normal">
+                                        <input type="radio" name="purchaseTime" value="2"/>
+                                        <span class="i-checks-span">2年</span>
+                                    </label>
+                                    <label class="i-checks i-checks-label fw-normal">
+                                        <input type="radio" name="purchaseTime" value="3"/>
+                                        <span class="i-checks-span">3年</span>
+                                    </label>
+                                    <label class="i-checks i-checks-label fw-normal">
+                                        <input type="radio" name="purchaseTime" value="4"/>
+                                        <span class="i-checks-span">4年</span>
+                                    </label>-->
+                                </div>
+                            </div>
+                            {{/if}}
+                            <div class="form-group">
+                                <label class="col-md-3 col-xl-2 text-right">购买后有效时间：</label>
+                                <div class="col-md-9 col-xl-10 purchase-time-show">
+                                    {{if _isNullOrBlank(dataInfo) || (_isNullOrBlank(dataInfo.accountEffectStartTime) && _isNullOrBlank(dataInfo.accountEffectEndTime))}}
+                                       {{_momentFormat(nowDate,'YYYY/MM/DD')}} - {{_dateAddByYears(nowDate,1)}}
+                                    {{else}}
+                                        {{_momentFormat(dataInfo.accountEffectStartTime,'YYYY/MM/DD')}} - {{version=='02'?_momentFormat(dataInfo.accountEffectEndTime,'YYYY/MM/DD'):_dateAddByYears(dataInfo.accountEffectEndTime,1)}}
+                                    {{/if}}
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="content-box {{version=='01'?'':'hide'}}" data-type="3">
+                            <div class="form-group">
+                                <label class="col-md-3 col-xl-2 text-right">续费时长：</label>
+                                <div class="col-md-9 col-xl-10" data-start-time="{{_momentFormat(dataInfo.accountEffectStartTime,'YYYY-MM-DD')}}" data-end-time="{{_momentFormat(dataInfo.accountEffectEndTime,'YYYY-MM-DD')}}">
+                                    <label class="i-checks i-checks-label fw-normal">
+                                        <input type="radio" name="serviceTime" value="1" checked/>
+                                        <span class="i-checks-span">1年</span>
+                                    </label>
+                                    <!--<label class="i-checks i-checks-label fw-normal">
+                                        <input type="radio" name="serviceTime" value="2"/>
+                                        <span class="i-checks-span">2年</span>
+                                    </label>
+                                    <label class="i-checks i-checks-label fw-normal">
+                                        <input type="radio" name="serviceTime" value="3"/>
+                                        <span class="i-checks-span">3年</span>
+                                    </label>
+                                    <label class="i-checks i-checks-label fw-normal">
+                                        <input type="radio" name="serviceTime" value="4"/>
+                                        <span class="i-checks-span">4年</span>
+                                    </label>-->
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xl-2 text-right">续费后有效时间：</label>
+                                <div class="col-md-9 col-xl-10 service-time-show" >
+                                    {{if _isNullOrBlank(dataInfo) || (_isNullOrBlank(dataInfo.accountEffectStartTime) && _isNullOrBlank(dataInfo.accountEffectEndTime))}}
+
+                                        {{_momentFormat(nowDate,'YYYY/MM/DD')}} - {{_dateAddByYears(nowDate,1)}}
+
+                                    {{else}}
+
+                                        {{_momentFormat(dataInfo.accountEffectStartTime,'YYYY/MM/DD')}} - {{_dateAddByYears(dataInfo.accountEffectEndTime,1)}}
+
+                                    {{/if}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2"></label>
+                            <div class="col-md-9 col-xl-10 text-right">
+                                <span class="font-bold f-s-xl v-middle m-r-xs">总计：<span class="fc-red"><span class="order-amount">{{dataInfo?dataInfo.orderAmount:'0'}}</span> &nbsp;元&nbsp;</span></span>
+                                <button class="btn btn-primary" data-action="submitOrders">提交订单</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div id="tab-2" class="tab-pane" data-type="personnelPurchase">
+                <div class="panel-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 text-right">当前版本：</label>
+                            <div class="col-md-9 col-xl-10">
+                                {{if version=='03'}}
+                                基础版
+                                {{else if version=='02'}}
+                                专业版
+                                {{else if version=='01'}}
+                                企业版
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 text-right">当前使用账号：</label>
+                            <div class="col-md-9 col-xl-10">
+                                {{dataInfo?dataInfo.useCount:'0'}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 text-right">当前已购买账号数：</label>
+                            <div class="col-md-9 col-xl-10" data-account-count="{{dataInfo?dataInfo.accountCount:'0'}}">
+                                {{dataInfo?dataInfo.accountCount:'0'}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 text-right">版本有效时间：</label>
+                            <div class="col-md-9 col-xl-10 current-effect-time" data-end-time="{{_momentFormat(dataInfo.accountEffectEndTime,'YYYY-MM-DD')}}">
+                                {{if _isNullOrBlank(dataInfo) || (_isNullOrBlank(dataInfo.accountEffectStartTime) && _isNullOrBlank(dataInfo.accountEffectEndTime))}}
+                                --
+                                {{else}}
+                                {{_momentFormat(dataInfo.accountEffectStartTime,'YYYY/MM/DD')}} - {{_momentFormat(dataInfo.accountEffectEndTime,'YYYY/MM/DD')}}
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="form-group order-count">
+                            <label class="col-md-3 col-xl-2  control-label">扩充数量：</label>
+                            <div class="col-md-9 col-xl-10">
+                                <div class="input-group width-225">
+                                    <input placeholder="请输入账号数" class="form-control" type="text" name="orderCount" value="" data-type="2">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 text-right">扩充后账号总数：</label>
+                            <div class="col-md-9 col-xl-10">
+                                <span class="purchased-num">{{dataInfo?dataInfo.accountCount:'0'}}</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 text-right">扩充后有效时间：</label>
+                            <div class="col-md-9 col-xl-10">
+                                {{if _isNullOrBlank(dataInfo) || (_isNullOrBlank(dataInfo.accountEffectStartTime) && _isNullOrBlank(dataInfo.accountEffectEndTime))}}
+                                --
+                                {{else}}
+                                {{_momentFormat(dataInfo.accountEffectStartTime,'YYYY/MM/DD')}} - {{_momentFormat(dataInfo.accountEffectEndTime,'YYYY/MM/DD')}}
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 "></label>
+                            <div class="col-md-9 col-xl-10 text-right">
+                                <span class="font-bold f-s-xl v-middle m-r-xs">总计：<span class="fc-red"><span class="order-amount">0</span> &nbsp;元&nbsp;</span></span>
+                                <button class="btn btn-primary" data-action="submitOrders">提交订单</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div id="tab-3" class="tab-pane" data-type="spacePurchase">
+                <div class="panel-body">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 text-right">当前存储空间：</label>
+                            <div class="col-md-9 col-xl-10" data-space-capacity="{{dataInfo?dataInfo.totalSize:'0'}}">
+                                {{dataInfo?dataInfo.totalSize:'0'}}G
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 text-right">免费存储空间：</label>
+                            <div class="col-md-9 col-xl-10">
+                                5G
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 text-right">付费存储空间：</label>
+                            <div class="col-md-9 col-xl-10">
+                                {{dataInfo?dataInfo.totalSize-5:'0'}}G
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 text-right">剩余存储空间：</label>
+                            <div class="col-md-9 col-xl-10">
+                                {{dataInfo?dataInfo.freeSize:'0'}}G
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 text-right">付费空间有效时间：</label>
+                            <div class="col-md-9 col-xl-10 current-effect-time" data-start-time="{{_momentFormat(dataInfo.spaceEffectStartTime,'YYYY-MM-DD')}}"
+                                 data-end-time="{{_momentFormat(dataInfo.spaceEffectEndTime,'YYYY-MM-DD')}}">
+
+                                {{if _isNullOrBlank(dataInfo) || (_isNullOrBlank(dataInfo.spaceEffectStartTime) && _isNullOrBlank(dataInfo.spaceEffectEndTime))}}
+                                --
+                                {{else}}
+                                {{_momentFormat(dataInfo.spaceEffectStartTime,'YYYY/MM/DD')}} - {{_momentFormat(dataInfo.spaceEffectEndTime,'YYYY/MM/DD')}}
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 text-right">购买内容：</label>
+                            <div class="col-md-9 col-xl-10">
+                                <label class="i-checks i-checks-label fw-normal">
+                                    <input type="radio" name="productContentType" value="4" checked/>
+                                    <span class="i-checks-span">存储空间扩充</span>
+                                </label>
+                                <label class="i-checks i-checks-label fw-normal">
+                                    <input type="radio" name="productContentType" value="5"/>
+                                    <span class="i-checks-span">续费使用</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="content-box" data-type="4">
+                            <div class="form-group">
+                                <label class="col-md-3 col-xl-2 control-label">存储空间容量：</label>
+                                <div class="col-md-9 col-xl-10">
+                                    <div class="input-group width-225">
+                                        <input placeholder="请输入存储空间容量" class="form-control" type="text" name="orderCount" value="" data-type="3">
+                                        <span class="input-group-addon">G</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xl-2 text-right">购买后存储空间：</label>
+                                <div class="col-md-9 col-xl-10">
+                                    <span class="purchased-num">{{dataInfo?dataInfo.totalSize:'0'}}</span>G
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xl-2 text-right">扩充后付费空间有效时间：</label>
+                                <div class="col-md-9 col-xl-10">
+                                    {{if _isNullOrBlank(dataInfo) || (_isNullOrBlank(dataInfo.spaceEffectStartTime) && _isNullOrBlank(dataInfo.spaceEffectEndTime))}}
+                                    --
+                                    {{else}}
+                                    {{_momentFormat(dataInfo.spaceEffectStartTime,'YYYY/MM/DD')}} - {{_momentFormat(dataInfo.spaceEffectEndTime,'YYYY/MM/DD')}}
+                                    {{/if}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="content-box hide" data-type="5">
+                            <div class="form-group">
+                                <label class="col-md-3 col-xl-2 text-right">续费时长：</label>
+                                <div class="col-md-9 col-xl-10">
+                                    <label class="i-checks i-checks-label fw-normal">
+                                        <input type="radio" name="serviceTime" value="1" checked/>
+                                        <span class="i-checks-span">1年</span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-xl-2 text-right">续费后有效时间：</label>
+                                <div class="col-md-9 col-xl-10 service-time-show">
+                                    {{if _isNullOrBlank(dataInfo) || (_isNullOrBlank(dataInfo.spaceEffectStartTime) && _isNullOrBlank(dataInfo.spaceEffectEndTime))}}
+                                        --
+                                    {{else}}
+                                        {{_momentFormat(dataInfo.spaceEffectStartTime,'YYYY/MM/DD')}} - {{_dateAddByYears(dataInfo.spaceEffectEndTime,1)}}
+                                    {{/if}}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-3 col-xl-2 "></label>
+                            <div class="col-md-9 col-xl-10 text-right">
+                                <span class="font-bold f-s-xl v-middle m-r-xs">总计：<span class="fc-red"><span class="order-amount">0</span> &nbsp;元&nbsp;</span></span>
+                                <button class="btn btn-primary" data-action="submitOrders">提交订单</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+<table class="table table-hover table-bordered table-responsive dataTable" >
+    <thead>
+    <tr>
+        <th>
+            编号
+            <a class="icon-filter pull-right" id="filter_expNo" ><i class="icon iconfont icon-shaixuan"></i></a>
+        </th>
+        <th>申请日期</th>
+        <th class="min-w-60">
+            申请人
+            <a class="icon-filter pull-right" id="filter_userNameLike"><i class="icon iconfont icon-shaixuan"></i></a>
+        </th>
+        <th>
+            经办人
+            <a class="icon-filter pull-right" id="filter_submitUserName"><i class="icon iconfont icon-shaixuan"></i></a>
+        </th>
+        <th>审批人</th>
+        <th>所在组织</th>
+        <th>部门</th>
+        <th>
+            类型
+            <!--<a class="icon-filter pull-right" id="filter_expType"><i class="icon iconfont icon-shaixuan"></i></a>-->
+        </th>
+        <th class="min-w-60">
+            审批状态
+            <a class="icon-filter pull-right" id="filter_approveStatus"><i class="icon iconfont icon-shaixuan"></i></a>
+        </th>
+        <!--<th width="">操作</th>-->
+    </tr>
+    </thead>
+    <tbody>
+    {{each dataList as p}}
+    <tr class="curp" data-type="{{p.type}}" data-id="{{p.id}}">
+        <td>{{p.expNo}}</td>
+        <td>{{_momentFormat(p.expDate,'YYYY/MM/DD')}}</td>
+        <td>{{p.userName}}</td>
+        <td>{{p.submitUserName}}</td>
+        <td>{{p.auditPersonName}}</td>
+        <td>{{p.companyName}}</td>
+        <td>{{p.departName}}</td>
+        <td>{{p.expTypeName}}</td>
+        <td>{{p.approveStatusName}}</td>
+        <!--<td>
+            {{if p.expFlag!=1 && (p.approveStatus ==2 || p.approveStatus ==3) && p.companyUserId == currentCompanyUserId && p.type!=5 }}
+                <button class="btn btn-primary btn-xs" data-action="edit">编辑</button>
+            {{/if}}
+        </td>-->
+    </tr>
+    {{/each}}
+    {{if dataList==null || dataList.length==0}}
+    <tr class="no-data">
+        <td colspan="9" class="text-center v-middle">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}">
+                <span class="fc-dark-blue dp-block">您还没有相关数据</span>
+            </div>
+        </td>
+    </tr>
+    {{/if}}
+    </tbody>
+</table>

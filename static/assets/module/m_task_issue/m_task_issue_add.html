@@ -1,0 +1,46 @@
+<form class="form-horizontal m-task-issue-add m">
+    <div class="form-group ">
+        <label class="col-sm-2 control-label">{{businessType==1?'项目/子项':'课题'}} <span class="fc-red">*</span></label>
+        <div class="col-sm-10">
+            <input placeholder="{{businessType==1?'请输入项目/子项名称':'请输入课题'}} " class="form-control" type="text" name="taskName" style="width: 80%;display: inline-block;">
+            <span><span class="wordCount">0</span>/<span>50</span></span>
+        </div>
+    </div>
+    <div class="form-group ">
+        <label class="col-sm-2 control-label">所属年度<span class="fc-red">*</span></label>
+        <div class="col-sm-10 m-b-xs">
+            <div class="input-group">
+                <input type="text" class="form-control" name="year" placeholder="请选择所属年度" readonly="" onfocus="WdatePicker({dateFmt:'yyyy'})" value="">
+                <span class="input-group-addon " onclick="javascript:$(this).prev().focus();">
+                    年
+                </span>
+            </div>
+        </div>
+        <div class="col-sm-offset-2 f-s-xs fc-dark-gray p-l">注释：所属年度用于最终统计相关时间内的产值情况</div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">开始时间</label>
+        <div class="col-sm-10">
+            <div class="input-group">
+                <input type="text" class="form-control timeInput startTime" id="ipt_startTime" name="startTime" data-appointmentStartTime = ""
+                       placeholder="开始日期" readonly onFocus="startTimeLimitFun(this,m_inputProcessTime_onpicked)" value="{{appointmentStartTime}}">
+                <span class="input-group-addon" onclick="javascript:$(this).prev().focus();">
+                    <i class="icon-append fa fa-calendar" ></i>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-sm-2 control-label">结束时间</label>
+        <div class="col-sm-10">
+            <div class="input-group">
+                <input type="text" class="form-control timeInput endTime" id="ipt_endTime" name="endTime" data-appointmentEndTime = ""
+                       placeholder="结束日期" readonly onFocus="endTimeLimitFun(this,m_inputProcessTime_onpicked)" value="{{appointmentEndTime}}">
+                <span class="input-group-addon" onclick="javascript:$(this).prev().focus();">
+                    <i class="icon-append fa fa-calendar"></i>
+                </span>
+            </div>
+        </div>
+    </div>
+</form>
+

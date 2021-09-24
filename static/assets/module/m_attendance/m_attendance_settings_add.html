@@ -1,0 +1,295 @@
+<form class="form-horizontal m-attendance-settings-add m ">
+    <div class="row">
+        <div class="col-md-6">
+            <h4 class="title-line">添加打卡规则</h4>
+        </div>
+        <div class="col-md-6 text-right">
+            <button data-action="back" class="btn btn-default">返回</button>
+        </div>
+    </div>
+    <div class="hr-line-dashed space-10"></div>
+    <div class="col-md-8 p-l-none">
+        <div class="form-group">
+            <label class="col-sm-2 control-label">规则名称<span class="fc-red">*</span>：</label>
+            <div class="col-sm-10">
+                <input placeholder="请输入规则名称" class="form-control" type="text" name="ruleName" value="{{dataInfo?dataInfo.ruleName:''}}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 text-right">规则类型<span class="fc-red">*</span>：</label>
+            <div class="col-sm-10">
+                <div class="col-xs-12 p-l-none m-b-xs">
+                    <label class="i-checks i-checks-label fw-normal dp-block">
+                        {{if dataInfo==null || (dataInfo && dataInfo.ruleType==1)}}
+                            <input type="radio" name="ruleType" value="1" checked/>
+                        {{else}}
+                            <input type="radio" name="ruleType" value="1"/>
+                        {{/if}}
+                        <span class="i-checks-span">固定时间上下班 <span class="fc-v1-grey">所有人按照相同时间打卡</span></span>
+                    </label>
+                </div>
+                <div class="col-xs-12 p-l-none m-b-xs">
+                    <label class="i-checks i-checks-label fw-normal dp-block">
+                        {{if dataInfo && dataInfo.ruleType==2}}
+                            <input type="radio" name="ruleType" value="2" checked/>
+                        {{else}}
+                            <input type="radio" name="ruleType" value="2"/>
+                        {{/if}}
+                        <span class="i-checks-span">按班次上下班 <span class="fc-v1-grey">不同人员按照各自排班打卡</span></span>
+                    </label>
+                </div>
+                <div class="col-xs-12 p-l-none m-b-xs">
+                    <label class="i-checks i-checks-label fw-normal dp-block">
+                        {{if dataInfo && dataInfo.ruleType==3}}
+                            <input type="radio" name="ruleType" value="3" checked/>
+                        {{else}}
+                            <input type="radio" name="ruleType" value="3"/>
+                        {{/if}}
+                        <span class="i-checks-span">自由上下班 <span class="fc-v1-grey">所有人无时间限制，可随时打卡，只统计旷工</span></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="hr-line-dashed space-10"></div>
+        <div class="form-group">
+            <label class="col-sm-2 text-right">打卡人员<span class="fc-red">*</span>：</label>
+            <div class="col-sm-10">
+                <!--<span class="label">
+                    <i class="fa fa-users"></i>
+                    王汝彬
+                    <a href="javascript:void(0);" class="curp"><i class="fa fa-times fc-red"></i></a>
+                </span>-->
+                <button class="btn btn-default btn-xs" data-action="addAttendanceUser" data-type="1">添加</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 text-right">白名单：</label>
+            <div class="col-sm-10">
+                <button class="btn btn-default btn-xs" data-action="addAttendanceUser" data-type="2">添加</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 text-right">汇报对象：</label>
+            <div class="col-sm-10">
+                <button class="btn btn-default btn-xs" data-action="addAttendanceUser" data-type="3">添加</button>
+            </div>
+        </div>
+        <div class="hr-line-dashed space-10"></div>
+        <div class="form-group">
+            <label class="col-sm-2 text-right">打卡方式<span class="fc-red">*</span>：</label>
+            <div class="col-sm-10">
+                <div class="col-xs-12 p-l-none m-b-xs">
+                    <label class="i-checks i-checks-label fw-normal dp-block">
+                        <input type="radio" name="clockWay" value="1" checked/>
+                        <span class="i-checks-span">手机 <span class="fc-v1-grey">可通过位置或WiFi打卡</span></span>
+                    </label>
+                </div>
+                <!--<div class="col-xs-12 p-l-none m-b-xs">
+                    <label class="i-checks i-checks-label fw-normal dp-block">
+                        <input type="radio" name="optional" value="1"/>
+                        <span class="i-checks-span">U盘导入 <span class="fc-v1-grey">可定期导入，并结合审批核算考勤</span></span>
+                    </label>
+                </div>-->
+            </div>
+        </div>
+        <div class="hr-line-dashed space-10"></div>
+        <div class="form-group">
+            <label class="col-sm-2 text-right">打卡地点<span class="fc-red">*</span>：</label>
+            <div class="col-sm-10">
+                位置和WiFi满足任意一项即可打卡
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 text-right">位置：</label>
+            <div class="col-sm-10">
+                <button class="btn btn-default btn-xs" data-action="addPosition">添加</button>
+                <span class="fc-v1-grey">可添加多个打卡地点，并设置有效打卡范围</span>
+                <!--<div class="border m-t-xs attendance-data">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="col-sm-4 p-h-xxs">&nbsp;苍松大厦</div>
+                            <div class="col-sm-6 p-h-xxs">广东省深圳市福田区泰然七路25号 | 300米</div>
+                            <div class="col-sm-2 p-h-xxs"><button class="btn btn-link no-padding">删除</button></div>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>-->
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 text-right">WiFi：</label>
+            <div class="col-sm-10">
+                <button class="btn btn-default btn-xs" data-action="addWiFi">添加</button>
+                <span class="fc-v1-grey">可添加多个WiFi，连上指定的WiFi即可打卡</span>
+            </div>
+        </div>
+        <div class="hr-line-dashed space-10"></div>
+        <div class="form-group" data-rule-type="1">
+            <label class="col-sm-2 text-right">打卡时间：</label>
+            <div class="col-sm-10">
+                <button class="btn btn-default btn-xs" data-action="addTime">添加</button>
+            </div>
+        </div>
+        <div class="form-group" data-rule-type="2" style="display: none;">
+            <label class="col-sm-2 text-right">班次：</label>
+            <div class="col-sm-10">
+                <button class="btn btn-default btn-xs" data-action="addScheduling">添加</button>
+            </div>
+        </div>
+        <div class="form-group" data-rule-type="3" style="display: none;">
+            <label class="col-sm-2 text-right">打卡时间：</label>
+            <div class="col-sm-10">
+                <div class="row p-t-7 p-l">
+                    <div class="col-24-xs-3 no-padding ">
+                        <label class="i-checks i-checks-label fw-normal dp-block">
+                            <input type="checkbox" name="workDays" value="1"/>
+                            <span class="i-checks-span">星期一</span>
+                        </label>
+                    </div>
+                    <div class="col-24-xs-3 no-padding ">
+                        <label class="i-checks i-checks-label fw-normal dp-block">
+                            <input type="checkbox" name="workDays" value="2"/>
+                            <span class="i-checks-span">星期二</span>
+                        </label>
+                    </div>
+                    <div class="col-24-xs-3 no-padding ">
+                        <label class="i-checks i-checks-label fw-normal dp-block">
+                            <input type="checkbox" name="workDays" value="3"/>
+                            <span class="i-checks-span">星期三</span>
+                        </label>
+                    </div>
+                    <div class="col-24-xs-3 no-padding ">
+                        <label class="i-checks i-checks-label fw-normal dp-block">
+                            <input type="checkbox" name="workDays" value="4"/>
+                            <span class="i-checks-span">星期四</span>
+                        </label>
+                    </div>
+                    <div class="col-24-xs-3 no-padding ">
+                        <label class="i-checks i-checks-label fw-normal dp-block">
+                            <input type="checkbox" name="workDays" value="5"/>
+                            <span class="i-checks-span">星期五</span>
+                        </label>
+                    </div>
+                    <div class="col-24-xs-3 no-padding ">
+                        <label class="i-checks i-checks-label fw-normal dp-block">
+                            <input type="checkbox" name="workDays" value="6"/>
+                            <span class="i-checks-span">星期六</span>
+                        </label>
+                    </div>
+                    <div class="col-24-xs-3 no-padding ">
+                        <label class="i-checks i-checks-label fw-normal dp-block">
+                            <input type="checkbox" name="workDays" value="7"/>
+                            <span class="i-checks-span">星期日</span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="form-group" data-rule-type="2" style="display: none;">
+            <label class="col-sm-2 text-right">排班设置：</label>
+            <div class="col-sm-10">
+                <button class="btn btn-default btn-xs" data-action="editScheduling">编辑排班</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 text-right">特殊日期：</label>
+            <div class="col-sm-10">
+                <div class="col-xs-12 p-l-none m-b-xs" data-rule-type="1">
+                    <button class="btn btn-default btn-xs" data-action="dateMustBePunched">添加</button><span class="fc-v1-grey">必须打卡的日期</span>
+                </div>
+                <div class="col-xs-12 p-l-none m-b-xs">
+                    <button class="btn btn-default btn-xs" data-action="dateNotMustBePunched">添加</button><span class="fc-v1-grey">不用打卡的日期</span>
+                </div>
+                <div class="col-xs-12 p-l-none m-b-xs">
+                    <label class="i-checks i-checks-label fw-normal dp-block">
+                        {{if dataInfo && dataInfo.isOpenClock==1}}
+                            <input type="checkbox" name="isOpenClock" value="1" checked/>
+                        {{else}}
+                            <input type="checkbox" name="isOpenClock" value="1"/>
+                        {{/if}}
+                        <span class="i-checks-span">非工作日允许打卡</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 text-right">节假日：</label>
+            <div class="col-sm-10">
+                <div class="col-xs-12 p-l-none m-b-xs">
+                    <label class="i-checks i-checks-label fw-normal dp-block">
+                        {{if dataInfo && dataInfo.isSyncHoliday==1}}
+                            <input type="checkbox" name="isSyncHoliday" value="1" checked/>
+                        {{else}}
+                            <input type="checkbox" name="isSyncHoliday" value="1"/>
+                        {{/if}}
+                        <span class="i-checks-span">同步中国节假日 <span class="fc-v1-grey">节假日期间不用打卡</span></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="hr-line-dashed space-10"></div>
+        <div class="form-group">
+            <label class="col-sm-2 text-right">手机提醒<span class="fc-red">*</span>：</label>
+            <div class="col-sm-10">
+                <div class="pull-left">上班</div>
+                <div class="pull-left width-150" style="margin: -5px 5px;">
+                    <select class="form-control select-control input-sm" name="remindTime">
+                        <option value="0">准点</option>
+                        <option value="5">提前5分钟</option>
+                        <option value="10">提前10分钟</option>
+                        <option value="15">提前15分钟</option>
+                    </select>
+                </div>
+                <div class="pull-left">－ 下班 准点</div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-2 text-right">补卡申请：</label>
+            <div class="col-sm-10">
+                <div class="col-xs-12 p-l-none m-b-xs">
+                    <label class="i-checks i-checks-label fw-normal dp-block">
+                        {{if dataInfo && dataInfo.isAnomalyApply==1}}
+                            <input type="checkbox" name="isAnomalyApply" value="1" checked/>
+                        {{else}}
+                            <input type="checkbox" name="isAnomalyApply" value="1"/>
+                        {{/if}}
+                        <span class="i-checks-span">员工异常打卡时可提交申请，审批通过后修正异常</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="hr-line-dashed space-10"></div>
+        <div class="form-group">
+            <label class="col-sm-2 text-right">规则生效时间：</label>
+            <div class="col-sm-10">
+                <div class="col-xs-12 p-l-none m-b-xs">
+                    <label class="i-checks i-checks-label fw-normal dp-block">
+                        {{if dataInfo && dataInfo.effectWay==1}}
+                            <input type="radio" name="effectWay" value="1" checked/>
+                        {{else}}
+                            <input type="radio" name="effectWay" value="1"/>
+                        {{/if}}
+                        <span class="i-checks-span">明日生效</span>
+                    </label>
+                </div>
+                <div class="col-xs-12 p-l-none m-b-xs">
+                    <label class="i-checks i-checks-label fw-normal dp-block">
+                        {{if dataInfo && dataInfo.effectWay==2}}
+                            <input type="radio" name="effectWay" value="2" checked/>
+                        {{else}}
+                            <input type="radio" name="effectWay" value="2"/>
+                        {{/if}}
+                        <span class="i-checks-span">立即生效</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-10">
+                <button class="btn btn-primary" data-action="save">保存</button>
+            </div>
+        </div>
+    </div>
+</form>

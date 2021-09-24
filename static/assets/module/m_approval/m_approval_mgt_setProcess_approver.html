@@ -1,0 +1,21 @@
+{{each flowTaskList as p i}}
+    <div class="approver-outbox">
+        <div class="approver-box text-center">
+            <div class="img-circle">
+                <img alt="image" class="img-circle" src="{{p.candidateUserList && p.candidateUserList.length>0 && !_isNullOrBlank(p.candidateUserList[0].imgUrl)?p.candidateUserList[0].imgUrl:_url('/img/head_default.png')}}"
+                     onerror=javascript:this.src="{{_url('/img/head_default.png')}}" width="50" height="50">
+            </div>
+            <div class="m-t-xs full-width text-ellipsis" data-container="body" data-toggle="tooltip" data-original-title="{{p.name}}">
+                {{p.name}}
+            </div>
+            <a href="javascript:void(0);" class="approver-remove" data-action="removeApprover" data-type="{{doType}}" data-i="{{i}}" style="display: none;">
+                <i class="glyphicon glyphicon-remove"></i>
+            </a>
+        </div>
+    </div>
+    {{if (i+1) < flowTaskList.length }}
+    <div class="arrow-icon p-h-m">
+        <i class="fa fa-long-arrow-right"></i>
+    </div>
+    {{/if}}
+{{/each}}

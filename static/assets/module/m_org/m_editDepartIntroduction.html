@@ -1,0 +1,86 @@
+<div class="ibox m_organizational no-margins">
+    <!--组织－组织架构-编辑研究组简介-->
+    <div class="ibox-content no-padding">
+
+        <div class="col-24-md-24">
+            <div class="row text-right p-xs">
+                <a class="btn btn-default btn-sm" href="javascript:void(0);" data-action="backToLast">返回</a>
+                <a class="btn btn-primary btn-sm" href="javascript:void(0);" data-action="preview">预览</a>
+                <a class="btn btn-primary btn-sm" href="javascript:void(0);" data-action="save">保存</a>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-8 " style="width:73%; padding: 1% 15% 1% 1%;">
+                    <form class="form-horizontal ">
+                        <div class="form-group">
+                            <label class=" control-label" style="float:left ;padding-left: 15px">封面</label>
+                            <div class=" " style="float:left;padding-left: 5px">
+                                <div class="row">
+                                    <div class="col-md-12 m-t-xs">
+                    <span id="showFileLoading">
+                        {{if fileName}}
+                        <span class="label m-r-xs m-b-xs"
+                              style="background: #ecf0f1;padding: 5px 10px;display: inline-block;">
+                            <a href="javascript:void(0)" data-action="preview" data-net-file-id="{{fileId}}"
+                               data-src="{{fileFullPath}}" data-name="{{fileName}}" data-type="">
+                                {{fileName}}
+                            </a>
+                        </span>
+                        {{/if}}
+                         </span>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <a href="javascript:void(0)" id="filePicker" data-action="recordAttach"
+                                           class="upload-icon vertical-top m-t-xxs dp-inline-block" title="请上传部门封面"></a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <form class="form-horizontal ">
+                        <div class="form-group">
+
+                            <div class="col-sm-12">
+                                <div id="remarkEditor"></div>
+                            </div>
+                        </div>
+                    </form>
+
+
+                </div>
+
+                <div class="col-md-4  " style="width:27%; padding: 0px;">
+                    <div class="middleLine"
+                         style="width:1px;height:750px;background:#e2e2e2;float:left;position:relative"></div>
+                    <div class="right-panel ">
+                        <div class="panel-heading">
+                            课题名称
+                        </div>
+                        <div>
+                            {{if projectList && projectList.length>0}}
+                            {{each projectList as p}}
+                            <div style=" padding: 10px 10px 0px 15px;border-bottom: 1px solid #e2e2e2;">
+                                <p>
+                                    <a href="javascript:void(0);" data-action="projectAction" data-key="{{p.id}}"
+                                       data-value="{{p.projectName}}">{{p.projectName}}</a>
+                                </p>
+                            </div>
+                            {{/each}}
+                            {{else}}
+                            <div class="notice-row">
+                                <div class="text-center">
+                                    <img src="{{_url('/img/default/without_data.png')}}">
+                                    <span class="fc-dark-blue dp-block">您还没有相关数据</span>
+                                </div>
+                            </div>
+                            {{/if}}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

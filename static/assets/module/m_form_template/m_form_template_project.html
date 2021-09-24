@@ -1,0 +1,227 @@
+<div class="ibox m-projectBasicInfo min-h">
+    <div class="ibox-content p-b-none no-borders no-padding">
+        <form class="sky-form no-margins">
+            <div class="row">
+                <div class="col-md-6">
+                    <h4>
+                        基本信息
+                    </h4>
+                </div>
+                <div class="col-md-6 text-right">
+                </div>
+            </div>
+            <table class="table table-bordered m-b-xs">
+                <tbody>
+                <tr>
+                    <td width="12%"><b>项目名称</b></td>
+                    <td width="37%">
+                        <input type="text" class="form-control input-sm p-r-md" placeholder="请输入项目名称" value="" name="projectName">
+                    </td>
+                    <td width="12%"><b>立项时间</b></td>
+                    <td>
+                        <div class="input-group" >
+                            <input type="text" class="form-control input-sm " placeholder="立项时间" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" readonly="" value="">
+                            <span class="input-group-addon no-padding" onclick="javascript:$(this).prev().focus();">
+                                <i class="icon-sm icon-append fa fa-calendar" style="height: 28px;line-height: 28px;"></i>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>项目编号</b></td>
+                    <td>
+                        <input type="text" class="form-control input-sm p-r-md" placeholder="请输入项目编号" value="" name="projectNo">
+                    </td>
+                    <td><b>立项组织</b></td>
+                    <td>
+                        <select class="form-control" name="projectCreator"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>项目状态</b></td>
+                    <td>
+                        <select class="form-control" name="status"></select>
+                    </td>
+                    <td><b>立项人</b></td>
+                    <td>--</td>
+                </tr>
+                <tr>
+                    <td><b>甲方</b></td>
+                    <td>
+                        <input type="text" class="form-control input-sm p-r-md" placeholder="请输入甲方名称" value="" name="constructCompanyName">
+                    </td>
+                    <td><b>乙方</b></td>
+                    <td>
+                        <select class="form-control" name="companyBid"></select>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>项目地点</b></td>
+                    <td colspan="3">
+                        <input type="text" class="form-control input-sm p-r-md" placeholder="请输入项目地点" value="" >
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            {{if doType=='projectSetUp'}}
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 class="pull-left">项目信息</h4>
+                    <a href="javascript:void(0)" class="designRangeEditBtn pull-left m-t-xs m-l-sm"  data-action="editDesignRange">
+                        <i class=" fa fa-pencil fc-dark-blue"></i>
+                    </a>
+                </div>
+            </div>
+            <table class="table table-bordered m-b-xs">
+                <tbody>
+                <tr>
+                    <td><b>设计分类</b></td>
+                    <td>
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="projectType" value="" placeholder="请输入设计分类">
+                            <div class="input-group-btn">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                                <ul class="dropdown-menu dropdown-menu-right" style="right: 0;left: inherit;">
+                                    <li><a href="javascript:void(0);" data-id="67b460467d5d4506885b3807acef1105" data-name="城乡规划设计">城乡规划设计</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                    <td><b>功能分类</b></td>
+                    <td>
+                        <a href="javascript:void(0);" class="editable editable-click" data-action="edit_builtType">
+                            <span class="fc-v1-grey">未设置</span>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="12%"><b>基地面积</b></td>
+                    <td width="37%">
+                        <input type="text" class="form-control input-sm p-r-md dp-inline-block" placeholder="请输入" value="" name="propertyField" style="width: 90%;"/>
+                        <span class="unit-span">m²</span>
+                    </td>
+                    <td width="12%"><b>容积率</b></td>
+                    <td>
+                        <input type="text" class="form-control input-sm p-r-md dp-inline-block" placeholder="请输入" value="" name="propertyField" style="width: 90%;"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="12%"><b>总建筑面积</b></td>
+                    <td width="37%">
+                        <span>
+                           <input type="text" class="form-control input-sm p-r-md dp-inline-block" placeholder="请输入" value="" name="propertyField" style="width: 90%;"/>
+                            <span class="unit-span">m&sup2;</span>
+                        </span>
+                    </td>
+                    <td width="12%"><b>计容建筑面积</b></td>
+                    <td>
+                        <span>
+                            <input type="text" class="form-control input-sm p-r-md dp-inline-block" placeholder="请输入" value="" name="propertyField" style="width: 90%;"/>
+                            <span class="unit-span">m&sup2;</span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="12%"><b>覆盖率</b></td>
+                    <td width="37%">
+                        <span>
+                            <input type="text" class="form-control input-sm p-r-md dp-inline-block" placeholder="请输入" value="" name="propertyField" style="width: 90%;"/>
+                            <span class="unit-span">%</span>
+                        </span>
+                    </td>
+                    <td width="12%"><b>绿化率</b></td>
+                    <td>
+                        <span>
+                            <input type="text" class="form-control input-sm p-r-md dp-inline-block" placeholder="请输入" value="" name="propertyField" style="width: 90%;"/>
+                            <span class="unit-span">%</span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="12%"><b>建筑高度</b></td>
+                    <td width="37%">
+                        <span>
+                            <input type="text" class="form-control input-sm p-r-md dp-inline-block" placeholder="请输入" value="" name="propertyField" style="width: 90%;"/>
+                            <span class="unit-span">m</span>
+                        </span>
+                    </td>
+                    <td width="12%" class="p-l-none"><b>建筑层数(地上)</b></td>
+                    <td>
+                        <span>
+                            <input type="text" class="form-control input-sm p-r-md dp-inline-block" placeholder="请输入" value="" name="propertyField" style="width: 90%;"/>
+                            <span class="unit-span">层</span>
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td width="12%" class="p-l-none"><b>建筑层数(地下)</b></td>
+                    <td width="37%">
+                        <span>
+                            <input type="text" class="form-control input-sm p-r-md dp-inline-block" placeholder="请输入" value="" name="propertyField" style="width: 90%;"/>
+                            <span class="unit-span">层</span>
+                        </span>
+                    </td>
+                    <td width="12%"></td>
+                    <td></td>
+                </tr>
+                </tbody>
+            </table>
+            {{/if}}
+            {{if doType=='projectSetUp'}}
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 class="pull-left">设计范围</h4>
+                    <a href="javascript:void(0)" class="designRangeEditBtn pull-left m-t-xs m-l-sm"  data-action="editDesignRange">
+                        <i class=" fa fa-pencil fc-dark-blue"></i>
+                    </a>
+                </div>
+            </div>
+            <table class="table table-bordered m-b-xs">
+                <tbody>
+                <tr>
+                    <td  width="12%"><b>设计范围</b></td>
+                    <td colspan="3">
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            {{/if}}
+            {{if doType=='contractAudit'}}
+            <div class="row">
+                <div class="col-md-6">
+                    <h4 class="pull-left">
+                        合同信息
+                    </h4>
+                </div>
+                <div class="col-md-6 text-right p-b-xs">
+                </div>
+            </div>
+            <table class="table table-bordered m-b-xs">
+                <tbody>
+                <tr>
+                    <td width="12%">
+                        <b>合同附件</b>
+                    </td>
+                    <td colspan="3">
+                        <a href="javascript:void(0)" id="filePicker" name="recordAttach" class="upload-icon" title="请上传PDF文件"></a>
+                        <note class="pt-relative vertical-sub" style="color: #777;bottom: 3px;" >请上传pdf文件！</note>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>合同签订</b></td>
+                    <td colspan="3">
+                        <div class="input-group" >
+                            <input type="text" class="form-control input-sm " placeholder="合同签订" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd'})" readonly="" value="">
+                            <span class="input-group-addon no-padding" onclick="javascript:$(this).prev().focus();">
+                                <i class="icon-sm icon-append fa fa-calendar" style="height: 28px;line-height: 28px;"></i>
+                            </span>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            {{/if}}
+        </form>
+    </div>
+</div>

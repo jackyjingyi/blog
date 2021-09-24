@@ -1,0 +1,84 @@
+<div class="m">
+    <div class="tabs-container">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">按日统计</a></li>
+            <li class=""><a data-toggle="tab" href="#tab-2" aria-expanded="false">按月统计</a></li>
+        </ul>
+        <div class="tab-content">
+            <div id="tab-1" class="tab-pane active">
+                <div class="panel-body">
+                    <form role="form" class="form-inline m-b-sm">
+                        <div class="form-group z-index-1">
+                            <label  class="">当前组织：</label>
+                            <div class="btn-group" id="selectOrg1">
+
+                            </div>
+                        </div>
+                        <div class="form-group time-box">
+                            <label class="m-t-xs">时间：</label>
+                            <div class="input-group dp-inline-block">
+                                <input type="text" class="form-control input-sm " name="startDate" placeholder="开始时间" value="{{startDate}}" readonly style="width: 110px;" >
+                                <span class="input-group-addon no-padding" onclick="javascript:$(this).prev().click();">
+                                    <i class="icon-sm icon-append fa fa-calendar"></i>
+                                </span>
+                            </div>
+                            <div class="input-group dp-inline-block">
+                                <input type="text" class="form-control input-sm " name="endDate" placeholder="结束时间" value="{{endDate}}" readonly style="width: 110px;" >
+                                <span class="input-group-addon no-padding" onclick="javascript:$(this).prev().click();">
+                                    <i class="icon-sm icon-append fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group pull-right">
+                            <button class="btn btn-primary btn-sm pull-right roleControl" data-action="exportDetailsByDay">导出日报</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </form>
+                    <div class="data-list-box">
+                        <div class="data-list-container"></div>
+                        <div class="p-w-sm">
+                            <div id="data-pagination-container-day" class="m-pagination pull-right "></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tab-2" class="tab-pane">
+                <div class="panel-body">
+                    <form role="form" class="form-inline m-b-sm">
+                        <div class="form-group z-index-1">
+                            <label  class="">当前组织：</label>
+                            <div class="btn-group" id="selectOrg2">
+
+                            </div>
+                        </div>
+                        <div class="form-group time-box">
+                            <label class="m-t-xs">时间：</label>
+                            <div class="input-group dp-inline-block">
+                                <input type="text" class="form-control input-sm " name="startDate" placeholder="开始时间" value="{{startMonth}}" readonly style="width: 110px;" >
+                                <span class="input-group-addon no-padding" onclick="javascript:$(this).prev().click();">
+                                    <i class="icon-sm icon-append fa fa-calendar"></i>
+                                </span>
+                            </div>
+                            <div class="input-group dp-inline-block">
+                                <input type="text" class="form-control input-sm " name="endDate" placeholder="结束时间" value="{{endMonth}}" readonly style="width: 110px;" >
+                                <span class="input-group-addon no-padding" onclick="javascript:$(this).prev().click();">
+                                    <i class="icon-sm icon-append fa fa-calendar"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group pull-right">
+                            <button class="btn btn-primary btn-sm pull-right roleControl" data-action="exportDetailsByMonth">导出月报</button>
+                        </div>
+                        <div class="clearfix"></div>
+                    </form>
+                    <div class="data-list-box">
+                        <div class="data-list-container"></div>
+                        <div class="p-w-sm">
+                            <div id="data-pagination-container-month" class="m-pagination pull-right "></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

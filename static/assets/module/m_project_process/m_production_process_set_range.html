@@ -1,0 +1,25 @@
+<div class="m-production-process-set-range p-sm ">
+    {{if treeList && treeList.length>0}}
+        <div class="row no-margin" data-i="">
+            <div class="col-sm-12 bg-v5-grey p-t-xs p-b-xs p-l-md border-top border-right border-left">
+                <span>设计分类</span>
+                <!--<a href="javascript:void(0);" class="pull-right" data-action="expand">
+                    <i class="fa text-bold fc-v2-grey fa-angle-down"></i>
+                </a>-->
+            </div>
+            <div class="col-sm-12 border content" >
+                <div class="tree-box"></div>
+            </div>
+        </div>
+    {{else}}
+    <div class="row no-data-tr">
+        <div class="text-center col-md-12">
+            <div class="m-b-xl m-t-md">
+                <img src="{{_url('/img/default/without_data.png')}}" width="100">
+                <span class="fc-dark-blue dp-block">请设置设计分类！</span>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+</div>
+

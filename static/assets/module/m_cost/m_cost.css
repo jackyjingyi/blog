@@ -1,0 +1,81 @@
+/* table filter -------------------------------------------------------------*/
+.revenue-expenditure .ibox .table > tbody > tr > td {
+    vertical-align: middle
+}
+
+.revenue-expenditure tbody tr td {height: 38px;}
+.revenue-expenditure tbody tr td  div.bPaidFee{position: relative}
+.revenue-expenditure tbody tr td  div.bPaidFee:hover a[data-action="delPaidFee"]{
+    display: block
+}
+.revenue-expenditure tbody tr td  div.bPaidFee a[data-action="delPaidFee"]{
+    position: absolute;right: 0;top:8px;display: none
+}
+.revenue-expenditure tbody tr td.totalPaidFee{
+    position: relative;
+}
+.revenue-expenditure tbody tr td.totalPaidFee:hover a[data-action="delCostPointDetail"]{
+    display: block;position: absolute;right: 4px;top: 8px;
+}
+.revenue-expenditure tbody tr td a[data-action="delCostPointDetail"]{
+    display: none;position: absolute;right: 4px;top: 8px;
+}
+.revenue-expenditure tbody tr td.feeDescription:hover a[data-action="delCostPoint"]{
+    display: block
+}
+.revenue-expenditure tbody tr td a[data-action="delCostPoint"]{
+    display: none
+}
+
+.revenue-expenditure tbody tr td.feeDescription:hover a[data-action="delCostPoint"]{
+    display: block
+}
+.revenue-expenditure tbody tr td a[data-action="deleteInvoice"]{
+    display: none
+}
+.revenue-expenditure tbody tr td.invoice:hover a[data-action="deleteInvoice"]{
+    display: block
+}
+.revenue-expenditure tbody tr td {
+    vertical-align: middle;
+}
+
+.revenue-expenditure .bPaidFee{
+    width: calc(54.5% + 1px);border-right: solid 1px #e7eaec;float: left;
+}
+.revenue-expenditure .paid-date{
+    width: calc(44.5% - 1px);float: left;
+}
+.revenue-expenditure .paid-detail-box{
+    line-height: 38px;border-bottom: solid 1px #e7eaec;
+}
+
+.m_cooperativeDesignFee .table-bordered > thead > tr > th.white-bg{background: #fff;}
+
+.m_cooperativeDesignFee .CDF_org.tree-box td.treeTd{padding: 8px !important;}
+.m_cooperativeDesignFee .CDF_org.tree-box span.treegrid-expander{width: auto;}
+.m_cooperativeDesignFee table.partB{border-right:0px;margin-bottom: 0px;}
+.m_cooperativeDesignFee table.partB,table.partB tbody,table.partB tbody tr,table.partB tbody tr td{border-bottom: 0px}
+
+.m-cost-item .mask-layer-content{
+    z-index: 3;
+    background: none;
+    border: none;
+    opacity: 1;
+    padding-top: 60px;
+    text-align: center;
+    color: #666;
+}
+.m-cost-item .contract.text-ellipsis{
+    width: auto;
+    max-width: 155px;
+    position: relative;
+}
+@media (max-width: 1366px){
+
+    .m-cost-item .contract.text-ellipsis{
+        width: auto;
+        max-width: 115px;
+    }
+}
+

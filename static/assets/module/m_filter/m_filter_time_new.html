@@ -1,0 +1,36 @@
+<div class="data-list-filter" >
+    {{if label}}
+        <label class="dp-inline-block-1 v-middle m-b-none">{{#label}}：</label>
+    {{/if}}
+    {{if type==1}}
+        <a class="btn btn-link dp-inline-block-1" data-click-action="setTime" data-days="30">一个月</a>
+        <a class="btn btn-link dp-inline-block-1" data-click-action="setTime" data-days="90">三个月</a>
+        <a class="btn btn-link dp-inline-block-1" data-click-action="setTime" data-days="180">六个月</a>
+    {{/if}}
+    {{each yearList as y }}
+    <a class="btn btn-link dp-inline-block-1" data-click-action="setTime" data-days="{{y}}">{{y}}年</a>
+    {{/each}}
+
+    <div class="input-group inline v-middle {{type==1||type==3?'':'hide'}}" style="width: 129px;">
+        <input type="text" class="form-control input-sm" id="ipt_startTime" name="startTime" placeholder="{{type==3?'开始月份':'开始时间'}}"
+               readonly value="" style="width: 90px;padding: 6px;">
+        <span class="input-group-addon no-padding" onclick="javascript:$(this).prev().click();">
+            <i class="icon-sm icon-append fa fa-calendar" style="height: 28px;line-height: 28px;"></i>
+        </span>
+    </div>
+    <span class="glyphicon glyphicon-minus fc-v1-grey inline v-middle {{type==1||type==3?'':'hide'}}"></span>
+    <div class="input-group inline v-middle {{type==1||type==3?'':'hide'}}" style="width: 129px;">
+        <input type="text" class="form-control input-sm" id="ipt_endTime" name="endTime" placeholder="{{type==3?'结束月份':'结束时间'}}"
+               readonly value="" style="width: 90px;padding: 6px;">
+        <span class="input-group-addon no-padding" onclick="javascript:$(this).prev().click();">
+            <i class="icon-sm icon-append fa fa-calendar" style="height: 28px;line-height: 28px;"></i>
+        </span>
+    </div>
+
+    <div class="input-group inline v-middle {{type==2?'':'hide'}}" style="width: 129px;">
+        <input type="text" class="form-control input-sm" id="ipt_year" name="yearTime" placeholder="年份" value="" style="width: 90px;padding: 6px;">
+        <span class="input-group-addon no-padding" onclick="javascript:$(this).prev().click();">
+            <i class="icon-sm icon-append fa fa-calendar" style="height: 28px;line-height: 28px;"></i>
+        </span>
+    </div>
+</div>

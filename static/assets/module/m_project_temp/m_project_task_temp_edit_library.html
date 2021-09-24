@@ -1,0 +1,21 @@
+{{if dataList && dataList.length>0}}
+<h4>模板标签库</h4>
+<div class="m-b-sm">
+    <label class="i-checks i-checks-label fw-normal">
+        <input name="allItemCK" type="checkbox" value="0"/>
+        <span class="i-checks-span">全选</span>
+    </label>
+</div>
+<div class="row">
+    {{each dataList as p}}
+    <div class="col-md-4 p-r-none">
+        <label class="i-checks i-checks-label fw-normal">
+            <input name="itemCk" type="checkbox"  value="{{p.fieldName}}" data-id="{{p.id}}" data-relation-id="{{p.relationId}}"/>
+            <span class="i-checks-span text-ellipsis" data-toggle="tooltip" data-container="body" data-original-title="{{p.fieldName}}">
+                {{p.fieldName }}
+            </span>
+        </label>
+    </div>
+    {{/each}}
+</div>
+{{/if}}

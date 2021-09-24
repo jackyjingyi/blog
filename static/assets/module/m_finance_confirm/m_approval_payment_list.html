@@ -1,0 +1,48 @@
+<table class="table table-bordered table-responsive">
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>编号</th>
+        <th>申请时间</th>
+        <th>申请人</th>
+        <th>所在组织</th>
+        <th>类型</th>
+        <th>所在部门</th>
+        <th>用途说明</th>
+        <th>申请金额</th>
+        <th>审批人</th>
+        <th>审批时间</th>
+        <th>拨款时间</th>
+    </tr>
+    </thead>
+    <tbody>
+        {{if dataList!=null && dataList.length>0}}
+        {{each dataList as d i}}
+        <tr data-id="{{d.id}}" data-i="{{i}}">
+            <td>{{i+1+pageIndex*10}}</td>
+            <td>编号</td>
+            <td>申请时间</td>
+            <td>申请人</td>
+            <td>所在组织</td>
+            <td>类型</td>
+            <td>所在部门</td>
+            <td>用途说明</td>
+            <td>申请金额</td>
+            <td>审批人</td>
+            <td>审批时间</td>
+            <td>拨款时间</td>
+        </tr>
+        {{/each}}
+        {{else}}
+        <tr class="no-data">
+            <td colspan="12" class="text-center v-middle">
+                <div class="m-b-xl m-t-md">
+                    <img src="{{_url('/img/default/without_data.png')}}">
+                    <span class="fc-dark-blue dp-block">没有相关数据</span>
+                </div>
+            </td>
+        </tr>
+        {{/if}}
+    </tbody>
+</table>
+

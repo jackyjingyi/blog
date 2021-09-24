@@ -1,0 +1,43 @@
+<ul class="nav nav-third-level collapse in project-second-menu">
+    <li>
+        <a id="basicInfo" href="#/project/basicInfo?id={{id}}&projectName={{projectName}}&dataCompanyId={{dataCompanyId}}&businessType={{businessType}}">
+            <span>基本信息</span>
+        </a>
+        <input type="hidden" id="projectFileId" value="{{fileId}}"/>
+    </li>
+    {{if projectOperator.issueModule==1}}
+    <li class="roleControl" roleCode="2001" flag="2">
+        <a id="taskIssue" href="#/project/taskIssue?id={{id}}&projectName={{projectName}}&dataCompanyId={{dataCompanyId}}&businessType={{businessType}}">
+            <span>工作内容</span>
+        </a>
+    </li>
+    {{/if}}
+    {{if projectOperator.productModule==1}}
+    <li class="roleControl" roleCode="2002" flag="2">
+        <a id="production" href="#/project/production?id={{id}}&projectName={{projectName}}&dataCompanyId={{dataCompanyId}}&businessType={{businessType}}">
+            <span>任务分配</span>
+        </a>
+    </li>
+    {{/if}}
+    {{if projectOperator.paymentModule==1 || projectOperator.receiveModule==1 || projectOperator.payModule==1 }}
+    <li class="roleControl" roleCode="2003" flag="2">
+        <a id="cost" href="#/project/cost?id={{id}}&projectName={{projectName}}&dataCompanyId={{dataCompanyId}}&businessType={{businessType}}">
+            <span>费用管理</span>
+        </a>
+    </li>
+    {{/if}}
+    <!--{{if projectOperator.projectDocModule==1}}
+    <li>
+        <a id="projectDocumentLib" href="#/project/projectDocumentLib?id={{id}}&projectName={{projectName}}&dataCompanyId={{dataCompanyId}}" >
+            项目文档
+        </a>
+    </li>
+    {{/if}}-->
+    {{if projectOperator.projectMemberModule==1}}
+    <li class="roleControl" roleCode="2004" flag="2">
+        <a id="projectMember" href="#/project/projectMember?id={{id}}&projectName={{projectName}}&dataCompanyId={{dataCompanyId}}&businessType={{businessType}}">
+            <span>工作效能</span>
+        </a>
+    </li>
+    {{/if}}
+</ul>

@@ -1,0 +1,19 @@
+{{each selectedUserList as u ui}}
+    <span class="selected-user m-r-xs" data-type="{{u.orgType}}" data-i="{{ui}}">
+         <span class="label label-light m-t-xs dp-inline-block" >
+             {{if u.candidateUserList && u.candidateUserList.length>0}}
+                <span class="selected-user-list" id="sortableUser{{u.orgType}}">
+                    {{each u.candidateUserList as c ci}}
+                        <span class="user-item" data-sort-id="{{ci}}">[{{c.name}}]</span>
+                    {{/each}}
+                </span>
+                <span>-第{{u.level}}级主管({{u.orgType==3?'多级':'单级'}})</span>
+             {{else}}
+                {{u.userName}}
+             {{/if}}
+             {{if isASingleSelectUser!=2}}
+                <a class="curp" href="javascript:void(0)" data-id="{{u.id}}" data-action="delUser"><i class="fa fa-times fc-red"></i></a>
+             {{/if}}
+         </span>
+    </span>
+{{/each}}

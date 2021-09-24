@@ -1,0 +1,78 @@
+<div class="{{dataInfo?'m':''}}">
+    {{if dataInfo}}
+    <div class="row m-b-xs">
+        <div class="col-md-6">
+            <h4>{{dataInfo.userName}}&nbsp;{{_momentFormat(dataInfo.workDate,'YYYY/MM')}}打卡记录</h4>
+        </div>
+        <div class="col-md-6 text-right">
+            <button class="btn btn-primary btn-sm roleControl" data-action="exportDetailsByMonthOfUser">导出个人月报</button>
+            <a class="btn btn-default btn-" href="javascript:void(0);" data-action="backToReportByMonth">返回</a>
+        </div>
+    </div>
+    {{/if}}
+    <table class="table table-hover table-bordered table-responsive " >
+        <thead>
+        <tr>
+            <th>时间</th>
+            <th>姓名</th>
+            <th>部门</th>
+            {{if type==0}}
+            <th>所属规则</th>
+            {{/if}}
+            <th>最早</th>
+            <th>最晚</th>
+            <th>次数</th>
+            {{if type==0}}
+            <th>工作时长</th>
+            <th>审批单</th>
+            <th>状态</th>
+            <th>校对状态</th>
+            <th>异常信息</th>
+            <th>早退</th>
+            <th>迟到</th>
+            <th>加班</th>
+            {{/if}}
+        </tr>
+        </thead>
+        <tbody>
+        {{each dataList as p i}}
+        <tr class="curp" data-i="{{i}}" data-id="{{p.id}}" data-company-id="{{p.companyId}}">
+            <td>{{_momentFormat(p.workDate,'YYYY/MM/DD')}}</td>
+            <td>{{p.userName}}</td>
+            <td>{{p.departName}}</td>
+            {{if type==0}}
+            <td>{{p.ruleName}}</td>
+            {{/if}}
+            <td>{{p.startClockTime?p.startClockTime:'--'}}</td>
+            <td>{{p.endClockTime?p.endClockTime:'--'}}</td>
+            <td>{{p.clockNum}}</td>
+            {{if type==0}}
+            <td>{{p.workingHours}}</td>
+            <td>
+                {{p.approveNum}}
+                {{if p.expMainList && p.expMainList.length>0}}
+                    <a href="javascript:void(0);" data-action="viewApproval" data-exp-ids="{{p.expMain}}"><i class="fa fa-info-circle"></i></a>
+                {{/if}}
+            </td>
+            <td>{{p.clockStatus}}</td>
+            <td>{{p.correctStatus}}</td>
+            <td>{{p.exceptionRemark}}</td>
+            <td>{{p.earlyTime}}</td>
+            <td>{{p.lateTime}}</td>
+            <td>{{p.overTime}}</td>
+            {{/if}}
+        </tr>
+        {{/each}}
+        {{if dataList==null || dataList.length==0}}
+        <tr class="no-data">
+            <td colspan="{{type==0?'15':'6'}}" class="text-center v-middle">
+                <div class="m-b-xl m-t-md">
+                    <img src="{{_url('/img/default/without_data.png')}}">
+                    <span class="fc-dark-blue dp-block">您还没有相关数据</span>
+                </div>
+            </td>
+        </tr>
+        {{/if}}
+        </tbody>
+    </table>
+</div>

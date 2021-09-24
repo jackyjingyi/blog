@@ -1,0 +1,51 @@
+<div class="m-project-task-temp-add">
+    {{if doType==1}}
+        <h4 class="font-normal">
+            {{if dataInfo && dataInfo.id}}
+            编辑任务模版
+            {{else}}
+            创建任务模版
+            {{/if}}
+        </h4>
+        <form class="form-horizontal m-t">
+            <div class="form-group p-l">
+                <label class="pull-left control-label f-s-m-v1">任务模版名称<span class="fc-red">*</span>：</label>
+                <div class="pull-left">
+                    <input type="text" class="form-control width-600" name="templateName" placeholder="请输入任务模版名称" value="{{dataInfo?dataInfo.templateName:''}}">
+                </div>
+            </div>
+            <div class="form-group p-l">
+                <button class="btn btn-primary" data-action="addTaskTempItem"><i class="fa fa-plus f-s-m" ></i>&nbsp;增加/编辑任务</button>
+                <!--<button class="btn btn-default" data-action="selectTaskTemp">从模版中选择</button>-->
+            </div>
+            <div id="taskTempItemList">
+
+            </div>
+            <div class="form-group p-l">
+                <button class="btn btn-primary" data-action="save">保存</button>
+                <button class="btn btn-default" data-action="cancel">取消</button>
+            </div>
+        </form>
+    {{else}}
+        <h4 class="font-normal">查看任务模版</h4>
+        <form class="form-horizontal m-t">
+            <div class="form-group p-l">
+                <label class="pull-left f-s-m-v1">任务模版名称：</label>
+                <div class="pull-left l-h-22">
+                    {{dataInfo?dataInfo.templateName:''}}
+                </div>
+            </div>
+            <div id="taskTempItemList">
+
+            </div>
+            <div class="form-group p-l">
+                <button class="btn btn-default" data-action="cancel">返回任务模板列表</button>
+            </div>
+        </form>
+
+    {{/if}}
+</div>
+
+
+
+
