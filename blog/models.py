@@ -142,6 +142,12 @@ class Post(models.Model):
     def get_absolute_url(self):
         return reverse('home')
 
+    def get_origin_name(self):
+        return '原创' if self.origin == '1' else '转载'
+
+    def get_post_file_name(self):
+        return os.path.basename(self.post_file.name)
+
     def increase_views(self):
         self.views += 1
         self.save(update_fields=['views'])
@@ -303,6 +309,8 @@ class Post(models.Model):
 
     def get_oa_status_verbose_name(self):
         return OA_STATUS_VERBOSE_NAME.get(self.oa_status)
+
+
 
 
 class Profile(models.Model):

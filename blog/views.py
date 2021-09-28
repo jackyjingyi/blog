@@ -106,10 +106,13 @@ class HomeView(ListView):
 
 
 class ApprovalPosts(LoginRequiredMixin, ListView):
+
     """
       基于Approver自身的审批等级进行筛选
         1. 本view对post进行简单展示，并非审批功能view
     """
+    login_url = '/members/login_to/'
+    # redirect_field_name = 'redirect_to'
     model = Post
     template_name = 'approval_list.html'
 
@@ -474,7 +477,9 @@ def statics_and_charts_get_data(request):
     elif request.method == 'POST':
         if request.POST.get('group_name'):
             group_name = request.POST.get('group_name')
+
             requested_group = Group.objects.get(name=group_name)
+
             all_members = requested_group.user_set.all().filter(profile__is_publisher=True)
             month_data_origin = Post.objects.filter(author__in=all_members, publish=True, origin='1').annotate(
                 month=TruncMonth('publish_date')).values('month').annotate(c=Count('id')).values('month', 'c')
@@ -516,7 +521,7 @@ def statics_and_charts_get_data(request):
                                           for j in range(1, len(_origin_list))],
 
             }
-            print(group_statics)
+
             member_list = []
             for u in all_members:
                 member_list.append(
@@ -663,6 +668,9 @@ class UpdatePostView(LoginRequiredMixin, UpdateView):
     model = Post
     form_class = EditForm
     template_name = 'update_post.html'
+    login_url = '/members/login_to/'
+    success_url = reverse_lazy('home')
+
 
     def get_context_data(self, *args, object_list=None, **kwargs):
         cat_menu = Category.objects.all()

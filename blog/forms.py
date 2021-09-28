@@ -4,6 +4,7 @@ from .models import Post, Category
 from taggit.forms import TagField
 from taggit_labels.widgets import LabelWidget
 from django.core.validators import ValidationError
+
 # from crispy_forms.helper import FormHelper, FormHelpersException
 # from crispy_forms.layout import Submit
 
@@ -47,7 +48,6 @@ class PostFormV2(forms.Form):
     post_file = forms.FileField(max_length=255)
     is_submit = forms.BooleanField(required=False)
 
-
     def clean_tags(self):
         data = self.cleaned_data.get('tags', [])
         if len(data) > 3:
@@ -55,40 +55,30 @@ class PostFormV2(forms.Form):
         return data
 
     def save(self, *args, **kwargs):
-        print(self.fields)
-        print("++++++++++++==================")
-        print(self.cleaned_data)
-        print(type(kwargs.get('user')))
         user = kwargs.get('user')
-
         post = Post()
         post.title = self.cleaned_data.get('title')
-
         post.author = user
-
         post.category = self.cleaned_data.get('category1')
         post.subcategory = self.cleaned_data.get('category2')
         if self.cleaned_data.get('is_submit'):
-            print(self.cleaned_data.get('is_submit'))
             post.submit()
-        print(self.cleaned_data.get('body'))
         post.body = self.cleaned_data.get('body')
-
         post.is_submit = self.cleaned_data.get('is_submit')
         post.origin = self.cleaned_data.get('origin')
         post.post_file.save(self.cleaned_data.get('post_file').name, self.cleaned_data.get('post_file'))
-        print(self.cleaned_data.get('post_file').name)
-        print(type(kwargs.get('user')))
-
         post.save()
+
 
 class EditForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title', 'title_tag', 'body', 'post_file')
+        fields = ('title', 'body', 'post_file', 'category', 'subcategory', 'origin')
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'title_tag': forms.TextInput(attrs={'class': 'form-control'}),
             'body': forms.Textarea(attrs={'class': 'form-control'}),
             'post_file': forms.FileInput(attrs={'class': 'form-control', }),
+            'category': forms.Select(choices=choices, attrs={'class': 'form-control'}),
+            'subcategory': forms.Select(attrs={'class': 'form-control'}),
+            'origin': forms.Select(attrs={'class': 'form-control'})
         }

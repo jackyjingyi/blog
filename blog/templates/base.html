@@ -33,23 +33,35 @@
     <link href="{% static 'css/vendor.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/main.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/module.min.css' %}" rel="stylesheet">
-    {#    <link href="{% static 'layer-v3.5.1/layer/theme/default/layer.css' %}" rel="stylesheet">#}
     <link href="{% static 'assets/lib/icon/iconfont.min.css' %}" rel="stylesheet">
-    {#        <link href="{% static 'css/google.css' %}" rel="stylesheet">#}
-    <!-- Custom styles for this template -->
-    {#        <link href="{% static 'css/blog.css' %}" rel="stylesheet">#}
+
     <script type="text/javascript" src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/echarts.min.js' %}"></script>
-    {#        <script type="text/javascript" src="{% static 'layer-v3.5.1/layer/layer.js' %}"></script>#}
 
+    <style>
+        .backToMainButton a {
+            o-transition: color .2s ease-out, background 1s ease-in;
+            -ms-transition: color .2s ease-out, background 1s ease-in;
+            -moz-transition: color .2s ease-out, background 1s ease-in;
+            -webkit-transition: color .2s ease-out, background 1s ease-in;
+            /* ...and now override with proper CSS property */
+            transition: color .2s ease-out, background 1s ease-in;
+        }
+
+        .backToMainButton a:hover {
+            background-color: #337b8e;
+            color: #EEEEEE;
+
+        }
+    </style>
 </head>
 <body class="bg-v1-grey no-skin-config">
 <div id="wrapper">
     <div id="m_top" class="row white-bg">
         <nav class="navbar navbar-static-top m-0 p-0" role="navigation" style="margin-bottom: 0px">
             <div class="navbar-header">
-                <a href="/" class="navbar-brand svg" target="_self" style="margin-left: -10px;">
-                    <img class="pt-relative max-h-80" src="{% static 'images/logo_white1.png' %}">
+                <a href="http://bigdata.octiri.com" class="navbar-brand svg" target="_self" style="margin-left: 0px;">
+                    <img class="pt-relative max-h-80" src="{% static 'images/logo12.png' %}">
                 </a>
             </div>
 
@@ -173,24 +185,33 @@
                     </li>
                     <li class="parentProject selected">
                         <a class="svg" href="javascript:void(0);">
-                            <i class="pull-left font-style-normal text-bold m-metismenu-icon">G</i>
-                            <span class="nav-label pull-left">分组浏览</span>
+                            <span class="nav-label pull-left" style="margin-left: 0">分组浏览</span>
                             <span class="fa arrow"></span>
                             <div class="clearfix">
-
                             </div>
                         </a>
                         <ul class="nav nav-second-level collapse in">
                             {% for item in group %}
-                                <li class="liGroupList active">
-                                    <a href="{% url 'group_post' item.name %}" class="groupList">
-                                        <span>{{ item.name }}</span>
+                                <li class="liGroupList">
+                                    <a href="javascript:void(0);" class="groupList">
+                                        <span style="margin-left: 20%" value="{{ item.name }}">{{ item.name }}</span>
                                     </a>
                                 </li>
                             {% endfor %}
 
                         </ul>
                     </li>
+                    <li class="parentProject">
+                        <a class="svg" href="http://bigdata.octiri.com">
+                            <span class="nav-label pull-left" style="margin-left: 0">返回数字大脑</span>
+
+
+                            <div class="clearfix">
+                            </div>
+                        </a>
+
+                    </li>
+
                 </ul>
             </div>
         </nav>
@@ -205,7 +226,8 @@
                         <div class="pull-left" id="breadcrumb">
                             <div class="no-margins p-h-sm breadcrumb-box">
                                 <ol class="breadcrumb" id="secondaryMenu">
-                                    <li class="">首页</li>
+                                    <li class="backToMainButton">
+                                        <a href="{% url 'home' %}">首页</a></li>
                                 </ol>
                             </div>
                         </div>
@@ -225,17 +247,17 @@
 
             </div>
         </div>
+
         <div class="clearfix">
 
         </div>
     </div>
-    {#    {% block content %}#}
-    {#    {% endblock %}#}
+
 </div>
 
 </body>
 
-<script type="text/javascript" src="{% static 'assets/js/vendor.min.js' %}"></script>
+{#<script type="text/javascript" src="{% static 'assets/js/vendor.min.js' %}"></script>#}
 <script type="text/javascript" src="{% static 'assets/lib/bootstrap/js/bootstrap.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'assets/lib/layer/layer.js' %}"></script>
 <script type="text/javascript" src="{% static 'assets/lib/js-cookie/js.cookie.min.js' %}"></script>
@@ -253,8 +275,30 @@
 <script type="text/javascript" src="{% static 'assets/lib/footable/footable.all.min.js' %}"></script>
 <script type="text/javascript"
         src="{% static 'assets/lib/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js' %}"></script>
-<link href="{% static 'assets/lib/summernote/summernote.min.css' %}" rel="stylesheet">
-<script src="{% static 'assets/lib/summernote/summernote.min.js' %}"></script>
-<script src="{% static 'assets/lib/summernote/lang/summernote-zh-CN.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $(".parentProject a.svg").on('click', function () {
+            let sp = $(this).parent()
+            if (!sp.hasClass("selected")) {
+                sp.addClass("selected")
+                sp.find("ul").addClass("in");
+            } else {
+                sp.removeClass("selected")
+                sp.find("ul").removeClass("in");
+            }
+
+        })
+        $(".liGroupList").on('click', function () {
+            let gName = $(this).children().first().children().first()[0].innerText;
+            let url = '/group_posts/' + gName
+            window.location.href = url
+        })
+
+
+    })
+</script>
+{#<link href="{% static 'assets/lib/summernote/summernote.min.css' %}" rel="stylesheet">#}
+{#<script src="{% static 'assets/lib/summernote/summernote.min.js' %}"></script>#}
+{#<script src="{% static 'assets/lib/summernote/lang/summernote-zh-CN.js' %}"></script>#}
 
 </html>

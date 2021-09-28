@@ -13,109 +13,144 @@
 </style>
 
 {% block content %}
+    <div class="row" style="margin:10px">
+        {% if user.is_authenticated and user.profile.is_publisher %}
+            <link href="{% static 'blog/css/blog-loader.css' %}" rel="stylesheet">
 
-    {% if user.is_authenticated and user.profile.is_publisher %}
-        <link href="{% static 'blog/css/blog-loader.css' %}" rel="stylesheet">
-        <div class="row" id="subHeader">
-            <div class="col-4 pt-1"></div>
-            <div class="col-4 text-center"><h2 class="text-center" type="hidden/inherit">文件上传</h2></div>
-            <div class="col-4">
-                <p class="mb-0" style="position: absolute; top:11.2%" type="hidden/inherit">
-                    当前组：
-                    {% if user_group %}
-                        <a href="#">{{ user_group }}</a>
-                    {% endif %}
-                </p>
+            <div class="row" id="subHeader">
+                <div class="col-md-4"></div>
+                <div class="col-md-12 text-center"><h2 class="text-center" type="hidden/inherit">文件上传</h2></div>
+                <hr>
+                <div class="col-md-12">
+                    <p class="mb-0" style="position: absolute; top:11.2%" type="hidden/inherit">
+                        当前组：
+                        {% if user_group %}
+                            <i class="text-info">{{ user_group }}</i>
+                        {% endif %}
+                    </p>
+                    <div class="clearfix"></div>
+                </div>
+
             </div>
-            <hr>
-        </div>
 
-        <div class="row mb-5" id="afterSuccess" type="hidden">
-            <h2 class="text-md-center" id="uploadInfo"></h2>
-            <hr>
-            <div class="row mb-5">
-                <div class="col-md-6 mb-5 text-center">
-                    <a class="btn btn-primary" href="{% url 'author_post' user.id %}">查看工作空间</a>
-                </div>
-                <div class="col-md-6 mb-5 text-center">
-                    <a class="btn btn-primary" href="{% url 'add_post' %}">继续上传</a>
+            <div class="row margin-top-25" id="afterSuccess" type="hidden">
+                <h3 class="text-info text-center" id="uploadInfo"></h3>
+                <hr>
+                <div class="m-b-xl m-t-md">
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>
+                                <img src="{% static 'assets/img/default/invite_success.png' %}"
+                                     style="display: block;margin:0 auto;" alt="成功">
+                                <br>
+                                <div class="col-md-4"></div>
+                                <div class="col-md-4" style="display: block;margin:0 auto;text-align: center">
+                                    <a class="btn btn-sm btn-primary" href="{% url 'author_post' user.id %}"
+                                       style="left: 15%">工作空间</a>
+                                    <a class="btn btn-sm btn-primary" href="{% url 'add_post' %}" style="right: 15%">继续上传</a>
+
+                                </div>
+                                <div class="col-md-4"></div>
+                            </td>
+                        </tr>
+
+                    </table>
                 </div>
             </div>
-        </div>
 
-        <div class="form-group">
+            <div class="form-group">
 
-            <form class="g-3 needs-validation" enctype="multipart/form-data" id="create_post" novalidate>
-                {% csrf_token %}
+                <form class="g-3 needs-validation" enctype="multipart/form-data" id="create_post" novalidate>
+                    {% csrf_token %}
+                    <div class="row margin-top-10">
+                        <div class="col-md-6">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="myPDFTitle"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
 
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="myPDFTitle"
-                               class="form-label d-inline-block mb-2 text-primary"><strong>标题</strong></label>
-                        <input name="title" type="text" class="form-control" id="myPDFTitle" maxlength="255"
-                               placeholder="请输入标题"
-                               required>
+                                标题
+                            </strong></label>
+                            <input name="title" type="text" class="form-control" id="myPDFTitle" maxlength="255"
+                                   placeholder="请输入标题"
+                                   required>
+                        </div>
+                        <div class="col-md-6">
+                            <i class="pull-left icon iconfont icon-shangchuan">
+                            </i>&nbsp;
+                            <label for="myPDFFile"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                上传PDF文件</strong></label>
+                            <input name="post_file" type="file" class="form-control" id="myPDFFile" required>
+
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label for="myPDFFile"
-                               class="form-label d-inline-block mb-2 text-primary"><strong>上传PDF文件</strong></label>
-                        <input name="post_file" type="file" class="form-control" id="myPDFFile" required>
-                        <div class="invalid-feedback">非PDF文件</div>
+
+                    <div class="row margin-top-10">
+                        <div class="col-md-6">
+                            <i class="pull-left icon iconfont icon-fenlei1">
+                            </i>&nbsp;
+                            <label for="lv1_category"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>分类</strong></label>
+                            <select name="category1" class="form-control" id="lv1_category" required>
+                                {% for lv1cat in lv1_cats %}
+                                    <option value="{{ lv1cat.name }}">{{ lv1cat.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <i class="pull-left icon iconfont icon-iconfontfenlei">
+                            </i>&nbsp;
+                            <label for="lv2_category"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>二级分类</strong></label>
+                            <select name="category2" class="form-control" id="lv2_category" required>
+
+                            </select>
+                        </div>
                     </div>
-                </div>
-
-                <div class="row mb-3">
-                    <div class="col-md-6">
-                        <label for="lv1_category"
-                               class="form-label d-inline-block mb-2 text-primary"><strong>分类</strong></label>
-                        <select name="category1" class="form-control" id="lv1_category" required>
-                            {% for lv1cat in lv1_cats %}
-                                <option value="{{ lv1cat.name }}">{{ lv1cat.name }}</option>
-                            {% endfor %}
-                        </select>
+                    <div class="col-md-12 margin-top-15">
+                        <div class="form-check  radio-inline">
+                            <input class="form-check-input radio-inline" type="radio" name="flexRadioDefault"
+                                   id="origin">
+                            <label class="form-check-label" for="origin">
+                                原创
+                            </label>
+                        </div>
+                        <div class="form-check radio-inline">
+                            <input class="form-check-input radio-inline" type="radio" name="flexRadioDefault"
+                                   id="reproduction" checked>
+                            <label class="form-check-label" for="reproduction">
+                                转载
+                            </label>
+                        </div>
                     </div>
-                    <div class="col-md-6">
-                        <label for="lv2_category"
-                               class="form-label d-inline-block mb-2 text-primary"><strong>二级分类</strong></label>
-                        <select name="category2" class="form-control" id="lv2_category" required>
-
-                        </select>
+                    <div class="col-md-12 row margin-top-10">
+                        <label for="body">摘要</label>
+                        <textarea name="body" cols="40" rows="10" class="form-control" id="body"
+                                  placeholder="请输入200字内简短摘要"></textarea>
                     </div>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="origin">
-                    <label class="form-check-label" for="origin">
-                        原创
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="reproduction" checked>
-                    <label class="form-check-label" for="reproduction">
-                        转载
-                    </label>
-                </div>
+                    <div class="form-check mb-0">
+                        <input class="form-check-input" type="hidden" value="" id="is_submit">
 
-                <div class="row mb-3">
-                    <label for="body">摘要</label>
-                    <textarea name="body" cols="40" rows="10" class="form-control" id="body"
-                              placeholder="请输入200字内简短摘要"></textarea>
-                </div>
-                <div class="form-check mb-0">
-                    <input class="form-check-input" type="hidden" value="" id="is_submit">
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="col-md-12 margin-top-10">
 
-                </div>
-                <button class="btn btn-secondary" id="saveAsDraft">存为草稿</button>
-                <button class="btn btn-secondary" id="directSubmit">直接提交</button>
-                <a href="{% url 'author_post' user.id %}" class="btn btn-secondary" id="cancelButton">取消</a>
-            </form>
-            {#            <div class="spinner-border" role="status">#}
-            {#                <span class="visually-hidden">Loading...</span>#}
-            {#            </div>#}
-        </div>
+                            <button class="btn btn-primary" id="saveAsDraft">存为草稿</button>
 
-    {% else %}
-        暂无发布权限
-    {% endif %}
+                            <button class="btn btn-primary" id="directSubmit">直接提交</button>
+
+                            <a href="{% url 'author_post' user.id %}" class="btn btn-primary" id="cancelButton"
+                               role="button">取消</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+        {% else %}
+            暂无发布权限
+        {% endif %}
+    </div>
     <div class="loader" style="height: auto">
         <div class="loaderInfo text-light text-center"></div>
         <div class="dot"></div>

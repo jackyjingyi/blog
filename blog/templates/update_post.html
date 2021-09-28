@@ -1,24 +1,227 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}
     编辑
 {% endblock %}
 
 {% block content %}
-    {% if user.is_authenticated and user == post.author %}
-        <h3>编辑</h3>
-        <br><br>
-        <div class="form-group">
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {{ form.media }}
-                {{ form.as_p }}
-                <iframe class="embed-responsive-item" id="pdf" src="{{ post.post_file.url }}" width="100%"
-                        height="1000px">
-                </iframe>
-                <button class="btn btn-secondary">Post</button>
-            </form>
-        </div>
-    {% else %}
-        暂无权限
-    {% endif %}
+    <link href="{% static 'blog/css/blog-loader.css' %}" rel="stylesheet">
+    <style>
+        .changeableInfo {
+            o-transition: color .2s ease-out, background 1s ease-in;
+            -ms-transition: color .2s ease-out, background 1s ease-in;
+            -moz-transition: color .2s ease-out, background 1s ease-in;
+            -webkit-transition: color .2s ease-out, background 1s ease-in;
+            /* ...and now override with proper CSS property */
+            transition: color .2s ease-out, background 1s ease-in;
+        }
+
+        .changeableInfo span:hover {
+            background-color: #337b8e;
+            color: #EEEEEE;
+        }
+    </style>
+    <div class="row" style="margin:10px">
+        {% if user.is_authenticated and user == post.author %}
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">名称</th>
+                    <th scope="col" colspan="2" class="text-center">参数</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>标题</td>
+                    <td id="new_title" class="changeableInfo"><span>{{ post.title }}</span></td>
+                    <td class="changeableInfo"><span class="badge badge-success"></span></td>
+                </tr>
+                <tr>
+                    <td>一级分类</td>
+                    <td id="new_category" class="changeableInfo"><span>{{ post.category }}</span></td>
+                    <td class="changeableInfo"><span class="badge badge-success"></span></td>
+                </tr>
+                <tr>
+                    <td>二级分类</td>
+                    <td id="new_subcategory" class="changeableInfo"><span>{{ post.subcategory }}</span></td>
+                    <td class="changeableInfo"><span class="badge badge-success"></span></td>
+                </tr>
+                <tr>
+
+                    <td>原创|转载</td>
+                    <td id="new_origin" class="changeableInfo"><span>{{ post.get_origin_name }}</span></td>
+                    <td class="changeableInfo"><span class="badge badge-success"></span></td>
+                </tr>
+                <tr>
+                    <td>摘要：</td>
+                    <td id="new_body" class="changeableInfo"><span>{{ post.body }}</span></td>
+                    <td class="changeableInfo"><span class="badge badge-success"></span></td>
+                </tr>
+                <tr>
+                    <td>文件：</td>
+                    <td id="new_file" class="changeableInfo"><span>{{ post.get_post_file_name }}</span></td>
+                    <td class="changeableInfo"><span class="badge badge-success"></span></td>
+                </tr>
+                </tbody>
+            </table>
+            <button class="btn btn-primary" id="postChangeSubmit">提交修改</button>
+            <a href="{% url 'author_post' user.id %}" class="btn btn-primary" type="button">取消</a>
+            <hr>
+            <div class="form-group">
+                <form method="post" enctype="multipart/form-data" onkeydown="if(event.keyCode==13){return false;}">
+                    <button class="btn btn-primary" id="postChangeSubmitTrue" style="display: none">提交修改</button>
+                    <h3>编辑</h3>
+                    {% csrf_token %}
+                    {#                {{ form.media }}#}
+                    {#                {{ form.as_p }}#}
+                    <div class="row margin-top-10">
+                        <div class="fieldWrapper col-md-6">
+                            {{ form.title.errors }}
+                            <i class="pull-left icon iconfont icon-miaoshu"></i>&nbsp;
+                            <label for="{{ form.title.id_for_label }}" class="">标题</label>
+                            {{ form.title }}
+                        </div>
+                        <div class="fieldWrapper col-md-6">
+                            {{ form.post_file.errors }}
+                            <i class="pull-left icon iconfont icon-shangchuan"></i>&nbsp;
+                            <label for="{{ form.post_file.id_for_label }}">上传PDF文件</label>
+                            {{ form.post_file }}
+                        </div>
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="fieldWrapper col-md-6">
+                            {{ form.category.errors }}
+                            <i class="pull-left icon iconfont icon-fenlei1">
+                            </i>&nbsp;
+                            <label for="{{ form.category.id_for_label }}">一级分类</label>
+                            {{ form.category }}
+                        </div>
+                        <div class="fieldWrapper col-md-6">
+                            {{ form.subcategory.errors }}
+                            <i class="pull-left icon iconfont icon-iconfontfenlei">
+                            </i>&nbsp;
+                            <label for="{{ form.subcategory.id_for_label }}">二级分类</label>
+                            {{ form.subcategory }}
+                        </div>
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="fieldWrapper col-md-12">
+                            {{ form.origin.errors }}
+                            <i class="pull-left icon iconfont icon-biangeng">
+                            </i>&nbsp;
+                            <label for="{{ form.origin.id_for_label }}">原创|转载</label>
+                            {{ form.origin }}
+                        </div>
+                    </div>
+
+                    <div class="row margin-top-10">
+                        <div class="fieldWrapper col-md-12">
+                            {{ form.body.errors }}
+                            <i class="pull-left icon iconfont icon-chunwenben">
+                            </i>&nbsp;
+                            <label for="{{ form.body.id_for_label }}">修改摘要</label>
+                            {{ form.body }}
+                        </div>
+                    </div>
+                    <br>
+                    <iframe class="embed-responsive-item" id="pdf" src="{{ post.post_file.url }}" width="100%"
+                            height="1000px">
+                    </iframe>
+
+                </form>
+
+            </div>
+        {% else %}
+            暂无权限
+        {% endif %}
+    </div>
+    <div class="loader" style="height: auto">
+        <div class="loaderInfo text-light text-center"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            var loader = $('.loader')
+            loader.hide();
+            let categoryFunc = function () {
+                let options = $('#id_category option:selected');
+                let lv1_cat_value = options.val();
+
+                $.ajax({
+                    url: '/add_post/get_subcategory/',
+                    data: {'lv1_cat': lv1_cat_value},
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        var content = "";
+                        $.each(data, function (i, item) {
+                            content += '<option value' + item + '>' + item + '</option>'
+                        });
+                        $('#id_subcategory').html(content);
+                    },
+                })
+            }
+            categoryFunc();
+
+            $("#id_category").change(function () {
+                categoryFunc();
+                let newCategory = $("#new_category")
+                newCategory.siblings().last().children().first()[0].innerText = $(this).val();
+                $("#new_subcategory").siblings().last().children().first()[0].innerText = "";
+            })
+
+            $("#id_title").change(function () {
+                let newtitle = $("#new_title")
+                newtitle.siblings().last().children().first()[0].innerText = $(this).val();
+            })
+
+            $("#id_subcategory").change(function () {
+                let newSubcategory = $("#new_subcategory")
+                newSubcategory.siblings().last().children().first()[0].innerText = $(this).val();
+            })
+
+            $("#id_body").change(function () {
+                let newBody = $("#new_body")
+                newBody.siblings().last().children().first()[0].innerText = $(this).val();
+            })
+            $("#id_post_file").change(function () {
+                let new_file = $("#new_file")
+                new_file.siblings().last().children().first()[0].innerText = $(this).val().split(/(\\|\/)/g).pop();
+            })
+            let originOptions = $("#id_origin option")
+            $(function () {
+                $.each(originOptions, function (idx, opt) {
+                    if (opt.innerText === 'origin') {
+                        opt.innerText = '原创'
+                    } else if (opt.innerText === 'reproduction') {
+                        opt.innerText = '转载'
+                    } else {
+                        opt.hidden = true
+                    }
+                })
+            })
+
+            $("#id_origin").change(function () {
+                let newOrigin = $("#new_origin");
+                let optionsValue = $(this).val();
+                if (optionsValue === '1') {
+                    newOrigin.siblings().last().children().first()[0].innerText = '原创'
+                } else {
+                    newOrigin.siblings().last().children().first()[0].innerText = '转载'
+                }
+            })
+
+            $("#postChangeSubmit").on('click', function () {
+                $(".loaderInfo")[0].textContent = '提交修改中';
+                loader.show();
+                $("#postChangeSubmitTrue").click()
+
+            })
+
+        })
+
+    </script>
 {% endblock %}

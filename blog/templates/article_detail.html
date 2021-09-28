@@ -49,15 +49,15 @@
 
         {% endif %}
         <br/>
-        <a href="{% url 'home' %}" class="btn btn-secondary">Back</a>
+        <a href="{% url 'home' %}" class="btn btn-primary">返回</a>
         <br/><br/>
         <hr>
-        {% if user.is_authenticated and post.publish %}
-            <form action="{% url 'like_post' post.pk %}" method="post">
-                {% csrf_token %}
-                <button type="submit" , name="post_id" value="{{ post.id }}" class="btn btn-primary btn-sm">like
-                </button>
-            </form>
-        {% endif %}
+{#        {% if user.is_authenticated and post.publish %}#}
+{#            <form action="{% url 'like_post' post.pk %}" method="post">#}
+{#                {% csrf_token %}#}
+{#                <button type="submit" , name="post_id" value="{{ post.id }}" class="btn btn-primary btn-sm">like#}
+{#                </button>#}
+{#            </form>#}
+{#        {% endif %}#}
     </div>
 {% endblock %}

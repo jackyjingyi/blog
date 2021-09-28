@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
     <style>
 
@@ -44,153 +44,162 @@
 
         <!-- Tab panes -->
         <div class="tab-content" id="myTabContent">
-            <div role="tabpanel" class="tab-pane fade in active" id="approving"> {% if object_list %}
-                <br>
-                <small>
-                    共{{ object_list.count }}篇
-                    <div class="btn-group" role="group">
-                        <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle btn-sm"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                            批量操作
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                            <li>
+            <div role="tabpanel" class="tab-pane fade in active" id="approving">
+                {% if object_list %}
+                    <br>
+                    <small>
+                        共{{ object_list.count }}篇
+                        <div class="dropdown">
+                            <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle btn-sm"
+                                    data-toggle="dropdown" aria-expanded="false">
+                                批量操作
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                                <li>
 
-                                <button id="approveALL"
-                                        class="list-group-item list-group-item-action btn-sm">
-                                    批量通过
-                                </button>
-                            </li>
-                            <li>
-                                <button id="denyALL"
-                                        class="list-group-item list-group-item-action btn-sm">
-                                    批量驳回
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                </small>
-                <hr style="margin-bottom: 2px; margin-top:5px">
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th scope="col" class="col-md-half">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value=""
-                                       id="flexCheckDefault_approving">
-                                <label class="form-check-label" for="flexCheckDefault_approving">
-                                </label>
-                            </div>
-                        </th>
-                        <th scope="col" class="col-md-1">ID</th>
-                        <th scope="col" class="col-md-4">文章名称</th>
-                        <th scope="col" class="col-md-1">来源</th>
-                        <th scope="col" class="col-md-1">标签</th>
-                        <th scope="col" class="col-md-1">作者</th>
-                        <th scope="col" class="col-md-1">提交日期</th>
-                        <th scope="col" class="col-md-1">操作</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for post in object_list %}
+                                    <button id="approveALL"
+                                            class="list-group-item list-group-item-action btn-sm">
+                                        批量通过
+                                    </button>
+                                </li>
+                                <li>
+                                    <button id="denyALL"
+                                            class="list-group-item list-group-item-action btn-sm">
+                                        批量驳回
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </small>
+                    <hr style="margin-bottom: 2px; margin-top:5px">
+                    <table class="table table-bordered">
+                        <thead>
                         <tr>
-                            <td class="col-md-half">
-
+                            <th scope="col" class="col-md-half">
                                 <div class="form-check">
-
-                                    <input class="form-check-input-app" type="checkbox" value="{{ post.pk }}"
-                                           id="flexCheckDefault">
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                    <input class="form-check-input" type="checkbox" value=""
+                                           id="flexCheckDefault_approving">
+                                    <label class="form-check-label" for="flexCheckDefault_approving">
                                     </label>
                                 </div>
-                            </td>
-                            <td>
-                                <small>{{ forloop.counter }}</small>
-                            </td>
-                            <td>
-                                <small><a
-                                        href="{% url 'approval_articel_detail' user.id post.pk %}">{{ post.title }}</a></small>
-                            </td>
-                            <td>
-                                <small>{{ post.author.groups.all.0.name }}</small>
-                            </td>
-                            <td><small><a
-                                    href="{% url 'category' post.category %}">{{ post.category }}</a></small>
-                            </td>
-                            <td>
-                                <small><a
-                                        href="{% url 'author_post' post.author.id %}">{{ post.author.first_name }}</a></small>
-                            </td>
-                            <td>
-                                <small>{{ post.submit_time|date:"Y年n月d日" }}</small>
-                            </td>
-                            <td>
-                                <small><a href="" class="singleApproval">通过</a></small>
-                                <small><a href="" class="singleDeny">驳回</a> </small>
-                            </td>
-
+                            </th>
+                            <th scope="col" class="col-md-1">ID</th>
+                            <th scope="col" class="col-md-4">文章名称</th>
+                            <th scope="col" class="col-md-1">来源</th>
+                            <th scope="col" class="col-md-1">标签</th>
+                            <th scope="col" class="col-md-1">作者</th>
+                            <th scope="col" class="col-md-1">提交日期</th>
+                            <th scope="col" class="col-md-1">操作</th>
                         </tr>
+                        </thead>
+                        <tbody>
+                        {% for post in object_list %}
+                            <tr>
+                                <td class="col-md-half">
 
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% else %}
-                暂无
-            {% endif %}</div>
-            <div role="tabpanel" class="tab-pane fade" id="approved">{% if approved_list_by_user.count > 0 %}
-                <small>共{{ approved_list_by_user.count }}篇</small>
-                <table class="table table-bordered">
-                    <thead>
-                    <tr>
-                        <th scope="col" class="col-md-1">ID</th>
-                        <th scope="col" class="col-lg-4">文章名称</th>
-                        <th scope="col" class="col-md-1">组</th>
-                        <th scope="col" class="col-md-1">标签</th>
-                        <th scope="col" class="col-md-1">提交人</th>
-                        <th scope="col" class="col-md-1">提交日期</th>
-                        {#                        <th scope="col" class="col-md-1">已提交天数</th>#}
-                        <th scope="col" class="col-md-1">当前状态</th>
-                        <th scope="col" class="col-md-1">报送状态</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {% for post in approved_list_by_user %}
+                                    <div class="form-check">
+
+                                        <input class="form-check-input-app" type="checkbox" value="{{ post.pk }}"
+                                               id="flexCheckDefault">
+                                        <label class="form-check-label" for="flexCheckDefault">
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <small>{{ forloop.counter }}</small>
+                                </td>
+                                <td>
+                                    <small><a
+                                            href="{% url 'approval_articel_detail' user.id post.pk %}">{{ post.title }}</a></small>
+                                </td>
+                                <td>
+                                    <small>{{ post.author.groups.all.0.name }}</small>
+                                </td>
+                                <td><small><a
+                                        href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                                </td>
+                                <td>
+                                    <small><a
+                                            href="{% url 'author_post' post.author.id %}">{{ post.author.first_name }}</a></small>
+                                </td>
+                                <td>
+                                    <small>{{ post.submit_time|date:"Y年n月d日" }}</small>
+                                </td>
+                                <td>
+                                    <small><a href="" class="singleApproval">通过</a></small>
+                                    <small><a href="" class="singleDeny">驳回</a> </small>
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                     <div class="m-b-xl m-t-md">
+                        <img src="{% static 'assets/img/default/without_data.png' %}" style="display: block;margin:0 auto;" alt="没有相关数据">
+                        <span class="fc-dark-blue dp-block" style="text-align: center">没有相关数据</span>
+                    </div>
+                {% endif %}</div>
+            <div role="tabpanel" class="tab-pane fade" id="approved">
+                {% if approved_list_by_user.count > 0 %}
+                    <small>共{{ approved_list_by_user.count }}篇</small>
+                    <table class="table table-bordered">
+                        <thead>
                         <tr>
-                            <td>
-                                <small>{{ forloop.counter }}</small>
-                            </td>
-                            <td>
-                                <small><a
-                                        href="{% url 'article_detail' post.pk %}">{{ post.title }}</a></small>
-                            </td>
-                            <td>
-                                <small>{{ post.author.groups.all.0.name }}</small>
-                            </td>
-                            <td><small><a
-                                    href="{% url 'category' post.category %}">{{ post.category }}</a></small>
-                            </td>
-                            <td>
-                                <small><a
-                                        href="{% url 'author_post' post.author.id %}">{{ post.author.first_name }}</a></small>
-                            </td>
-                            <td>
-                                {#                                后面改为submittime#}
-                                <small>{{ post.post_date|date:"Y年n月d日" }}</small>
-                            </td>
-                            <td>
-                                <small>{{ post.get_status_verbose_name }}</small>
-                            </td>
-                            <td>
-                                <small>{{ post.get_oa_status_verbose_name }}</small>
-                            </td>
+                            <th scope="col" class="col-md-1">ID</th>
+                            <th scope="col" class="col-lg-4">文章名称</th>
+                            <th scope="col" class="col-md-1">组</th>
+                            <th scope="col" class="col-md-1">标签</th>
+                            <th scope="col" class="col-md-1">提交人</th>
+                            <th scope="col" class="col-md-1">提交日期</th>
+                            {#                        <th scope="col" class="col-md-1">已提交天数</th>#}
+                            <th scope="col" class="col-md-1">当前状态</th>
+                            <th scope="col" class="col-md-1">报送状态</th>
                         </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        {% for post in approved_list_by_user %}
+                            <tr>
+                                <td>
+                                    <small>{{ forloop.counter }}</small>
+                                </td>
+                                <td>
+                                    <small><a
+                                            href="{% url 'article_detail' post.pk %}">{{ post.title }}</a></small>
+                                </td>
+                                <td>
+                                    <small>{{ post.author.groups.all.0.name }}</small>
+                                </td>
+                                <td><small><a
+                                        href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                                </td>
+                                <td>
+                                    <small><a
+                                            href="{% url 'author_post' post.author.id %}">{{ post.author.first_name }}</a></small>
+                                </td>
+                                <td>
+                                    {#                                后面改为submittime#}
+                                    <small>{{ post.post_date|date:"Y年n月d日" }}</small>
+                                </td>
+                                <td>
+                                    <small>{{ post.get_status_verbose_name }}</small>
+                                </td>
+                                <td>
+                                    <small>{{ post.get_oa_status_verbose_name }}</small>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
 
-            {% else %}
-                暂无
-            {% endif %}</div>
+                {% else %}
+                    <div class="m-b-xl m-t-md">
+                        <img src="{% static 'assets/img/default/without_data.png' %}" style="display: block;margin:0 auto;" alt="没有相关数据">
+                        <span class="fc-dark-blue dp-block" style="text-align: center">没有相关数据</span>
+                    </div>
+                {% endif %}
+            </div>
         </div>
 
     </div>

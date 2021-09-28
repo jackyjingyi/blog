@@ -6,17 +6,17 @@
 {% endblock %}
 
 {% block content %}
-    <div class="row g-5">
+    <div class="row" style="margin:10px">
         <div class="col-md-8">
             <h3 class="pb-4 mb-4 fst-italic border-bottom">
                 {{ cats }}
             </h3>
             {% if category_posts %}
 
-                <ul>
+                <ul style="list-style: none">
                     {% for post in category_posts %}
-
-                        <li><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
+                        【<small class="text-primary">{{ post.subcategory }}</small>】
+                        <li style="padding-left: 10px"><a href="{% url 'article_detail' post.pk %}">{{ post.title }}</a>
                             - <small><a
                                     href="{% url 'author_post' post.author.pk %}">{{ post.author.first_name }}</a></small>
                             <small>来源：<a
@@ -31,11 +31,12 @@
                 暂无文章
             {% endif %}
         </div>
-        <div class="col-md-4">
+        <div class="col-md-2">
             <div class="position-sticky" style="top: 2rem;">
                 <div class="p-4 mb-3 bg-light rounded">
                     <h4 class="fst-italic">关于</h4>
-                    <p class="mb-0">创研院文件报送系统使用中如有问题，请及时联系，谢谢支持。</p>
+                    <p class="mb-0">创研院文件报送系统，您可以<a href="{% static 'video/handbook.mp4' %}" target="_blank">观看视频</a>学习如何使用,或者查看<a
+                            href="/article/140">使用指南。</a>使用中如有问题，请及时联系，谢谢支持。</p>
                 </div>
 
                 <div class="p-4">
@@ -52,11 +53,17 @@
                         <li><a href="#">2021 9月</a></li>
                     </ol>
                 </div>
-
-
             </div>
         </div>
     </div>
+    <script>
+        $(document).ready(function () {
+            $('#secondaryMenu').append(
+                "<li class='fa fa-angle-right active fw-bold'>" + "分类预览" + "</li>"+
+                "<li class='fa fa-angle-right active fw-bold'>" + "{{ cats }}" + "</li>"
+            )
+        })
+    </script>
 
 
 {% endblock %}

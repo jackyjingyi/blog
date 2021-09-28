@@ -1,56 +1,72 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<style>
-.sticky-offset {
-    top: 300px
-}
-</style>
     <br>
     <hr>
     <div class="row">
-        <div class="col-2" style="width: 220px">
-            <div class="position-sticky" style="top: 2rem;">
-                <div class="p-4 mb-3 bg-light rounded">
-                    <h4 class="fst-italic text-dark">查看各组</h4>
-                    <ul class="list-group-flush bg-light p-0">
-                        {% for item in group %}
-                            <li class="list-group-item bg-light">
-                                <button type="button" class="group-list btn btn-light d-inline-flex align-items-start"
-                                        value="{{ item.name }}">{{ item.name }}</button>
+        <div class="col-md-2">
+            <nav class="navbar-default navbar-static-side m-metismenu" role="navigation">
+                <div class="sidebar-collapse">
+                    <ul class="nav metismenu" id="side-menu" style="display: block;">
+                        <li class="navbar-minimalize">
+                        </li>
+                        <li class="selected">
+                            <a class="svg" href="javascript:void(0);">
+                                <i class="pull-left icon iconfont icon-tongji">
+                                </i>
+                                <span class="nav-label pull-left">各组统计</span>
+                                <span class="fa arrow"></span>
+                                <div class="clearfix">
+                                </div>
+                            </a>
+                            <ul class="nav nav-second-level collapse in">
+                                {% for item in group %}
+                                    <li class="liGroupList0 active" value="{{ item.name }}">
+                                        <a href="javascript:void(0)" class="groupList" type="button"
+                                        >
+                                            <span>{{ item.name }}</span>
+                                        </a>
 
-                            </li>
-                        {% endfor %}
-                        <li class="list-group-item bg-light">
-                            <button type="button" class="btn btn-light d-inline-flex align-items-start"
-                                    value="back" id="backButton">返回
-                            </button>
+                                    </li>
+                                {% endfor %}
+                                <li class="liGroupList1 active" id="backButton">
+
+                                    <a href="javascript:void(0)" class="groupList" type="button"
+                                    >
+                                        <span>返回</span>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </div>
-
-            </div>
+            </nav>
         </div>
-        <div class="col-10">
+
+        <div class="col-md-10">
             <h3 class="text-center">统计图表</h3>
-            <div class="row" id="user-display" style="background-color: snow"></div>
-            <div class="row">
-                <div id="staticCharts" class="col-6" style="width: 100%;height: 1800px"></div>
+            <div class="row" id="user-display" style="background-color: snow;margin: 20px;padding: 15px"></div>
+            <div class="row" style="margin: 50px;padding: 15px">
+                <div id="staticCharts" class="col-6" style="width: auto;height: 1800px"></div>
             </div>
-            <hr>
-            <div class="row">
-                <h5 id="title0" class="fst-italic bg-light rounded"></h5>
-                <table class="table table-striped table-bordered" id="dataset0">
-                    <thead></thead>
-                    <tbody></tbody>
-                </table>
+            <br>
+            <div class="row" style="margin: 20px;padding: 15px">
+                <div class="col-md-12 margin-right-15">
+                    <h5 id="title0" class="fst-italic bg-light rounded" style="margin: 20px"></h5>
+                    <table class="table table-striped table-bordered" id="dataset0" >
+                        <thead></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
-            <div class="row">
-                <h5 id="title1" class="fst-italic bg-light rounded"></h5>
-                <table class="table table-striped table-bordered" id="dataset1">
-                    <thead></thead>
-                    <tbody></tbody>
-                </table>
+            <div class="row" style="margin: 20px;padding: 15px">
+                <div class="col-md-12 margin-right-15">
+                    <h5 id="title1" class="fst-italic bg-light rounded" style="margin: 20px"></h5>
+                    <table class="table table-striped table-bordered" id="dataset1">
+                        <thead></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
             </div>
 
 
@@ -62,6 +78,9 @@
 
         $(document).ready()
         {
+            $('#secondaryMenu').append(
+                "<li class='fa fa-angle-right active fw-bold'>" + "统计图表" + "</li>"
+            )
             let tableDataset0Th = $("#dataset0 thead")
             let tableDataset0Tb = $("#dataset0 tbody")
             let tableDataset1Th = $("#dataset1 thead")
@@ -316,7 +335,8 @@
             }
             chartFunc();
 
-            $(".group-list").click(function () {
+            $(".liGroupList0").click(function () {
+
                 echarts.dispose(chartDom);
                 tableDataset0Th.empty();
                 tableDataset0Tb.empty();
@@ -324,7 +344,9 @@
                 tableDataset1Tb.empty();
                 title0[0].textContent = '';
                 title1[0].textContent = '';
-                let name = $(this).val();
+
+                let name = $(this)[0].innerText;
+
                 // get groups data
                 chartDom.style.height = '550px'
                 let myChart = echarts.init(chartDom)
@@ -344,17 +366,17 @@
                         $.each(memberList, function (idx, item) {
                             if (item.headimg === undefined || item.headimg === '') {
                                 userList.append(
-                                    "<div class='col-4 p-2 text-start ps-5'>" +
+                                    "<div class='col-md-2 text-start margin-bottom-20 margin-top-15' style='margin-left:15px'>" +
                                     "<a href='#' class='user-func link-secondary p-3 bg-light'>" +
-                                    "<image src='/static/bootstrap/icons/person-circle.svg' style='width: 36px; height:36px' class='rounded-circle p-0'>" + "<span class='p-2 text-info'>" + item.first_name + "</span>" +
+                                    "<image src='/static/bootstrap/icons/person-circle.svg' style='width: 36px; height:36px' class='img-circle'>" + "<span class='p-2 text-info'>" + item.first_name + "</span>" +
                                     "</a><small class='text-info'>" + item.published + "篇</small>" +
                                     "</div>"
                                 )
                             } else {
                                 userList.append(
-                                    "<div class='col-4 p-2 text-start ps-5'>" +
+                                    "<div class='col-md-2 text-start margin-bottom-20 margin-top-15' style='margin-left:15px'>" +
                                     "<a href='#' class='user-func link-secondary p-3 bg-light'>" +
-                                    "<img src='/static/" + item.headimg + "' style='width: 36px; height:36px' class='rounded-circle p-0' alt='" + item.first_name + "'+/>" + "<span class='p-2 text-info'>" + item.first_name + "</span>" +
+                                    "<img src='/static/" + item.headimg + "' style='width: 36px; height:36px' class='img-circle' alt='" + item.first_name + "'+/>" + "<span class='p-2 text-info'>" + item.first_name + "</span>" +
                                     "</a><small class='text-info bg-light'>" + item.published + "篇<small>" +
                                     "</div>"
                                 )
@@ -455,6 +477,7 @@
                             }
                         } else {
                             chartDom.style.height = '0px';
+
                         }
                     }
                 })
@@ -475,6 +498,7 @@
                 userList.empty();
                 chartFunc();
             });
+
         }
 
     </script>

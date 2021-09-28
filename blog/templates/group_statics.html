@@ -37,19 +37,24 @@
                             {% endfor %}
                         </ul>
                     {% endfor %}
-
+                {% else %}
+                    <div class="m-b-xl m-t-md">
+                        <img src="{% static 'assets/img/default/without_data.png' %}"
+                             style="display: block;margin:0 auto;" alt="没有相关数据">
+                        <span class="fc-dark-blue dp-block" style="text-align: center">没有相关数据</span>
+                    </div>
                 {% endif %}
 
             </div>
 
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-2">
             <div class="position-sticky" style="top: 2rem;">
                 <div class="p-4 mb-3 bg-light rounded">
                     <h4 class="fst-italic">关于</h4>
                     <p class="mb-0">创研院文件报送系统，您可以<a href="{% static 'video/handbook.mp4' %}" target="_blank">观看视频</a>学习如何使用,或者查看<a
-                            href="article/140">使用指南。</a>使用中如有问题，请及时联系，谢谢支持。</p>
+                            href="/article/140">使用指南。</a>使用中如有问题，请及时联系，谢谢支持。</p>
                 </div>
                 <div class="p-4">
                     <h4 class="fst-italic">组员</h4>
@@ -87,6 +92,16 @@
             $('#secondaryMenu').append(
                 "<li class='fa fa-angle-right'>" + "分组浏览" + "</li>" + "<li class='fa fa-angle-right active fw-bold'>" + "{{ selected_group }}" + "</li>"
             )
+            $.each($(".liGroupList"), function (idx, opt) {
+                let urlPath = decodeURI(window.location.pathname).split(/(\\|\/)/g)
+
+                if (opt.innerText === urlPath[4]) {
+                    $(opt).addClass('active')
+                } else {
+                    $(opt).removeClass('active')
+                }
+
+            })
 
             $('.author').each(
                 function (i, v) {

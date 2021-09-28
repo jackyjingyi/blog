@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
     <style>
 
@@ -53,7 +53,8 @@
                             <br>
                             <small>
                                 <div class="dropdown">
-                                    <button id="dLabel1" type="button" data-toggle="dropdown" aria-haspopup="true"
+                                    <button id="dLabel1" type="button" class="btn btn-sm btn-primary"
+                                            data-toggle="dropdown" aria-haspopup="true"
                                             aria-expanded="false">
                                         批量操作
                                         <span class="caret"></span>
@@ -125,8 +126,8 @@
                                                         href="{% url 'group_post' post.author.groups.first %}">{{ post.author.groups.first.name }}</a></small>
                                             </td>
                                             <td>
-                                                <small><a
-                                                        href="{% url 'category' post.category %}">{{ post.category }}</a></small>
+                                                <small class="text-info"><a
+                                                        href="{% url 'category' post.category %}">{{ post.category }}</a>-{{ post.subcategory }}</small>
                                             </td>
                                             <td>
                                                 <small>{{ post.post_date|date:"Y年n月d日" }}</small>
@@ -188,7 +189,11 @@
                                 {% endif %}
                             </div>
                         {% else %}
-                            暂无
+                            <div class="m-b-xl m-t-md">
+                                <img src="{% static 'assets/img/default/without_data.png' %}"
+                                     style="display: block;margin:0 auto;" alt="没有相关数据">
+                                <span class="fc-dark-blue dp-block" style="text-align: center">没有相关数据</span>
+                            </div>
                         {% endif %}
 
                     </div>
@@ -280,7 +285,11 @@
                                 {% endif %}
                             </div>
                         {% else %}
-                            暂无
+                            <div class="m-b-xl m-t-md">
+                                <img src="{% static 'assets/img/default/without_data.png' %}"
+                                     style="display: block;margin:0 auto;" alt="没有相关数据">
+                                <span class="fc-dark-blue dp-block" style="text-align: center">没有相关数据</span>
+                            </div>
                         {% endif %}
                     </div>
                     <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
@@ -289,7 +298,8 @@
                             <br>
                             <small style="margin-top: 10px">
                                 <div class="dropdown">
-                                    <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true"
+                                    <button id="dLabel" type="button" class="btn btn-sm btn-primary"
+                                            data-toggle="dropdown" aria-haspopup="true"
                                             aria-expanded="false">
                                         批量操作
                                         <span class="caret"></span>
@@ -387,7 +397,11 @@
                             </table>
 
                         {% else %}
-                            暂无
+                            <div class="m-b-xl m-t-md">
+                                <img src="{% static 'assets/img/default/without_data.png' %}"
+                                     style="display: block;margin:0 auto;" alt="没有相关数据">
+                                <span class="fc-dark-blue dp-block" style="text-align: center">没有相关数据</span>
+                            </div>
                         {% endif %}
                     </div>
                 </div>
