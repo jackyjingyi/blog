@@ -24,6 +24,7 @@ INSTALLED_APPS = [
     'taggit',
     'taggit_labels',
     'crispy_forms',
+    'ApprovalSystemOCT',
 ]
 
 MIDDLEWARE = [
@@ -42,7 +43,7 @@ REST_FRAMEWORK = {
     # Use Django's standard `django.contrib.auth` permissions,
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        'rest_framework.permissions.AllowAny'
     ]
 }
 CORS_ORIGIN_ALLOW_ALL = True
@@ -80,6 +81,9 @@ DATABASES = {
         'PASSWORD': 'Jack733079!',
         'HOST': '127.0.0.1',
         'PORT': '3306',
+        # 'OPTIONS': {
+        #     "init_command": "SET foreign_key_checks = 0;",
+        # }
     }
 }
 

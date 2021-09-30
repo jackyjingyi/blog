@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <p>书名：{{ book.book_name }}</p>
+    <p>作者：{{ book.author }}</p>
+    <p>日期：{{ book.publish_date|date:"Y年n月d日" }}</p>
+    <div class="row">
+        {% if process %}
+            <p>流程：{{ process }}</p>
+        {% endif %}
+    </div>
+    <div class="row">
+        {% if task %}
+            {% for item in task %}
+                <p>任务{{ forloop.counter }}：{{ item }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
+    <div class="row">
+        {% if step %}
+            {% for item in step %}
+                {{ item|safe }}
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}

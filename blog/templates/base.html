@@ -142,7 +142,9 @@
                                 <button class="btn btn-sm btn-outline no-padding btn-warning">
                                     我的待办
                                     <span id="unReadTodoCount" class="label-warning"></span>
+
                                 </button>
+                                <span class="badge bg-danger" style="">1</span>
                             </a>
                         {% elif role == '1' or role == '4' or role == '5' %}
                             <a class="messageInfo" href="{% url 'author_post' user.id %}" data-action="myTasks"
@@ -150,7 +152,11 @@
                                 <button class="btn btn-sm btn-outline no-padding btn-warning">
                                     我的待办
                                     <span id="unReadTodoCount" class="label-warning"></span>
+
                                 </button>
+                                <span class="badge bg-danger" style="margin-left: -10px; margin-top: -15px">
+                                    10
+                                </span>
                             </a>
                         {% else %}
                             <a class="messageInfo" href="{% url 'login' %}" data-action="myTasks"
@@ -227,7 +233,7 @@
                             <div class="no-margins p-h-sm breadcrumb-box">
                                 <ol class="breadcrumb" id="secondaryMenu">
                                     <li class="backToMainButton">
-                                        <a href="{% url 'home' %}">首页</a></li>
+                                        <a href="/">首页</a></li>
                                 </ol>
                             </div>
                         </div>
@@ -238,7 +244,20 @@
                 <div class="ibox-content" id="content-box" style="position: static;zoom: 1">
                     <div class="row">
                         <div class="col-sm-12">
+                            <form class="form-inline d-flex justify-content-center md-form "
+                                  action="{% url 'search_items' %}" method="post">
+                                {% csrf_token %}
+                                <input class="form-control form-control-sm mr-3 w-75" type="text"
+                                       placeholder="Search"
+                                       aria-label="Search" name="searched">
+                                <button class="btn btn-outline" type="submit" id="search_button">
+                                    <i class="fa fa-search"
+                                       aria-hidden="true"></i>
+                                </button>
+
+                            </form>
                             {% block content %}
+
                             {% endblock %}
                         </div>
                     </div>

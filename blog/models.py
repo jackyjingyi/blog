@@ -82,7 +82,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.PROTECT)
     body = models.TextField(verbose_name="摘要", blank=True, null=True)
     post_date = models.DateTimeField(auto_now_add=True)
-    post_file = models.FileField(verbose_name="上传文件", upload_to=get_absolute_upload_path())
+    post_file = models.FileField(verbose_name="上传文件", upload_to=get_absolute_upload_path)
     category = models.CharField(max_length=255, default='旅游', verbose_name="分类")
     subcategory = models.CharField(max_length=255, default='旅游', verbose_name="二级分类")
     source = models.CharField(max_length=255, default='大数据组', verbose_name="组别")
@@ -309,8 +309,6 @@ class Post(models.Model):
 
     def get_oa_status_verbose_name(self):
         return OA_STATUS_VERBOSE_NAME.get(self.oa_status)
-
-
 
 
 class Profile(models.Model):
