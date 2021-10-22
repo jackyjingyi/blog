@@ -1,0 +1,551 @@
+{% extends 'projectBase.html' %}
+{% load static %}
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/datepicker/jquery.datetimepicker.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/iconfont/iconfont/css/iconfont.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/iconfont/iconfont/css/iconfont-animate.min.css' %}">
+    <style>
+
+        .icon-list {
+            cursor: pointer;
+            text-align: center;
+            color: #757575;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .icon-list li {
+            width: 12.5%;
+        }
+
+        .icon-list li {
+            float: left;
+            width: 12.5%;
+            height: 100px;
+            padding: 10px;
+            line-height: 1.4;
+            text-align: center;
+            background-color: #f9f9f9;
+            border: 1px solid #fff;
+        }
+
+        .icon-list li:hover {
+            color: #FFFFFF;
+            background-color: #ff7e00;
+        }
+
+        .icon-list .caption {
+            display: block;
+            text-align: center;
+            word-wrap: break-word;
+            font-size: 12px;
+        }
+
+        .icon-category-header {
+            padding-bottom: 9px;
+            margin: 40px 0 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        @media (max-width: 768px) {
+            .icon-list li {
+                width: 25%;
+            }
+        }
+
+        .if {
+            font-size: 36px;
+        }
+
+    </style>
+
+    <div class="row" style="margin:30px">
+        <h2 class="text-center"><strong>{{ template_name }}</strong></h2>
+        <table id="infoPanel" class="table table-bordered"
+               style="background-color: whitesmoke; box-shadow: 10px 5px 5px floralwhite;padding:5px">
+
+            <thead class="table table-head-wrap">
+            <tr>
+                <th scope="col">课题录入说明</th>
+            </tr>
+            </thead>
+            <tbody class="table-content">
+            <tr>
+                <td>
+                    如果课题录入未开始，展示说明内容；如果已经开始，展示下面的表单
+                </td>
+            </tr>
+            </tbody>
+
+        </table>
+        <table id="processPanel" class="table table-bordered"
+               style="background-color: whitesmoke; box-shadow: 10px 5px 5px floralwhite;padding:5px">
+
+            <thead>
+            <tr>
+                <th colspan="1" id="projectWorkTitle">
+                    创建课题录入工作薄
+                </th>
+            </tr>
+
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    询问是否创建工作簿；如果确认，发送ajax请求创建对应流程；并展示表单
+                    <ul style="list-style: none" class="icon-list">
+                        <li id="createProcess" class="ifa"
+                            style="width: 100px;box-shadow: 10px 5px 5px floralwhite;padding:5px"
+                            data-toggle="collapse" data-target="#inputPanel">
+                            <i class="if if-workflow ifa-pulse ifa-infinite"></i>
+                            <span class="caption">创建工作薄</span>
+                        </li>
+
+                    </ul>
+                    流程图
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+
+        <div id="inputPanel" class="table table-bordered collapse"
+             style="background-color: whitesmoke; box-shadow: 10px 5px 5px floralwhite;padding:5px">
+            <div class="form-group" style="margin:30px">
+
+                <form class="g-3 needs-validation" enctype="multipart/form-data" id="create_project" novalidate>
+                    {% csrf_token %}
+                    <div class="row margin-top-10">
+                        <div class="col-md-12">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_name"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                研究课题
+                            </strong></label>
+                            <input name="project_name" type="text" class="form-control" id="project_name1"
+                                   maxlength="255"
+                                   placeholder="请输入项目名称"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="col-md-3">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_type"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                课题类型
+                            </strong></label>
+                            <select name="project_type" class="form-control" id="project_type" required>
+                                {% for t in project_types %}
+                                    <option value="{{ t.0 }}">{{ t.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_research_direction"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                研究方向
+                            </strong></label>
+                            <select name="project_research_direction" class="form-control"
+                                    id="project_research_direction"
+                                    required>
+                                {% for t in project_directions %}
+                                    <option value="{{ t.0 }}">{{ t.1 }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_department_sponsor"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                需求单位联系人
+                            </strong></label>
+                            <input name="project_department_sponsor" type="text" class="form-control"
+                                   id="project_department_sponsor" maxlength="255"
+                                   placeholder="请输入联系人姓名"
+                                   required>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_department_phone"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                联系电话
+                            </strong></label>
+                            <input name="project_department_phone" type="text" class="form-control"
+                                   id="project_department_phone" maxlength="255"
+                                   placeholder="请输入联系电话"
+                                   required>
+                        </div>
+
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="col-md-12">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_department"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                需求单位
+                            </strong></label>
+                            <input name="project_department" type="text" class="form-control" id="project_department"
+                                   maxlength="255"
+                                   placeholder="请输入单位名称"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="col-md-3">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_research_funding"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                研究经费
+                            </strong></label>
+                            <input name="project_research_funding" type="text" class="form-control"
+                                   id="project_research_funding" maxlength="255"
+                                   placeholder="请输入研究经费"
+                                   required>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_outsourcing_funding"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                外协预算
+                            </strong></label>
+                            <input name="project_outsourcing_funding" type="text" class="form-control"
+                                   id="project_outsourcing_funding" maxlength="255"
+                                   placeholder="外协预算"
+                                   required>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_start_time"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                研究实施计划时间（起）
+                            </strong></label>
+                            <input name="project_start_time" type="text" class="form-control"
+                                   id="project_start_time" maxlength="255"
+                                   placeholder="项目开始时间"
+                                   required>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_end_time"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                研究实施计划时间（止）
+                            </strong></label>
+                            <input name="project_end_time" type="text" class="form-control"
+                                   id="project_end_time" maxlength="255"
+                                   placeholder="项目结束时间"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="col-md-12">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_co_group"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                联合工作小组成员及分工
+                            </strong></label>
+                            <textarea name="project_co_group" type="text" class="form-control" id="project_co_group"
+                                      placeholder="" , rows="15"
+                                      required>联合工作小组成员及分工:</textarea>
+                        </div>
+                    </div>
+
+                    <div class="row margin-top-10">
+                        <div class="col-md-12">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_detail"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                具体分项任务内容及安排
+                            </strong></label>
+                            <textarea name="project_detail" type="text" class="form-control" id="project_detail"
+                                      placeholder="" , rows="15"
+                                      required>具体分项任务内容及安排:</textarea>
+                        </div>
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="col-md-12">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_purpose"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                主要创新研究课题内容、目标及意义
+                            </strong></label>
+                            <textarea name="project_purpose" type="text" class="form-control" id="project_purpose"
+                                      placeholder="" , rows="15"
+                                      required>主要创新研究课题内容、目标及意义</textarea>
+                        </div>
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="col-md-12">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_preparation"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                与课题相关的前期工作情况，现有基础条件
+                            </strong></label>
+                            <textarea name="project_preparation" type="text" class="form-control"
+                                      id="project_preparation"
+                                      placeholder="" , rows="15"
+                                      required>与课题相关的前期工作情况，现有基础条件</textarea>
+                        </div>
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="col-md-12">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_difficult"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                研究课题的重点及难点
+                            </strong></label>
+                            <textarea name="project_difficult" type="text" class="form-control" id="project_difficult"
+                                      placeholder="" , rows="15"
+                                      required>研究课题的重点及难点:</textarea>
+                        </div>
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="col-md-12 margin-top-10">
+                            <button class="btn btn-primary" id="saveAsDraft">存为草稿</button>
+                            <button class="btn btn-primary" id="directSubmit">直接提交</button>
+                            {#                            <a href="{% url 'project_home' %}" class="btn btn-primary" id="cancelButton"#}
+                            {#                               role="button">取消</a>#}
+                            <button class="btn btn-primary" id="resetButton" type="reset">重置</button>
+                            <button class="btn btn-primary" id="cancleButton">取消</button>
+                        </div>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <button id="col1">click</button>
+    <script src="{% static 'lib/datepicker/jquery.datetimepicker.full.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            const csrftoken = getCookie('csrftoken');
+            var processOrderIDList = [];
+            var taskID = [];
+
+            $("#col1").on('click', function () {
+                let k = $("#projectWorkTitle")
+                k.attr('colspan',(parseInt(k.attr('colspan'))+1).toString())
+            })
+
+            $('#secondaryMenu').append(
+                "<li class='fa fa-angle-right'>" + "课题需求" + "</li>" + "<li class='fa fa-angle-right active fw-bold'>" + "{{ template_name }}" + "</li>"
+            )
+            $.each($(".liGroupList"), function (idx, opt) {
+                let urlPath = "{{ template_name }}"
+                if (opt.innerText === urlPath) {
+                    $(opt).addClass('active');
+                } else {
+                    $(opt).removeClass('active');
+                }
+            });
+            $('#project_start_time').datetimepicker({
+                format: 'Y-m-d H:i',
+                onShow: function (ct) {
+                    this.setOptions({
+                        maxDate: $('#project_end_time').val() ? $('#project_end_time').val() : false
+                    })
+                },
+
+            });
+            $('#project_end_time').datetimepicker({
+                format: 'Y-m-d H:i',
+                onShow: function (ct) {
+                    this.setOptions({
+                        minDate: $('#project_start_time').val() ? $('#project_start_time').val() : false
+                    })
+                },
+
+            });
+            $("#saveAsDraft").on("click", function (e) {
+
+                    e.preventDefault()
+                    var forms = $('#create_project')
+                    if (processOrderIDList.length < 1) {
+                        $.ajax({
+                            url: '/projectSystem/process/creation/',
+                            type: 'post',
+                            data: {'type': 'input'},
+                            async: false,
+                            success: function (data) {
+                                processOrderIDList.push(data.process[0].process_order_id);
+                                taskID.push(data.task[0].task_id);
+                                console.log(processOrderIDList, taskID)
+
+                                $("#processPanel tbody").append(
+                                    '<tr><td>' + "课题流程ID：" + data.process[0].process_order_id + '</td>' +
+                                    '<td>' + data.task[0].task_type + '</td></tr>'
+                                )
+
+
+                            },
+                            error: function (error_data) {
+                                console.log(error_data)
+                            },
+
+                        });
+                    }
+                    if (forms[0].checkValidity() === false && taskID.length > 0) {
+                        forms[0].reportValidity();
+                        e.stopPropagation();
+                    } else {
+                        var fd = new FormData;
+                        var x = forms.serializeArray().reduce(function (obj, item) {
+                            obj[item.name] = item.value;
+                            return obj;
+                        }, {});
+                        for (var key in x) {
+                            if (key === 'project_start_time' || key === 'project_end_time') {
+                                x[key] = x[key] + ":00.000000"
+                            }
+                            fd.append(key, x[key]);
+                        }
+
+                        $.ajax({
+                            url: '/projectSystem/projectRequirements/',
+                            type: 'post',
+                            data: fd,
+                            dataType: 'json',
+                            processData: false,
+                            contentType: false,
+                            beforeSend: function (xhr, settings) {
+                                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                    xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                                }
+                            },
+                            success: function (data) {
+                                console.log(data);
+                                let stepTaskID = taskID[0];
+                                let attachment = getAttachment('ApprovalSystemOCT', 'ProjectRequirement', data.id)
+                                let step = getStep(stepTaskID, attachment.attachment_uuid)
+                                let output = ""
+                                $.each(data, function (key, value) {
+                                    output += "<p>" + key + ": " + value + "</p>"
+                                });
+                                $("#processPanel tbody tr").last().append(
+                                    output
+                                );
+                                $("#inputPanel").removeClass('in');
+                                $("#resetButton").click();
+                            },
+                            error: function (error_data) {
+                                console.log(error_data.responseText)
+
+                            }
+                        })
+                    }
+                }
+            )
+            ;
+            var getAttachment = function (attachment_app_name, attachment_app_model, projectID) {
+
+                return JSON.parse($.ajax({
+                    url: '/projectSystem/attachment/',
+                    type: 'post',
+                    async: false,
+                    data: {
+                        'attachment_app_name': attachment_app_name,
+                        'attachment_app_model': attachment_app_model,
+                        'attachment_identify': projectID,
+                    },
+                    beforeSend: function (xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                        }
+                    },
+                    success: function (data) {
+                        console.log(data)
+                    },
+                    error: function (error_data) {
+                        console.log(error_data)
+                    }
+                }).responseText);
+
+            }
+
+            var getStep = function (taskID, attachmentID) {
+                console.log(taskID, attachmentID)
+                return JSON.parse($.ajax({
+                    'url': '/projectSystem/steps/',
+                    'type': 'post',
+                    'data': {
+                        'step_attachment': attachmentID,
+                        'task': taskID,
+                        'step_seq': 0,
+                        'step_attachment_snapshot': JSON.stringify(''),
+                        'step_owner': '{{ user.pk }}',
+                    },
+                    async: false,
+                    beforeSend: function (xhr, settings) {
+                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                            xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                        }
+                    },
+                    success: function (data) {
+                        console.log(data)
+
+                    },
+                    error: function (error_data) {
+                        console.log(error_data)
+                    }
+                }).responseText);
+            }
+
+            $("#createProcess").on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $("#inputPanel").addClass('in');
+            })
+            $("#cancleButton").on('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                $("#inputPanel").removeClass('in');
+                $("#resetButton").click();
+                if (processOrderIDList.length > 0) {
+                    processOrderIDList.pop();
+                    taskID.pop();
+                    $("#processPanel tbody tr").last().remove();
+                }
+
+
+            })
+        })
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function csrfSafeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+    </script>
+{% endblock %}

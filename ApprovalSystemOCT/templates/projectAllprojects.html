@@ -1,0 +1,107 @@
+{% extends 'projectBase.html' %}
+{% load static %}
+{% block content %}
+    <div class="row" style="margin:30px">
+        <div id="projectDetailDisplayPanel">
+
+        </div>
+        <div id="projectDisplyPanel">
+            {% if queryset %}
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col" colspan="2">课题名称</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for p in queryset %}
+                        <tr>
+                            <td value="{{ p.id }}" class="project_link">
+                                <a href="javascript:void(0)"><span>{{ p.project_name }}</span></a>
+                            </td>
+                            <td value="{{ p.id }}" class="wordTransform">
+                                <a href="javascript:void(0)"><span>生成word文档</span></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+    </div>
+    <button id="showTable" class="btn btn-sm btn-primary">返回</button>
+
+    <script>
+
+        $(document).ready(function () {
+            var projectDetailPanel = $("#projectDetailDisplayPanel");
+            var projectDisplyPanel = $("#projectDisplyPanel");
+            var projectVerboseName = JSON.parse('{{ project_verbose_name }}'.replace(/&quot;/g, '"'));
+
+            $('#secondaryMenu').append(
+                "<li class='fa fa-angle-right'>" + "课题需求" + "</li>" + "<li class='fa fa-angle-right active fw-bold'>" + "{{ template_name }}" + "</li>"
+            )
+            $.each($(".liGroupList"), function (idx, opt) {
+                let urlPath = "{{ template_name }}"
+                if (opt.innerText === urlPath) {
+                    $(opt).addClass('active');
+                } else {
+                    $(opt).removeClass('active');
+                }
+            });
+            $(".project_link").on('click', function () {
+                let requiredProjectId = $(this).attr("value")
+                let projecturl = "/projectSystem/projectRequirements/" + requiredProjectId + "/"
+                $.ajax({
+                    url: projecturl,
+                    type: 'get',
+                    success: function (data) {
+                        let Detail = "<ul style='list-style: none'>"
+                        for (var key in data) {
+                            if (projectVerboseName[key] != null) {
+                                Detail += "<li>" + projectVerboseName[key] + ": &nbsp;&nbsp;" + data[key] +
+                                    "</li>"
+                            }
+                        }
+                        Detail += "</ul>"
+                        projectDisplyPanel.hide();
+                        projectDetailPanel.empty();
+                        projectDetailPanel.html(Detail)
+                    }
+                })
+            });
+            $("#showTable").on('click', function () {
+                projectDisplyPanel.show();
+                projectDetailPanel.empty();
+
+            })
+            $('.wordTransform a').on('click', function () {
+                let target = $(this).parent()
+                let requirementID = $(this).parent().attr('value');
+                var docxurl = ''
+                function download2(fp) {
+                    var $form = $('<form method="GET"></form>');
+                    $form.attr('action', fp);
+                    $form.appendTo($('body'));
+                    $form.submit();
+                }
+
+                console.log(requirementID)
+                $.ajax({
+                    url: '/projectSystem/transform/ProjectRequirement/',
+                    type: 'post',
+                    async: false,
+                    data: {'requirement_id': requirementID},
+                    success: function (data) {
+                        console.log(data)
+                        docxurl = data['docx']
+                        console.log(docxurl, target)
+                        {#target.append(#}
+                        {#    "<a href="+docxurl+">下载</a>")#}
+                        download2(docxurl)
+                    }
+                })
+            })
+        })
+    </script>
+{% endblock %}

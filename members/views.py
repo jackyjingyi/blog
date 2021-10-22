@@ -8,6 +8,9 @@ from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.debug import sensitive_post_parameters
 from django.http import HttpResponseRedirect
+from django.utils.http import (
+    url_has_allowed_host_and_scheme, urlsafe_base64_decode,
+)
 
 class UserRegisterView(generic.CreateView):
     form_class = UserCreationForm
@@ -17,6 +20,8 @@ class UserRegisterView(generic.CreateView):
 
 class UserLoginView(LoginView):
     '''A LoginView with no CSRF protection.'''
+
+    redirect_authenticated_user = True
 
     @method_decorator(sensitive_post_parameters())
     @method_decorator(csrf_exempt)
@@ -30,3 +35,4 @@ class UserLoginView(LoginView):
                     'your LOGIN_REDIRECT_URL doesn\'t point to a login page.')
             return HttpResponseRedirect(redirect_to)
         return super(LoginView, self).dispatch(request, *args, **kwargs)
+

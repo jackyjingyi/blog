@@ -62,8 +62,16 @@
 
                         {% if all_members %}
                             {% for member in all_members %}
-                                <li><a href="" class="author">{{ member.first_name }}</a></li>
+                                {% if member.first_name != '李兰兰' %}
+
+                                    <li><a href="" class="author">{{ member.first_name }}</a></li>
+
+                                {% endif %}
+
                             {% endfor %}
+                            {% if selected_group == '康旅度假' %}
+                                <li><a href="" class="author">李兰兰</a></li>
+                            {% endif %}
                         {% endif %}
                     </ol>
                 </div>

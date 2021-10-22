@@ -1,0 +1,266 @@
+{% extends 'projectBase.html' %}
+{% load static %}
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/datepicker/jquery.datetimepicker.min.css' %}">
+    <div class="row" style="margin:30px">
+        <div class="selectPanel">
+            <button id="create_process_id">点击出现相关表单，加入“课题录入” “课题修改”等</button>
+        </div>
+        <div class="form-group">
+
+            <form class="g-3 needs-validation" enctype="multipart/form-data" id="create_process" novalidate>
+                {% csrf_token %}
+                <div class="row margin-top-10">
+                    <div class="col-md-3">
+                        <i class="pull-left icon iconfont icon-miaoshu">
+                        </i>&nbsp;
+                        <label for="process_name"
+                               class="form-label d-inline-block mb-2 text-primary"><strong>
+                            流程名称
+                        </strong></label>
+                        <input name="process_name" type="text" class="form-control" id="process_name" maxlength="255"
+                               placeholder="请输入流程名称"
+                               required>
+                    </div>
+                    <div class="col-md-3">
+                        <i class="pull-left icon iconfont icon-miaoshu">
+                        </i>&nbsp;
+                        <label for="process_type"
+                               class="form-label d-inline-block mb-2 text-primary"><strong>
+                            流程类型
+                        </strong></label>
+                        <select name="process_type" class="form-control" id="process_type" required>
+                            {% for t in process_types %}
+                                <option value="{{ t.0 }}">{{ t.1 }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="row margin-top-10">
+                    <div class="col-md-3">
+                        <i class="pull-left icon iconfont icon-miaoshu">
+                        </i>&nbsp;
+                        <label for="process_start_time"
+                               class="form-label d-inline-block mb-2 text-primary"><strong>
+                            录入开始时间
+                        </strong></label>
+                        <input name="process_start_time" type="text" class="form-control"
+                               id="process_start_time" maxlength="255"
+                               placeholder="项目结束时间"
+                               required>
+                    </div>
+                    <div class="col-md-3">
+                        <i class="pull-left icon iconfont icon-miaoshu">
+                        </i>&nbsp;
+                        <label for="process_end_time"
+                               class="form-label d-inline-block mb-2 text-primary"><strong>
+                            录入结束时间
+                        </strong></label>
+                        <input name="process_end_time" type="text" class="form-control"
+                               id="process_end_time" maxlength="255"
+                               placeholder="项目结束时间"
+                               required>
+                    </div>
+
+
+                </div>
+                <div class="row margin-top-10">
+                    <div class="col-md-3">
+                        <i class="pull-left icon iconfont icon-miaoshu">
+                        </i>&nbsp;
+                        <label for="process_excutor"
+                               class="form-label d-inline-block mb-2 text-primary"><strong>
+                            执行人
+                        </strong></label>
+                        <input name="process_executor" type="text" class="form-control"
+                               id="process_executor" maxlength="255"
+                               placeholder="点选执行人"
+                               required>
+                        <button id="reset" type="button">reset</button>
+                        {% for user in users %}
+                            {% if user.first_name %}
+                                <button class="executor btn btn-sm btn-info" value="{{ user.id }}" type="button">
+                                    {{ user.first_name }}
+                                </button>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="col-md-3">
+                        <i class="pull-left icon iconfont icon-miaoshu">
+                        </i>&nbsp;
+                        <label for="process_creator"
+                               class="form-label d-inline-block mb-2 text-primary"><strong>
+                            创建者
+                        </strong></label>
+                        <input name="process_creator" type="text" class="form-control"
+                               id="process_creator" maxlength="255"
+                               placeholder="输入流程创建者" value="{{ user.first_name }}"
+                               required disabled>
+                    </div>
+                </div>
+                <div class="row margin-top-10">
+                    <div class="col-md-12 margin-top-10">
+                        <button class="btn btn-primary" id="setProcess">确认</button>
+                        <a href="{% url 'project_home' %}" class="btn btn-primary" id="cancelButton"
+                           role="button">取消</a>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+    <script src="{% static 'lib/datepicker/jquery.datetimepicker.full.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+
+            const csrftoken = getCookie('csrftoken');
+
+            $(".form-group").hide();
+            $("#create_process_id").on('click', function () {
+
+                $(".form-group").show();
+            })
+            $('#secondaryMenu').append(
+                "<li class='fa fa-angle-right'>" + "课题需求" + "</li>" + "<li class='fa fa-angle-right active fw-bold'>" + "{{ template_name }}" + "</li>"
+            )
+            $.each($(".liGroupList"), function (idx, opt) {
+                let urlPath = "{{ template_name }}"
+                if (opt.innerText === urlPath) {
+                    $(opt).addClass('active');
+                } else {
+                    $(opt).removeClass('active');
+                }
+            });
+
+            $('#process_start_time').datetimepicker({
+                format: 'Y-m-d H:i',
+                onShow: function (ct) {
+                    this.setOptions({
+                        maxDate: $('#process_end_time').val() ? $('#process_end_time').val() : false
+                    })
+                },
+
+            });
+            $('#process_end_time').datetimepicker({
+                format: 'Y-m-d H:i',
+                onShow: function (ct) {
+                    this.setOptions({
+                        minDate: $('#process_start_time').val() ? $('#process_start_time').val() : false
+                    })
+                },
+
+            });
+
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            function csrfSafeMethod(method) {
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+
+            var executorList = new Array();
+            Array.prototype.remove = function (val) {
+                var index = this.indexOf(val);
+                if (index > -1) {
+                    this.splice(index, 1);
+                }
+            };
+
+            $(".executor").on('click', function (e) {
+                e.preventDefault()
+                let z = $(this)[0].innerText + ", "
+
+                if ($(this).hasClass("btn-info")) {
+                    console.log(z)
+                    executorList.push(parseInt($(this).attr("value")));
+                    console.log(executorList)
+                    $("#process_executor").val($("#process_executor").val() + z);
+                    $(this).removeClass("btn-info").addClass("btn-success");
+                } else {
+                    $("#process_executor").val($("#process_executor").val().replace(z, ""));
+                    $(this).removeClass("btn-success").addClass("btn-info");
+                    executorList.remove(parseInt($(this).attr("value")));
+                    console.log(executorList)
+                }
+
+            });
+            $("#reset").on('click', function (e) {
+                e.preventDefault()
+                $("#process_excutor").val('');
+                $(".executor").each(function (idx, ele) {
+                    if ($(this).hasClass("btn-success")) {
+                        $(this).removeClass("btn-success").addClass("btn-info");
+                        executorList.remove($(this).attr("value"))
+                        console.log(executorList)
+                    }
+                })
+            });
+            $("#setProcess").on('click', function (e) {
+                e.preventDefault()
+                var forms = $('#create_process')
+                if (forms[0].checkValidity() === false) {
+                    forms[0].reportValidity();
+                    console.log("wrong")
+                    e.stopPropagation();
+                } else {
+                    var x = forms.serializeArray().reduce(function (obj, item) {
+                        obj[item.name] = item.value;
+                        return obj;
+                    }, {});
+                    console.log(x, typeof x)
+                    for (var key in x) {
+                        if (key === 'process_start_time' || key === 'process_end_time') {
+                            x[key] = x[key] + ":00.000000"
+                        }
+                        if (key === 'process_creator') {
+                            x[key] = parseInt('{{ user.pk }}')
+                        }
+                        if (key === 'process_executor') {
+                            x[key] = executorList
+                        }
+
+                    }
+
+
+                    $.ajax({
+                        url: '/projectSystem/processTypes/',
+                        type: 'post',
+                        data: JSON.stringify(x),
+                        dataType: 'json',
+                        contentType: "application/json; charset=utf-8",
+                        beforeSend: function (xhr, settings) {
+                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                            }
+
+                        },
+                        success: function (data) {
+                            console.log(data)
+
+                        },
+                        error: function (error_data) {
+                            console.log(error_data.responseText)
+
+                        }
+                    })
+                }
+            })
+
+        })
+    </script>
+{% endblock %}

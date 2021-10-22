@@ -1,0 +1,23 @@
+{% extends 'projectBase.html' %}
+{% load static %}
+{% block content %}
+    <div class="row" style="margin: 30px">
+
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('#secondaryMenu').append(
+                "<li class='fa fa-angle-right'>" + "课题需求" + "</li>" + "<li class='fa fa-angle-right active fw-bold'>" + "{{ template_name }}" + "</li>"
+            )
+            $.each($(".liGroupList"), function (idx, opt) {
+                let urlPath = "{{ template_name }}"
+                if (opt.innerText === urlPath) {
+                    $(opt).addClass('active');
+                } else {
+                    $(opt).removeClass('active');
+                }
+            });
+
+        })
+    </script>
+{% endblock %}

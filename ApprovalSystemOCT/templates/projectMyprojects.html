@@ -1,0 +1,86 @@
+{% extends 'projectBase.html' %}
+{% load static %}
+{% block content %}
+    <style>
+        .piu {
+            cursor: pointer;
+            text-align: left;
+            color: #757575;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .piu:hover {
+            color: #FFFFFF;
+            background-color: #ff7e00;
+        }
+    </style>
+    <div class="row" style="margin:30px">
+        {#        dis play all projects #}
+        <table id="processPanel" class="table table-bordered"
+               style="background-color: whitesmoke; box-shadow: 10px 5px 5px floralwhite;padding:5px">
+            <thead>
+            <tr>
+                <th>
+                    123
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="piu">
+                    123
+                </td>
+
+            </tr>
+            <tr class="collapse">
+                <td>
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                        </tr>
+                    </table>
+                </td>
+
+            </tr>
+            <tr>
+                <td class="piu">
+                    123
+                </td>
+
+            </tr>
+            <tr class="collapse">
+                <td>
+                    <table class="table table-bordered">
+                        <tr>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                        </tr>
+                    </table>
+                </td>
+
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <script>
+        $(document).ready(function () {
+            var piu = $(".piu")
+            var toggleFunction = function (dom2) {
+                if (dom2.hasClass("in")) {
+                    dom2.removeClass("in");
+                } else {
+                    dom2.addClass("in")
+                }
+            }
+            piu.on('click', function () {
+                toggleFunction($(this).parent().next())
+            })
+
+        })
+    </script>
+{% endblock %}
