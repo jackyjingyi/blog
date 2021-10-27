@@ -27,42 +27,47 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <td class="piu">
-                    123
-                </td>
+            {% for p in user_process %}
+                {% if p.has_snapshots %}
+                    <tr>
+                        <td class="piu">
+                            {{ p.process_pattern.process_name }} - {{ p.process_order_id }}
+                            - {{ p.process_executor.first_name }}
+                            - {{ p.creat_time|date:"Y年n月d日" }}
 
-            </tr>
-            <tr class="collapse">
-                <td>
-                    <table class="table table-bordered">
-                        <tr>
-                            <td>1</td>
-                            <td>2</td>
-                            <td>3</td>
-                        </tr>
-                    </table>
-                </td>
+                        </td>
 
-            </tr>
-            <tr>
-                <td class="piu">
-                    123
-                </td>
+                    </tr>
+                    <tr class="collapse">
+                        <td>
+                            <table class="table table-bordered">
+                                {% for t in p.get_tasks %}
+                                    <tr>
+                                        {{ p.get_tasks }}
+                                    </tr>
+                                    <tr>
+                                        {% for s in t.get_steps %}
+                                            <td>{{ s }} - {{ s.step_type }} - {{ s.step_owner }}</td>
+                                            <td>{{ s.step_attachment.get_attachment.first|safe }}</td>
+                                        {% endfor %}
+                                    </tr>
+{#                                    <tr>#}
+{##}
+{#                                        <td>{{ t.get_task_last_attachment_snapshots }}</td>#}
+{##}
+{#                                    </tr>#}
+{#                                    <tr>#}
+{#                                        <td>#}
+{#                                            {{ t.get_task_last_attachment_snapshot }}#}
+{#                                        </td>#}
+{#                                    </tr>#}
+                                {% endfor %}
+                            </table>
+                        </td>
 
-            </tr>
-            <tr class="collapse">
-                <td>
-                    <table class="table table-bordered">
-                        <tr>
-                            <td>1</td>
-                            <td>2</td>
-                            <td>3</td>
-                        </tr>
-                    </table>
-                </td>
-
-            </tr>
+                    </tr>
+                {% endif %}
+            {% endfor %}
             </tbody>
         </table>
 

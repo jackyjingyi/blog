@@ -32,7 +32,13 @@ class ProcessTypeSerializer(serializers.ModelSerializer):
             "process_creator", "process_executor")
 
 
-class AttachmentSeriablizer(serializers.ModelSerializer):
+class AttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attachment
+        fields = "__all__"
+
+
+class ProcessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Process
         fields = "__all__"

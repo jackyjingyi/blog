@@ -36,7 +36,7 @@ PROJECT_REQUIREMENT_VERBOSE = {
 }
 
 PROCESS_TYPE = [
-    ('0', '未选择'), ('1', '课题录入'), ('2', '课题修改'), ('3', '进度录入')
+    ('0', '未选择'), ('1', '课题录入'), ('2', '课题修改'), ('3', '进度录入'), ('4', '成果录入'), ('5', '结题'), ('6', '资料上传')
 ]
 
 
@@ -78,7 +78,21 @@ class ProjectRequirement(models.Model):
     project_difficult = models.TextField("研究课题的重点及难点", default="")
 
     def __str__(self):
-        return f"研究项目: {self.project_name}"
+        return f"<p>研究项目:                       {self.project_name}</p>" \
+               f"<p>研究类型:                       {self.project_type} </p>" \
+               f"<p>研究方向:                       {self.project_research_direction}</p>" \
+               f"<p>研究部门:                       {self.project_department} </p>" \
+               f"<p>联系人:                         {self.project_department_sponsor} </p>" \
+               f"<p>联系方式:                       {self.project_department_phone} </p>" \
+               f"<p>联合工作小组成员及分工:            {self.project_co_group}</p>" \
+               f"<p>研究经费:                       {self.project_research_funding}</p>" \
+               f"<p>外协预算:                        {self.project_outsourcing_funding}</p>" \
+               f"<p>研究实施计划时间（起）:            {self.project_start_time}</p>" \
+               f"<p>研究实施计划时间（止）:            {self.project_end_time}</p>" \
+               f"<p>具体分项任务内容及安排:             {self.project_detail}</p>" \
+               f"<p>主要创新研究课题内容、目标及意义:     {self.project_purpose}</p>" \
+               f"<p>与课题相关的前期工作情况，现有基础条件:{self.project_preparation}</p>" \
+               f"<p>研究课题的重点及难点:              {self.project_difficult}</p>"
 
 
 class Book(models.Model):
@@ -110,9 +124,16 @@ class Attachment(models.Model):
 
 
 class ProcessType(models.Model):
+    status_choice = [
+        ("1", "processing"),
+        ("2", "not start"),
+        ("3", "finished"),
+        ("4", "abort"),
+        ("5", "pending")
+    ]
     process_name = models.CharField("流程名称", max_length=255)
     # process_pattern = models.CharField("流程模板", max_length=255)
-    process_type = models.CharField("流程类型", choices=PROJECT_TYPE, max_length=255)
+    process_type = models.CharField("流程类型", choices=PROCESS_TYPE, max_length=255)
     process_creator = models.ForeignKey(User, on_delete=models.CASCADE)
     process_executor = models.ManyToManyField(User, related_name='executors')
     process_init_time = models.DateTimeField(auto_now_add=True)
@@ -120,14 +141,23 @@ class ProcessType(models.Model):
     process_start_time = models.DateTimeField(default=timezone.now)
     process_duration = models.DurationField("持续时长", help_text="流程持续天数", null=True)
     process_end_time = models.DateTimeField(null=True, blank=True)
+    status = models.CharField(choices=status_choice, default="1", max_length=5)
 
 
 class Process(models.Model):
+    status_choice = [
+        ("1", "进行中"),
+        ("2", "未开始"),
+        ("3", "已结束"),
+        ("4", "撤销"),
+        ("5", "暂停")
+    ]
     process_order_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,
                                         help_text="create an uuid for each order")
     process_pattern = models.ForeignKey(ProcessType, on_delete=models.CASCADE)
     process_executor = models.ForeignKey(User, on_delete=models.CASCADE)
     creat_time = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(choices=status_choice, default="1", max_length=5)
 
     # process_readonly_sponsors = models.CharField(max_length=255)  TODO: 添加流程只读干系人（群） [pk1, pk2]
     # process_administrator = models.CharField(max_length=255)    TODO: 流程管理员（群组)
@@ -138,6 +168,12 @@ class Process(models.Model):
     def create_task(self, **kwargs):
         kwargs['process_id'] = self.process_order_id
         return Task.objects.create(**kwargs)
+
+    def has_snapshots(self):
+        for t in self.get_tasks():
+            if t.get_task_last_attachment_snapshots():
+                return True
+        return False
 
 
 class Task(models.Model):
@@ -158,11 +194,16 @@ class Task(models.Model):
 
     @classmethod
     def get_tasks(cls, process_id):
-        return cls.objects.filter(process_id=process_id).order_by('task_seq')
+        _z = cls.objects.filter(process_id=process_id).order_by('task_update_time')
+        return cls.objects.filter(process_id=process_id).order_by('task_update_time')
+
+    def get_steps(self):
+        return Step.get_steps(self.task_id)
 
     def get_last_task_attachment_snapshot(self):
         contained_steps = Step.get_steps(self.task_id)
-        if contained_steps:
+        if contained_steps.last():
+
             return contained_steps.last().step_attachment_snapshot
         else:
             return
@@ -172,6 +213,7 @@ class Task(models.Model):
         if contained_steps:
             res = []
             for i in contained_steps:
+                i.set_attachment_snapshot()
                 res.append(i.step_attachment_snapshot)
             return res
         else:
