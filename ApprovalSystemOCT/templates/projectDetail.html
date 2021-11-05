@@ -1,12 +1,391 @@
 {% extends 'projectBase.html' %}
 {% load static %}
 {% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/datepicker/jquery.datetimepicker.min.css' %}">
     <div class="row" style="margin: 30px">
+        <div id="inputPanel" class="table table-bordered"
+             style="background-color: whitesmoke; box-shadow: 10px 5px 5px floralwhite;padding:5px">
 
+            <div class="form-group" style="margin:30px">
+                <div>
+                    <h3 class="text-center">{{ attachment.project_name }}</h3>
+                    <p class="text-center">
+                        <i>{{ process.process_executor.first_name }}</i>创建{{ process.get_tasks.last.get_steps.last.step_update_time|date:"Y年n月d日" }}
+                        <a id="updateAll">修改</a></p>
+                </div>
+                <form class="g-3 needs-validation" enctype="multipart/form-data" id="update_project" novalidate>
 
+                    <div class="row margin-top-10">
+                        <div class="col-md-12">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp
+                            <label for="project_name"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                研究课题
+                            </strong></label>
+                            <input name="project_name" type="text" class="form-control" id="project_name1"
+                                   maxlength="255"
+                                   placeholder="请输入项目名称" value="{{ attachment.project_name }}"
+                                   required disabled>
+                        </div>
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="col-md-3">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_type"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                课题类型
+                            </strong></label>
+                            <select name="project_type" class="form-control" id="project_type" required
+                                    value="{{ attachment.get_project_type_display }}" disabled>
+                                {% for t in project_types %}
+                                    {% if t.0 == attachment.project_type %}
+                                        <option value="{{ t.0 }}" selected>{{ t.1 }}</option>
+                                    {% else %}
+                                        <option value="{{ t.0 }}">{{ t.1 }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>
+                            <label for="project_research_direction"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                研究方向
+                            </strong></label>
+                            <select name="project_research_direction" class="form-control"
+                                    id="project_research_direction"
+                                    value="{{ attachment.get_project_research_direction_display }}"
+                                    required disabled>
+                                {% for t in project_directions %}
+                                    {% if t.0 == attachment.project_research_direction %}
+                                        <option value="{{ t.0 }}" selected>{{ t.1 }}</option>
+                                    {% else %}
+                                        <option value="{{ t.0 }}">{{ t.1 }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_department_sponsor"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                需求单位联系人
+                            </strong></label>
+                            <input name="project_department_sponsor" type="text" class="form-control"
+                                   id="project_department_sponsor" maxlength="255"
+                                   placeholder="请输入联系人姓名" value="{{ attachment.project_department_sponsor }}"
+                                   required disabled>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_department_phone"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                联系电话
+                            </strong></label>
+                            <input name="project_department_phone" type="text" class="form-control"
+                                   id="project_department_phone" maxlength="255"
+                                   placeholder="请输入联系电话" value="{{ attachment.project_department_phone }}"
+                                   required disabled>
+                        </div>
+
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="col-md-12">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_department"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                需求单位
+                            </strong></label>
+
+                            <input name="project_department" type="text" class="form-control" id="project_department"
+                                   maxlength="255"
+                                   placeholder="请输入单位名称" value="{{ attachment.project_department }}"
+                                   required disabled>
+
+                        </div>
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="col-md-3">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_research_funding"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                研究经费
+                            </strong></label>
+                            <input name="project_research_funding" type="text" class="form-control"
+                                   id="project_research_funding" maxlength="255"
+                                   placeholder="请输入研究经费" value="{{ attachment.project_research_funding }}"
+                                   required disabled>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_outsourcing_funding"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                外协预算
+                            </strong></label>
+                            <input name="project_outsourcing_funding" type="text" class="form-control"
+                                   id="project_outsourcing_funding" maxlength="255"
+                                   placeholder="外协预算" value="{{ attachment.project_outsourcing_funding }}"
+                                   required disabled>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_start_time"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                研究实施计划时间（起）
+                            </strong></label>
+                            <input name="project_start_time" type="text" class="form-control"
+                                   id="project_start_time" maxlength="255"
+                                   placeholder="项目开始时间" value="{{ attachment.project_start_time|date:'Y-n-d H:m' }}"
+                                   required disabled>
+                        </div>
+                        <div class="col-md-3">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_end_time"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                研究实施计划时间（止）
+                            </strong></label>
+                            <input name="project_end_time" type="text" class="form-control"
+                                   id="project_end_time" maxlength="255"
+                                   placeholder="项目结束时间" value="{{ attachment.project_end_time|date:'Y-n-d H:m' }}"
+                                   required disabled>
+                        </div>
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="col-md-12">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_co_group"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                联合工作小组成员及分工
+                            </strong></label>
+                            <textarea name="project_co_group" type="text" class="form-control" id="project_co_group"
+                                      placeholder="" rows="15" value="{{ attachment.project_co_group }}"
+                                      required disabled>{{ attachment.project_co_group }}</textarea>
+                        </div>
+                    </div>
+
+                    <div class="row margin-top-10">
+                        <div class="col-md-12">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_detail"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                具体分项任务内容及安排
+                            </strong></label>
+                            <textarea name="project_detail" type="text" class="form-control" id="project_detail"
+                                      placeholder="" rows="15" value="{{ attachment.project_detail }}"
+                                      required disabled>{{ attachment.project_detail }}</textarea>
+                        </div>
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="col-md-12">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_purpose"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                主要创新研究课题内容、目标及意义
+                            </strong></label>
+                            <textarea name="project_purpose" type="text" class="form-control" id="project_purpose"
+                                      placeholder="" rows="15" value="{{ attachment.project_purpose }}"
+                                      required disabled>{{ attachment.project_purpose }}</textarea>
+                        </div>
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="col-md-12">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_preparation"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                与课题相关的前期工作情况，现有基础条件
+                            </strong></label>
+                            <textarea name="project_preparation" type="text" class="form-control"
+                                      id="project_preparation"
+                                      placeholder="" rows="15" value="{{ attachment.project_preparation }}"
+                                      required disabled>{{ attachment.project_preparation }}</textarea>
+                        </div>
+                    </div>
+                    <div class="row margin-top-10">
+                        <div class="col-md-12">
+                            <i class="pull-left icon iconfont icon-miaoshu">
+                            </i>&nbsp;
+                            <label for="project_difficult"
+                                   class="form-label d-inline-block mb-2 text-primary"><strong>
+                                研究课题的重点及难点
+                            </strong></label>
+                            <textarea name="project_difficult" type="text" class="form-control" id="project_difficult"
+                                      placeholder="" rows="15" value="{{ attachment.project_difficult }}"
+                                      required disabled>{{ attachment.project_difficult }}</textarea>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
     </div>
+    <script src="{% static 'lib/datepicker/jquery.datetimepicker.full.min.js' %}"></script>
     <script>
         $(document).ready(function () {
+            const csrftoken = getCookie('csrftoken');
+            const processID = "{{ process.pk }}"
+            const attachmentID = "{{ attachment.pk }}"
+            const attachURL = '/projectSystem/projectRequirements/' + attachmentID + "/"
+            $('label').each(function () {
+                let updateTarget = $(this).attr('for')
+                $(this).append(
+                    "<a data-action='upload' data-target=" + updateTarget + " href='javascript:void(0)' style='visibility: hidden;'><i class='pull-right icon iconfont icon-bianji'></i></a>"
+                );
+                $(this).hover(function () {
+                    $(this).children('a').attr('style', 'visibility: visible');
+                });
+                $(this).parent().mouseleave(function () {
+                    $(this).find('a').first().attr('style', 'visibility: hidden');
+                });
+            });
+            $("a[data-action='upload']").on('click', function () {
+                // use siblings not next ,cause a div tag will insert in
+                let inputTag = $(this).parent().siblings().last();
+                let prepVal = inputTag.val()
+                if (inputTag.attr('disabled')) {
+                    let t = $(this).attr("data-target")
+                    inputTag.attr('disabled', false);
+                    if ($(this).parent().parent().find("a[data-action~='upload']").length <= 1) {
+                        $(this).parent().after(
+                            "<div class='pull-right'>" +
+                            "<a class='text-right' data-action='uploadSubmit' data-target=" + t + " href='javascript:void(0)' style='visibility: visible;'><small> 修改 </small></a>" +
+                            "<a class='text-right' data-action='uploadCancel' data-target=" + t + " href='javascript:void(0)' style='visibility: visible;'><small> 取消 </small></a>" +
+                            "</div>"
+                        );
+                    } else {
+                        $(this).parent().next().find('a').each(function () {
+                            $(this).attr('style', 'visibility: visible')
+                        })
+                    }
+                    $("a[data-action=uploadSubmit]").on('click', function () {
+                        let attachmentRequirementKey = inputTag.attr("name");
+                        let attachmentRequirementVal = inputTag.val();
+                        if (prepVal !== attachmentRequirementVal) {
+                            let data = {};
+                            data[attachmentRequirementKey] = attachmentRequirementVal
+                            // patch method
+                            $.ajax({
+                                url: attachURL,
+                                type: 'patch',
+                                contentType: 'application/json',
+                                data: JSON.stringify(data),
+                                headers: {'X-CSRFToken': csrftoken},
+                                success: function (data) {
+                                    inputTag.val(data[attachmentRequirementKey]);
+                                }
+                            })
+                        }
+                        inputTag.attr('disabled', true);
+                        $(this).attr('style', 'visibility: hidden');
+                        $(this).next().attr('style', 'visibility: hidden');
+                    });
+                    $("a[data-action=uploadCancel]").on('click', function () {
+                        inputTag.val(prepVal);
+                        inputTag.attr('disabled', true);
+                        $(this).attr('style', 'visibility: hidden');
+                        $(this).prev().attr('style', 'visibility: hidden');
+                    });
+                }
+            });
+            var updateForm = $("#update_project")
+            let formStatusChange = function (form, action) {
+                form.find('input,textarea,select').each(function () {
+                    if ($(this).attr("disabled") !== action) {
+                        $(this).attr("disabled", action);
+                    }
+                });
+            }
+            $("#updateAll").on('click', function () {
+                let prevValue = {};
+                let assignValue = function (ele, vl) {
+                    ele.find('input,textarea,select').each(function () {
+                            vl[$(this).attr("name")] = $(this).val();
+                        }
+                    )
+                }
+                let resignValue = function (ele, vl) {
+                    ele.find('input,textarea,select').each(function () {
+                            $(this).val(vl[$(this).attr("name")]);
+                        }
+                    )
+                }
+                assignValue(updateForm, prevValue)
+
+                if ($(this).parent().find('a').length <= 1) {
+                    $(this).after(
+                        "&nbsp;<a id='updateAllSubmit'>提交</a>" +
+                        "&nbsp;<a id='updateCancelAll'>取消</a>"
+                    );
+                } else {
+                    $(this).parent().find('a').each(function () {
+                        $(this).show();
+                    })
+                }
+                $(this).hide();
+                formStatusChange(updateForm, false);
+                $("#updateAllSubmit").on("click", function () {
+                    let currentValues = {}
+                    assignValue(updateForm, currentValues);
+                    $.ajax({
+                        url: attachURL,
+                        type: 'put',
+                        contentType: 'application/json',
+                        data: JSON.stringify(currentValues),
+                        headers: {'X-CSRFToken': csrftoken},
+                        success: function (data) {
+                            resignValue(updateForm, data)
+                        },
+                        error: function (data) {
+                            console.log(data)
+                        }
+                    })
+                    formStatusChange(updateForm, true);
+                    $(this).hide();
+                    $(this).prev().show();
+                    $(this).next().hide();
+                });
+                $("#updateCancelAll").on('click', function () {
+                    formStatusChange(updateForm, true);
+                    updateForm.find('input,textarea,select').each(function () {
+                        $(this).val(prevValue[$(this).attr("name")]);
+                    });
+                    $(this).hide();
+                    $(this).prev().hide();
+                    $(this).prev().prev().show();
+
+                })
+            })
+            $('#project_start_time').datetimepicker({
+                format: 'Y-m-d H:i',
+                onShow: function (ct) {
+                    this.setOptions({
+                        maxDate: $('#project_end_time').val() ? $('#project_end_time').val() : false
+                    })
+                },
+
+            });
+            $('#project_end_time').datetimepicker({
+                format: 'Y-m-d H:i',
+                onShow: function (ct) {
+                    this.setOptions({
+                        minDate: $('#project_start_time').val() ? $('#project_start_time').val() : false
+                    })
+                },
+
+            });
             $('#secondaryMenu').append(
                 "<li class='fa fa-angle-right'>" + "课题需求" + "</li>" + "<li class='fa fa-angle-right active fw-bold'>" + "{{ template_name }}" + "</li>"
             )
@@ -19,6 +398,35 @@
                 }
             });
 
+            $("#my_projects").append(
+                "<ul class='nav nav-third-level collapse in project-second-menu'>" +
+                "<li class='active'>" +
+                "<a id='basicInfo' href=''>" +
+                "<span style='margin-left: 30%'>课题信息</span></a></li>" +
+                "<li>" +
+                "<a id='changeCatolog' href='#'>" +
+                "<span style='margin-left: 30%'>变更记录</span></a></li>"
+            );
+
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            function csrfSafeMethod(method) {
+                return (/^(GET|HEAD|OPTIONS|TRACE|PATCH|PUT)$/.test(method));
+            }
         })
     </script>
 {% endblock %}

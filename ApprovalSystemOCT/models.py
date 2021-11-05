@@ -36,7 +36,8 @@ PROJECT_REQUIREMENT_VERBOSE = {
 }
 
 PROCESS_TYPE = [
-    ('0', '未选择'), ('1', '课题录入'), ('2', '课题修改'), ('3', '进度录入'), ('4', '成果录入'), ('5', '结题'), ('6', '资料上传')
+    ('0', '未选择'), ('1', '课题录入'), ('2', '课题修改'), ('3', '进度录入'), ('4', '成果录入'), ('5', '结题'), ('6', '资料上传'),
+    ('7', '立项')
 ]
 
 
@@ -79,8 +80,8 @@ class ProjectRequirement(models.Model):
 
     def __str__(self):
         return f"<p>研究项目:                       {self.project_name}</p>" \
-               f"<p>研究类型:                       {self.project_type} </p>" \
-               f"<p>研究方向:                       {self.project_research_direction}</p>" \
+               f"<p>研究类型:                       {self.get_project_type_display()} </p>" \
+               f"<p>研究方向:                       {self.get_project_research_direction_display()}</p>" \
                f"<p>研究部门:                       {self.project_department} </p>" \
                f"<p>联系人:                         {self.project_department_sponsor} </p>" \
                f"<p>联系方式:                       {self.project_department_phone} </p>" \
@@ -93,6 +94,48 @@ class ProjectRequirement(models.Model):
                f"<p>主要创新研究课题内容、目标及意义:     {self.project_purpose}</p>" \
                f"<p>与课题相关的前期工作情况，现有基础条件:{self.project_preparation}</p>" \
                f"<p>研究课题的重点及难点:              {self.project_difficult}</p>"
+
+
+class ProjectImplementTitle(models.Model):
+    title = "创新研究课题推进情况季度报表"
+    project_base = models.ForeignKey(ProjectRequirement, on_delete=models.CASCADE)
+    sponsor = models.CharField("负责人", max_length=50, null=True, blank=True)
+    department = models.CharField("责任单位/部门", max_length=255)
+    progress_year = models.CharField("编报年", max_length=20)
+    progress_season = models.CharField("编报季度", max_length=20)
+    create_time = models.DateTimeField("创建时间", auto_now_add=True)
+    update_time = models.DateTimeField("更新时间", auto_now=True)
+
+
+class ProjectImplement(models.Model):
+    title = "创新研究课题推进情况季度报表"
+    project_base = models.ForeignKey(ProjectImplementTitle, on_delete=models.CASCADE)
+    project_important_issue = models.CharField("重点工作事项", max_length=500)
+    project_important_issue_number = models.IntegerField("重点工作事项编号", default=0)
+    project_task = models.CharField("分项任务", max_length=255)
+    project_task_seq = models.IntegerField("分项任务编号", default=0)
+    project_task_start_time = models.DateTimeField("分项任务开展时间", null=True, blank=True)
+    project_task_end_time = models.DateTimeField("分项任务完成时间", null=True, blank=True)
+    season_implement_progress = models.TextField("本季度工作推进情况", null=True, blank=True)
+    season_implement_delay_explanation = models.TextField("未能按计划进度完成的原因", null=True, default="无")
+    add_ups = models.TextField("相关说明", null=True, blank=True)
+    create_time = models.DateTimeField("创建时间", auto_now_add=True)
+    update_time = models.DateTimeField("更新时间", auto_now=True)
+
+    @classmethod
+    def group_by_issues(cls, base_id, issue_id):
+        return cls.objects.filter(project_base_id=base_id, project_important_issue_number=issue_id).order_by(
+            "project_task_seq")
+
+    @classmethod
+    def group_by_base(cls, base_id):
+        q = cls.objects.filter(project_base_id=base_id).values('project_important_issue_number').distinct()
+        print(q)
+        res = []
+        if q:
+            for i in q:
+                res.append(cls.group_by_issues(base_id, i.get("project_important_issue_number")))
+        return res
 
 
 class Book(models.Model):
@@ -150,7 +193,8 @@ class Process(models.Model):
         ("2", "未开始"),
         ("3", "已结束"),
         ("4", "撤销"),
-        ("5", "暂停")
+        ("5", "暂停"),
+        ("6", "删除")
     ]
     process_order_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,
                                         help_text="create an uuid for each order")
@@ -158,6 +202,8 @@ class Process(models.Model):
     process_executor = models.ForeignKey(User, on_delete=models.CASCADE)
     creat_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(choices=status_choice, default="1", max_length=5)
+    prep = models.CharField(max_length=255, null=True, blank=True)
+    next = models.CharField(max_length=255, null=True, blank=True)
 
     # process_readonly_sponsors = models.CharField(max_length=255)  TODO: 添加流程只读干系人（群） [pk1, pk2]
     # process_administrator = models.CharField(max_length=255)    TODO: 流程管理员（群组)
@@ -167,6 +213,7 @@ class Process(models.Model):
 
     def create_task(self, **kwargs):
         kwargs['process_id'] = self.process_order_id
+        # print(kwargs)
         return Task.objects.create(**kwargs)
 
     def has_snapshots(self):
@@ -244,10 +291,10 @@ class Step(models.Model):
     step_duration = models.DurationField(default=timedelta(seconds=0))
     step_end_time = models.DateTimeField(null=True, blank=True)
 
-    step_status = models.CharField("执行状态", max_length=255)  # 挂起pending, 执行中processing, 等待awaiting, 完成finish
+    step_status = models.CharField("执行状态", max_length=255)  # 挂起pending, 执行中processing, 等待awaiting, 完成finish, 暂存 save
     step_state = models.CharField("步骤状态", max_length=255)  # 通过approval、驳回deny、撤回withdraw、放弃abandon、转出patch out
 
-    step_type = models.CharField("步骤类型", max_length=255)  # 1. 录入 input  2. 审批 approval 3. 修订 edit 4. 合并 5. 删减 6. 新增
+    step_type = models.CharField("步骤类型", max_length=255)  # 1.录入 input  2. 审批 approval 3. 修订 edit 4. 合并 5. 删减 6. 新增,7.立项
     step_attachment = models.ForeignKey(Attachment, on_delete=models.CASCADE, default=None)
     step_attachment_snapshot = models.JSONField(default=snapshot_default,
                                                 blank=True)  # store attachment snapshot cloud be forms { id: 21, title:"love story"}

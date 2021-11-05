@@ -15,7 +15,8 @@ class StepSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Step
-        fields = ("step_id", "task", "step_seq", "step_owner", "step_attachment_snapshot", "step_attachment")
+        fields = (
+        "step_id", "task", "step_seq", "step_owner", "step_attachment_snapshot", "step_attachment", "step_status")
 
 
 class ProjectRequirementSerializer(serializers.ModelSerializer):

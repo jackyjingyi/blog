@@ -14,77 +14,309 @@
             color: #FFFFFF;
             background-color: #ff7e00;
         }
+
+        .col-md-half {
+            position: relative;
+            min-height: 1px;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        .form-check {
+            display: block;
+            min-height: 1.5rem;
+            padding-left: 0em;
+            margin-bottom: 0rem;
+            float: left;
+        }
+
+        @media (min-width: 769px) {
+        {#.col-md-half {#}
+        {#    float: left;#}
+
+
+            .col-md-half {
+                width: 3%;
+            }
+
+        }
     </style>
+
+
     <div class="row" style="margin:30px">
         {#        dis play all projects #}
-        <table id="processPanel" class="table table-bordered"
-               style="background-color: whitesmoke; box-shadow: 10px 5px 5px floralwhite;padding:5px">
-            <thead>
-            <tr>
-                <th>
-                    123
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for p in user_process %}
-                {% if p.has_snapshots %}
+
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab"
+                                                      data-toggle="tab">草稿箱</a></li>
+            <li role="presentation"><a href="#profile" aria-controls="profile" role="tab"
+                                       data-toggle="tab">已提交</a>
+            </li>
+
+
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade in active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div style="margin-top:10px;margin-bottom: -15px">
+                    <small>
+                        <div class="dropdown">
+                            <button id="dLabel" type="button" class="btn btn-sm btn-primary"
+                                    data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                批量操作
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dLabel">
+                                <li>
+
+                                    <button id="draft_bulk_submit"
+                                            class="list-group-item list-group-item-action btn-sm">
+                                        批量提交
+                                    </button>
+                                </li>
+                                <li>
+                                    <button id="draft_bulk_delete"
+                                            class="list-group-item list-group-item-action btn-sm">
+                                        批量删除
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </small>
+                </div>
+                <hr style="margin-bottom: 5px">
+                <table id="processPanel" class="table table-bordered"
+                       style="background-color: whitesmoke; box-shadow: 10px 5px 5px floralwhite;padding:5px">
+                    <thead>
                     <tr>
-                        <td class="piu">
-                            {{ p.process_pattern.process_name }} - {{ p.process_order_id }}
+                        <th scope="col" class="col-md-half">
+                            <div class="form-check">
+
+                                <input class="form-check-input_draft_all" type="checkbox" value=""
+                                       id="flexCheckDefault_select_all_draft">
+                                <label class="form-check-label" for="flexCheckDefault_select_all_draft">
+                                </label>
+                            </div>
+                        </th>
+                        <th colspan="5">
+                            课题列表
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for p in user_process %}
+                        {% if p.has_snapshots %}
+                            <tr>
+                                <th scope="row" class="col-md-half">
+                                    <input class="form-check-input2" type="checkbox" value="{{ p.process_order_id }}"
+                                           id="flexCheckDefault_2">
+                                    <label class="form-check-label" for="flexCheckDefault_2"
+                                           style="display: none">{{ p.pk }}
+                                    </label>
+                                </th>
+                                <td>
+                                    <span class="piu">
+                                        <a>{{ p.process_pattern.process_name }}</a>
+                                    </span>
+                                </td>
+                                <td value="{{ p.pk }}" class="process_detail_link">
+                                    <a href="{% url 'project_detail' p.pk %}">{{ p.get_tasks.first.get_steps.first.step_attachment.get_attachment.first.project_name }}</a>
+                                </td>
+                                <td>
+                                    {{ p.process_executor.first_name }}
+                                </td>
+                                <td>
+                                    {{ p.creat_time|date:"Y年n月d日" }}
+                                </td>
+                                <td>
+                                    <a>修改</a>
+                                </td>
+
+                            </tr>
+                            <tr class="collapse">
+                                <td colspan="6">
+                                    <table class="table table-bordered">
+                                        {% for t in p.get_tasks %}
+                                            <tr>
+                                                <td>
+                                                    {{ p.get_tasks.first.get_steps.first.step_attachment.get_attachment.first.project_name }}
+                                                </td>
+                                                <td>
+                                                    {% if p.get_tasks.first.get_steps.first.step_status == '1' %}
+                                                        保存
+                                                    {% elif p.get_tasks.first.get_steps.first.step_status == '2' %}
+                                                        已提交
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+
+                                            {% for s in t.get_steps %}
+                                                <tr>
+                                                    <td>{{ s }} - {{ s.step_type }} - {{ s.step_owner }}</td>
+                                                    <td>{{ s.step_attachment.get_attachment.first|safe }}</td>
+                                                    {#                                            <td>{{ s.step_attachment_snapshot }}</td>#}
+                                                </tr>
+                                            {% endfor %}
+
+                                        {% endfor %}
+                                    </table>
+                                </td>
+
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                <br><br>
+                <table id="processPanel" class="table table-bordered"
+                       style="background-color: whitesmoke; box-shadow: 10px 5px 5px floralwhite;padding:5px">
+                    <thead>
+                    <tr>
+                        <th>
+                            课题列表
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for p in user_process_sub %}
+                        {% if p.has_snapshots %}
+                            <tr>
+                                <td>
+                            <span class="piu">
+                            {{ p.process_pattern.process_name }} - {{ p.get_tasks.first.get_steps.first.step_attachment.get_attachment.first.project_name }}
                             - {{ p.process_executor.first_name }}
                             - {{ p.creat_time|date:"Y年n月d日" }}
+                            </span>
+                                </td>
+                            </tr>
+                            <tr class="collapse">
+                                <td>
+                                    <table class="table table-bordered">
+                                        {% for t in p.get_tasks %}
+                                            <tr>
+                                                <td>
+                                                    {{ p.get_tasks.first.get_steps.first.step_attachment.get_attachment.first.project_name }}
+                                                </td>
+                                                <td>
+                                                    {% if p.get_tasks.first.get_steps.first.step_status == '1' %}
+                                                        保存
+                                                    {% elif p.get_tasks.first.get_steps.first.step_status == '2' %}
+                                                        已提交
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
 
-                        </td>
+                                            {% for s in t.get_steps %}
+                                                <tr>
+                                                    <td>{{ s }} - {{ s.step_type }} - {{ s.step_owner }}</td>
+                                                    <td>{{ s.step_attachment.get_attachment.first|safe }}</td>
+                                                    {#                                            <td>{{ s.step_attachment_snapshot }}</td>#}
+                                                </tr>
+                                            {% endfor %}
 
-                    </tr>
-                    <tr class="collapse">
-                        <td>
-                            <table class="table table-bordered">
-                                {% for t in p.get_tasks %}
-                                    <tr>
-                                        {{ p.get_tasks }}
-                                    </tr>
-                                    <tr>
-                                        {% for s in t.get_steps %}
-                                            <td>{{ s }} - {{ s.step_type }} - {{ s.step_owner }}</td>
-                                            <td>{{ s.step_attachment.get_attachment.first|safe }}</td>
                                         {% endfor %}
-                                    </tr>
-{#                                    <tr>#}
-{##}
-{#                                        <td>{{ t.get_task_last_attachment_snapshots }}</td>#}
-{##}
-{#                                    </tr>#}
-{#                                    <tr>#}
-{#                                        <td>#}
-{#                                            {{ t.get_task_last_attachment_snapshot }}#}
-{#                                        </td>#}
-{#                                    </tr>#}
-                                {% endfor %}
-                            </table>
-                        </td>
+                                    </table>
+                                </td>
 
-                    </tr>
-                {% endif %}
-            {% endfor %}
-            </tbody>
-        </table>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
 
     </div>
     <script>
         $(document).ready(function () {
-            var piu = $(".piu")
             var toggleFunction = function (dom2) {
                 if (dom2.hasClass("in")) {
                     dom2.removeClass("in");
                 } else {
                     dom2.addClass("in")
                 }
+            };
+            $(".piu").on('click', function () {
+
+                toggleFunction($($(this).parentsUntil("tbody")[1]).next())
+            });
+
+            function select_all(selectall, selectones) {
+                for (let i = 0; i < selectones.length; i++) {
+                    selectones[i].checked = selectall.checked
+                }
+
             }
-            piu.on('click', function () {
-                toggleFunction($(this).parent().next())
+
+            function select_one(selectall, selectones) {
+                var isAllChecked = true;
+                for (let i = 0; i < selectones.length; i++) {
+                    if (selectones[i].checked === false) {
+                        isAllChecked = false;
+                        break
+                    }
+                }
+                selectall.checked = isAllChecked
+            }
+
+
+            Array.prototype.remove = function (val) {
+                var index = this.indexOf(val);
+                if (index > -1) {
+                    this.splice(index, 1);
+                }
+            };
+
+
+            $("#flexCheckDefault_select_all_draft").on('click', function () {
+                select_all($(this)[0], document.getElementsByClassName("form-check-input2"));
+
             })
+            $(".form-check-input2").on('click', function () {
+                select_one(document.getElementById("flexCheckDefault_select_all_draft"), document.getElementsByClassName("form-check-input2"));
+
+            })
+            var bulkAction = function (another, status) {
+                another.attr("disabled", true)
+                var draftSelectList = [];
+                $.each($(".form-check-input2"), function (idx, item) {
+
+                    {#draftSelectList.push($(this))#}
+                    if ($(this)[0].checked) {
+                        draftSelectList.push($(item).attr("value"));
+                    } else {
+                        draftSelectList.remove($(item).attr("value"));
+                    }
+                })
+
+                $.ajax({
+                    url: '/projectSystem/requirementBulkAction/',
+                    data: {
+                        'action': status,
+                        'info': JSON.stringify(draftSelectList),
+                    },
+                    type: 'post',
+                    success: function (data) {
+                        console.log(data)
+                        location.reload();
+                    }
+                })
+                setTimeout(function () {
+                    another.attr("disabled", false);
+                }, 2000)
+
+            }
+            $("#draft_bulk_submit").on('click', function (e) {
+                bulkAction($("#draft_bulk_delete"), 'submit')
+
+            });
+            $("#draft_bulk_delete").on('click', function (e) {
+                bulkAction($("#draft_bulk_delete"), 'delete')
+            });
+
 
         })
     </script>

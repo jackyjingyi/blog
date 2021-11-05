@@ -1,0 +1,113 @@
+{% extends 'projectBase.html' %}
+{% load static %}
+{% block content %}
+    <style>
+
+        .piu {
+            cursor: pointer;
+            text-align: left;
+            color: #757575;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .piu:hover {
+            color: #FFFFFF;
+            background-color: #ff7e00;
+        }
+
+        .col-md-half {
+            position: relative;
+            min-height: 1px;
+            padding-right: 15px;
+            padding-left: 15px;
+        }
+
+        .form-check {
+            display: block;
+            min-height: 1.5rem;
+            padding-left: 0em;
+            margin-bottom: 0rem;
+            float: left;
+        }
+
+        @media (min-width: 769px) {
+        {#.col-md-half {#}
+        {#    float: left;#}
+
+
+            .col-md-half {
+                width: 3%;
+            }
+
+        }
+    </style>
+    <div class="row" style="margin:30px">
+        <div>
+            <table class="table table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col" class="col-md-half">
+                        id
+                    </th>
+                    <th scope="col">
+                        课题名称
+                    </th>
+                    <th scope="col">
+                        课题负责人
+                    </th>
+                    <th scope="col">
+                        归属
+                    </th>
+                    <th>
+                        立项时间
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in query_set %}
+                    <tr>
+                        <td value="{{ item.pk }}">{{ forloop.counter }}</td>
+                        <td>
+                            <span class="piu">
+                            {{ item.get_tasks.last.get_steps.last.step_attachment.get_attachment.first.project_name }}
+                            </span>
+                        </td>
+{#                        {% for k,v in prep_dict.items %}#}
+{#                            {% if k == item.prep %}#}
+                                <td>{{ item.process_executor.first_name }}</td>
+                                <td>{{ item.process_executor.groups.first.name }}</td>
+{#                            {% endif %}#}
+{#                        {% endfor %}#}
+                        <td>{{ item.creat_time|date:"Y年n月d日" }}</td>
+                    </tr>
+                    <tr class="collapse">
+                        <td colspan="5">
+                            {{ item.get_tasks.last.get_steps.last.step_attachment.get_attachment.first|safe }}
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+    <script>
+        $(document).ready(function () {
+            var piu = $(".piu")
+            var toggleFunction = function (dom2) {
+                if (dom2.hasClass("in")) {
+                    dom2.removeClass("in");
+                } else {
+                    dom2.addClass("in")
+                }
+            };
+            piu.on('click', function () {
+
+                toggleFunction($($(this).parentsUntil("tbody")[1]).next())
+            });
+        })
+    </script>
+
+{% endblock %}

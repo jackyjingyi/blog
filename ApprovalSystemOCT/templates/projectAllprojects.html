@@ -10,18 +10,45 @@
                 <table class="table table-bordered">
                     <thead>
                     <tr>
-                        <th scope="col" colspan="2">课题名称</th>
+                        <th scope="col" colspan="6">课题名称</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for p in queryset %}
                         <tr>
-                            <td value="{{ p.id }}" class="project_link">
-                                <a href="javascript:void(0)"><span>{{ p.project_name }}</span></a>
+                            <th scope="row">
+                                <input class="form-check-input2" type="checkbox" value="{{ p.process_order_id }}"
+                                       id="flexCheckDefault_2">
+                                <label class="form-check-label" for="flexCheckDefault_2"
+                                       style="display: none">{{ post.pk }}
+                                </label>
+
+                            </th>
+                            <td value="{{ p.get_tasks.first.get_steps.last.step_attachment.get_attachment.first.id }}"
+                                class="project_link">
+                                <a href="javascript:void(0)"><span>{{ p.get_tasks.first.get_steps.last.step_attachment.get_attachment.first.project_name }}</span></a>
                             </td>
-                            <td value="{{ p.id }}" class="wordTransform">
+                            <td style="border-right: none; text-align: center">
+                                <a class="editProject" value="{{ p.process_order_id }}">
+                                    修改(待开发）
+                                </a>
+                            </td>
+                            <td style="border-left: none;border-right: none; text-align: center">
+                                <a class="patchUpProject">合并(待开发）</a>
+                            </td>
+                            <td style="border-right: none; border-left: none;text-align: center">
+                                <a class="toAnnualProject" value="{{ p.process_order_id }}">
+                                    转为立项课题
+                                </a>
+                            </td>
+                            <td value="{{ p.get_tasks.first.get_steps.last.step_attachment.get_attachment.first.id }}"
+                                class="wordTransform" style="border-right: none;border-left: none; text-align: center">
                                 <a href="javascript:void(0)"><span>生成word文档</span></a>
                             </td>
+
+                        </tr>
+                        <tr class="detailPanel collapse">
+
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -29,15 +56,16 @@
             {% endif %}
         </div>
     </div>
+
     <button id="showTable" class="btn btn-sm btn-primary">返回</button>
 
     <script>
-
         $(document).ready(function () {
             var projectDetailPanel = $("#projectDetailDisplayPanel");
             var projectDisplyPanel = $("#projectDisplyPanel");
             var projectVerboseName = JSON.parse('{{ project_verbose_name }}'.replace(/&quot;/g, '"'));
-
+            var project_types = JSON.parse("{{ process_types }}".replace(/&quot;/g, '"'))
+            var project_dirs = JSON.parse("{{ process_directions }}".replace(/&quot;/g, '"'))
             $('#secondaryMenu').append(
                 "<li class='fa fa-angle-right'>" + "课题需求" + "</li>" + "<li class='fa fa-angle-right active fw-bold'>" + "{{ template_name }}" + "</li>"
             )
@@ -52,24 +80,51 @@
             $(".project_link").on('click', function () {
                 let requiredProjectId = $(this).attr("value")
                 let projecturl = "/projectSystem/projectRequirements/" + requiredProjectId + "/"
-                $.ajax({
-                    url: projecturl,
-                    type: 'get',
-                    success: function (data) {
-                        let Detail = "<ul style='list-style: none'>"
-                        for (var key in data) {
-                            if (projectVerboseName[key] != null) {
-                                Detail += "<li>" + projectVerboseName[key] + ": &nbsp;&nbsp;" + data[key] +
-                                    "</li>"
+                let nextTr = $(this).parent().next()
+                {#let project_types = JSON.parse('{{ project_types }}')#}
+
+                if (nextTr.hasClass("in")) {
+                    nextTr.removeClass("in")
+                } else {
+                    if (nextTr.children().length === 0) {
+                        $.ajax({
+                            url: projecturl,
+                            type: 'get',
+                            success: function (data) {
+                                // show project detail
+                                console.log(data)
+                                let Detail = "<td colspan='5'><ul style='list-style: none;margin:10px'>"
+                                for (var key in data) {
+                                    if (projectVerboseName[key] != null) {
+                                        if (key === "project_type") {
+                                            Detail += "<li>" + projectVerboseName[key] + ": &nbsp;&nbsp;" + project_types[parseInt(data[key]) - 1][1] +
+                                                "</li>"
+                                        } else if (key === "project_research_direction") {
+                                            Detail += "<li>" + projectVerboseName[key] + ": &nbsp;&nbsp;" + project_dirs[parseInt(data[key]) - 1][1] +
+                                                "</li>"
+                                        } else {
+                                            if (data[key].length > 50) {
+                                                Detail += "<li>" + projectVerboseName[key] + ": &nbsp;&nbsp;" + data[key].slice(0, 50) + " ……" +
+                                                    "</li>"
+                                            } else {
+                                                Detail += "<li>" + projectVerboseName[key] + ": &nbsp;&nbsp;" + data[key] +
+                                                    "</li>"
+                                            }
+                                        }
+                                    }
+                                }
+                                Detail += "<p class='text-left'><a><span>查看详情</span></a></p></ul></td>"
+                                nextTr.html(Detail)
+                                {#projectDisplyPanel.hide();#}
+                                {#projectDetailPanel.empty();#}
+                                {#projectDetailPanel.html(Detail);#}
                             }
-                        }
-                        Detail += "</ul>"
-                        projectDisplyPanel.hide();
-                        projectDetailPanel.empty();
-                        projectDetailPanel.html(Detail)
+                        })
                     }
-                })
+                    nextTr.addClass("in")
+                }
             });
+
             $("#showTable").on('click', function () {
                 projectDisplyPanel.show();
                 projectDetailPanel.empty();
@@ -79,6 +134,7 @@
                 let target = $(this).parent()
                 let requirementID = $(this).parent().attr('value');
                 var docxurl = ''
+
                 function download2(fp) {
                     var $form = $('<form method="GET"></form>');
                     $form.attr('action', fp);
@@ -102,6 +158,47 @@
                     }
                 })
             })
+
+            $(".toAnnualProject").on('click', function () {
+                let targetProcessID = $(this).attr("value");
+                let project_name = $(this).parentsUntil("tr").parent().find("td").first().find("span").first().text();
+                $.ajax({
+                    url: "/projectSystem/projectDispatch/",
+                    type: "get",
+                    success: function (data) {
+                        layer.ready(
+                            layer.open({
+                                type: 1,
+                                area: ['780px', '500px'],
+                                shadeClose: true, //点击遮罩关闭
+                                title: '立项确认',
+                                content: "<p style='margin: 30px;margin-bottom:-15px'>请分配" + "&nbsp" + "<strong>" + project_name + "</strong>" + "</p>" + data.html,
+                                btn: ['确认', '取消'],
+                                yes: function () {
+                                    let x = $("#set_assignee").serializeArray().reduce(function (obj, item) {
+                                        obj[item.name] = item.value;
+                                        return obj;
+                                    }, {})
+                                    console.log("yes")
+                                    $.ajax({
+                                        url: '/projectSystem/requirementSetToAnnual/',
+                                        data: {"process_id": targetProcessID, "user_id":x.assignee},
+                                        type: "post",
+
+                                        success: function (data) {
+                                            console.log(data)
+                                        }
+                                    })
+                                }
+                            })
+                        )
+                    }
+
+                })
+
+
+            })
+
         })
     </script>
 {% endblock %}

@@ -76,8 +76,13 @@ class ProjectInputProcess(AbstractProcess):
 
     def process_creation(self, *args, **kwargs):
         # process
-        instance = kwargs.get('instance')
+
+        instance = Process.objects.create(
+            process_pattern_id=kwargs.get('process_pattern_id'),
+            process_executor=kwargs.get('process_executor')
+        )
         if self.process_date_validator(instance=instance):
+
             task_demo = instance.create_task(
                 task_type='录入',
                 task_seq=0,
@@ -85,12 +90,13 @@ class ProjectInputProcess(AbstractProcess):
                 task_state='',
                 task_sponsor=instance.process_executor
             )
-            return task_demo
+            return instance,task_demo
 
 
     def process_date_validator(self, instance):
         current_date = timezone.now()
         # datetime
+
         return instance.process_pattern.process_start_time < current_date < instance.process_pattern.process_end_time
 
     def process_attach(self, collaborator):

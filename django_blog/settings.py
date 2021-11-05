@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'taggit_labels',
     'crispy_forms',
     'ApprovalSystemOCT',
+    'django_crontab',
 ]
 
 MIDDLEWARE = [
@@ -44,8 +45,10 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny'
-    ]
+    ],
+    'DATETIME_FORMAT': "%Y-%m-%d %H:%M",
 }
+
 CORS_ORIGIN_ALLOW_ALL = True
 ROOT_URLCONF = 'django_blog.urls'
 
@@ -100,6 +103,11 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
+]
+
+CRONJOBS = [
+    ('*/5 * * * *', 'ApprovalSystemOCT.cron.processing_date_validator',
+     f'>>/{BASE_DIR}/ApprovalSystemOCT/logs/cron/log/processing_date_validator.log')
 ]
 
 LANGUAGE_CODE = 'en-us'

@@ -1,0 +1,273 @@
+{% extends 'projectBase.html' %}
+{% load static %}
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/datepicker/jquery.datetimepicker.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/iconfont/iconfont/css/iconfont.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/iconfont/iconfont/css/iconfont-animate.min.css' %}">
+    <style>
+
+        .icon-list {
+            cursor: pointer;
+            text-align: center;
+            color: #757575;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .icon-list li {
+            width: 12.5%;
+        }
+
+        .icon-list li {
+            float: left;
+            width: 12.5%;
+            height: 100px;
+            padding: 10px;
+            line-height: 1.4;
+            text-align: center;
+            background-color: #f9f9f9;
+            border: 1px solid #fff;
+        }
+
+        .icon-list li:hover {
+            color: #FFFFFF;
+            background-color: #ff7e00;
+        }
+
+        .icon-list .caption {
+            display: block;
+            text-align: center;
+            word-wrap: break-word;
+            font-size: 12px;
+        }
+
+        .icon-category-header {
+            padding-bottom: 9px;
+            margin: 40px 0 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        @media (max-width: 768px) {
+            .icon-list li {
+                width: 25%;
+            }
+        }
+
+        .if {
+            font-size: 36px;
+        }
+
+        #implementTbody input textarea {
+            width: 100%;
+            height: 100%;
+        }
+
+        input, select, textarea {
+            border: none;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+
+        textarea {
+            resize: none;
+            overflow: auto;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+    <div style="background-color: whitesmoke;box-shadow: 10px 5px 5px floralwhite;padding:5px;margin-top: 30px">
+
+
+        <div class="row" style="margin:5px 35px 5px 35px">
+            <h2 class="text-center" style="margin:5px 35px 5px 35px"><strong>创新研究课题推进情况季度报表</strong></h2>
+        </div>
+        <div class="row" style="margin:5px 35px 5px 35px">
+            <div class="col-md-12">
+                <p class="text-left" style="margin-left: 5px"><span>课题名称:</span>
+                    <select>
+                        <option value="1">课题A</option>
+                        <option value="1">课题B</option>
+
+                    </select>
+
+                </p>
+            </div>
+        </div>
+        <div class="row" style="margin:5px 35px 5px 35px">
+            <div class="col-md-4">
+                <span style="margin-left: 5px">责任单位/部门:</span>
+                <span><input style="width: 60%"></span>
+                <div class="clearfix"></div>
+
+            </div>
+            <div class="col-md-4">
+                <span style="margin-left: 5px">编报季度: </span>
+                <span><input style="width: 15%">年<input style="width: 10%">季度</span>
+                <div class="clearfix"></div>
+            </div>
+            <div class="col-md-3">
+                <span class="pull-left" style="margin-left: 5px">负责人:</span>
+                <span><input></span>
+
+                <div class="clearfix"></div>
+
+            </div>
+            <div class="col-md-1">
+                <a><i class="icon iconfont icon-gou"></i></a>
+                <a><i class="icon iconfont icon-bianji"></i></a>
+            </div>
+
+        </div>
+        <div class="row" style="margin:5px 35px 5px 35px">
+            <div class="col-md-12">
+                <table class="table table-bordered"
+                       style="background-color: white; padding:5px;">
+                    <thead>
+                    <tr>
+                        <th scope="col" style="width: 1%"></th>
+                        <th scope="col" class="col-md-1">
+                            重点工作事项
+                        </th>
+                        <th scope="col" class="col-md-1">
+                            分项任务
+                        </th>
+                        <th scope="col" class="col-md-1">
+                            计划开展时间及
+                            完成时间
+                        </th>
+                        <th scope="col" class="col-md-3">
+                            本季度工作推进情况
+                        </th>
+                        <th scope="col" class="col-md-3">
+                            未能按计划进度完成的原因
+                        </th>
+                        <th scope="col" class="col-md-3">
+                            相关说明
+                        </th>
+                        <th scope="col" class="col-md-1">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="implementTbody">
+                    <tr>
+                        <td></td>
+                        <td class="text-center">
+                            <a id="addIssue">
+                            <span class="badge badge-success"><strong class="font-bold"
+                                                                      style="font-size: medium">+</strong></span>
+                            </a>
+                        </td>
+                        <td class="text-center">
+                            <a id="addTask">
+                            <span class="badge badge-success"><strong class="font-bold"
+                                                                      style="font-size: medium">+</strong></span>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+
+            $('#secondaryMenu').append(
+                "<li class='fa fa-angle-right'>" + "课题需求" + "</li>" + "<li class='fa fa-angle-right active fw-bold'>" + "{{ template_name }}" + "</li>"
+            )
+            $.each($(".liGroupList"), function (idx, opt) {
+                let urlPath = "{{ template_name }}"
+                if (opt.innerText === urlPath) {
+                    $(opt).addClass('active');
+                } else {
+                    $(opt).removeClass('active');
+                }
+            });
+            var saveInit = function () {
+
+                $(".saveImplement").on('click', function () {
+
+                    let x = $($(this).parent().parent().find("input,textarea")).serializeArray();
+                    console.log(x)
+                })
+
+            }
+            $("#addIssue").on("click", function () {
+                // add an issue
+
+                let p = $(this).parent().parent();
+                p.before("<tr>" +
+                    "<th scope='row'>+</th>" +
+                    "<td><input type='hidden' name='id' value='row1'/><input class='form-control' name='project_important_issue' type='text' value='' style='width: 100%;height: 100%'/></td>" +
+                    "<td><input  class='form-control' name='project_task' type='text' value='' style='width: 100%;height: 100%'/></td>" +
+                    "<td>" +
+                    "<label>开始时间： </label>" +
+                    "<input class='form-control' name='project_task_start_time' type='text' value='' style='width: 100%;height: 100%'/>" +
+                    "<label>结束时间： </label>" +
+                    "<input class='form-control' name='project_task_end_time' type='text' value='' style='width: 100%;height: 100%'/>" +
+                    "</td>" +
+                    "<td style='padding: 0'><textarea rows=8 class='form-control' name='season_implement_progress' type='text' value='' style='width: 100%;height: 100%'></textarea></td>" +
+                    "<td style='padding: 0'><textarea rows=8 class='form-control' name='season_implement_delay_explanation' type='text' value='' style='width: 100%;height: 100%'></textarea></td>" +
+                    "<td style='padding: 0'><textarea rows=8 class='form-control' name='add_ups' type='text' value='' style='width: 100%;height: 100%'></textarea></td>" +
+                    "<td><a class='saveImplement'>保存</a><a class='updateImplement'>更新 </a><a class='deleteImplement'>删除</a></td>" +
+                    "</tr>"
+                )
+                saveInit();
+            })
+            $("#addTask").on('click', function () {
+                let p = $(this).parent().parent();
+
+                if (p.prevAll().length > 0) {
+                    let current = p.prev()
+                    let z = false
+
+                    while (z === false) {
+
+                        if (current.children('td').length === 7) {
+
+                            if ($(current.children('td')[0]).attr('rowspan') === undefined) {
+                                $(current.children('td')[0]).attr('rowspan', "2");
+                            } else {
+                                $(current.children('td')[0]).attr('rowspan', (parseInt($(current.children('td')[0]).attr('rowspan')) + 1).toString());
+                            }
+                            z = true
+                        } else {
+                            current = current.prev()
+                        }
+                    }
+
+                    p.before("<tr>" +
+                        "<th scope='row'>+</th>" +
+                        "<td><input  class='form-control' name='project_task' type='text' value='' style='width: 100%;height: 100%'/></td>" +
+                        "<td>" +
+                        "<label>开始时间： </label>" +
+                        "<input class='form-control' name='project_task_start_time' type='text' value='' style='width: 100%;height: 100%'/>" +
+                        "<label>结束时间： </label>" +
+                        "<input class='form-control' name='project_task_end_time' type='text' value='' style='width: 100%;height: 100%'/>" +
+                        "</td>" +
+                        "<td style='padding: 0'><textarea rows=8 class='form-control' name='season_implement_progress' type='text' value='' style='width: 100%;height: 100%'></textarea></td>" +
+                        "<td style='padding: 0'><textarea rows=8 class='form-control' name='season_implement_delay_explanation' type='text' value='' style='width: 100%;height: 100%'></textarea></td>" +
+                        "<td style='padding: 0'><textarea rows=8 class='form-control' name='add_ups' type='text' value='' style='width: 100%;height: 100%'></textarea></td>" +
+                        "<td><a class='saveImplement'>保存</a><a class='updateImplement'>更新 </a><a class='deleteImplement'>删除</a></td>" +
+                        "</tr>"
+                    )
+                    saveInit();
+                }
+
+            })
+
+            $(".submit").on("click", function (event) {
+                event.preventDefault();
+                var url = ($(this).data("action") === "undefined" ? "/" : $(this).data("action"));
+                var row = $(this).parents("tr").first();
+                var data = row.find("input, select, radio").serialize();
+                $.post(url, data, function (result) {
+                    console.log(result);
+                });
+            });
+        })
+    </script>
+
+{% endblock %}

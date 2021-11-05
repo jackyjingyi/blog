@@ -173,9 +173,17 @@
                                 <ul class="nav nav-second-level collapse in">
                                     {% for item in lv2Val %}
                                         <li class="liGroupList">
-                                            <a href="{% url item.1 %}" class="groupList">
-                                                <span style="margin-left: 20%" value="">{{ item.0 }}</span>
-                                            </a>
+                                            {% if item.1 == 'annual_user_projects' %}
+                                                {% if user.is_authenticated %}
+                                                    <a href="{% url item.1 user.id %}" class="groupList" id = "{{ item.1 }}">
+                                                        <span style="margin-left: 20%" value="">{{ item.0 }}</span>
+                                                    </a>
+                                                {% endif %}
+                                            {% else %}
+                                                <a href="{% url item.1 %}" class="groupList" id = "{{ item.1 }}">
+                                                    <span style="margin-left: 20%" value="">{{ item.0 }}</span>
+                                                </a>
+                                            {% endif %}
                                         </li>
                                     {% endfor %}
                                 </ul>
@@ -283,12 +291,6 @@
             }
 
         })
-        {#$(".liGroupList").on('click', function () {#}
-        {#    let gName = $(this).children().first().children().first()[0].innerText;#}
-        {#    let url = '/group_posts/' + gName#}
-        {#    window.location.href = url#}
-        {# })#}
-
 
     })
 </script>

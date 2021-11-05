@@ -145,7 +145,7 @@
                         </div>
                         <div class="col-md-3">
                             <i class="pull-left icon iconfont icon-miaoshu">
-                            </i>&nbsp;
+                            </i>
                             <label for="project_research_direction"
                                    class="form-label d-inline-block mb-2 text-primary"><strong>
                                 研究方向
@@ -257,7 +257,7 @@
                                 联合工作小组成员及分工
                             </strong></label>
                             <textarea name="project_co_group" type="text" class="form-control" id="project_co_group"
-                                      placeholder="" , rows="15"
+                                      placeholder=""  rows="15"
                                       required>联合工作小组成员及分工:</textarea>
                         </div>
                     </div>
@@ -271,7 +271,7 @@
                                 具体分项任务内容及安排
                             </strong></label>
                             <textarea name="project_detail" type="text" class="form-control" id="project_detail"
-                                      placeholder="" , rows="15"
+                                      placeholder="" rows="15"
                                       required>具体分项任务内容及安排:</textarea>
                         </div>
                     </div>
@@ -284,7 +284,7 @@
                                 主要创新研究课题内容、目标及意义
                             </strong></label>
                             <textarea name="project_purpose" type="text" class="form-control" id="project_purpose"
-                                      placeholder="" , rows="15"
+                                      placeholder=""  rows="15"
                                       required>主要创新研究课题内容、目标及意义</textarea>
                         </div>
                     </div>
@@ -298,7 +298,7 @@
                             </strong></label>
                             <textarea name="project_preparation" type="text" class="form-control"
                                       id="project_preparation"
-                                      placeholder="" , rows="15"
+                                      placeholder="" rows="15"
                                       required>与课题相关的前期工作情况，现有基础条件</textarea>
                         </div>
                     </div>
@@ -311,7 +311,7 @@
                                 研究课题的重点及难点
                             </strong></label>
                             <textarea name="project_difficult" type="text" class="form-control" id="project_difficult"
-                                      placeholder="" , rows="15"
+                                      placeholder="" rows="15"
                                       required>研究课题的重点及难点:</textarea>
                         </div>
                     </div>
@@ -341,7 +341,7 @@
 
             $("#col1").on('click', function () {
                 let k = $("#projectWorkTitle")
-                k.attr('colspan',(parseInt(k.attr('colspan'))+1).toString())
+                k.attr('colspan', (parseInt(k.attr('colspan')) + 1).toString())
             })
 
             $('#secondaryMenu').append(
@@ -373,86 +373,97 @@
                 },
 
             });
-            $("#saveAsDraft").on("click", function (e) {
+            var saveSubmitFunc = function (e, status) {
+                e.preventDefault()
+                var forms = $('#create_project')
+                let processOrderID = null;
+                let taskID = null
+                let get_process_and_task = function (event) {
+                    return JSON.parse($.ajax({
+                        url: '/projectSystem/process/creation/',
+                        type: 'post',
+                        data: {'process_type_id': '1'},
+                        async: false,
+                        success: function (data) {
+                            $("#processPanel tbody").append(
+                                '<tr><td>' + "课题流程ID：" + data.process[0].process_order_id + '</td>' +
+                                '<td>' + data.task[0].task_type + '</td></tr>'
+                            )
+                        },
+                        error: function (error_data) {
+                            event.stopPropagation();
+                            window.alert("系统异常，请联系管理员")
 
-                    e.preventDefault()
-                    var forms = $('#create_project')
-                    if (processOrderIDList.length < 1) {
-                        $.ajax({
-                            url: '/projectSystem/process/creation/',
-                            type: 'post',
-                            data: {'type': 'input'},
-                            async: false,
-                            success: function (data) {
-                                processOrderIDList.push(data.process[0].process_order_id);
-                                taskID.push(data.task[0].task_id);
-                                console.log(processOrderIDList, taskID)
+                        },
+                    }).responseText);
 
-                                $("#processPanel tbody").append(
-                                    '<tr><td>' + "课题流程ID：" + data.process[0].process_order_id + '</td>' +
-                                    '<td>' + data.task[0].task_type + '</td></tr>'
-                                )
-
-
-                            },
-                            error: function (error_data) {
-                                console.log(error_data)
-                            },
-
-                        });
-                    }
-                    if (forms[0].checkValidity() === false && taskID.length > 0) {
-                        forms[0].reportValidity();
-                        e.stopPropagation();
-                    } else {
-                        var fd = new FormData;
-                        var x = forms.serializeArray().reduce(function (obj, item) {
-                            obj[item.name] = item.value;
-                            return obj;
-                        }, {});
-                        for (var key in x) {
-                            if (key === 'project_start_time' || key === 'project_end_time') {
-                                x[key] = x[key] + ":00.000000"
-                            }
-                            fd.append(key, x[key]);
-                        }
-
-                        $.ajax({
-                            url: '/projectSystem/projectRequirements/',
-                            type: 'post',
-                            data: fd,
-                            dataType: 'json',
-                            processData: false,
-                            contentType: false,
-                            beforeSend: function (xhr, settings) {
-                                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                                    xhr.setRequestHeader('X-CSRFToken', csrftoken);
-                                }
-                            },
-                            success: function (data) {
-                                console.log(data);
-                                let stepTaskID = taskID[0];
-                                let attachment = getAttachment('ApprovalSystemOCT', 'ProjectRequirement', data.id)
-                                let step = getStep(stepTaskID, attachment.attachment_uuid)
-                                let output = ""
-                                $.each(data, function (key, value) {
-                                    output += "<p>" + key + ": " + value + "</p>"
-                                });
-                                $("#processPanel tbody tr").last().append(
-                                    output
-                                );
-                                $("#inputPanel").removeClass('in');
-                                $("#resetButton").click();
-                            },
-                            error: function (error_data) {
-                                console.log(error_data.responseText)
-
-                            }
-                        })
-                    }
                 }
-            )
-            ;
+                let create_project = function (t) {
+                    let fd = new FormData;
+                    let x = forms.serializeArray().reduce(function (obj, item) {
+                        obj[item.name] = item.value;
+                        return obj;
+                     }, {});
+                    for (var key in x) {
+                        if (key === 'project_start_time' || key === 'project_end_time') {
+                            x[key] = x[key] + ":00.000000"
+                        }
+                        fd.append(key, x[key]);
+                     }
+
+                    $.ajax({
+                        url: '/projectSystem/projectRequirements/',
+                        type: 'post',
+                        data: fd,
+                        dataType: 'json',
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function (xhr, settings) {
+                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                                xhr.setRequestHeader('X-CSRFToken', csrftoken);
+                            }
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            let stepTaskID = t;
+                            let attachment = getAttachment('ApprovalSystemOCT', 'ProjectRequirement', data.id)
+                            let step = getStep(stepTaskID, attachment.attachment_uuid, status)
+                            let output = ""
+                            $.each(data, function (key, value) {
+                                output += "<p>" + key + ": " + value + "</p>"
+                            });
+                            $("#processPanel tbody tr").last().append(
+                                output
+                            );
+                            $("#inputPanel").removeClass('in');
+                            $("#resetButton").click();
+                        },
+                        error: function (error_data) {
+                            e.stopPropagation();
+                            window.alert("系统异常，请联系管理员")
+
+                        }
+                     })
+
+                }
+
+                if (forms[0].checkValidity() === false) {
+                    forms[0].reportValidity();
+                    e.stopPropagation();
+                } else {
+                    let prepData = get_process_and_task(e);
+                    create_project(prepData.task[0].task_id)
+                }
+            }
+
+
+            $("#saveAsDraft").on("click", function (e) {
+                    saveSubmitFunc(e, '1');
+                }
+            );
+            $("#directSubmit").on('click', function (e) {
+                saveSubmitFunc(e, '3');
+            })
             var getAttachment = function (attachment_app_name, attachment_app_model, projectID) {
 
                 return JSON.parse($.ajax({
@@ -479,7 +490,7 @@
 
             }
 
-            var getStep = function (taskID, attachmentID) {
+            var getStep = function (taskID, attachmentID, status) {
                 console.log(taskID, attachmentID)
                 return JSON.parse($.ajax({
                     'url': '/projectSystem/steps/',
@@ -490,6 +501,7 @@
                         'step_seq': 0,
                         'step_attachment_snapshot': JSON.stringify(''),
                         'step_owner': '{{ user.pk }}',
+                        'step_status': status
                     },
                     async: false,
                     beforeSend: function (xhr, settings) {
@@ -499,6 +511,16 @@
                     },
                     success: function (data) {
                         console.log(data)
+                        if (status === "3") {
+                            $.ajax({
+                                url: "/projectSystem/finishProcess/",
+                                type: "post",
+                                data: {"step_id": data.step_id},
+                                success: function (data) {
+                                    console.log(data)
+                                }
+                            })
+                        }
 
                     },
                     error: function (error_data) {
@@ -518,11 +540,6 @@
 
                 $("#inputPanel").removeClass('in');
                 $("#resetButton").click();
-                if (processOrderIDList.length > 0) {
-                    processOrderIDList.pop();
-                    taskID.pop();
-                    $("#processPanel tbody tr").last().remove();
-                }
 
 
             })

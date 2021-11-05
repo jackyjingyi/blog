@@ -452,13 +452,13 @@
         {#多选 | 单选#}
 
         function simpleActions(obj, action) {
-            console.log(obj)
-            console.log(action)
-            console.log(typeof action)
+            {#console.log(obj)#}
+            {#console.log(action)#}
+            {#console.log(typeof action)#}
             var postPkList = []
             var postPK = parseInt(obj.parentElement.parentElement.parentElement.firstElementChild.firstElementChild.children[1].textContent.trim())
             postPkList.push(postPK)
-            console.log(postPK)
+            {#console.log(postPK)#}
             $.ajax({
                     type: "POST",
                     url: "/bulk_submit/",
@@ -470,7 +470,7 @@
                     dataType: "json",
                     success: function (data) {
                         location.reload();
-                        console.log("refreshed")
+                        {#console.log("refreshed")#}
 
                     },
                     error: function (error_data) {
