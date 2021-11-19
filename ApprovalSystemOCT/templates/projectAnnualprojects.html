@@ -73,17 +73,15 @@
                             {{ item.get_tasks.last.get_steps.last.step_attachment.get_attachment.first.project_name }}
                             </span>
                         </td>
-{#                        {% for k,v in prep_dict.items %}#}
-{#                            {% if k == item.prep %}#}
-                                <td>{{ item.process_executor.first_name }}</td>
-                                <td>{{ item.process_executor.groups.first.name }}</td>
-{#                            {% endif %}#}
-{#                        {% endfor %}#}
+                        <td>{{ item.process_executor.first_name }}</td>
+                        <td>{{ item.process_executor.groups.first.name }}</td>
                         <td>{{ item.creat_time|date:"Y年n月d日" }}</td>
                     </tr>
                     <tr class="collapse">
                         <td colspan="5">
                             {{ item.get_tasks.last.get_steps.last.step_attachment.get_attachment.first|safe }}
+                            <a href="{% url 'annual_project_detail' item.pk %}">查看详情</a>
+                            <a>进度管理</a>
                         </td>
                     </tr>
                 {% endfor %}

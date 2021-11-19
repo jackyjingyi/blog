@@ -1,9 +1,7 @@
 {% extends 'projectBase.html' %}
 {% load static %}
 {% block content %}
-    <link rel="stylesheet" type="text/css" href="{% static 'lib/datepicker/jquery.datetimepicker.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'lib/iconfont/iconfont/css/iconfont.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'lib/iconfont/iconfont/css/iconfont-animate.min.css' %}">
+
     <style>
 
         .icon-list {
@@ -78,46 +76,50 @@
         }
     </style>
     <div style="background-color: whitesmoke;box-shadow: 10px 5px 5px floralwhite;padding:5px;margin-top: 30px">
-
-
         <div class="row" style="margin:5px 35px 5px 35px">
             <h2 class="text-center" style="margin:5px 35px 5px 35px"><strong>创新研究课题推进情况季度报表</strong></h2>
         </div>
+
         <div class="row" style="margin:5px 35px 5px 35px">
             <div class="col-md-12">
-                <p class="text-left" style="margin-left: 5px"><span>课题名称:</span>
-                    <select>
-                        <option value="1">课题A</option>
-                        <option value="1">课题B</option>
-
-                    </select>
-
+                <p class="text-left">
+                    <strong>课题名称: <span class="text-info">{{ obj_pr.project_name }}</span></strong>
                 </p>
-            </div>
-        </div>
-        <div class="row" style="margin:5px 35px 5px 35px">
-            <div class="col-md-4">
-                <span style="margin-left: 5px">责任单位/部门:</span>
-                <span><input style="width: 60%"></span>
-                <div class="clearfix"></div>
+                <form class="g-3 needs-validation" enctype="multipart/form-data" id="create_title" novalidate>
+                    <div class="form-group">
+                        <div class="col-md-4 margin-left-0 text-left" style="padding-left: 0">
+
+                            <input class="form-control inline input-sm v-middle" name="project_base"
+                                   value="{{ obj_pr.pk }}" type="hidden"/>
+                            <label class="inline v-middle m-b-none"
+                                   for="department">责任单位/部门:</label>
+                            <input class="form-control inline input-sm v-middle width-200" placeholder="请输入部门名称"
+                                   id="department" name="department"/>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="inline v-middle m-b-none" for="progress_year"
+                                   style="margin-left: 5px">编报季度: </label>
+                            <input class="form-control inline input-sm v-middle width-100" id="progress_year"
+                                   name="progress_year"/>年
+                            <label class="inline v-middle m-b-none" for="progress_season"></label>
+                            <input class="form-control inline input-sm v-middle width-60" id="progress_season"
+                                   name="progress_season"/>季度
+                        </div>
+                        <div class="col-md-3">
+                            <label class="inline v-middle m-b-none" style="margin-left: 5px"
+                                   for="sponsor">负责人:</label>
+                            <input class="form-control inline input-sm v-middle width-200"
+                                   id="sponsor" name="sponsor"/>
+                        </div>
+                        <div class="col-md-1 pull-right">
+                            <a data-action="title_submit"><i class="icon iconfont icon-gou"></i></a>
+                            <a data-action="title_edit"><i class="icon iconfont icon-bianji"></i></a>
+                        </div>
+                    </div>
+                </form>
 
             </div>
-            <div class="col-md-4">
-                <span style="margin-left: 5px">编报季度: </span>
-                <span><input style="width: 15%">年<input style="width: 10%">季度</span>
-                <div class="clearfix"></div>
-            </div>
-            <div class="col-md-3">
-                <span class="pull-left" style="margin-left: 5px">负责人:</span>
-                <span><input></span>
-
-                <div class="clearfix"></div>
-
-            </div>
-            <div class="col-md-1">
-                <a><i class="icon iconfont icon-gou"></i></a>
-                <a><i class="icon iconfont icon-bianji"></i></a>
-            </div>
+            {#            </form>#}
 
         </div>
         <div class="row" style="margin:5px 35px 5px 35px">
@@ -171,8 +173,40 @@
             </div>
         </div>
     </div>
+    <script type="text/javascript" src="{% static 'ApprovalSystemOCT/js/updateLogProcess.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ApprovalSystemOCT/js/components.js' %}"></script>
     <script>
         $(document).ready(function () {
+            const csrftoken = getCookie('csrftoken');
+            const processID = "{{ process.pk }}"
+            let leftSideBarSelector = $("#annual_all_projects");
+            let titleForm = $("#create_title");
+            // adds second level menu onto left sidebar
+            leftSideBarSelector.empty();
+            leftSideBarFunc(leftSideBarSelector, "课题详情", '/projectSystem/annualProjectDetail/' + processID + "/", '');
+            leftSideBarFunc(leftSideBarSelector, "进度管理", '/projectSystem/Project/implement/' + processID + '/progress/', 'active');  // 进度管理，href待更新
+            leftSideBarFunc(leftSideBarSelector, "成果上传", '', '');
+            leftSideBarFunc(leftSideBarSelector, "结题详情", '', '');
+            leftSideBarFunc(leftSideBarSelector, "资料上传", '', '');
+
+            $('a[data-action=title_submit]').on('click', function () {
+                let newTitle = {}
+                let create_url = "/projectSystem/Project/implementTitle/create/"
+                assignValue(titleForm, newTitle);
+                console.log(JSON.stringify(newTitle));
+                $.ajax({
+                    url: create_url,
+                    data: newTitle,
+                    headers: {'X-CSRFToken': csrftoken},
+                    type: 'post',
+                    success: function (data) {
+                        console.log(data)
+                    },
+                    error:function (edata){
+                        console.log(edata)
+                    }
+                })
+            })
 
             $('#secondaryMenu').append(
                 "<li class='fa fa-angle-right'>" + "课题需求" + "</li>" + "<li class='fa fa-angle-right active fw-bold'>" + "{{ template_name }}" + "</li>"
@@ -257,7 +291,6 @@
                 }
 
             })
-
             $(".submit").on("click", function (event) {
                 event.preventDefault();
                 var url = ($(this).data("action") === "undefined" ? "/" : $(this).data("action"));

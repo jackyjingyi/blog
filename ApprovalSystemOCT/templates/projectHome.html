@@ -1,125 +1,92 @@
 {% extends 'projectBase.html' %}
 
 {% block content %}
-    <div class="row" style="margin:10px">
-        <div class="col-md-4">
-            <ul style="list-style: none">
-                <li>书名：<span id="bookName">{{ book.book_name }}</span></li>
-                <li>作者：<span id="authorName">{{ book.author }}</span></li>
-                <li>日期：<span id="updateTime">{{ book.update_time|date:"Y年n月d日" }}</span></li>
-            </ul>
-        </div>
-        <div>
-            <ul style="list-style: none">
-                <li class="d-flex">
-                    <span><label for="newBookName">New Book Name</label></span>
-                    <input id="newBookName"></li>
-                <li class="d-flex">
-                    <span><label for="newAuthor">New Author</label></span>
-                    <input id="newAuthor">
-                </li>
-            </ul>
-        </div>
-    </div>
-    <button id='test'>test</button>
     <div class="row">
-        {% if process %}
-            <p>流程：{{ process }}</p>
-        {% endif %}
-    </div>
-
-    {#    <div class="row">#}
-    {#        {% if task %}#}
-    {#            {% for item in task %}#}
-    {#                <p>任务{{ forloop.counter }}：{{ item }}</p>#}
-    {#            {% endfor %}#}
-    {#        {% endif %}#}
-    {#    </div>#}
-    {#    <div class="row">#}
-    {#        {% if step %}#}
-    {#            {% for item in step %}#}
-    {#                {{ item|safe }}#}
-    {#            {% endfor %}#}
-    {#        {% endif %}#}
-    {#    </div>#}
-    <form>
-        <label for="taskID">输入TASK ID</label>
-        <input id="taskID">
-    </form>
-
-    <div class="row">
-        <div class="col-md-8">
-            <div>
-                <ul style="list-style: none" id="stepsDisplayPanel">
-
-                </ul>
+        <div class="col-md-12" id="timeSelect">
+            <div class="data-list-filter">
+                <label class="dp-inline-block-1 v-middle m-b-none">立&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;项：</label>
+                {% for item in time_interval %}
+                    <a class="btn btn-link dp-inline-block-1" data-click-action="setTime"
+                       data-days="{{ item.0 }}">{{ item.1 }}</a>
+                {% endfor %}
             </div>
         </div>
-
+        <div class="col-md-12" id="statusSelect">
+            <div class="z-index-1 m-b-none">
+                <label class="inline v-middle m-b-none">状&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;态：</label>
+                <a class="btn btn-link" data-id data-action="selection">全部</a>
+                {% for item in status_list %}
+                    <a class="btn btn-link" data-id="{{ item.0 }}" data-action="selection">{{ item.1 }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group z-index-1">
+                <label class="inline" for="keywordSearch">搜&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;索：</label>
+                <input class="form-control input-sm width-300 inline v-middle" type="text" name="keyword" id="keywordSearch"
+                       placeholder="请输入关键字" />
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="border-bottom p-b-sm">
+                <button class="btn btn-primary" data-action="search">查询</button>
+                <button class="btn btn-default" data-action="refreshBtn">重置条件</button>
+            </div>
+        </div>
     </div>
-    <button id="getSteps">get steps</button>
+    <div class="row m-b-sm m-t-xs p-t-sm">
+        <div class="col-md-9 filter-result-col">
+        <span>
+            筛选条件：共
+            <span id="totalBySearch"></span>
+             个项目
+        </span>
+        </div>
+        <div class="col-md-3 text-right">
+            <button class="btn btn-white" data-action="exportDetails">导出</button>
+            <button type="button" class="btn btn-primary" data-action="setField" title="设置字段">
+                <span>
+                    <i class="fa fa-list"></i>
+                    <span class="caret m-t-n-xs"></span>
+                </span>
+            </button>
+        </div>
+    </div>
+    <div class="data-list-box" style="position: static;zoom:1;">
+        <div class="data-list-container">
+            <div class="project-list of-auto m-scroll-box">
+                <table class="table table-bordered table-hover cell-border dataTable">
+                    <thead style="position: relative;zoom: 1;">
+                    <tr>
+                        <th colspan="sorting" data-action="sort" data-code="projectNo" data-type="0">
+                            项目编号
+                        </th>
+                        <th data-code="projectName" data-type="0">项目名称</th>
+                        <th data-code="createCompany" data-type="2">所属组
+                            <a class="icon-filter pull-right" id="filter_createCompany">
+                                <i class="icon iconfont icon-shaixuan"></i>
+                            </a>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for item in process %}
+                        <tr class="curp" data-id="{{ item.pk }}">
+                            <td data-code="projcetNo">{{ item.get_tasks.last.get_steps.last.step_attachment.get_attachment.first.pk }}</td>
+                            <td data-code="projectName">{{ item.get_tasks.last.get_steps.last.step_attachment.get_attachment.first.project_name }}</td>
+                            <td data-code="createCompany">{{ item.process_executor.groups.first.name }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
     <script>
 
         $(document).ready(function () {
             const csrftoken = getCookie('csrftoken');
-            $("#test").on('click', function () {
-                {#const csrftoken = getCookie('csrftoken');#}
-                let newBook = $("#newBookName")[0].value
-                let newAuthor = $("#newAuthor")[0].value
-                $.ajax({
-                    url: '/projectSystem/books/1.json',
-                    data: {
-                        'book_name': newBook,
-                        'author': newAuthor,
-                    },
-                    type: 'patch',
-                    beforeSend: function (xhr, settings) {
-                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                            xhr.setRequestHeader('X-CSRFToken', csrftoken);
-                        }
-                    },
-                    success: function (data) {
-                        console.log(data)
-                        console.log(typeof data.update_time)
-                        $("#bookName")[0].innerText = data.book_name
-                        $("#authorName")[0].innerText = data.author
-
-                        $("#updateTime")[0].innerText = data.update_time
-                        $("#newBookName")[0].value = ""
-                        $("#newAuthor")[0].value = ""
-                    }
-                })
-            })
-            $("#getSteps").on("click", function () {
-                let url = '/projectSystem/tasks/steps/' + $("#taskID")[0].value
-                $.ajax({
-                    url: url,
-                    type: 'get',
-                    beforeSend: function (xhr, settings) {
-                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                            xhr.setRequestHeader('X-CSRFToken', csrftoken);
-                        }
-                    },
-                    success: function (data) {
-                        let stepTags = "";
-
-                        console.log(typeof data)
-
-                        for (let i = 0; i < data.length; i++) {
-
-                            let snapshot = data[i].step_attachment_snapshot
-                            let snapshotJson = ""
-                            if (snapshot != null) {
-                                console.log(snapshot)
-                                snapshotJson = JSON.stringify(snapshot)
-                            }
-                            stepTags += "<li>" + "步骤ID：" + data[i].step_id + " 顺序:" + data[i].step_seq + " 归属人:" + data[i].step_owner + " 数据: " + snapshotJson + "</li>"
-                        }
-                        $("#stepsDisplayPanel").append(stepTags)
-                    }
-                })
-
-            })
 
         })
 

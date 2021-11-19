@@ -1,116 +1,60 @@
 import logging
 import os
 import json
-import pdb
-import timeit
 from datetime import datetime
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import permission_required, login_required
-from django.http import HttpResponseRedirect, JsonResponse
-from django.http import HttpResponse, Http404
-from django.core import serializers, paginator
+from django.http import JsonResponse
+from django.http import Http404
 from django.conf import settings
+from django.db.models import Func, Value
 import django.utils.timezone as timezone
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import status
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
-from rest_framework import mixins
+from ApprovalSystemOCT.project_statics.static_data import *
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import generics
 
 import docx
-import IPy
-from docx.document import Document
+
 from ApprovalSystemOCT.models import Process, Task, Step, Book, ProcessType, Attachment, ProjectRequirement, \
     PROJECT_TYPE, \
     PROJECT_RESEARCH_DIRECTION, PROJECT_REQUIREMENT_VERBOSE, PROCESS_TYPE
 from ApprovalSystemOCT.serializers import BookSerializer, StepSerializer, ProjectRequirementSerializer, \
     ProcessTypeSerializer, AttachmentSerializer, ProcessSerializer
 from ApprovalSystemOCT.process import ProjectInputProcess
-from ApprovalSystemOCT.docx_handler import TableHandler, ProjectTableHandler
+from ApprovalSystemOCT.docx_handler import ProjectTableHandler
+from ApprovalSystemOCT.project_statics.static_function import *
 
-BASE_SIDEBAR_INDEX = {
-    "课题需求": {
-        "general": [("课题录入", "project_creation"), ("我的课题", "my_projects"), ("所有课题", "display_all_projects"), ]
-        # ("我的流程", "my_projects")],
-    },
-    "立项课题": {
-        "general": [("我的立项课题", "annual_user_projects"), ("所有立项课题", "annual_all_projects"),
-                    ("进度管理", "project_implement")],
-    },
-    "课题管理": {
-        "general": [("创建流程", "project_settlement"), ("所有课题", "display_all_projects"),
-                    ("所有立项课题", "annual_all_projects")]
-    }
-}
-INTERNAL = '172.25.0.0/16'
+logger = logging.getLogger(__name__)
+collect_logger = logging.getLogger("collect")
 
 
-def get_ip_address(request):
-    """
-    获取ip地址
-    :param request:
-    :return:
-    """
-    ip = request.META.get("HTTP_X_FORWARDED_FOR", "")
-
-    if not ip:
-        ip = request.META.get('REMOTE_ADDR', "")
-    client_ip = ip.split(",")[-1].strip() if ip else ""
-    return client_ip
-
-
-def if_internal_ip(internal, client_ip):
-    # todo
-    return client_ip in IPy.IP(internal)
-
-
-def tag_formatter(tag):
-    def add_tags(element, *args, **kwargs):
-        tag_properties = ''
-        for k, v in kwargs.items():
-            if k == 'cls_property':
-                tag_properties += f"class = '{v}'"
-            else:
-                tag_properties += f"{k} = '{v}'"
-        return f"<{tag} {tag_properties}>{element}</{tag}>"
-
-    return add_tags
-
-
-def single_tag_formatter(tag):
-    def add_tags(*args, **kwargs):
-        tag_properties = ''
-        for k, v in kwargs.items():
-            if k == 'cls_property':
-                tag_properties += f"class = '{v}'"
-            elif k == "fortag":
-                tag_properties += f"for = '{v}'"
-            else:
-                tag_properties += f"{k} = '{v}'"
-        return f"<{tag} {tag_properties}/>"
-
-    return add_tags
+def input_step_init(t, a, u, ty='1', ss='3'):
+    # think all step should be status down , no doing stuff keep
+    s = Step.objects.create(
+        step_attachment=a,
+        task=t,
+        step_seq=t.get_steps.last().step_seq + 1,
+        step_owner=u,
+        step_type=ty,  #
+        step_status=ss
+    )
+    s.set_attachment_snapshot()
+    return s
 
 
 def home_view(request):
-    print(get_ip_address(request))
-    p1 = Process.objects.all()[0]
-    t1 = Task.get_tasks(process_id=p1.process_order_id)
-    s1 = [Step.display_steps(task_id=i.task_id) for i in t1]
+    p1 = Process.objects.all()
     context = {
         'book': Book.objects.get(id=1),
         'process': p1,
-        'task': t1,
-        'step': s1,
         'sidebar_index': BASE_SIDEBAR_INDEX,
+        'time_interval': TIME_INTERVAL,
+        'status_list': STATUS_LIST
     }
+    logger.info("hi")
     return render(request, 'projectHome.html', context=context)
 
 
@@ -127,17 +71,41 @@ def project_creation(request):
 
 
 def display_all_projects(request):
-    queryset = Process.objects.filter(status='3', next__isnull=True, process_pattern__process_type="1")
-    # queryset = ProjectRequirement.objects.all()
+    queryset = Process.objects.filter(status__in=['3', '8'], process_pattern__process_type="1")
+    already_set_to_annual = []
+    not_set_to_annual = []
+
+    for i in queryset:
+        pnext = i.get_next()
+
+        if pnext:
+            tmp = False
+
+            for k in pnext:
+                _k = Process.objects.get(pk=k)
+
+                if _k.process_pattern.process_type == '7':
+                    tmp = True
+            if tmp:
+                already_set_to_annual.append(i.pk)
+            else:
+                not_set_to_annual.append(i.pk)
+        else:
+            not_set_to_annual.append(i.pk)
+
+    al = Process.objects.filter(process_order_id__in=already_set_to_annual)
+    nal = Process.objects.filter(process_order_id__in=not_set_to_annual)
     context = {
         'template_name': "所有课题",
         'sidebar_index': BASE_SIDEBAR_INDEX,
         'project_verbose_name': json.dumps(PROJECT_REQUIREMENT_VERBOSE),
         'queryset': queryset,
-        'process_types': json.dumps(PROCESS_TYPE[1:]),
+        'al': al,
+        'nal': nal,
+        'project_type': json.dumps(PROJECT_TYPE[1:]),
         'process_directions': json.dumps(PROJECT_RESEARCH_DIRECTION[1:]),
     }
-
+    logging.info(f"Here goes {123}")
     return render(request, 'projectAllprojects.html', context=context)
 
 
@@ -153,59 +121,231 @@ def project_settlement(request):
 
 
 def project_dispatch(request):
-    user_set = User.objects.filter(groups=15)
+    user_set = User.objects.filter(groups=15).extra(
+        select={'convert_name': 'convert(first_name using gbk)'},
+        order_by=['convert_name']
+    )
+    user_set_chief = User.objects.filter(groups__name="课题负责领导").extra(
+        select={'convert_name': 'convert(first_name using gbk)'},
+        order_by=['convert_name']
+    )
 
-    def get_form(user_set):
-        table = tag_formatter("table")
+    def get_form(user_set, user_set_chief):
+        def _get_user_selection(option, target):
+            users = ""
+            if target:
+                for u in target:
+                    users += option(u.first_name, value=u.id)
+            return users
+
         form = tag_formatter("form")
         label = tag_formatter("label")
         div = tag_formatter("div")
         input_tag = single_tag_formatter("input")
-        textarea = single_tag_formatter("textarea")
+        strong = tag_formatter("strong")
+        anchor = tag_formatter("a")
+        span = tag_formatter("span")
         select_tag = tag_formatter("select")
         option = tag_formatter("option")
-        assignee_label = label("负责人", fortag="assignee")
-        users = ""
-        if user_set:
-            for u in user_set:
-                users += option(u.first_name, value=u.id)
-        assignee = select_tag(users, cls_property="form-control", id="assignee", name="assignee")
-        form_group01 = div(assignee_label + assignee, cls_property="form-group")
+        # row1
+        assignee_label = label("负责人", fortag="project_sponsor")
+        users = _get_user_selection(option, user_set)
+        assignee = select_tag(users, cls_property="form-control", id="project_sponsor", name="project_sponsor")
+        div_row1_col1 = div(assignee_label + assignee, cls_property="col-md-6")
+        users_chief = _get_user_selection(option, user_set_chief)
+        label_chief = label("课题负责领导", fortag="project_head_master")
+        input_chief = select_tag(users_chief, cls_property="form-control", id="project_head_master",
+                                 name="project_head_master")
+        div_row1_col2 = div(label_chief + input_chief, cls_property="col-md-6")
+
+        div_row1 = div(div_row1_col1 + div_row1_col2, cls_property="row margin-top-5")
+        # row 2
+        label_settle_time = label("立项时间", fortag="project_approval_time")
+        project_approval_time = input_tag(value=datetime.strftime(datetime.now(), "%Y年%m月%d日"),
+                                          cls_property="form-control",
+                                          id="project_approval_time", name="project_approval_time", disabled="disabled")
+        div_row2_col1 = div(label_settle_time + project_approval_time, cls_property="col-md-6")
+        div_row2 = div(div_row2_col1, cls_property="row margin-top-5")
+        # row3
+        label_company = label("外部合作单位", fortag="project_outsourcing_companies_0")
+        input_company = input_tag(name="project_outsourcing_companies_0", cls_property="form-control companies",
+                                  id="project_outsourcing_companies_0", )
+        div_row3_col1 = div(label_company + input_company, cls_property="col-md-6")
+
+        label_company_purpose = label("外部合作内容", fortag="project_outsourcing_info_0")
+        input_company_purpose = input_tag(name="project_outsourcing_info_0", cls_property="form-control companies_info",
+                                          id="project_outsourcing_info_0", )
+
+        div_row3_col2 = div(label_company_purpose + input_company_purpose, cls_property="col-md-6")
+        div_row3 = div(div_row3_col1 + div_row3_col2, cls_property="row margin-top-5")
+        div_row4 = div(div(anchor(span(strong("新增", cls_property="font-bold", ), ),
+                                  cls_property="badge badge-info", id="add_one"), cls_property="col-md-6"),
+                       cls_property="row margin-top-5")
+        form_group01 = div(div_row1 + div_row2 + div_row3 + div_row4,
+                           cls_property="form-group")
         form_zip = div(form(form_group01, id="set_assignee"), style="margin:30px")
 
         return form_zip
 
-    res = get_form(user_set)
+    res = get_form(user_set, user_set_chief)
     return JsonResponse({'html': res}, status=200, safe=False)
 
 
-def project_implement_title(request):
-    pass
+def get_history(task_id):
+    history = []
+    for idx, val in enumerate(Step.get_update_history(task_id=task_id), start=1):
+        _k = list(val.keys())[0]
+        if _k in PROJECT_REQUIREMENT_VERBOSE.keys():
+            before = val[_k].get("before")
+            after = val[_k].get("after")
+            if "time" in _k:
+                before = datetime.strftime(datetime.strptime(val[_k].get("before"), "%Y-%m-%dT%H:%M:%S"),
+                                           "%Y年%m月%d日 %H:%M:%S")
+                after = datetime.strftime(datetime.strptime(val[_k].get("after"), "%Y-%m-%dT%H:%M:%S"),
+                                          "%Y年%m月%d日 %H:%M:%S")
+            elif _k == 'project_type':
+                before = PROJECT_TYPE[int(val[_k].get("before"))][1]
+                after = PROJECT_TYPE[int(val[_k].get("after"))][1]
+            elif _k == "project_research_direction":
+                before = PROJECT_RESEARCH_DIRECTION[int(val[_k].get("before"))][1]
+                after = PROJECT_RESEARCH_DIRECTION[int(val[_k].get("after"))][1]
+            history.append(
+                (idx, datetime.strftime(val[_k].get("update_time"), "%Y年%m月%d日 %H:%M:%S"), val[_k].get("step_owner"),
+                 PROJECT_REQUIREMENT_VERBOSE[_k],
+                 before, after
+                 ))
+    return history
+
+
+def make_conjunction(ship, bucket, check_func):
+    try:
+        check_func(bucket)
+        ship = json.dumps(json.loads(ship).append(bucket))
+    except Exception as e:
+        logging.warning(f"{bucket} is not a valid value {e}")
+    return ship
+
+
+@csrf_exempt
+def process_pack_up(request):
+    # process_conjunction processConjunction/
+    # ship new process, buckets [uuid1:str, uuid2:str]
+    # TODO: admin need a default input process type without influenced by time
+
+    def _check_validation(b):
+        try:
+            Process.objects.get(pk=b)
+        except Process.DoesNotExist:
+            return False
+        finally:
+            return True
+
+    if request.method == 'POST':
+        # try:
+        #     user.groups.get(name="课题系统管理员")
+        # except Group.DoesNotExist:
+        #     return HttpResponseForbidden
+        # buckets store process ids
+
+        data = json.loads(request.POST.get('data'))
+
+        # debug part
+        logging.info(f"Get request data {data}")
+        logging.info(f"Start set conjunction!")
+        process_type_queryset = ProcessType.objects.filter(process_type='1',
+                                                           status='1')  # 管理员不受时间限制
+
+        pc = ProjectInputProcess()
+        np, init_task = pc.process_creation(process_pattern_id=process_type_queryset.first().id,
+                                            process_executor=request.user)
+
+        _prev = []
+        _attachments = []
+        for i in data:
+            i = json.loads(i)
+            logging.info(f"Iterating target {i}")
+            p = Process.objects.get(pk=i.get('process_id'))
+            p.set_conjunction([json.loads(j).get('process_id') for j in data if
+                               json.loads(j).get('process_id') != i.get('process_id')])
+            p.status = '8'
+            # 上线取消注释
+            p.read_only = '1'
+            p.set_next([str(np.process_order_id)])
+            _prev.append(str(p.process_order_id))
+            _attachments.append(i.get("attachment_id"))
+            p.save()
+        np.set_prev(_prev)
+
+        np.save()
+        prd = {}
+        prpinstance = ProjectRequirement.objects.get(pk=_attachments[0])
+        for i in prpinstance._meta.fields:
+            if i.name != 'id':
+                prd[i.name] = getattr(prpinstance, i.name)
+        print(prd)
+        rp = ProjectRequirement.objects.create(
+            **prd
+        )
+        at = Attachment.objects.create(
+            attachment_app_name='ApprovalSystemOCT',
+            attachment_app_model='ProjectRequirement',
+            attachment_identify=rp.pk,
+        )
+        st = Step.objects.create(
+            task=init_task,
+            step_type='1',
+            step_owner=request.user.id,
+            step_attachment=at,
+            step_status='3',
+            step_seq=0,
+        )
+        st.set_attachment_snapshot()
+        url = f'/projectSystem/projectDetail/{str(np.process_order_id)}/'
+        return JsonResponse({'url': url, 'atc': st.step_attachment_snapshot}, status=200, safe=False)
+
+
+@csrf_exempt
+def get_requirement_content(request):
+    if request.method == 'POST':
+        p = Process.objects.get(pk=request.POST.get('process_id'))
+        ar = p.get_tasks().last().get_steps().last().step_attachment.get_attachment().first()
+        _info = ProjectRequirement.objects.values().get(pk=ar.pk)
+
+        return JsonResponse({'info': _info, 'html': ar.__str__()}, status=200, safe=False)
 
 
 @login_required(login_url="/memebers/login_to/")
 def process_detail(request, pk):
     p = Process.objects.get(process_order_id=pk)
-    attachment = p.get_tasks().last().get_steps().last().step_attachment.get_attachment().first()
+    attachment = p.get_tasks().last().get_steps().last().step_attachment
+    history = get_history(task_id=p.get_tasks().last().pk)
     context = {
         'template_name': "课题录入",
         'sidebar_index': BASE_SIDEBAR_INDEX,
         'project_types': PROJECT_TYPE,
         'project_directions': PROJECT_RESEARCH_DIRECTION,
         'attachment': attachment,
+        'prev': Process.objects.filter(pk__in=Process.objects.get(pk=p.pk).get_prev()),
         'process': p,
+        'project_verbose_name': json.dumps(PROJECT_REQUIREMENT_VERBOSE),
+        'history': history
     }
     return render(request, 'projectDetail.html', context=context)
 
 
-def project_implement(request):
-    context = {
-        'template_name': "课题推进",
-        'sidebar_index': BASE_SIDEBAR_INDEX,
-        'project_verbose_name': json.dumps(PROJECT_REQUIREMENT_VERBOSE),
-        'users': User.objects.filter(groups__in=Group.objects.filter(pk=14)),
-    }
-    return render(request, 'projectImplement.html', context=context)
+@csrf_exempt
+def get_history_log(request):
+    # url: getHistoryLog
+    if request.method == 'POST':
+        process_id, attachment_id = request.POST.get('process_id'), request.POST.get('attachment_id')
+        h = []
+        for t in Process.objects.get(pk=process_id).get_tasks():
+            h += get_history(t.task_id)
+        context = {
+            'new_history': json.dumps(h),
+        }
+
+        return JsonResponse(context, status=200, safe=False)
 
 
 @csrf_exempt
@@ -249,14 +389,40 @@ def my_projects(request):
     context = {
         'template_name': "我的课题",
         'sidebar_index': BASE_SIDEBAR_INDEX,
-        'project_verbose_name': json.dumps(PROJECT_REQUIREMENT_VERBOSE),
+        'project_verbose_name': PROJECT_REQUIREMENT_VERBOSE,
         'user_process': _get_processlist('1'),
         'user_process_sub': _get_processlist('3'),
-        'process_types': PROCESS_TYPE[1:],
+        'project_types': PROJECT_TYPE[1:],
         'process_directions': PROJECT_RESEARCH_DIRECTION[1:]
     }
 
     return render(request, 'projectMyprojects.html', context=context)
+
+
+@csrf_exempt
+def update_attachment(request):
+    # url update_attachment
+    if request.method == 'POST':
+        _p = Process.objects.get(pk=request.POST.get("process_id"))
+        _a = Attachment.objects.get(pk=request.POST.get("attachment_id"))
+        _t = _p.get_tasks().last()
+        _max_seq = _t.get_steps().last().step_seq + 1
+        _s = Step.objects.create(
+            task=_t,
+            step_seq=_max_seq,
+            step_owner=request.user.pk,
+            step_status='3',  # 变更结束
+            step_type='3',  # edit
+            step_attachment=_a,
+        )
+
+        _s.set_attachment_snapshot()
+        history = get_history(task_id=_t.task_id)
+        context = {
+            'new_history': history,
+            'new_step_snapshot': _s.step_attachment_snapshot
+        }
+        return JsonResponse(context, status=200, safe=False)
 
 
 @csrf_exempt
@@ -286,7 +452,7 @@ def process_creation(request):
                     'process': list(Process.objects.filter(pk=p.pk).values()),
                     'task': list(Task.objects.filter(pk=init_task.task_id).values()),
                 }
-                print(context)
+
             except Exception as e:
                 logging.warning(e)
                 return JsonResponse({'msg': 'sth goes wrong'}, safe=False)
@@ -316,22 +482,32 @@ def requirement_bulk_action(request):
         if action == "submit":
             for idx, process in enumerate(info):
                 try:
-                    target_task = process.get_tasks().first()
+                    target_task = process.get_tasks().last()
                     # task_type == input
                     # 本步骤不改变attachment
-                    last_step = target_task.get_steps().order_by('step_seq').order_by('step_update_time').last()
+
+                    last_steps = target_task.get_steps().order_by('step_seq').order_by('step_update_time')
+                    last_step = last_steps.last()
+                    seq = last_step.step_seq + 1
                     attachment = last_step.step_attachment
                     s = StepSerializer(data={
                         'step_attachment': attachment.attachment_uuid,
                         'task': target_task.task_id,
-                        'step_seq': 0,
+                        'step_seq': seq,
                         'step_attachment_snapshot': {},
                         'step_owner': request.user.id,
                         'step_status': '3'}
                     )
                     s.is_valid(raise_exception=True)
+
                     s.save()
+                    # 2 提交、审批
+                    s.instance.set_attachment_snapshot()
+                    s.instance.step_type = '2'
+                    s.instance.save()
+                    target_task.task_status = '3'
                     process.status = '3'
+                    target_task.save()
                     process.save()
                     print(attachment)
                 except Exception as e:
@@ -391,28 +567,6 @@ def get_process_type_list(request):
         return JsonResponse(context, status=200, safe=False)
 
 
-def annual_projects(request, user=None):
-    if user and request.user.is_authenticated:
-        query_set = Process.objects.filter(process_pattern__process_type='7', status='3', process_executor=request.user)
-    else:
-        query_set = Process.objects.filter(process_pattern__process_type='7', status='3')
-    res = {}
-    for p in query_set:
-        if p.prep:
-            res[p.prep] = Process.objects.get(pk=p.prep)
-    print(res)
-    context = {
-        'template_name': "我的课题",
-        'sidebar_index': BASE_SIDEBAR_INDEX,
-        'project_verbose_name': json.dumps(PROJECT_REQUIREMENT_VERBOSE),
-        'query_set': query_set,
-        'prep_dict': res,
-        'process_types': PROCESS_TYPE[1:],
-        'process_directions': PROJECT_RESEARCH_DIRECTION[1:]
-    }
-    return render(request, 'projectAnnualprojects.html', context=context)
-
-
 @csrf_exempt
 def set_to_annual_project(request):
     # { process id: id}
@@ -458,17 +612,15 @@ def set_to_annual_project(request):
             )
             _s.set_attachment_snapshot()
             _p.status = '3'
-
-            process.next = str(_p.process_order_id)
-            _p.prep = str(process.process_order_id)
+            _t.task_status = '3'
+            process.set_next([str(_p.process_order_id)])
+            _p.set_prev([str(process.process_order_id)])
+            process.read_only = '1'
             _p.save()
+            _t.save()
             process.save()
         except Exception as e:
-            _p.delete()
-            _t.delete()
-            _s.delete()
             print(e)
-            _p = Process.objects.none()
             logging.warning(e)
             raise Http404
         return JsonResponse({"msg": "success", "process_id": _p.process_order_id}, status=200, safe=False)
@@ -574,6 +726,8 @@ class StepList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save()
+        # create type is 1 <input>
+        serializer.instance.step_type = '1'
         serializer.instance.set_attachment_snapshot()
 
 

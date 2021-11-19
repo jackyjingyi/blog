@@ -257,7 +257,7 @@
                                 联合工作小组成员及分工
                             </strong></label>
                             <textarea name="project_co_group" type="text" class="form-control" id="project_co_group"
-                                      placeholder=""  rows="15"
+                                      placeholder="" rows="15"
                                       required>联合工作小组成员及分工:</textarea>
                         </div>
                     </div>
@@ -284,7 +284,7 @@
                                 主要创新研究课题内容、目标及意义
                             </strong></label>
                             <textarea name="project_purpose" type="text" class="form-control" id="project_purpose"
-                                      placeholder=""  rows="15"
+                                      placeholder="" rows="15"
                                       required>主要创新研究课题内容、目标及意义</textarea>
                         </div>
                     </div>
@@ -331,13 +331,11 @@
             </div>
         </div>
     </div>
-    <button id="col1">click</button>
+
     <script src="{% static 'lib/datepicker/jquery.datetimepicker.full.min.js' %}"></script>
     <script>
         $(document).ready(function () {
             const csrftoken = getCookie('csrftoken');
-            var processOrderIDList = [];
-            var taskID = [];
 
             $("#col1").on('click', function () {
                 let k = $("#projectWorkTitle")
@@ -374,10 +372,9 @@
 
             });
             var saveSubmitFunc = function (e, status) {
-                e.preventDefault()
+
                 var forms = $('#create_project')
-                let processOrderID = null;
-                let taskID = null
+
                 let get_process_and_task = function (event) {
                     return JSON.parse($.ajax({
                         url: '/projectSystem/process/creation/',
@@ -403,13 +400,13 @@
                     let x = forms.serializeArray().reduce(function (obj, item) {
                         obj[item.name] = item.value;
                         return obj;
-                     }, {});
+                    }, {});
                     for (var key in x) {
                         if (key === 'project_start_time' || key === 'project_end_time') {
                             x[key] = x[key] + ":00.000000"
                         }
                         fd.append(key, x[key]);
-                     }
+                    }
 
                     $.ajax({
                         url: '/projectSystem/projectRequirements/',
@@ -443,7 +440,7 @@
                             window.alert("系统异常，请联系管理员")
 
                         }
-                     })
+                    })
 
                 }
 
@@ -458,11 +455,32 @@
 
 
             $("#saveAsDraft").on("click", function (e) {
+                    e.preventDefault();
                     saveSubmitFunc(e, '1');
                 }
             );
             $("#directSubmit").on('click', function (e) {
-                saveSubmitFunc(e, '3');
+                e.preventDefault();
+                let _content = "<div class='row'>" +
+                    "<div class='col-md-12'>" +
+                    "<p>是否指定负责人</p>" +
+                    "</div>" +
+                    "</div>"
+                layer.ready(
+                    layer.open({
+                        type: 1,
+                        area: ['780px', '500px'],
+                        shadeClose: true, //点击遮罩关闭
+                        title: '确认提交',
+                        content: _content,
+                        btn: ['确认', '取消'],
+                        yes: function (index, layro) {
+                            saveSubmitFunc(e, '3');
+                            layer.close(index)
+                        }
+                    })
+                )
+
             })
             var getAttachment = function (attachment_app_name, attachment_app_model, projectID) {
 
@@ -493,15 +511,16 @@
             var getStep = function (taskID, attachmentID, status) {
                 console.log(taskID, attachmentID)
                 return JSON.parse($.ajax({
-                    'url': '/projectSystem/steps/',
-                    'type': 'post',
-                    'data': {
+                    url: '/projectSystem/steps/',
+                    type: 'post',
+                    data: {
                         'step_attachment': attachmentID,
                         'task': taskID,
                         'step_seq': 0,
                         'step_attachment_snapshot': JSON.stringify(''),
                         'step_owner': '{{ user.pk }}',
-                        'step_status': status
+                        'step_status': status,
+                        'step_type': '1'
                     },
                     async: false,
                     beforeSend: function (xhr, settings) {
@@ -510,7 +529,7 @@
                         }
                     },
                     success: function (data) {
-                        console.log(data)
+
                         if (status === "3") {
                             $.ajax({
                                 url: "/projectSystem/finishProcess/",

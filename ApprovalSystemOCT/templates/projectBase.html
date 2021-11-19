@@ -3,7 +3,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport"
+          content="width=device-width,height=device-height,initial-scale=1,user-scalable=no,minimum-scale=1,maximum-scale=1">
     <title>
         {% block title %}
             创研院-信息报送平台
@@ -14,12 +15,12 @@
     <link rel="stylesheet" href="{% static 'assets/lib/bootstrap/css/bootstrap_ext.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/lib/font-awesome/css/font-awesome.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/lib/layer/theme/default/layer.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/lib/webuploader/webuploader.min.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/lib/footable/footable.core.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/lib/cube-portfolio/cubeportfolio/css/cubeportfolio.min.css' %}">
-    <link rel="stylesheet"
-          href="{% static 'assets/lib/cube-portfolio/cubeportfolio/custom/custom-cubeportfolio.css' %}">
-    <link rel="stylesheet" href="{% static 'assets/lib/jquery-treegrid/css/jquery.treegrid.min.css' %}">
+    {#    <link rel="stylesheet" href="{% static 'assets/lib/webuploader/webuploader.min.css' %}">#}
+    {#    <link rel="stylesheet" href="{% static 'assets/lib/footable/footable.core.css' %}">#}
+    {#    <link rel="stylesheet" href="{% static 'assets/lib/cube-portfolio/cubeportfolio/css/cubeportfolio.min.css' %}">#}
+    {#    <link rel="stylesheet"#}
+    {#          href="{% static 'assets/lib/cube-portfolio/cubeportfolio/custom/custom-cubeportfolio.css' %}">#}
+    {#    <link rel="stylesheet" href="{% static 'assets/lib/jquery-treegrid/css/jquery.treegrid.min.css' %}">#}
     <link rel="stylesheet" href="{% static 'assets/lib/select2/css/select2.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/lib/jsTree/style.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets/lib/icheck-1.x/skins/square/green.min.css' %}">
@@ -34,7 +35,10 @@
     <link href="{% static 'css/main.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/module.min.css' %}" rel="stylesheet">
     <link href="{% static 'assets/lib/icon/iconfont.min.css' %}" rel="stylesheet">
-
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/datepicker/jquery.datetimepicker.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/iconfont/iconfont/css/iconfont.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'lib/iconfont/iconfont/css/iconfont-animate.min.css' %}">
+    <link rel="stylesheet" href="{% static 'lib/jquery-ui-1.13.0/jquery-ui.min.css' %}">
     <script type="text/javascript" src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/echarts.min.js' %}"></script>
 
@@ -55,13 +59,13 @@
         }
     </style>
 </head>
-<body class="bg-v1-grey no-skin-config">
-<div id="wrapper">
+<body class="bg-v1-grey no-skin-config pace-done" style="position: static; zoom: 1;">
+<div id="wrapper" style="width: 100%; overflow-x: hidden;height: 100%">
     <div id="m_top" class="row white-bg">
         <nav class="navbar navbar-static-top m-0 p-0" role="navigation" style="margin-bottom: 0px">
             <div class="navbar-header">
                 <a href="http://bigdata.octiri.com" class="navbar-brand svg" target="_self" style="margin-left: 0px;">
-                    <img class="pt-relative max-h-80" src="{% static 'images/logo12.png' %}">
+                    <img class="pt-relative max-h-80" src="{% static 'images/logo_project.png' %}">
                 </a>
             </div>
 
@@ -75,11 +79,11 @@
                             {% if user.last_name %}
                                 <img src="{% static user.last_name %}"
                                      style="width: 40px; height:40px;margin-right: 5px"
-                                     class="img-circle">
+                                     class="img-circle" alt="profile">
                             {% else %}
                                 <img src="{% static 'bootstrap/icons/person-circle.svg' %}"
                                      style="width: 40px; height:40px;margin-right: 5px"
-                                     class="img-circle">
+                                     class="img-circle" alt="profile">
                                 {% if user.is_authenticated %}
                                     <span>{{ user.first_name }}</span>
                                 {% else %}
@@ -93,7 +97,11 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-left dropdown-menu-new"
                                 style="z-index: 99999">
-
+                                {% if user.is_authenticated %}
+                                    <li><a href="{% url 'logout_app' %}">注销</a></li>
+                                {% else %}
+                                    <li><a href="{% url 'login_app' %}">登录</a></li>
+                                {% endif %}
                             </ul>
 
 
@@ -175,12 +183,13 @@
                                         <li class="liGroupList">
                                             {% if item.1 == 'annual_user_projects' %}
                                                 {% if user.is_authenticated %}
-                                                    <a href="{% url item.1 user.id %}" class="groupList" id = "{{ item.1 }}">
+                                                    <a href="{% url item.1 user.id %}" class="groupList"
+                                                       id="{{ item.1 }}">
                                                         <span style="margin-left: 20%" value="">{{ item.0 }}</span>
                                                     </a>
                                                 {% endif %}
                                             {% else %}
-                                                <a href="{% url item.1 %}" class="groupList" id = "{{ item.1 }}">
+                                                <a href="{% url item.1 %}" class="groupList" id="{{ item.1 }}">
                                                     <span style="margin-left: 20%" value="">{{ item.0 }}</span>
                                                 </a>
                                             {% endif %}
@@ -207,7 +216,7 @@
         <div class="clearfix"></div>
     </div>
 
-    <div id="page-wrapper" class="bg-v1 workbench gray-bg" style="min-height: 1146px;">
+    <div id="page-wrapper" class="bg-v1 workbench gray-bg" style="min-height: 1525px">
         <div id="content-right" class="row">
             <div class="ibox">
                 <div class="ibox-title secondary-menu-outbox">
@@ -227,18 +236,18 @@
                 <div class="ibox-content" id="content-box" style="position: static;zoom: 1">
                     <div class="row">
                         <div class="col-sm-12">
-                            <form class="form-inline d-flex justify-content-center md-form "
-                                  action="{% url 'search_items' %}" method="post">
-                                {% csrf_token %}
-                                <input class="form-control form-control-sm mr-3 w-75" type="text"
-                                       placeholder="Search"
-                                       aria-label="Search" name="searched">
-                                <button class="btn btn-outline" type="submit" id="search_button">
-                                    <i class="fa fa-search"
-                                       aria-hidden="true"></i>
-                                </button>
-
-                            </form>
+                            {#                            <form class="form-inline d-flex justify-content-center md-form "#}
+                            {#                                  action="{% url 'search_items' %}" method="post">#}
+                            {#                                {% csrf_token %}#}
+                            {#                                <input class="form-control form-control-sm mr-3 w-75" type="text"#}
+                            {#                                       placeholder="Search"#}
+                            {#                                       aria-label="Search" name="searched">#}
+                            {#                                <button class="btn btn-outline" type="submit" id="search_button">#}
+                            {#                                    <i class="fa fa-search"#}
+                            {#                                       aria-hidden="true"></i>#}
+                            {#                                </button>#}
+                            {##}
+                            {#                            </form>#}
                             {% block content %}
 
                             {% endblock %}
@@ -263,19 +272,9 @@
 {#<script type="text/javascript" src="{% static 'assets/js/vendor.min.js' %}"></script>#}
 <script type="text/javascript" src="{% static 'assets/lib/bootstrap/js/bootstrap.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'assets/lib/layer/layer.js' %}"></script>
-<script type="text/javascript" src="{% static 'assets/lib/js-cookie/js.cookie.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'assets/lib/icon/iconfont.js' %}"></script>
-<script type="text/javascript" src="{% static 'assets/lib/citys/jquery.cityselect.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'assets/lib/My97DatePicker/WdatePicker.js' %}"></script>
-<script type="text/javascript" src="{% static 'assets/lib/jquery-treegrid/js/jquery.treegrid.min.js' %}"></script>
-<script type="text/javascript"
-        src="{% static 'assets/lib/jquery-treegrid/js/jquery.treegrid.bootstrap3.js' %}"></script>
-<script type="text/javascript" src="{% static 'assets/lib/select2/js/select2.full.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'assets/lib/select2/js/i18n/zh-CN.js' %}"></script>
-<script type="text/javascript" src="{% static 'assets/lib/select2/js/pinyin.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'assets/lib/jsTree/jstree.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'assets/lib/icheck-1.x/icheck.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'assets/lib/footable/footable.all.min.js' %}"></script>
+<script src="{% static 'lib/jquery-ui-1.13.0/jquery-ui.min.js' %}"></script>
+{#<script type="text/javascript" src="{% static 'assets/lib/js-cookie/js.cookie.min.js' %}"></script>#}
+
 <script type="text/javascript"
         src="{% static 'assets/lib/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js' %}"></script>
 <script>

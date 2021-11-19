@@ -37,7 +37,7 @@ class ProjectTableHandler(TableHandler):
     """
     template_name = "requirement"
     template_map = {'^project_name$': {'pos': (0, 7, 0, 0), 'default': '', 'default_replace': '', 'selection': False},
-                    '^project_type1$': {'pos': (1, 1, 0, 0), 'default': '创新前瞻研究□', 'default_replace': '创新前瞻研究⌧',
+                    '^project_type1$': {'pos': (1, 1, 0, 0), 'default': '前瞻战略研究□', 'default_replace': '前瞻战略研究⌧',
                                         'selection': True},
                     '^project_type2$': {'pos': (1, 5, 0, 0), 'default': '产品标准化研究□', 'default_replace': '产品标准化研究⌧',
                                         'selection': True},

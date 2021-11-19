@@ -152,9 +152,14 @@
 
                                             {% for s in t.get_steps %}
                                                 <tr>
-                                                    <td>{{ s }} - {{ s.step_type }} - {{ s.step_owner }}</td>
-                                                    <td>{{ s.step_attachment.get_attachment.first|safe }}</td>
-                                                    {#                                            <td>{{ s.step_attachment_snapshot }}</td>#}
+                                                    <td>{{ s.step_update_time|date:"Y年n月d日" }} - {{ s.get_step_type_display_name }} - {{ s.get_owner.first_name }}</td>
+                                                    <td> {% for key, val in project_verbose_name.items %}
+                                                        {% for k1,v1 in s.step_attachment_snapshot.0.fields.items %}
+                                                            {% if k1 == key %}
+                                                                <p>{{ val }}: &nbsp;{{ v1 }}</p>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    {% endfor %}</td>
                                                 </tr>
                                             {% endfor %}
 
@@ -210,9 +215,16 @@
 
                                             {% for s in t.get_steps %}
                                                 <tr>
-                                                    <td>{{ s }} - {{ s.step_type }} - {{ s.step_owner }}</td>
-                                                    <td>{{ s.step_attachment.get_attachment.first|safe }}</td>
-                                                    {#                                            <td>{{ s.step_attachment_snapshot }}</td>#}
+                                                    <td>{{ s.step_update_time|date:"Y年n月d日" }} - {{ s.get_step_type_display_name }} - {{ s.get_owner.first_name }}</td>
+                                                    <td>
+                                                        {% for key, val in project_verbose_name.items %}
+                                                            {% for k1,v1 in s.step_attachment_snapshot.0.fields.items %}
+                                                                {% if k1 == key %}
+                                                                    <p>{{ val }}: &nbsp;{{ v1 }}</p>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                        {% endfor %}
+                                                    </td>
                                                 </tr>
                                             {% endfor %}
 
@@ -227,7 +239,6 @@
                 </table>
             </div>
         </div>
-
 
     </div>
     <script>

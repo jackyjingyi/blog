@@ -6,8 +6,11 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from .views import home_view, BookList, BookDetail, StepList, StepDetail, TaskStepList, ProjectRequirementList, \
     ProjectRequirementDetail, project_creation, display_all_projects, ProcessTypeList, ProcessTypeDetail, \
     project_settlement, process_creation, AttachmentList, requirement_transformation, my_projects, \
-    get_process_type_list, ProcessListWithType, project_implement, project_implement_title, requirement_bulk_action, \
-    set_to_annual_project, annual_projects, project_dispatch, finish_process, process_detail
+    get_process_type_list, ProcessListWithType, requirement_bulk_action, \
+    set_to_annual_project, project_dispatch, finish_process, process_detail, update_attachment, \
+    get_history_log, process_pack_up, get_requirement_content
+from .annual_project_view import annual_project_detail, annual_projects, project_implement, project_implement_title, \
+    ImplementTitleList, ImplementTitleDetail
 
 urlpatterns = [
                   path('', home_view, name='project_home'),
@@ -17,8 +20,7 @@ urlpatterns = [
                   url(r'^projectDetail/(?P<pk>[0-9a-f-]+)/$', process_detail, name='project_detail'),
                   url(r'^ProjectAllList/$', display_all_projects, name='display_all_projects'),
                   url(r'^ProjectAllList/myProjects/$', my_projects, name='my_projects'),
-                  url(r"^Project/implementTitle/$", project_implement_title),
-                  url(r"^Project/implement/$", project_implement, name="project_implement"),
+
                   url(r'^transform/ProjectRequirement/$', requirement_transformation),
                   url(r'^books/$', BookList.as_view()),
                   url(r'^books/(?P<pk>[0-9]+)/$', BookDetail.as_view()),
@@ -37,7 +39,19 @@ urlpatterns = [
                   url(r'^projectRequirements/$', ProjectRequirementList.as_view(), name="projectRequirementList"),
                   url(r'^projectRequirements/(?P<pk>[0-9]+)/$', ProjectRequirementDetail.as_view(),
                       name="projectRequirementDetail"),
-                  url("^projectDispatch/$", project_dispatch),
-                  url("^finishProcess/$", finish_process)
+                  url(r"^projectDispatch/$", project_dispatch),
+                  url(r"^updateAttachment/$", update_attachment, name="update_attachment"),
+                  url(r"^getHistoryLog/$", get_history_log),
+                  url(r"^processPackUp/$", process_pack_up),
+                  url(r"^get_requirement_content/$", get_requirement_content),
+
+                  url("^finishProcess/$", finish_process),
+                  url(r"^annualProjectDetail/(?P<pk>[0-9a-f-]+)/$", annual_project_detail,
+                      name="annual_project_detail"),
+                  url(r"^Project/implementTitle/$", project_implement_title),
+                  url(r"^Project/implement/(?P<pk>[0-9a-f-]+)/progress/$", project_implement,
+                      name="project_implement"),
+                  url(r"^Project/implementTitle/create/", ImplementTitleList.as_view()),
+                  url(r"Project/implementTitle/detail/(?P<pk>[0-9a-f-]+)/", ImplementTitleDetail.as_view()),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -2,48 +2,96 @@
 {% load static %}
 {% block content %}
     <div class="row" style="margin:30px">
-        <div id="projectDetailDisplayPanel">
+        <div style="margin-top:10px;">
+            <small>
+                <div class="dropdown">
+                    <button id="dLabel" type="button" class="btn btn-sm btn-primary"
+                            data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="false">
+                        操作
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dLabel">
+                        <li>
 
+                            <button id="mergeProcess"
+                                    class="list-group-item list-group-item-action btn-sm">
+                                合并
+                            </button>
+                        </li>
+                        <li>
+                            <button id="draft_bulk_delete"
+                                    class="list-group-item list-group-item-action btn-sm">
+                                删除
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </small>
         </div>
         <div id="projectDisplyPanel">
             {% if queryset %}
-                <table class="table table-bordered">
+                <table class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                        <th scope="col" colspan="6">课题名称</th>
+                        <th scope="col" colspan="6">
+                            <input class="form-check-input2" type="checkbox"
+                                   id="flexCheckDefault_2">&nbsp;
+                            课题名称
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for p in queryset %}
                         <tr>
                             <th scope="row">
-                                <input class="form-check-input2" type="checkbox" value="{{ p.process_order_id }}"
-                                       id="flexCheckDefault_2">
+                                {% if p.read_only == '0' %}
+                                    <input class="form-check-input2" type="checkbox" value="{{ p.pk }}"
+                                           id="flexCheckDefault_2" data-type="process-id-list">
+                                {% else %}
+                                    <input class="form-check-input2" type="checkbox" value="{{ p.pk }}"
+                                           id="flexCheckDefault_2" data-type="process-id-list" disabled>
+
+                                {% endif %}
                                 <label class="form-check-label" for="flexCheckDefault_2"
-                                       style="display: none">{{ post.pk }}
+                                       style="display: none">{{ p.pk }}
                                 </label>
 
                             </th>
                             <td value="{{ p.get_tasks.first.get_steps.last.step_attachment.get_attachment.first.id }}"
                                 class="project_link">
-                                <a href="javascript:void(0)"><span>{{ p.get_tasks.first.get_steps.last.step_attachment.get_attachment.first.project_name }}</span></a>
+                                <a href="javascript:void(0)"
+                                   data-target="{{ p.pk }}"><span>{{ p.get_tasks.first.get_steps.last.step_attachment.get_attachment.first.project_name }}</span></a>
                             </td>
                             <td style="border-right: none; text-align: center">
-                                <a class="editProject" value="{{ p.process_order_id }}">
-                                    修改(待开发）
-                                </a>
-                            </td>
-                            <td style="border-left: none;border-right: none; text-align: center">
-                                <a class="patchUpProject">合并(待开发）</a>
+                                {% if p.read_only == '1' %}
+                                    <p value="{{ p.process_order_id }}"
+                                       href="{% url 'project_detail' p.pk %}">
+                                        修改
+                                    </p>
+                                {% else %}
+                                    <a class="editProject" value="{{ p.process_order_id }}"
+                                       href="{% url 'project_detail' p.pk %}">
+                                        修改
+                                    </a>
+                                {% endif %}
                             </td>
                             <td style="border-right: none; border-left: none;text-align: center">
-                                <a class="toAnnualProject" value="{{ p.process_order_id }}">
-                                    转为立项课题
-                                </a>
+                                {% if p.read_only == '1' %}
+                                    <p value="{{ p.process_order_id }}">
+                                        转为立项课题
+                                    </p>
+                                {% else %}
+                                    <a class="toAnnualProject" value="{{ p.process_order_id }}">
+                                        转为立项课题
+                                    </a>
+                                {% endif %}
                             </td>
                             <td value="{{ p.get_tasks.first.get_steps.last.step_attachment.get_attachment.first.id }}"
                                 class="wordTransform" style="border-right: none;border-left: none; text-align: center">
-                                <a href="javascript:void(0)"><span>生成word文档</span></a>
+                                <a href="javascript:void (0)">
+                                    <i class="fa fa-file-word" aria-hidden="true">下载</i>
+                                </a>
                             </td>
 
                         </tr>
@@ -57,18 +105,126 @@
         </div>
     </div>
 
-    <button id="showTable" class="btn btn-sm btn-primary">返回</button>
-
+    <script type="text/javascript" src="{% static 'ApprovalSystemOCT/js/updateLogProcess.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ApprovalSystemOCT/js/componentCheckBox.js' %}"></script>
     <script>
         $(document).ready(function () {
-            var projectDetailPanel = $("#projectDetailDisplayPanel");
-            var projectDisplyPanel = $("#projectDisplyPanel");
-            var projectVerboseName = JSON.parse('{{ project_verbose_name }}'.replace(/&quot;/g, '"'));
-            var project_types = JSON.parse("{{ process_types }}".replace(/&quot;/g, '"'))
-            var project_dirs = JSON.parse("{{ process_directions }}".replace(/&quot;/g, '"'))
+            let projectDisplyPanel = $("#projectDisplyPanel");
+            let projectVerboseName = JSON.parse('{{ project_verbose_name }}'.replace(/&quot;/g, '"'));
+            let project_types = JSON.parse("{{ project_type }}".replace(/&quot;/g, '"'))
+            let project_dirs = JSON.parse("{{ process_directions }}".replace(/&quot;/g, '"'))
+            let project_links = $(".project_link")
+            let process_container = []
+
+            class ProcessStore {
+                constructor(pid, aid, aname) {
+                    this.process_id = pid;
+                    this.attachment_id = aid;
+                    this.attachment_display_name = aname;
+                };
+
+                get_attachment_name() {
+                    return this.attachment_display_name
+                }
+
+                get_ajax_data() {
+                    return JSON.stringify(this)
+                }
+
+            }
+
+            // construct
+
+            $.each(project_links, function (idx, ele) {
+                process_container.push(new ProcessStore(($(ele).find("a").first()).attr("data-target"), $(ele).attr("value"), $($(ele).find("span").first()).text()))
+            });
+
+
+            class PackUpBucket {
+                constructor(mp, sp) {
+                    this.mainProcess = mp;
+                    this.subProcesses = sp;
+                };
+
+                getMainProcess() {
+                    return this.mainProcess;
+                };
+
+                packUp() {
+                    console.log(this.mainProcess + " is merging with " + this.subProcesses)
+                };
+
+                * [Symbol.iterator]() {
+                    yield* this.subProcesses.entries();
+                };
+
+
+            }
+
+            $("#mergeProcess").on('click', function () {
+                let bucket = new PackUpBucket
+                let b = []
+                let bc = []
+                $(".form-check-input2[data-type=process-id-list]").each(function () {
+                    if ($(this)[0].checked) {
+                        b.push($(this).val())
+                    }
+                });
+                if (b.length < 2) {
+                    return window.alert("请至少选择2项课题进行合并。")
+                }
+
+                let _content = ""
+                for (let item of process_container) {
+                    // get selected items
+                    if (b.includes(item.process_id)) {
+                        _content += "<li class='text-info' style='margin: 30px;margin-bottom:-15px;'>" + item.get_attachment_name() + "</li>"
+                        bc.push(item)
+                    }
+                }
+                let _info = "<div style='margin: 30px;margin-bottom:-15px'><p><span>是否合并以下" + bc.length + "条课题？</span></p><ul>"
+                _content += "</div>"
+                _content = _info + _content
+                _data = []
+                for (let e of bc) {
+                    _data.push(e.get_ajax_data())
+                }
+                console.log(JSON.stringify(_data))
+                bucket.mainProcess = bc[0]
+                bucket.subProcesses = bc.slice(1,)
+                layer.ready(
+                    layer.open({
+                        type: 1,
+                        area: ['780px', '500px'],
+                        shadeClose: true, //点击遮罩关闭
+                        title: '合并课题',
+                        content: _content,
+                        btn: ['确认', '取消'],
+                        yes: function (index, layro) {
+                            $.ajax({
+                                url: '/projectSystem/processPackUp/',
+                                data: {'data': JSON.stringify(_data)},
+                                type: 'post',
+                                success: function (data) {
+                                    layer.close(index)
+                                    // redirect to creation panel
+                                    window.location.href = data.url
+                                }
+                            })
+                        }
+                    }))
+
+
+            })
             $('#secondaryMenu').append(
                 "<li class='fa fa-angle-right'>" + "课题需求" + "</li>" + "<li class='fa fa-angle-right active fw-bold'>" + "{{ template_name }}" + "</li>"
             )
+            $("#flexCheckDefault_2").on('click', function () {
+                select_all($(this)[0], document.getElementsByClassName("form-check-input2"));
+            });
+            $(".form-check-input2").on('click', function () {
+                select_one(document.getElementById("flexCheckDefault_2"), document.getElementsByClassName("form-check-input2"));
+            });
             $.each($(".liGroupList"), function (idx, opt) {
                 let urlPath = "{{ template_name }}"
                 if (opt.innerText === urlPath) {
@@ -77,12 +233,12 @@
                     $(opt).removeClass('active');
                 }
             });
-            $(".project_link").on('click', function () {
-                let requiredProjectId = $(this).attr("value")
+            project_links.on('click', function () {
+                let processID = $(this).find('a').first().attr('data-target');
+                let requiredProjectId = $(this).attr("value");
                 let projecturl = "/projectSystem/projectRequirements/" + requiredProjectId + "/"
-                let nextTr = $(this).parent().next()
-                {#let project_types = JSON.parse('{{ project_types }}')#}
-
+                let nextTr = $(this).parent().next();
+                let logData = getUpdateLog(processID, requiredProjectId)
                 if (nextTr.hasClass("in")) {
                     nextTr.removeClass("in")
                 } else {
@@ -92,8 +248,7 @@
                             type: 'get',
                             success: function (data) {
                                 // show project detail
-                                console.log(data)
-                                let Detail = "<td colspan='5'><ul style='list-style: none;margin:10px'>"
+                                let Detail = "<td colspan='2'><ul style='list-style: none;margin:10px'>"
                                 for (var key in data) {
                                     if (projectVerboseName[key] != null) {
                                         if (key === "project_type") {
@@ -114,10 +269,10 @@
                                     }
                                 }
                                 Detail += "<p class='text-left'><a><span>查看详情</span></a></p></ul></td>"
+                                let zipHtml = displayUpdateLog(logData, true);
+                                let anotherCol = "<td colspan='4'>" + zipHtml + "</td>"
+                                Detail += anotherCol
                                 nextTr.html(Detail)
-                                {#projectDisplyPanel.hide();#}
-                                {#projectDetailPanel.empty();#}
-                                {#projectDetailPanel.html(Detail);#}
                             }
                         })
                     }
@@ -127,8 +282,6 @@
 
             $("#showTable").on('click', function () {
                 projectDisplyPanel.show();
-                projectDetailPanel.empty();
-
             })
             $('.wordTransform a').on('click', function () {
                 let target = $(this).parent()
@@ -142,18 +295,13 @@
                     $form.submit();
                 }
 
-                console.log(requirementID)
                 $.ajax({
                     url: '/projectSystem/transform/ProjectRequirement/',
                     type: 'post',
                     async: false,
                     data: {'requirement_id': requirementID},
                     success: function (data) {
-                        console.log(data)
                         docxurl = data['docx']
-                        console.log(docxurl, target)
-                        {#target.append(#}
-                        {#    "<a href="+docxurl+">下载</a>")#}
                         download2(docxurl)
                     }
                 })
@@ -162,6 +310,7 @@
             $(".toAnnualProject").on('click', function () {
                 let targetProcessID = $(this).attr("value");
                 let project_name = $(this).parentsUntil("tr").parent().find("td").first().find("span").first().text();
+                let tik = 1
                 $.ajax({
                     url: "/projectSystem/projectDispatch/",
                     type: "get",
@@ -174,28 +323,56 @@
                                 title: '立项确认',
                                 content: "<p style='margin: 30px;margin-bottom:-15px'>请分配" + "&nbsp" + "<strong>" + project_name + "</strong>" + "</p>" + data.html,
                                 btn: ['确认', '取消'],
-                                yes: function () {
+                                yes: function (index, layro) {
                                     let x = $("#set_assignee").serializeArray().reduce(function (obj, item) {
                                         obj[item.name] = item.value;
+                                        console.log(item.name, item.value)
                                         return obj;
                                     }, {})
-                                    console.log("yes")
+                                    console.log(x)
                                     $.ajax({
                                         url: '/projectSystem/requirementSetToAnnual/',
-                                        data: {"process_id": targetProcessID, "user_id":x.assignee},
+                                        data: {"process_id": targetProcessID, "user_id": x.project_sponsor},
                                         type: "post",
 
-                                        success: function (data) {
-                                            console.log(data)
+                                          success: function (data) {
+                                            $($(layro[0]).children()[1]).empty();
+                                            $($(layro[0]).children()[1]).append("<p style='margin: 30px;margin-bottom:-15px'>" + project_name + "<strong>分配成功</strong>" + "</p>"
+                                            );
+                                            setTimeout(function () {
+                                                layer.close(index);
+                                            }, 2000);
+                                            location.reload();
                                         }
-                                    })
+                                     })
+
                                 }
                             })
-                        )
+                        );
+
+                        $("#add_one").on("click", function () {
+                            // add one row for outsourcing information
+                            let current_company = "project_outsourcing_companies_" + tik.toString()
+                            let current_company_info = "project_outsourcing_info_" + tik.toString()
+                            $(this).parent().parent().before(
+                                "<div class='row margin-top-5'>" +
+                                "<div class='col-md-6'>" +
+                                "<label for='" + current_company + "'" + ">外部合作单位</label>" +
+                                "<input class='form-control' name='" + current_company + "'" + "id='" + current_company + "'" + "/>" +
+                                "</div>" +
+                                "<div class='col-md-6'>" +
+                                "<label for='" + current_company_info + "'" + ">外部合作内容</label>" +
+                                "<input class='form-control' name='" + current_company_info + "'" + "id='" + current_company_info + "'" + "/>" +
+                                "</div>" +
+                                "</div>"
+                            )
+                            tik += 1
+                        })
+                        console.log(tik)
                     }
 
                 })
-
+                console.log(tik)
 
             })
 

@@ -1,7 +1,7 @@
 import json
 import uuid
 import logging
-
+import copy
 import django.db.models
 from django.db import models
 from django.contrib.auth.models import User
@@ -9,36 +9,7 @@ from django.apps import apps
 from django.core import serializers
 import django.utils.timezone as timezone
 from datetime import datetime, date, timedelta
-
-PROJECT_TYPE = [
-    ('0', '未选择'), ('1', '创新前瞻性研究'), ('2', '产品标准化研究'), ('3', '产品创新研究')
-]
-PROJECT_RESEARCH_DIRECTION = [
-    ('0', '未选择'), ('1', '新型城镇化'), ('2', '文化&品牌'), ('3', '主题公园&新场景'), ('4', '新商业'), ('5', '产品管理'), ('6', '旅游大数据'),
-    ('7', '康旅'), ('8', '创新投'), ('9', '其他')
-]
-PROJECT_REQUIREMENT_VERBOSE = {
-    'project_name': '研究项目',
-    "project_type": "课题类型",
-    "project_research_direction": "研究方向",
-    "project_department": "需求单位",
-    "project_department_sponsor": "需求单位联系人",
-    "project_department_phone": "联系电话",
-    "project_co_group": "联合工作小组成员及分工",
-    "project_research_funding": "研究经费",
-    "project_outsourcing_funding": "外协预算",
-    "project_start_time": "研究实施计划时间（起）",
-    "project_end_time": "研究实施计划时间（止）",
-    "project_detail": "具体分项任务内容及安排",
-    "project_purpose": "主要创新研究课题内容、目标及意义",
-    "project_preparation": "与课题相关的前期工作情况，现有基础条件",
-    "project_difficult": "研究课题的重点及难点"
-}
-
-PROCESS_TYPE = [
-    ('0', '未选择'), ('1', '课题录入'), ('2', '课题修改'), ('3', '进度录入'), ('4', '成果录入'), ('5', '结题'), ('6', '资料上传'),
-    ('7', '立项')
-]
+from ApprovalSystemOCT.project_statics.static_data import *
 
 
 def snapshot_default():
@@ -77,6 +48,11 @@ class ProjectRequirement(models.Model):
     project_purpose = models.TextField("主要创新研究课题内容、目标及意义", default="")
     project_preparation = models.TextField("与课题相关的前期工作情况，现有基础条件", default="")
     project_difficult = models.TextField("研究课题的重点及难点", default="")
+    project_approval_time = models.DateTimeField("立项时间", blank=True, null=True)
+    project_head_master = models.CharField("分管院长", blank=True, null=True, max_length=255)
+    project_sponsor = models.CharField("负责人", blank=True, null=True, max_length=255)
+    project_outsourcing_companies = models.JSONField("外部合作单位", null=True, blank=True)
+    project_outsourcing_info = models.JSONField("外部合作内容", null=True, blank=True)
 
     def __str__(self):
         return f"<p>研究项目:                       {self.project_name}</p>" \
@@ -194,7 +170,9 @@ class Process(models.Model):
         ("3", "已结束"),
         ("4", "撤销"),
         ("5", "暂停"),
-        ("6", "删除")
+        ("6", "删除"),
+        ("7", "立项"),
+        ("8", "合并")
     ]
     process_order_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,
                                         help_text="create an uuid for each order")
@@ -202,8 +180,10 @@ class Process(models.Model):
     process_executor = models.ForeignKey(User, on_delete=models.CASCADE)
     creat_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(choices=status_choice, default="1", max_length=5)
-    prep = models.CharField(max_length=255, null=True, blank=True)
-    next = models.CharField(max_length=255, null=True, blank=True)
+    prev = models.JSONField("前序", default=dict)
+    next = models.JSONField("后继", default=dict)
+    conjunction = models.JSONField("关联", default=dict)
+    read_only = models.CharField(max_length=5, default='0')
 
     # process_readonly_sponsors = models.CharField(max_length=255)  TODO: 添加流程只读干系人（群） [pk1, pk2]
     # process_administrator = models.CharField(max_length=255)    TODO: 流程管理员（群组)
@@ -222,6 +202,39 @@ class Process(models.Model):
                 return True
         return False
 
+    def get_conjunction(self):
+        try:
+            return json.loads(self.conjunction)
+        except TypeError:
+            return json.loads(json.dumps(self.conjunction))
+
+    def set_conjunction(self, x):
+        self.conjunction = json.dumps(x)
+
+    def set_prev(self, x):
+        self.prev = json.dumps(x)
+
+    def add_prev(self, x):
+        self.prev = json.dumps(json.loads(self.prev).append(x))
+
+    def get_prev(self):
+        try:
+            return json.loads(self.prev)
+        except TypeError:
+            return json.loads(json.dumps(self.prev))
+
+    def set_next(self, x):
+        self.next = json.dumps(x)
+
+    def add_next(self, x):
+        self.next = json.dumps(json.loads(self.next).append(x))
+
+    def get_next(self):
+        try:
+            return json.loads(self.next)
+        except TypeError:
+            return json.loads(json.dumps(self.next))
+
 
 class Task(models.Model):
     # A process include many moves,
@@ -238,6 +251,7 @@ class Task(models.Model):
     task_sponsor = models.ForeignKey(User, on_delete=models.CASCADE)
     task_creat_time = models.DateTimeField(auto_now_add=True)
     task_update_time = models.DateTimeField(auto_now=True)
+    task_co_worker = models.ManyToManyField(User, related_name="co_worker")
 
     @classmethod
     def get_tasks(cls, process_id):
@@ -260,7 +274,6 @@ class Task(models.Model):
         if contained_steps:
             res = []
             for i in contained_steps:
-                i.set_attachment_snapshot()
                 res.append(i.step_attachment_snapshot)
             return res
         else:
@@ -294,10 +307,12 @@ class Step(models.Model):
     step_status = models.CharField("执行状态", max_length=255)  # 挂起pending, 执行中processing, 等待awaiting, 完成finish, 暂存 save
     step_state = models.CharField("步骤状态", max_length=255)  # 通过approval、驳回deny、撤回withdraw、放弃abandon、转出patch out
 
-    step_type = models.CharField("步骤类型", max_length=255)  # 1.录入 input  2. 审批 approval 3. 修订 edit 4. 合并 5. 删减 6. 新增,7.立项
+    step_type = models.CharField("步骤类型",
+                                 max_length=255)  # 1.录入 input  2. 提交审批 approval 3. 修订 edit 4. 合并 5. 删减 6. 新增,7.立项
     step_attachment = models.ForeignKey(Attachment, on_delete=models.CASCADE, default=None)
     step_attachment_snapshot = models.JSONField(default=snapshot_default,
                                                 blank=True)  # store attachment snapshot cloud be forms { id: 21, title:"love story"}
+    comments = models.TextField("备注", null=True, blank=True)
 
     def set_condition(self, step_id=None):
         pass
@@ -305,10 +320,33 @@ class Step(models.Model):
     def get_condition(self):
         pass
 
+    def get_step_type_display_name(self):
+        types = [
+            ('1', 'input', '录入'),
+            ('2', 'approval/submit', '提交审批'),
+            ('3', 'edit', '修改更新'),
+            ('4', 'pack up', '合并'),
+            ('5', 'delete', '删除'),
+            ('6', 'create', '新增'),  # not use
+            ('7', 'rise up', '立项')
+        ]
+        for item in types:
+            if item[0] == self.step_type:
+                return item[2]
+
+    def get_owner(self):
+        return User.objects.get(pk=self.step_owner)
+
     def set_attachment_snapshot(self):
         _z = serializers.serialize('json', self.step_attachment.get_attachment())
-        self.step_attachment_snapshot = json.loads(_z)
+        self.step_attachment_snapshot = copy.deepcopy(json.loads(_z))
         self.save()
+
+    def done(self):
+        return self.step_status == '3'
+
+    def finish(self):
+        self.step_status = '3'
 
     def get_next_step(self):
         try:
@@ -318,6 +356,27 @@ class Step(models.Model):
             return _next_instance
         except models.ObjectDoesNotExist:
             return self.__class__.objects.none()
+
+    @classmethod
+    def get_update_history(cls, task_id):
+        steps = cls.get_steps(task_id=task_id)
+        res = []
+        base = steps[0].step_attachment_snapshot[0]['fields']
+
+        for idx, _s in enumerate(steps):
+
+            if idx > 0:
+
+                for k, v in _s.step_attachment_snapshot[0]['fields'].items():
+
+                    current = {}
+
+                    if v != base[k]:
+                        current[k] = {"before": base.get(k), "after": v, "update_time": _s.step_update_time,
+                                      "step_owner": User.objects.get(pk=_s.step_owner).first_name}
+                        res.append(current)
+                base = _s.step_attachment_snapshot[0]['fields']
+        return res
 
     @classmethod
     def get_steps(cls, task_id):
@@ -350,6 +409,21 @@ class Step(models.Model):
 
     def __str__(self):
         return f"stepid: {self.step_id}, taskid :{self.task_id}"
+
+
+class Finalize(models.Model):
+    title = "创新研究课题成果结题信息"
+    fin_project_name = models.CharField("课题名称", max_length=500)
+    fin_project_type = models.CharField("课题类型", max_length=255)
+    fin_departments = models.JSONField("课题组成单位", null=True)
+    fin_project_sponsor = models.ForeignKey(User, verbose_name="课题负责人", on_delete=models.CASCADE)
+    fin_groups = models.CharField("课题参与团队", max_length=500)
+    fin_start_time = models.DateTimeField("开始时间", default=timezone.now)
+    fin_end_time = models.DateTimeField("结束时间", default=timezone.now)
+    fin_funding_status = models.CharField("经费使用情况", max_length=500)
+    fin_project_achievement = models.CharField("课题结题成果", max_length=500)
+    fin_project_situation = models.TextField("课题完成情况", help_text="包括研究的背景、过程、结果及问题等")
+    fin_pre_audit = models.TextField("预检查情况")
 
 
 class Action(models.Model):

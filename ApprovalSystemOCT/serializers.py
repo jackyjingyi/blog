@@ -1,7 +1,8 @@
 import json
 import uuid
 from rest_framework import serializers
-from ApprovalSystemOCT.models import Attachment, Process, Task, Step, Book, ProjectRequirement, ProcessType
+from ApprovalSystemOCT.models import Attachment, Process, Task, Step, Book, ProjectRequirement, ProcessType, \
+    ProjectImplementTitle
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -16,7 +17,8 @@ class StepSerializer(serializers.ModelSerializer):
     class Meta:
         model = Step
         fields = (
-        "step_id", "task", "step_seq", "step_owner", "step_attachment_snapshot", "step_attachment", "step_status")
+            "step_id", "task", "step_seq", "step_owner", "step_attachment_snapshot", "step_attachment", "step_status",
+        )
 
 
 class ProjectRequirementSerializer(serializers.ModelSerializer):
@@ -43,3 +45,13 @@ class ProcessSerializer(serializers.ModelSerializer):
     class Meta:
         model = Process
         fields = "__all__"
+
+
+class ProjectImplementTitleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectImplementTitle
+        fields = (
+            "project_base", "sponsor", "department", "progress_year", "progress_season"
+        )
+
+
