@@ -87,6 +87,17 @@
                                     </a>
                                 {% endif %}
                             </td>
+                            <td style="border-right: none; border-left: none;text-align: center">
+                                {% if p.read_only == '1' %}
+                                    <p value="{{ p.process_order_id }}">
+                                        分发
+                                    </p>
+                                {% else %}
+                                    <a class="assign_project" value="{{ p.process_order_id }}">
+                                        分发
+                                    </a>
+                                {% endif %}
+                            </td>
                             <td value="{{ p.get_tasks.first.get_steps.last.step_attachment.get_attachment.first.id }}"
                                 class="wordTransform" style="border-right: none;border-left: none; text-align: center">
                                 <a href="javascript:void (0)">

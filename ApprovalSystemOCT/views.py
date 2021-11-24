@@ -59,7 +59,23 @@ def home_view(request):
 
 
 def display_all_projects(request):
-    queryset = Process.objects.filter(status__in=['3', '8'], process_pattern__process_type="1")
+    """
+    ######################################
+    前提：
+    # 查找所有需求录入阶段的process，分别处理
+    # 1. 负责人已提交
+    # 2. 负责人未提交
+    # 3. 已进入立项流程
+    # 4. 管理页面，仅管理员可操作
+    需求：
+    # 1. 提供智能搜索功能
+    # 2. 提供分页功能
+    # 3. 已提交部分允许动作： 管理员分发、管理员删除、管理员合并、管理员修改
+    # 4. 未提交部分允许管理员删除、修改、代为提交
+    # 5. 已进入立项流程部分，允许管理员查看、删除（特别确认）、修改（特别确认）
+    ######################################
+    """
+    queryset = Process.objects.filter(process_pattern__process_type="1")
     already_set_to_annual = []
     not_set_to_annual = []
 
@@ -367,22 +383,25 @@ def get_users_process(request):
 
 @login_required(login_url="/members/login_to_app/")
 def my_projects(request):
-    user = request.user
-
-    def _get_processlist(status_id):
-        user_steps = Step.objects.filter(step_owner=str(user.id))
-        task_id_set = user_steps.values("task_id").distinct()
-
-        process_id_set = Task.objects.filter(task_id__in=task_id_set).values("process_id").distinct()
-        user_process = Process.objects.filter(process_order_id__in=process_id_set, status=status_id)
-        return user_process
+    def _get_processlist(user,status_id):
+        # change logic here
+        process_type = ProcessType.objects.get(process_type='1', status='1')
+        process_query_set = Process.objects.filter(process_pattern=process_type, process_executor=user)
+        res = []
+        for p in process_query_set:
+            try:
+                if p.get_tasks().first().task_status == status_id:
+                    res.append(p.pk)
+            except AttributeError:
+                logging.warning(f"{p}, {p.get_tasks()}")
+        return process_query_set.filter(process_order_id__in=res)
 
     context = {
         'template_name': "我的课题",
         'sidebar_index': BASE_SIDEBAR_INDEX,
         'project_verbose_name': PROJECT_REQUIREMENT_VERBOSE,
-        'user_process': _get_processlist('1'),
-        'user_process_sub': _get_processlist('3'),
+        'user_process': _get_processlist(request.user,'1'),
+        'user_process_sub': _get_processlist(request.user,'3'),
         'project_types': PROJECT_TYPE[1:],
         'process_directions': PROJECT_RESEARCH_DIRECTION[1:]
     }
@@ -418,6 +437,7 @@ def update_attachment(request):
             'new_step_snapshot': _s.step_attachment_snapshot
         }
         return JsonResponse(context, status=200, safe=False)
+
 
 @login_required(login_url="/members/login_to_app/")
 def project_creation(request):
@@ -545,6 +565,7 @@ def requirement_bulk_action(request):
                 target_task = process.get_tasks().get(task_pattern=_tty)
                 last_steps = target_task.get_steps().order_by('step_seq').order_by('step_update_time')
                 last_step = last_steps.last()
+                # todo catch already delete or submit projects, require 500, 404 templates
                 seq = last_step.step_seq + 1
                 attachment = last_step.step_attachment
                 _s = Step.objects.create(
