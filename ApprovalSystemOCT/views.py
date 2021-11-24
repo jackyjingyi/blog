@@ -4,6 +4,7 @@ import json
 from datetime import datetime
 
 from django.shortcuts import render
+from django.db.models import Q
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import permission_required, login_required
 from django.http import JsonResponse
@@ -18,9 +19,9 @@ from rest_framework import generics
 
 import docx
 
-from ApprovalSystemOCT.models import Process, Task, Step, Book, ProcessType, Attachment, ProjectRequirement, \
-    PROJECT_TYPE, \
-    PROJECT_RESEARCH_DIRECTION, PROJECT_REQUIREMENT_VERBOSE, PROCESS_TYPE
+from ApprovalSystemOCT.models import Process, Task, TaskType, Step, Book, ProcessType, Attachment, ProjectRequirement, \
+    ProjectDirection
+from ApprovalSystemOCT.project_statics.static_data import *
 from ApprovalSystemOCT.serializers import BookSerializer, StepSerializer, ProjectRequirementSerializer, \
     ProcessTypeSerializer, AttachmentSerializer, ProcessSerializer
 from ApprovalSystemOCT.process import ProjectInputProcess
@@ -56,18 +57,6 @@ def home_view(request):
     }
     logger.info("hi")
     return render(request, 'projectHome.html', context=context)
-
-
-@login_required
-@permission_required('ApprovalSystemOCT.add_projectrequirement', raise_exception=True)
-def project_creation(request):
-    context = {
-        'template_name': "课题录入",
-        'sidebar_index': BASE_SIDEBAR_INDEX,
-        'project_types': PROJECT_TYPE,
-        'project_directions': PROJECT_RESEARCH_DIRECTION,
-    }
-    return render(request, 'projectCreation.html', context=context)
 
 
 def display_all_projects(request):
@@ -117,7 +106,7 @@ def project_settlement(request):
         'users': User.objects.filter(groups__in=Group.objects.filter(pk=14)),
         'process_types': PROCESS_TYPE[1:],
     }
-    return render(request, 'projectSettlment.html', context=context)
+    return render(request, 'projectSettlement.html', context=context)
 
 
 def project_dispatch(request):
@@ -207,8 +196,8 @@ def get_history(task_id):
                 before = PROJECT_TYPE[int(val[_k].get("before"))][1]
                 after = PROJECT_TYPE[int(val[_k].get("after"))][1]
             elif _k == "project_research_direction":
-                before = PROJECT_RESEARCH_DIRECTION[int(val[_k].get("before"))][1]
-                after = PROJECT_RESEARCH_DIRECTION[int(val[_k].get("after"))][1]
+                before = ",".join([ProjectDirection.objects.get(pk=i).name for i in val[_k].get("before")])
+                after = ",".join([ProjectDirection.objects.get(pk=i).name for i in val[_k].get("after")])
             history.append(
                 (idx, datetime.strftime(val[_k].get("update_time"), "%Y年%m月%d日 %H:%M:%S"), val[_k].get("step_owner"),
                  PROJECT_REQUIREMENT_VERBOSE[_k],
@@ -314,7 +303,7 @@ def get_requirement_content(request):
         return JsonResponse({'info': _info, 'html': ar.__str__()}, status=200, safe=False)
 
 
-@login_required(login_url="/memebers/login_to/")
+@login_required(login_url="/members/login_to/")
 def process_detail(request, pk):
     p = Process.objects.get(process_order_id=pk)
     attachment = p.get_tasks().last().get_steps().last().step_attachment
@@ -352,7 +341,10 @@ def get_history_log(request):
 def requirement_transformation(request):
     if request.method == 'POST':
         requirement_id = request.POST['requirement_id']
+        rp = ProjectRequirement.objects.get(pk=requirement_id)
         requirement = ProjectRequirement.objects.values().get(pk=requirement_id)
+        requirement['project_research_direction'] = [str(i.get('id')) for i in
+                                                     rp.project_research_direction.all().values()]
         path = os.path.join(settings.MEDIA_ROOT, 'template_doc1.docx')
 
         document = docx.Document(path)
@@ -374,7 +366,7 @@ def get_users_process(request):
         pass
 
 
-@login_required(login_url='/memebers/login_to/')
+@login_required(login_url='/members/login_to/')
 def my_projects(request):
     user = request.user
 
@@ -405,7 +397,11 @@ def update_attachment(request):
     if request.method == 'POST':
         _p = Process.objects.get(pk=request.POST.get("process_id"))
         _a = Attachment.objects.get(pk=request.POST.get("attachment_id"))
-        _t = _p.get_tasks().last()
+        # 1:input first task,
+        _task_type = request.POST.get("task_type")
+        _tty = TaskType.objects.get(task_type=_task_type)
+        # a process can only has one input task
+        _t = Task.objects.get(process=_p, task_pattern=_tty)
         _max_seq = _t.get_steps().last().step_seq + 1
         _s = Step.objects.create(
             task=_t,
@@ -425,34 +421,96 @@ def update_attachment(request):
         return JsonResponse(context, status=200, safe=False)
 
 
+def project_creation(request):
+    """
+    返回所有已创建但是未关联attachment的process
+    """
+    undone_list = Process.objects.filter(
+        Q(process_owner=request.user) | Q(process_executor=request.user) | Q(process_co_worker__in=[request.user]))
+    # todo: check if processes have at least one attachment
+
+    context = {
+        'template_name': "课题录入",
+        'sidebar_index': BASE_SIDEBAR_INDEX,
+        'project_types': PROJECT_TYPE,
+        'project_directions': PROJECT_RESEARCH_DIRECTION,
+    }
+    return render(request, 'projectCreation.html', context=context)
+
+
 @csrf_exempt
-@login_required
+@login_required(login_url="/members/login_to_app/")
 @permission_required('ApprovalSystemOCT.add_projectrequirement')
 def process_creation(request):
+    """
+    ajax 请求，仅为post
+    """
     if request.method == 'POST':
         # try:
         # process_type = 1 input process
         # 选定process type 验证时间
+        # 1. 检查是否允许创建
+        # 2. 同时创建所有task？
 
-        process_type_queryset = ProcessType.objects.filter(process_type=request.POST.get("process_type_id"), status='1',
+        data = json.loads(request.body)
+        process_type_queryset = ProcessType.objects.filter(process_type='1', status='1',
                                                            process_start_time__lt=timezone.now(),
                                                            process_end_time__gte=timezone.now())
-        if not process_type_queryset:
-            return JsonResponse({'msg': 'No processing input Process'}, status=500, safe=False)
+        # 获取DB中已创建的task type
+        task_allowed = TaskType.objects.filter(task_type='1', status='1', task_start_time__lt=timezone.now(),
+                                               task_end_time__gte=timezone.now())
+        if not task_allowed:
+            return JsonResponse({'msg': 'No processing input Process'}, status=404, safe=False)
         else:
             try:
-
-                pc = ProjectInputProcess()
-                # import pdb
-                # pdb.set_trace()
-                p, init_task = pc.process_creation(process_pattern_id=process_type_queryset.first().id,
-                                                   process_executor=request.user)
-
+                # 创建工作簿，并创建第一个task（录入任务）
+                p = Process.objects.create(
+                    process_pattern=process_type_queryset.first(),
+                    process_executor=request.user,  # 如无指派，默认为当前用户
+                    process_owner=request.user,  # 如无指派，默认为当前用户
+                    status='1',
+                )
+                t = Task.objects.create(
+                    process=p,
+                    task_type="input",
+                    task_pattern=task_allowed.first(),
+                    task_seq=0,  # 录入任务为0
+                    task_status="1",  # processing
+                    # task_state="",   # 暂无状态
+                    task_sponsor=request.user,  # 如未更改负责人，默认为当前用户
+                )
+                if data['status'] == '3':
+                    t.task_status = '3'
+                    t.save()
+                # create requirement
+                _dirs = data['business'].get('project_research_direction')
+                del data['business']['project_research_direction']
+                b = ProjectRequirement.objects.create(
+                    **data['business']
+                )
+                b.project_research_direction.add(*_dirs)
+                b.save()
+                # create attachment
+                a = Attachment.objects.create(
+                    attachment_app_name='ApprovalSystemOCT',
+                    attachment_app_model='ProjectRequirement',
+                    attachment_identify=b.pk
+                )
+                # create step
+                s = Step.objects.create(
+                    task=t,
+                    step_seq=0,
+                    step_owner=request.user.pk,
+                    step_status='3',
+                    step_state='3',
+                    step_type='1',
+                    step_attachment=a,
+                )
+                s.set_attachment_snapshot()
+                # step bind attachment
                 context = {
-                    'process': list(Process.objects.filter(pk=p.pk).values()),
-                    'task': list(Task.objects.filter(pk=init_task.task_id).values()),
+                    'html': b.__str__(),
                 }
-
             except Exception as e:
                 logging.warning(e)
                 return JsonResponse({'msg': 'sth goes wrong'}, safe=False)
@@ -476,50 +534,50 @@ def finish_process(request):
 @csrf_exempt
 def requirement_bulk_action(request):
     if request.method == 'POST':
-
+        # 获取动作代码，以及需要执行的process id列表
         action = request.POST.get("action")
+        task_type = request.POST.get('task_type')
         info = Process.objects.filter(process_order_id__in=json.loads(request.POST.get("info")))
-        if action == "submit":
-            for idx, process in enumerate(info):
-                try:
-                    target_task = process.get_tasks().last()
-                    # task_type == input
-                    # 本步骤不改变attachment
+        _tty = TaskType.objects.get(task_type=task_type)
+        # submit 动作1. 创建step =》 本task状态更新 =》 process状态更新 =》process调整为只读
+        for idx, process in enumerate(info):
+            try:
+                # todo： 当前判断为input task为课题需求流程中第一个任务（task_seq = 0）， 应该按task_type = input进行遍历筛选
+                target_task = process.get_tasks().get(task_pattern=_tty)
+                last_steps = target_task.get_steps().order_by('step_seq').order_by('step_update_time')
+                last_step = last_steps.last()
+                seq = last_step.step_seq + 1
+                attachment = last_step.step_attachment
+                _s = Step.objects.create(
+                    task=target_task,
+                    step_seq=seq,
+                    # step_condition_type
+                    # step_condition
 
-                    last_steps = target_task.get_steps().order_by('step_seq').order_by('step_update_time')
-                    last_step = last_steps.last()
-                    seq = last_step.step_seq + 1
-                    attachment = last_step.step_attachment
-                    s = StepSerializer(data={
-                        'step_attachment': attachment.attachment_uuid,
-                        'task': target_task.task_id,
-                        'step_seq': seq,
-                        'step_attachment_snapshot': {},
-                        'step_owner': request.user.id,
-                        'step_status': '3'}
-                    )
-                    s.is_valid(raise_exception=True)
-
-                    s.save()
-                    # 2 提交、审批
-                    s.instance.set_attachment_snapshot()
-                    s.instance.step_type = '2'
-                    s.instance.save()
+                    step_owner=request.user.pk,  # 提交人
+                    # step_assignee=   非指派任务无此项目
+                    # step_assigner=   非指派任务无此项目
+                    step_status='3',  # 非指派类步骤为原子性，创建即完成
+                    step_state='3',  # 3: finish
+                    step_type='2',  # 提交、审批
+                    step_attachment=attachment,
+                )
+                if action == 'submit':
+                    # 录入任务结束
                     target_task.task_status = '3'
-                    process.status = '3'
-                    target_task.save()
-                    process.save()
-                    print(attachment)
-                except Exception as e:
-                    print(e)
-                    logging.warning(e)
-                    continue
-            return JsonResponse({"msg": f"{info.count()} process submitted"}, status=200, safe=False)
-        elif action == "delete":
-            for idx, process in enumerate(info):
-                process.status = '6'
+                elif action == 'delete':
+                    _s.step_type = '6'
+                    target_task.task_status = '6'
+                    process.status = '6'
+                    process.read_only = '1'
+                _s.set_attachment_snapshot()
+                target_task.save()
                 process.save()
-            return JsonResponse({"msg": f"{info.count()} process deleted"}, status=200, safe=False)
+            except Exception as e:
+                print(e)
+                logging.warning(e)
+                continue
+        return JsonResponse({"msg": f"{info.count()} process {action}"}, status=200, safe=False)
 
 
 @csrf_exempt
@@ -539,12 +597,8 @@ def get_process_type_list(request):
         tbody = tag_formatter("tbody")
         tr = tag_formatter("tr")
         td = tag_formatter("td")
-        ul = tag_formatter("ul")
-        li = tag_formatter("li")
         th = tag_formatter("th")
         span = tag_formatter("span")
-        ptag = tag_formatter("p")
-        achor = tag_formatter("a")
         th1 = th("流程类型", scope="col") + th("开始时间", scope="col") + th("结束时间", scope="col") + th("创建人", scope="col") + th(
             "状态", scope="col")
         lis = []

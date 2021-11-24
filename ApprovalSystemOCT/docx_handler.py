@@ -160,8 +160,10 @@ class ProjectTableHandler(TableHandler):
                         else:
                             self.fill_select(v)
                 elif key == "project_research_direction":
+
                     for k1, v1 in _map_rsd.items():
-                        if k1 == val:
+
+                        if k1 in val:
                             self.fill_select(v1, checked=True)
                         else:
                             self.fill_select(v1)

@@ -87,26 +87,31 @@ class HomeView(ListView):
     def get_context_data(self, *args, object_list=None, **kwargs):
         cat_menu = Category.objects.all()
         source_menu = Source.objects.all()
-        post_group = {i.name: Post.objects.filter(category=i.name, publish=True).order_by('-publish_date') for i in
-                      cat_menu if
-                      Post.objects.filter(category=i.name, publish=True)}
+        res = {i.name: Post.objects.filter(category=i.name, publish=True).order_by('-publish_date')[:5] for i in
+               cat_menu if
+               Post.objects.filter(category=i.name, publish=True)}
+        post_group = []
+        for idx, val in enumerate(res.items()):
 
-        # hot_article = Post.objects.filter(publish=True).annotate(likes_count=Count('likes')).order_by(
-        #     '-likes_count').first()
-        top_two_topics = sorted(post_group.items(), key=lambda x: x[1].count(), reverse=True)
+            if idx % 2 == 0:
+                tmp = val
+            else:
+                post_group.append((tmp[0], tmp[1], val[0], val[1]))
+                tmp = None
+        if tmp:
+            post_group.append((tmp[0], tmp[1]))
         context = super(HomeView, self).get_context_data(*args, **kwargs)
         context["cat_menu"] = cat_menu
         context["source_menu"] = source_menu
         context["post_group"] = post_group
         context['role'] = get_user_role(self.request.user)
         # context['hot_article'] = hot_article
-        context['top_two_topics'] = top_two_topics
         context['group'] = GROUP_LIST
+
         return context
 
 
 class ApprovalPosts(LoginRequiredMixin, ListView):
-
     """
       基于Approver自身的审批等级进行筛选
         1. 本view对post进行简单展示，并非审批功能view
@@ -157,20 +162,23 @@ class ApprovalPosts(LoginRequiredMixin, ListView):
 
 def search_item(request):
     if request.method == "POST":
-        searched = request.POST.get('searched')
+        # todo: 1. 无body内容会有None type问题
+        searched = request.POST.get('searched').strip().lower()
+
         obj_list = set()
         target = Post.objects.filter(publish=True)
         # print([i.pk for i in target])
         for obj in target:
             # print("testing target {} with {}-{}".format(searched, obj.pk, obj.title))
             try:
-                if searched in obj.title:
+                if searched in str(obj.title).lower():
                     # print("find target {} with {}-{}".format(searched, obj.pk, obj.title))
                     obj_list.add(obj.pk)
-                if searched in obj.body:
+                elif searched in str(obj.body).lower():
                     # print("find target {} with {}-{}".format(searched, obj.pk, obj.title))
                     obj_list.add(obj.pk)
-            except TypeError:
+            except Exception as e:
+                logging.info(e)
                 continue
 
         if obj_list:
@@ -353,13 +361,22 @@ def group_posts_view(request, group_name):
     method: Get
     """
     if request.method == 'GET':
-
         all_members = User.objects.filter(groups__name=group_name)
 
         posts_list = Post.objects.filter(author__groups__name=group_name, publish=True).order_by('-publish_date')
         cat_menu = Category.objects.all()
-        post_group = {i.name: posts_list.filter(category=i.name) for i in cat_menu if
-                      posts_list.filter(category=i.name)}
+        res = {i.name: posts_list.filter(category=i.name) for i in cat_menu if
+               posts_list.filter(category=i.name)}
+        post_group = []
+        tmp = None
+        for idx, val in enumerate(res.items()):
+            if idx % 2 == 0:
+                tmp = val
+            else:
+                post_group.append((tmp[0], tmp[1], val[0], val[1]))
+                tmp = None
+        if tmp:
+            post_group.append((tmp[0], tmp[1]))
         role = get_user_role(request.user)
         context = {
             'all_members': all_members,
@@ -368,7 +385,6 @@ def group_posts_view(request, group_name):
             'role': role,
             'selected_group': group_name,
             'post_group': post_group,
-
         }
         return render(request, 'group_statics.html', context=context)
 
@@ -671,7 +687,6 @@ class UpdatePostView(LoginRequiredMixin, UpdateView):
     template_name = 'update_post.html'
     login_url = '/members/login_to/'
     success_url = reverse_lazy('home')
-
 
     def get_context_data(self, *args, object_list=None, **kwargs):
         cat_menu = Category.objects.all()

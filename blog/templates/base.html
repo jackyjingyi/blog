@@ -245,11 +245,11 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <form class="form-inline d-flex justify-content-center md-form "
-                                  action="{% url 'search_items' %}" method="post">
+                                  action="{% url 'search_items' %}" method="post" >
                                 {% csrf_token %}
                                 <input class="form-control form-control-sm mr-3 w-75" type="text"
                                        placeholder="Search"
-                                       aria-label="Search" name="searched">
+                                       aria-label="Search" name="searched" required>
                                 <button class="btn btn-outline" type="submit" id="search_button">
                                     <i class="fa fa-search"
                                        aria-hidden="true"></i>
@@ -294,6 +294,7 @@
 <script type="text/javascript" src="{% static 'assets/lib/footable/footable.all.min.js' %}"></script>
 <script type="text/javascript"
         src="{% static 'assets/lib/cube-portfolio/cubeportfolio/js/jquery.cubeportfolio.min.js' %}"></script>
+
 <script>
     $(document).ready(function () {
         $(".parentProject a.svg").on('click', function () {

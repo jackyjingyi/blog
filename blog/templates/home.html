@@ -14,25 +14,66 @@
             </h3>
             {% if post_group %}
 
-                {% for key,val in post_group.items %}
-                    <h4>【<a href="{% url 'category' key %}" class="link-primary">{{ key }}</a>】</h4>
-                    <ul style="list-style: none">
-                        {% for post in val %}
-                            <li style="padding-left: 10px">
-                            【<small class="text-primary">{{ post.subcategory }}</small>】
-                            {% if post.views > 10 %}
-                                <small><span class="badge bg-success">推荐</span></small>
-                            {% endif %}
-                            <a href="{% url 'article_detail' post.pk %}">{{ post.title|truncatewords:10 }}</a>
-                            - <small><a
-                                href="{% url 'author_post' post.author.id %}">{{ post.author.first_name }}</a></small>
+                {% for val in post_group %}
 
-                            <small>日期：{{ post.publish_date|date:"Y年n月d日" }}</small>
+                    <div class="row" style="margin:10px">
+                        <div class="col-md-6 margin-top-30" style="padding-left: 30px; padding-right: 70px">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4>【<a href="{% url 'category' val.0 %}" class="link-primary">{{ val.0 }}</a>】</h4>
+                                </div>
+                                <div class="col-md-6">
+                                    <a href="{% url 'category' val.0 %}"
+                                       class="link-primary pull-right"><span>more>></span></a>
+                                </div>
+                            </div>
+                            <ul style="list-style: none">
+                                {% for post in val.1 %}
+                                    <li style="padding-left: 10px">
+                                    【<small class="text-primary">{{ post.subcategory }}</small>】
+                                    {% if post.views > 10 %}
+                                        <small><span class="badge bg-success">推荐</span></small>
+                                    {% endif %}
+                                    <a href="{% url 'article_detail' post.pk %}">{{ post.title|truncatewords:10 }}</a>
+                                    - <small><a
+                                        href="{% url 'author_post' post.author.id %}">{{ post.author.first_name }}</a></small>
 
-                        {% endfor %}
-                    </ul>
+                                    <small>日期：{{ post.publish_date|date:"Y年n月d日" }}</small>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                        {% if val.2 %}
+
+                            <div class="col-md-6 margin-top-30" style="padding-left: 30px; padding-right: 70px">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h4>【<a href="{% url 'category' val.2 %}" class="link-primary">{{ val.2 }}</a>】
+                                        </h4>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <a href="{% url 'category' val.2 %}"
+                                           class="link-primary pull-right"><span>more>></span></a>
+                                    </div>
+                                </div>
+                                <ul style="list-style: none">
+                                    {% for post in val.3 %}
+                                        <li style="padding-left: 10px">
+                                        【<small class="text-primary">{{ post.subcategory }}</small>】
+                                        {% if post.views > 10 %}
+                                            <small><span class="badge bg-success">推荐</span></small>
+                                        {% endif %}
+                                        <a href="{% url 'article_detail' post.pk %}">{{ post.title|truncatewords:10 }}</a>
+                                        - <small><a
+                                            href="{% url 'author_post' post.author.id %}">{{ post.author.first_name }}</a></small>
+
+                                        <small>日期：{{ post.publish_date|date:"Y年n月d日" }}</small>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
                 {% endfor %}
-
             {% endif %}
 
         </div>

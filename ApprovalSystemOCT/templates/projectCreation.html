@@ -1,9 +1,6 @@
 {% extends 'projectBase.html' %}
 {% load static %}
 {% block content %}
-    <link rel="stylesheet" type="text/css" href="{% static 'lib/datepicker/jquery.datetimepicker.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'lib/iconfont/iconfont/css/iconfont.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'lib/iconfont/iconfont/css/iconfont-animate.min.css' %}">
     <style>
 
         .icon-list {
@@ -114,7 +111,7 @@
             <div class="form-group" style="margin:30px">
 
                 <form class="g-3 needs-validation" enctype="multipart/form-data" id="create_project" novalidate>
-                    {% csrf_token %}
+
                     <div class="row margin-top-10">
                         <div class="col-md-12">
                             <i class="pull-left icon iconfont icon-miaoshu">
@@ -151,7 +148,7 @@
                                 研究方向
                             </strong></label>
                             <select name="project_research_direction" class="form-control"
-                                    id="project_research_direction"
+                                    id="project_research_direction" multiple
                                     required>
                                 {% for t in project_directions %}
                                     <option value="{{ t.0 }}">{{ t.1 }}</option>
@@ -332,11 +329,11 @@
         </div>
     </div>
 
-    <script src="{% static 'lib/datepicker/jquery.datetimepicker.full.min.js' %}"></script>
+
     <script>
         $(document).ready(function () {
             const csrftoken = getCookie('csrftoken');
-
+            $('select').selectpicker();
             $("#col1").on('click', function () {
                 let k = $("#projectWorkTitle")
                 k.attr('colspan', (parseInt(k.attr('colspan')) + 1).toString())
@@ -371,92 +368,56 @@
                 },
 
             });
-            var saveSubmitFunc = function (e, status) {
 
+            var saveSubmitFunc = function (status) {
                 var forms = $('#create_project')
+                let businessData = {}
+                let assignValue = function (ele, vl) {
+                    ele.find('input,textarea,select').each(function () {
+                            if ($(this).attr("name") === 'project_start_time' || $(this).attr("name") === 'project_end_time') {
+                                vl[$(this).attr("name")] = $(this).val() + ":00.000000";
+                            } else {
+                                vl[$(this).attr("name")] = $(this).val();
+                            }
+                        }
+                    )
+                    return vl
+                }
 
-                let get_process_and_task = function (event) {
-                    return JSON.parse($.ajax({
+                if (forms[0].checkValidity() === false) {
+                    forms[0].reportValidity();
+                } else {
+                    businessData['business'] = assignValue(forms, {})
+                    businessData['status'] = status
+                    console.log(businessData)
+                    console.log(status)
+                    $.ajax({
                         url: '/projectSystem/process/creation/',
                         type: 'post',
-                        data: {'process_type_id': '1'},
+                        data: JSON.stringify(businessData),
+                        contentType: 'application/json',
+                        headers: {'X-CSRFToken': csrftoken},
                         async: false,
                         success: function (data) {
                             $("#processPanel tbody").append(
-                                '<tr><td>' + "课题流程ID：" + data.process[0].process_order_id + '</td>' +
-                                '<td>' + data.task[0].task_type + '</td></tr>'
-                            )
-                        },
-                        error: function (error_data) {
-                            event.stopPropagation();
-                            window.alert("系统异常，请联系管理员")
-
-                        },
-                    }).responseText);
-
-                }
-                let create_project = function (t) {
-                    let fd = new FormData;
-                    let x = forms.serializeArray().reduce(function (obj, item) {
-                        obj[item.name] = item.value;
-                        return obj;
-                    }, {});
-                    for (var key in x) {
-                        if (key === 'project_start_time' || key === 'project_end_time') {
-                            x[key] = x[key] + ":00.000000"
-                        }
-                        fd.append(key, x[key]);
-                    }
-
-                    $.ajax({
-                        url: '/projectSystem/projectRequirements/',
-                        type: 'post',
-                        data: fd,
-                        dataType: 'json',
-                        processData: false,
-                        contentType: false,
-                        beforeSend: function (xhr, settings) {
-                            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                                xhr.setRequestHeader('X-CSRFToken', csrftoken);
-                            }
-                        },
-                        success: function (data) {
-                            console.log(data);
-                            let stepTaskID = t;
-                            let attachment = getAttachment('ApprovalSystemOCT', 'ProjectRequirement', data.id)
-                            let step = getStep(stepTaskID, attachment.attachment_uuid, status)
-                            let output = ""
-                            $.each(data, function (key, value) {
-                                output += "<p>" + key + ": " + value + "</p>"
-                            });
-                            $("#processPanel tbody tr").last().append(
-                                output
+                                "<tr><td colspan='2'>" +
+                                data.html +
+                                "</td></tr>"
                             );
                             $("#inputPanel").removeClass('in');
                             $("#resetButton").click();
                         },
                         error: function (error_data) {
-                            e.stopPropagation();
                             window.alert("系统异常，请联系管理员")
 
-                        }
+                        },
                     })
-
-                }
-
-                if (forms[0].checkValidity() === false) {
-                    forms[0].reportValidity();
-                    e.stopPropagation();
-                } else {
-                    let prepData = get_process_and_task(e);
-                    create_project(prepData.task[0].task_id)
                 }
             }
 
-
             $("#saveAsDraft").on("click", function (e) {
                     e.preventDefault();
-                    saveSubmitFunc(e, '1');
+                    saveSubmitFunc('1');
                 }
             );
             $("#directSubmit").on('click', function (e) {
@@ -475,78 +436,13 @@
                         content: _content,
                         btn: ['确认', '取消'],
                         yes: function (index, layro) {
-                            saveSubmitFunc(e, '3');
+                            saveSubmitFunc('3');
                             layer.close(index)
                         }
                     })
                 )
 
             })
-            var getAttachment = function (attachment_app_name, attachment_app_model, projectID) {
-
-                return JSON.parse($.ajax({
-                    url: '/projectSystem/attachment/',
-                    type: 'post',
-                    async: false,
-                    data: {
-                        'attachment_app_name': attachment_app_name,
-                        'attachment_app_model': attachment_app_model,
-                        'attachment_identify': projectID,
-                    },
-                    beforeSend: function (xhr, settings) {
-                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                            xhr.setRequestHeader('X-CSRFToken', csrftoken);
-                        }
-                    },
-                    success: function (data) {
-                        console.log(data)
-                    },
-                    error: function (error_data) {
-                        console.log(error_data)
-                    }
-                }).responseText);
-
-            }
-
-            var getStep = function (taskID, attachmentID, status) {
-                console.log(taskID, attachmentID)
-                return JSON.parse($.ajax({
-                    url: '/projectSystem/steps/',
-                    type: 'post',
-                    data: {
-                        'step_attachment': attachmentID,
-                        'task': taskID,
-                        'step_seq': 0,
-                        'step_attachment_snapshot': JSON.stringify(''),
-                        'step_owner': '{{ user.pk }}',
-                        'step_status': status,
-                        'step_type': '1'
-                    },
-                    async: false,
-                    beforeSend: function (xhr, settings) {
-                        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                            xhr.setRequestHeader('X-CSRFToken', csrftoken);
-                        }
-                    },
-                    success: function (data) {
-
-                        if (status === "3") {
-                            $.ajax({
-                                url: "/projectSystem/finishProcess/",
-                                type: "post",
-                                data: {"step_id": data.step_id},
-                                success: function (data) {
-                                    console.log(data)
-                                }
-                            })
-                        }
-
-                    },
-                    error: function (error_data) {
-                        console.log(error_data)
-                    }
-                }).responseText);
-            }
 
             $("#createProcess").on('click', function (e) {
                 e.preventDefault();
@@ -559,7 +455,6 @@
 
                 $("#inputPanel").removeClass('in');
                 $("#resetButton").click();
-
 
             })
         })

@@ -1,9 +1,7 @@
 {% extends 'projectBase.html' %}
 {% load static %}
 {% block content %}
-    <link rel="stylesheet" type="text/css" href="{% static 'lib/datepicker/jquery.datetimepicker.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'lib/iconfont/iconfont/css/iconfont.min.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'lib/iconfont/iconfont/css/iconfont-animate.min.css' %}">
+
     <style>
 
         .icon-list {
@@ -135,8 +133,9 @@
                                            class="form-label d-inline-block mb-2 text-primary"><strong>
                                         课题类型
                                     </strong></label>
-                                    <select name="project_type" class="form-control" id="project_type" required
-                                            value="{{ attachment.get_attachment.first.get_project_type_display }}"
+                                    <select name="project_type" class="form-control selectpicker" id="project_type"
+                                            required
+                                            value="{{ attachment.get_attachment.first.project_type }}"
                                             disabled>
                                         {% for t in project_types %}
                                             {% if t.0 == attachment.get_attachment.first.project_type %}
@@ -154,12 +153,12 @@
                                            class="form-label d-inline-block mb-2 text-primary"><strong>
                                         研究方向
                                     </strong></label>
-                                    <select name="project_research_direction" class="form-control"
-                                            id="project_research_direction"
+                                    <select name="project_research_direction" class="form-control selectpicker"
+                                            id="project_research_direction" multiple
                                             value="{{ attachment.get_attachment.first.get_project_research_direction_display }}"
                                             required disabled>
                                         {% for t in project_directions %}
-                                            {% if t.0 == attachment.get_attachment.first.project_research_direction %}
+                                            {% if t.1 in attachment.get_attachment.first.get_project_research_direction_display %}
                                                 <option value="{{ t.0 }}" selected>{{ t.1 }}</option>
                                             {% else %}
                                                 <option value="{{ t.0 }}">{{ t.1 }}</option>
@@ -367,7 +366,13 @@
                     {% for h in history %}
                         <tr>
                             {% for i in h %}
-                                <td>{{ i|truncatechars:25 }}</td>
+
+                                {% if forloop.counter0 == 4 %}
+
+                                    <td class="text-danger" style="text-decoration: line-through">{{ i|truncatechars:25 }}</td>
+                                {% else %}
+                                    <td>{{ i|truncatechars:25 }}</td>
+                                {% endif %}
                             {% endfor %}
                         </tr>
                     {% endfor %}
@@ -377,9 +382,11 @@
             </div>
         </div>
     </div>
-    <script src="{% static 'lib/datepicker/jquery.datetimepicker.full.min.js' %}"></script>
+
     <script>
         $(document).ready(function () {
+
+
             const csrftoken = getCookie('csrftoken');
             const processID = "{{ process.pk }}"
             const attachmentTargetID = "{{ attachment.get_attachment.first.pk }}"
@@ -390,6 +397,9 @@
                 form.find('input,textarea,select').each(function () {
                     if ($(this).attr("disabled") !== action) {
                         $(this).attr("disabled", action);
+                        if ($(this).hasClass("selectpicker")) {
+                            $(this).selectpicker("refresh");
+                        }
                     }
                 });
             };
@@ -399,6 +409,7 @@
                     data: {
                         'process_id': processID,
                         'attachment_id': attachmentID,
+                        'task_type': '1',
                     },
                     type: 'post',
                     success: function (data) {
@@ -425,7 +436,11 @@
                         } else {
                             _info = data[i][j] + _tik
                         }
-                        html += "<td>" + _info + "</td>"
+                        if (j === 4) {
+                            html += "<td style='text-decoration: line-through' class='text-danger'>" + _info + "</td>"
+                        } else {
+                            html += "<td>" + _info + "</td>"
+                        }
                     }
                     html += "</tr>"
                     clt.append(html)
@@ -466,11 +481,19 @@
             });
             $("a[data-action='upload']").on('click', function () {
                 // use siblings not next ,cause a div tag will insert in
-                let inputTag = $(this).parent().siblings().last();
+                let inputTag = $(this).parent().parent().find("input,textarea,select");
                 let prepVal = inputTag.val()
+                console.log(inputTag)
+                console.log(inputTag.attr('disabled'))
+                console.log(inputTag.hasClass("selectpicker"))
+                // if disabled === true
                 if (inputTag.attr('disabled')) {
                     let t = $(this).attr("data-target")
+
                     inputTag.attr('disabled', false);
+                    if (inputTag.hasClass("selectpicker")) {
+                        inputTag.selectpicker('refresh')
+                    }
                     if ($(this).parent().parent().find("a[data-action~='upload']").length <= 1) {
                         $(this).parent().after(
                             "<div class='pull-right'>" +
@@ -484,7 +507,7 @@
                         })
                     }
                     $("a[data-action=uploadSubmit]").on('click', function () {
-                        let inputTag = $(this).parent().siblings().last();
+                        {#let inputTag = $(this).parent().siblings().last();#}
                         let attachmentRequirementKey = inputTag.attr("name");
                         let attachmentRequirementVal = inputTag.val();
                         if (prepVal !== attachmentRequirementVal) {
@@ -505,13 +528,18 @@
                         }
 
                         inputTag.attr('disabled', true);
+                        if (inputTag.hasClass("selectpicker")) {
+                            inputTag.selectpicker('refresh')
+                        }
                         $(this).attr('style', 'visibility: hidden');
                         $(this).next().attr('style', 'visibility: hidden');
                     });
                     $("a[data-action=uploadCancel]").on('click', function () {
-                        let inputTag = $(this).parent().siblings().last();
                         inputTag.val(prepVal);
                         inputTag.attr('disabled', true);
+                        if (inputTag.hasClass("selectpicker")) {
+                            inputTag.selectpicker('refresh')
+                        }
                         $(this).attr('style', 'visibility: hidden');
                         $(this).prev().attr('style', 'visibility: hidden');
                     });
@@ -550,10 +578,11 @@
                 }
                 $(this).hide();
                 formStatusChange(updateForm, false);
+
                 $("#updateAllSubmit").on("click", function () {
                     let currentValues = {}
                     assignValue(updateForm, currentValues);
-                    console.log(prevValue, currentValues)
+
                     $.ajax({
                         url: attachURL,
                         type: 'put',
@@ -587,7 +616,6 @@
             $('#project_start_time').datetimepicker({
                 format: 'Y-m-d H:i',
                 onShow: function (ct) {
-                    console.log(ct)
                     this.setOptions({
                         maxDate: $('#project_end_time').val() ? $('#project_end_time').val() : false
                     })
@@ -597,7 +625,6 @@
             $('#project_end_time').datetimepicker({
                 format: 'Y-m-d H:i',
                 onShow: function (ct) {
-                    console.log(ct)
                     this.setOptions({
                         minDate: $('#project_start_time').val() ? $('#project_start_time').val() : false
                     })

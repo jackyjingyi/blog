@@ -24,6 +24,14 @@ class Group(models.Model):
     pass
 
 
+class ProjectDirection(models.Model):
+    name = models.CharField("研究方向", max_length=255)
+    description = models.TextField("描述")
+
+    def __str__(self):
+        return str(self.pk) + self.name + " | " + self.description
+
+
 class ProjectRequirement(models.Model):
     class Meta:
         permissions = (
@@ -33,9 +41,7 @@ class ProjectRequirement(models.Model):
     project_name = models.CharField("研究项目", max_length=255)
     project_type = models.CharField("课题类型", choices=PROJECT_TYPE, max_length=25,
                                     help_text="0.未选择,1.创新前瞻性研究；2.产品标准化研究，3.产品创新研究", default="0")
-    project_research_direction = models.CharField("研究方向", max_length=25, choices=PROJECT_RESEARCH_DIRECTION,
-                                                  help_text="0.未选择,1.新型城镇化；2.文化&品牌；3.主题公园&新场景；4.新商业；5.产品管理；6.旅游大数据；7.康旅；8.创新投；9.其他",
-                                                  default="0")
+    project_research_direction = models.ManyToManyField(ProjectDirection)
     project_department = models.CharField("需求单位", max_length=255, default="")
     project_department_sponsor = models.CharField("需求单位联系人", max_length=25, default="")
     project_department_phone = models.CharField("联系电话", max_length=50, default="")
@@ -70,6 +76,9 @@ class ProjectRequirement(models.Model):
                f"<p>主要创新研究课题内容、目标及意义:     {self.project_purpose}</p>" \
                f"<p>与课题相关的前期工作情况，现有基础条件:{self.project_preparation}</p>" \
                f"<p>研究课题的重点及难点:              {self.project_difficult}</p>"
+
+    def get_project_research_direction_display(self):
+        return ",".join([i.name for i in self.project_research_direction.all()])
 
 
 class ProjectImplementTitle(models.Model):
@@ -143,6 +152,7 @@ class Attachment(models.Model):
 
 
 class ProcessType(models.Model):
+    # 更名为工作簿
     status_choice = [
         ("1", "processing"),
         ("2", "not start"),
@@ -163,6 +173,32 @@ class ProcessType(models.Model):
     status = models.CharField(choices=status_choice, default="1", max_length=5)
 
 
+class TaskType(models.Model):
+    """
+    task的原型
+    """
+    status_choice = [
+        ("1", "processing"),
+        ("2", "not start"),
+        ("3", "finished"),
+        ("4", "abort"),
+        ("5", "pending")
+    ]
+    task_name = models.CharField("任务名称", max_length=255)
+    task_type = models.CharField("任务类型", max_length=255)
+    task_creator = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    task_executor = models.ManyToManyField(User, related_name='task_executors')
+    task_init_time = models.DateTimeField("创建时间", auto_now_add=True)
+    task_update_time = models.DateTimeField("更新时间", auto_now=True)
+    task_start_time = models.DateTimeField("任务开始时间", default=timezone.now)
+    task_duration = models.DurationField("持续时长", help_text="流程持续天数", null=True)
+    task_end_time = models.DateTimeField("任务结束时间", null=True, blank=True)
+    status = models.CharField(choices=status_choice, default="1", max_length=5)
+
+    def __str__(self):
+        return self.task_name
+
+
 class Process(models.Model):
     status_choice = [
         ("1", "进行中"),
@@ -176,8 +212,10 @@ class Process(models.Model):
     ]
     process_order_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,
                                         help_text="create an uuid for each order")
-    process_pattern = models.ForeignKey(ProcessType, on_delete=models.CASCADE)
-    process_executor = models.ForeignKey(User, on_delete=models.CASCADE)
+    process_pattern = models.ForeignKey(ProcessType, on_delete=models.DO_NOTHING)
+    process_executor = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    process_owner = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="owner")
+    process_co_worker = models.ManyToManyField(User, related_name="process_co_worker")
     creat_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(choices=status_choice, default="1", max_length=5)
     prev = models.JSONField("前序", default=dict)
@@ -245,6 +283,7 @@ class Task(models.Model):
     task_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,
                                help_text="create an uuid for each Task")
     task_type = models.CharField("动作类型", max_length=255)
+    task_pattern = models.ForeignKey(TaskType, on_delete=models.DO_NOTHING)
     task_seq = models.IntegerField("动作顺序", default=0)
     task_status = models.CharField("执行状态", max_length=255)  # 挂起pending, 执行中processing, 等待awaiting,完成finish
     task_state = models.CharField("动作状态", max_length=255)  # 通过approval、驳回deny、撤回withdraw、放弃abandon、转出patch out
@@ -365,17 +404,19 @@ class Step(models.Model):
 
         for idx, _s in enumerate(steps):
 
-            if idx > 0:
-
-                for k, v in _s.step_attachment_snapshot[0]['fields'].items():
-
-                    current = {}
-
-                    if v != base[k]:
-                        current[k] = {"before": base.get(k), "after": v, "update_time": _s.step_update_time,
-                                      "step_owner": User.objects.get(pk=_s.step_owner).first_name}
-                        res.append(current)
-                base = _s.step_attachment_snapshot[0]['fields']
+            if idx > 0 and isinstance(_s.step_attachment_snapshot, list):
+                try:
+                    for k, v in _s.step_attachment_snapshot[0]['fields'].items():
+                        current = {}
+                        if v != base[k]:
+                            current[k] = {"before": base.get(k), "after": v, "update_time": _s.step_update_time,
+                                          "step_owner": User.objects.get(pk=_s.step_owner).first_name}
+                            res.append(current)
+                    base = _s.step_attachment_snapshot[0]['fields']
+                except KeyError:
+                    logging.warning(f"warning: {idx}- {_s.step_attachment_snapshot}")
+            else:
+                logging.info(f"{idx}- {_s.step_attachment_snapshot}")
         return res
 
     @classmethod
