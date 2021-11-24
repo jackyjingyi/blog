@@ -49,7 +49,6 @@ def input_step_init(t, a, u, ty='1', ss='3'):
 def home_view(request):
     p1 = Process.objects.all()
     context = {
-        'book': Book.objects.get(id=1),
         'process': p1,
         'sidebar_index': BASE_SIDEBAR_INDEX,
         'time_interval': TIME_INTERVAL,
@@ -303,7 +302,7 @@ def get_requirement_content(request):
         return JsonResponse({'info': _info, 'html': ar.__str__()}, status=200, safe=False)
 
 
-@login_required(login_url="/members/login_to/")
+@login_required(login_url="/members/login_to_app/")
 def process_detail(request, pk):
     p = Process.objects.get(process_order_id=pk)
     attachment = p.get_tasks().last().get_steps().last().step_attachment
@@ -366,7 +365,7 @@ def get_users_process(request):
         pass
 
 
-@login_required(login_url='/members/login_to/')
+@login_required(login_url="/members/login_to_app/")
 def my_projects(request):
     user = request.user
 
@@ -420,7 +419,7 @@ def update_attachment(request):
         }
         return JsonResponse(context, status=200, safe=False)
 
-
+@login_required(login_url="/members/login_to_app/")
 def project_creation(request):
     """
     返回所有已创建但是未关联attachment的process
