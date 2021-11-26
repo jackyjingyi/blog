@@ -216,7 +216,7 @@ class Process(models.Model):
     process_executor = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     process_owner = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="owner")
     process_co_worker = models.ManyToManyField(User, related_name="process_co_worker")
-    creat_time = models.DateTimeField(auto_now_add=True)
+    create_time = models.DateTimeField(auto_now_add=True)
     status = models.CharField(choices=status_choice, default="1", max_length=5)
     prev = models.JSONField("前序", default=dict)
     next = models.JSONField("后继", default=dict)
@@ -225,6 +225,31 @@ class Process(models.Model):
 
     # process_readonly_sponsors = models.CharField(max_length=255)  TODO: 添加流程只读干系人（群） [pk1, pk2]
     # process_administrator = models.CharField(max_length=255)    TODO: 流程管理员（群组)
+
+    def get_owner_name(self):
+        return self.process_owner.first_name
+
+    def get_current_status(self):
+        return self.get_tasks().last().task_status
+
+    def get_task_status_by_type(self, type):
+        task_type = None
+        if isinstance(type, str):
+            task_type = TaskType.objects.filter(task_type=type, status='1').first()
+        elif isinstance(type, TaskType):
+            task_type = type
+        else:
+            logging.warning(f"task_type is None")
+            return task_type
+        res = False
+        try:
+            t = Task.objects.get(process=self, task_pattern=task_type)
+            res = True
+            return (res, t.task_status)
+        except Exception as e:
+            logging.warning(f"target task does not exist {e}")
+            t = self.get_tasks().last()
+            return (res, t.task_status)
 
     def get_tasks(self):
         return Task.get_tasks(self.process_order_id)
@@ -279,7 +304,7 @@ class Task(models.Model):
     # A move include many steps,
     # A move is defines seq oder of steps
     # 串联 step1 => step2
-    process = models.ForeignKey(Process, on_delete=models.CASCADE)
+    process = models.ForeignKey(Process, related_name="tasks",on_delete=models.CASCADE)
     task_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,
                                help_text="create an uuid for each Task")
     task_type = models.CharField("动作类型", max_length=255)
@@ -294,8 +319,7 @@ class Task(models.Model):
 
     @classmethod
     def get_tasks(cls, process_id):
-        _z = cls.objects.filter(process_id=process_id).order_by('task_update_time')
-        return cls.objects.filter(process_id=process_id).order_by('task_update_time')
+        return cls.objects.filter(process_id=process_id).order_by('task_seq')
 
     def get_steps(self):
         return Step.get_steps(self.task_id)
@@ -325,7 +349,7 @@ class Task(models.Model):
 class Step(models.Model):
     step_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,
                                help_text="create an uuid for each STEP")
-    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="steps")
 
     step_seq = models.IntegerField('步骤顺序', default=0)
     # 1. conjunction: all previous step must be pass to reach this step
@@ -348,7 +372,7 @@ class Step(models.Model):
 
     step_type = models.CharField("步骤类型",
                                  max_length=255)  # 1.录入 input  2. 提交审批 approval 3. 修订 edit 4. 合并 5. 删减 6. 新增,7.立项
-    step_attachment = models.ForeignKey(Attachment, on_delete=models.CASCADE, default=None)
+    step_attachment = models.ForeignKey(Attachment, on_delete=models.CASCADE, default=None, related_name="attachments")
     step_attachment_snapshot = models.JSONField(default=snapshot_default,
                                                 blank=True)  # store attachment snapshot cloud be forms { id: 21, title:"love story"}
     comments = models.TextField("备注", null=True, blank=True)
@@ -380,6 +404,7 @@ class Step(models.Model):
         _z = serializers.serialize('json', self.step_attachment.get_attachment())
         self.step_attachment_snapshot = copy.deepcopy(json.loads(_z))
         self.save()
+        print(self.step_attachment_snapshot)
 
     def done(self):
         return self.step_status == '3'

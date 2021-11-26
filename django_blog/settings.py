@@ -47,7 +47,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny'
     ],
-    'DATETIME_FORMAT': "%Y-%m-%d %H:%M",
+    'DATETIME_FORMAT': "%Y-%m-%d %H:%M:%S.%f%z",  # only format match django format
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -141,7 +141,7 @@ CRONJOBS = [
 ]
 
 LANGUAGE_CODE = 'en-us'
-
+# USE_TZ=True
 TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True

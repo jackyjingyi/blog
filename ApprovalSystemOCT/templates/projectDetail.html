@@ -582,15 +582,16 @@
                 $("#updateAllSubmit").on("click", function () {
                     let currentValues = {}
                     assignValue(updateForm, currentValues);
-
+                    console.log(currentValues)
                     $.ajax({
                         url: attachURL,
-                        type: 'put',
+                        type: 'patch',
                         contentType: 'application/json',
                         data: JSON.stringify(currentValues),
                         headers: {'X-CSRFToken': csrftoken},
                         success: function (data) {
-                            resignValue(updateForm, data)
+                            resignValue(updateForm, data);
+                            setUpdateStep(processID, attachmentUUID);
                         },
                         error: function (data) {
                             console.log(data)
@@ -600,7 +601,7 @@
                     $(this).hide();
                     $(this).prev().show();
                     $(this).next().hide();
-                    setUpdateStep(processID, attachmentUUID);
+
                 });
                 $("#updateCancelAll").on('click', function () {
                     formStatusChange(updateForm, true);

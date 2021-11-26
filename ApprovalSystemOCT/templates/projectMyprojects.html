@@ -1,6 +1,6 @@
-{% extends 'projectBase.html' %}
+{% extends 'projectHome.html' %}
 {% load static %}
-{% block content %}
+{% block content1 %}
     <style>
         .piu {
             cursor: pointer;
@@ -126,7 +126,7 @@
                                     {{ p.process_executor.first_name }}
                                 </td>
                                 <td>
-                                    {{ p.creat_time|date:"Y年n月d日" }}
+                                    {{ p.create_time|date:"Y年n月d日" }}
                                 </td>
                                 <td>
                                     <a>修改</a>
@@ -194,7 +194,7 @@
                             <span class="piu">
                             {{ p.process_pattern.process_name }} - {{ p.get_tasks.first.get_steps.first.step_attachment.get_attachment.first.project_name }}
                             - {{ p.process_executor.first_name }}
-                            - {{ p.creat_time|date:"Y年n月d日" }}
+                            - {{ p.create_time|date:"Y年n月d日" }}
                             </span>
                                 </td>
                             </tr>

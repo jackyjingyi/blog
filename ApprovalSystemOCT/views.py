@@ -1,3 +1,4 @@
+import copy
 import logging
 import os
 import json
@@ -58,6 +59,15 @@ def home_view(request):
     return render(request, 'projectHome.html', context=context)
 
 
+def development_process(request):
+    context = {
+        'sidebar_index': BASE_SIDEBAR_INDEX,
+        'time_interval': TIME_INTERVAL,
+        'status_list': STATUS_LIST
+    }
+    return render(request, 'development_process.html', context=context)
+
+
 def display_all_projects(request):
     """
     ######################################
@@ -75,39 +85,37 @@ def display_all_projects(request):
     # 5. 已进入立项流程部分，允许管理员查看、删除（特别确认）、修改（特别确认）
     ######################################
     """
-    queryset = Process.objects.filter(process_pattern__process_type="1")
+    queryset = Process.objects.filter(process_pattern__process_type="1")  # 所有录入阶段的process
+
+    # submitted first task(task type == 1) status == 3
+    queryset_submitted = Process.objects.filter(
+        pk__in=[i.pk for i in queryset if i.get_tasks().first().task_status == '3' and i.get_tasks().first()])
+
+    # draft first task (task type ==1 ) status == 1
+    queryset_draft = Process.objects.filter(
+        pk__in=[i.pk for i in queryset if i.get_tasks().first().task_status == '1' and i.get_tasks().first()])
+
+    # 立项流程1, 提交立项，领导审批中 task(n).task_status == 1
+    # 立项流程2, 提交立项， 领导审批结束 task(n).task_status == 3
+
+    # 立项流程2.1 立项成功；
+
+    # 立项流程2.2 立项失败
+
     already_set_to_annual = []
     not_set_to_annual = []
 
-    for i in queryset:
-        pnext = i.get_next()
-
-        if pnext:
-            tmp = False
-
-            for k in pnext:
-                _k = Process.objects.get(pk=k)
-
-                if _k.process_pattern.process_type == '7':
-                    tmp = True
-            if tmp:
-                already_set_to_annual.append(i.pk)
-            else:
-                not_set_to_annual.append(i.pk)
-        else:
-            not_set_to_annual.append(i.pk)
-
-    al = Process.objects.filter(process_order_id__in=already_set_to_annual)
-    nal = Process.objects.filter(process_order_id__in=not_set_to_annual)
     context = {
         'template_name': "所有课题",
         'sidebar_index': BASE_SIDEBAR_INDEX,
         'project_verbose_name': json.dumps(PROJECT_REQUIREMENT_VERBOSE),
         'queryset': queryset,
-        'al': al,
-        'nal': nal,
+        'al': queryset_submitted,
+        'nal': queryset_draft,
         'project_type': json.dumps(PROJECT_TYPE[1:]),
         'process_directions': json.dumps(PROJECT_RESEARCH_DIRECTION[1:]),
+        'time_interval': TIME_INTERVAL,
+        'status_list': STATUS_LIST
     }
     logging.info(f"Here goes {123}")
     return render(request, 'projectAllprojects.html', context=context)
@@ -199,25 +207,30 @@ def get_history(task_id):
     history = []
     for idx, val in enumerate(Step.get_update_history(task_id=task_id), start=1):
         _k = list(val.keys())[0]
-        if _k in PROJECT_REQUIREMENT_VERBOSE.keys():
-            before = val[_k].get("before")
-            after = val[_k].get("after")
-            if "time" in _k:
-                before = datetime.strftime(datetime.strptime(val[_k].get("before"), "%Y-%m-%dT%H:%M:%S"),
-                                           "%Y年%m月%d日 %H:%M:%S")
-                after = datetime.strftime(datetime.strptime(val[_k].get("after"), "%Y-%m-%dT%H:%M:%S"),
-                                          "%Y年%m月%d日 %H:%M:%S")
-            elif _k == 'project_type':
-                before = PROJECT_TYPE[int(val[_k].get("before"))][1]
-                after = PROJECT_TYPE[int(val[_k].get("after"))][1]
-            elif _k == "project_research_direction":
-                before = ",".join([ProjectDirection.objects.get(pk=i).name for i in val[_k].get("before")])
-                after = ",".join([ProjectDirection.objects.get(pk=i).name for i in val[_k].get("after")])
-            history.append(
-                (idx, datetime.strftime(val[_k].get("update_time"), "%Y年%m月%d日 %H:%M:%S"), val[_k].get("step_owner"),
-                 PROJECT_REQUIREMENT_VERBOSE[_k],
-                 before, after
-                 ))
+        try:
+            if _k in PROJECT_REQUIREMENT_VERBOSE.keys():
+                before = val[_k].get("before")
+                after = val[_k].get("after")
+                if "time" in _k:
+                    print(before, after)
+                    before = datetime.strftime(datetime.strptime(val[_k].get("before"), "%Y-%m-%dT%H:%M:%S"),
+                                               "%Y年%m月%d日 %H:%M:%S")
+                    after = datetime.strftime(datetime.strptime(val[_k].get("after"), "%Y-%m-%dT%H:%M:%S"),
+                                              "%Y年%m月%d日 %H:%M:%S")
+
+                elif _k == 'project_type':
+                    before = PROJECT_TYPE[int(val[_k].get("before"))][1]
+                    after = PROJECT_TYPE[int(val[_k].get("after"))][1]
+                elif _k == "project_research_direction":
+                    before = ",".join([ProjectDirection.objects.get(pk=i).name for i in val[_k].get("before")])
+                    after = ",".join([ProjectDirection.objects.get(pk=i).name for i in val[_k].get("after")])
+                history.append(
+                    (idx, datetime.strftime(val[_k].get("update_time"), "%Y年%m月%d日 %H:%M:%S"), val[_k].get("step_owner"),
+                     PROJECT_REQUIREMENT_VERBOSE[_k],
+                     before, after
+                     ))
+        except Exception as e:
+            logging.warning(e)
     return history
 
 
@@ -383,7 +396,7 @@ def get_users_process(request):
 
 @login_required(login_url="/members/login_to_app/")
 def my_projects(request):
-    def _get_processlist(user,status_id):
+    def _get_processlist(user, status_id):
         # change logic here
         process_type = ProcessType.objects.get(process_type='1', status='1')
         process_query_set = Process.objects.filter(process_pattern=process_type, process_executor=user)
@@ -400,10 +413,12 @@ def my_projects(request):
         'template_name': "我的课题",
         'sidebar_index': BASE_SIDEBAR_INDEX,
         'project_verbose_name': PROJECT_REQUIREMENT_VERBOSE,
-        'user_process': _get_processlist(request.user,'1'),
-        'user_process_sub': _get_processlist(request.user,'3'),
+        'user_process': _get_processlist(request.user, '1'),
+        'user_process_sub': _get_processlist(request.user, '3'),
         'project_types': PROJECT_TYPE[1:],
-        'process_directions': PROJECT_RESEARCH_DIRECTION[1:]
+        'process_directions': PROJECT_RESEARCH_DIRECTION[1:],
+        'time_interval': TIME_INTERVAL,
+        'status_list': STATUS_LIST
     }
 
     return render(request, 'projectMyprojects.html', context=context)
@@ -712,7 +727,26 @@ class ProcessListWithType(generics.ListAPIView):
     pagination_class = SmallResultsSetPagination
 
     def get_queryset(self):
-        return Process.objects.filter(process_pattern_id=self.request.GET.get("process_type"))
+        """
+        kwargs = {
+            'process_status' :
+            'process_pattern':
+            'process_create_time__gte':
+        }
+        """
+        # todo: eval query kwargs
+        data = copy.deepcopy(self.request.GET.dict())
+        search_value = None
+        if 'format' in data.keys():
+            del data["format"]
+        if 'search_value' in data.keys():
+            search_value = data['search_value'].strip().lower()
+            del data["search_value"]
+            query_set = Process.objects.filter(**data)
+            # check latest info
+            return query_set.exclude(pk__in=[p.pk for p in query_set if
+                                             search_value not in p.get_tasks().last().get_steps().last().step_attachment.get_attachment().first().project_name.strip().lower()])
+        return Process.objects.filter(**data)
 
 
 class ProcessTypeList(generics.ListCreateAPIView):

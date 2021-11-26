@@ -8,7 +8,7 @@ from .views import home_view, BookList, BookDetail, StepList, StepDetail, TaskSt
     project_settlement, process_creation, AttachmentList, requirement_transformation, my_projects, \
     get_process_type_list, ProcessListWithType, requirement_bulk_action, \
     set_to_annual_project, project_dispatch, finish_process, process_detail, update_attachment, \
-    get_history_log, process_pack_up, get_requirement_content
+    get_history_log, process_pack_up, get_requirement_content, development_process
 from .annual_project_view import annual_project_detail, annual_projects, project_implement, project_implement_title, \
     ImplementTitleList, ImplementTitleDetail
 
@@ -44,7 +44,7 @@ urlpatterns = [
                   url(r"^getHistoryLog/$", get_history_log),
                   url(r"^processPackUp/$", process_pack_up),
                   url(r"^get_requirement_content/$", get_requirement_content),
-
+                  url(r"^development_process/$", development_process, name="development_process"),
                   url("^finishProcess/$", finish_process),
                   url(r"^annualProjectDetail/(?P<pk>[0-9a-f-]+)/$", annual_project_detail,
                       name="annual_project_detail"),
