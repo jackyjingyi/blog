@@ -19,6 +19,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework import generics
 
 import docx
+from guardian.shortcuts import assign_perm
 
 from ApprovalSystemOCT.models import Process, Task, TaskType, Step, Book, ProcessType, Attachment, ProjectRequirement, \
     ProjectDirection
@@ -455,12 +456,13 @@ def update_attachment(request):
 
 
 @login_required(login_url="/members/login_to_app/")
+@permission_required('ApprovalSystemOCT.add_projectrequirement',raise_exception=True)
 def project_creation(request):
     """
     返回所有已创建但是未关联attachment的process
     """
-    undone_list = Process.objects.filter(
-        Q(process_owner=request.user) | Q(process_executor=request.user) | Q(process_co_worker__in=[request.user]))
+    # undone_list = Process.objects.filter(
+    #     Q(process_owner=request.user) | Q(process_executor=request.user) | Q(process_co_worker__in=[request.user]))
     # todo: check if processes have at least one attachment
 
     context = {
@@ -472,9 +474,10 @@ def project_creation(request):
     return render(request, 'projectCreation.html', context=context)
 
 
+
 @csrf_exempt
 @login_required(login_url="/members/login_to_app/")
-@permission_required('ApprovalSystemOCT.add_projectrequirement')
+@permission_required('ApprovalSystemOCT.add_projectrequirement',raise_exception=True)
 def process_creation(request):
     """
     ajax 请求，仅为post
@@ -542,6 +545,7 @@ def process_creation(request):
                 )
                 s.set_attachment_snapshot()
                 # step bind attachment
+
                 context = {
                     'html': b.__str__(),
                 }
@@ -735,10 +739,13 @@ class ProcessListWithType(generics.ListAPIView):
         }
         """
         # todo: eval query kwargs
+
         data = copy.deepcopy(self.request.GET.dict())
         search_value = None
+
         if 'format' in data.keys():
             del data["format"]
+
         if 'search_value' in data.keys():
             search_value = data['search_value'].strip().lower()
             del data["search_value"]

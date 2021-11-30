@@ -226,6 +226,11 @@ class Process(models.Model):
     # process_readonly_sponsors = models.CharField(max_length=255)  TODO: 添加流程只读干系人（群） [pk1, pk2]
     # process_administrator = models.CharField(max_length=255)    TODO: 流程管理员（群组)
 
+    class Meta:
+        permissions = (
+            ("pack_up", "Pack up"),
+        )
+
     def get_owner_name(self):
         return self.process_owner.first_name
 

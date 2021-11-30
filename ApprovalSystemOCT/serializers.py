@@ -18,6 +18,7 @@ class ProjectRequirementSerializer(serializers.ModelSerializer):
 
 
 class ProcessTypeSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = ProcessType
         fields = (
@@ -35,13 +36,12 @@ class AttachmentSerializer(serializers.ModelSerializer):
 
 class StepSerializer(serializers.ModelSerializer):
     step_attachment_snapshot = serializers.JSONField(encoder=json.JSONEncoder)
-    attachments = AttachmentSerializer(many=True, read_only=True)
 
     class Meta:
         model = Step
         fields = (
             "step_id", "task", "step_seq", "step_owner", "step_attachment_snapshot", "step_attachment", "step_status",
-            'attachments'
+
         )
 
 
@@ -57,19 +57,23 @@ class TaskSerializer(serializers.ModelSerializer):
         response["steps"] = sorted(response["steps"], key=lambda x: x["step_seq"])
         return response
 
+
 class ProcessSerializer(serializers.ModelSerializer):
     tasks = TaskSerializer(many=True, read_only=True)
     process_owner = serializers.StringRelatedField(source="get_owner_name", read_only=True)
     current_status = serializers.StringRelatedField(source="get_current_status", read_only=True)
+    target_detail = serializers.HyperlinkedIdentityField(view_name="project_detail")
 
     class Meta:
         model = Process
         fields = "__all__"
         # depth = 1
+
     def to_representation(self, instance):
         response = super().to_representation(instance)
         response["tasks"] = sorted(response["tasks"], key=lambda x: x["task_seq"])
         return response
+
 
 class ProjectImplementTitleSerializer(serializers.ModelSerializer):
     class Meta:

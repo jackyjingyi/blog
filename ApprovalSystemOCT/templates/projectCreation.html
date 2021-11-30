@@ -1,5 +1,6 @@
 {% extends 'projectBase.html' %}
 {% load static %}
+{% load guardian_tags %}
 {% block content %}
     <style>
 
@@ -445,6 +446,8 @@
             })
 
             $("#createProcess").on('click', function (e) {
+                {#let #}
+                {#if ()#}
                 e.preventDefault();
                 e.stopPropagation();
                 $("#inputPanel").addClass('in');

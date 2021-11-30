@@ -1,5 +1,5 @@
 {% extends 'projectBase.html' %}
-
+{% load guardian_tags %}
 {% block content %}
     <div class="row">
         <div class="col-md-12" id="timeSelect">
@@ -65,20 +65,33 @@
                                 项目编号
                             </th>
                             <th data-code="projectName" data-type="0">项目名称</th>
-                            <th data-code="createCompany" data-type="2">所属组
+                            <th data-code="createCompany" data-type="2">创建人
                                 <a class="icon-filter pull-right" id="filter_createCompany">
                                     <i class="icon iconfont icon-shaixuan"></i>
                                 </a>
                             </th>
+                            {% if user.is_authenticated %}
+                                <th data-code="operation" data-type="3">
+                                    操作
+                                </th>
+                            {% endif %}
                         </tr>
                         </thead>
                         <tbody class="displayProcessObj">
 
                         {% for item in process %}
                             <tr class="curp" data-id="{{ item.pk }}">
-                                <td data-code="projcetNo">{{ item.get_tasks.last.get_steps.last.step_attachment.get_attachment.first.pk }}</td>
+                                <td data-code="projcetNo"><a href="{% url 'project_detail' item.pk %}">{{ item.pk }}</a>
+                                </td>
                                 <td data-code="projectName">{{ item.get_tasks.last.get_steps.last.step_attachment.get_attachment.first.project_name }}</td>
-                                <td data-code="createCompany">{{ item.process_executor.groups.first.name }}</td>
+                                <td data-code="createCompany">{{ item.process_owner.first_name }}</td>
+                                {% get_obj_perms user for item as "process_var" %}
+                                <td>
+
+                                    {% for pv in process_var %}
+                                        <button>{{ pv }}</button>
+                                    {% endfor %}
+                                </td>
                             </tr>
                         {% endfor %}
                         </tbody>
@@ -91,15 +104,26 @@
     <script>
 
         $(document).ready(function () {
+            // csrf token
             const csrftoken = getCookie('csrftoken');
-
+            // query data defines query params
+            let queryData = {
+                'setTime': '',
+                'setStatus': '',
+                'keyword': '',
+                'user': '',
+            }
+            // process objects
+            // receive, display, & functional events
             class ProcessObject {
+
                 constructor(obj) {
                     this.process_order_id = obj.process_order_id;
                     this.process_owner = obj.process_owner;
                     this.project_name = obj.project_name
                     this.process_status = obj.process_status;
-                    this.create_time = obj.create_time
+                    this.create_time = obj.create_time;
+                    this.target_detail = obj.target_detail;
                 }
 
                 static instance = new Set()
@@ -112,9 +136,12 @@
                         'process_order_id': info.process_order_id,
                         'process_owner': info.process_owner,
                         'create_time': info.create_time,
+                        // 已按step seq 、step seq 排序，
                         'project_name': info.tasks[info.tasks.length - 1].steps[info.tasks[info.tasks.length - 1].steps.length - 1].step_attachment_snapshot[0].fields.project_name,
                         'process_status': info.status,
+                        'target_detail': info.target_detail,
                     }
+
                     if (this.check(obj_data)) {
                         // not created
                         let tmp = new ProcessObject(obj_data);
@@ -122,7 +149,15 @@
                         this.id_lists.add(tmp.process_order_id)
                         return tmp;
                     } else {
-                        return this.get_obj(obj_data.process_order_id)
+                        let tmp = this.get_obj(obj_data.process_order_id)
+                        // update
+                        for (let key in obj_data) {
+
+                            if (tmp[key] !== obj_data[key]) {
+                                tmp[key] = obj_data[key]
+                            }
+                        }
+                        return tmp
                     }
 
                 }
@@ -131,8 +166,6 @@
 
                     for (const value of this.instance) {
                         if (value.process_order_id === pid) {
-                            console.log(pid, value.process_order_id, pid === value.process_order_id)
-
                             return value
                         }
                     }
@@ -144,22 +177,89 @@
 
                 display() {
                     return "<tr>" +
-                        "<td>" + this.process_order_id + "</td>" +
+                        "<td><a href='" + this.target_detail + "'>" + this.process_order_id + "</a></td>" +
                         "<td>" + this.project_name + "</td>" +
                         "<td>" + this.process_owner + "</td>" +
                         "</tr>"
                 }
+
+                check_authorization() {
+                    // check if {{ user.pk }} is administrator
+
+
+                    // check if user has permissions
+
+                    //
+
+                }
+
+
             }
 
-            let queryData = {
-                'setTime': '',
-                'setStatus': '',
-                'keyword': '',
+            // build block
+            $("#breadcrumbRightSide").append(
+                "<ol class='breadcrumb' id='title-right-side'>" +
+                "<li class='backToMainButton'><a href='javascript:void(0)' data-target='0' data-action='topFilter'>所有课题</a></li>" +
+                "<li class='backToMainButton'><a href='javascript:void(0)' data-target='1' data-action='topFilter'>我的课题</a></li>" +
+                "</ol>"
+            )
+
+            // reused funcs
+            function get_process_list(link) {
+                // 向后端请求数据并创建相关obj
+                $.ajax({
+                    url: link,
+                    type: "get",
+                    success: function (data) {
+                        if (data.count > 0) {
+                            $("tbody[class=displayProcessObj]").first().empty();
+                            for (let k of data.results) {
+                                let p = ProcessObject.create(k);
+
+                                $("tbody[class=displayProcessObj]").first().append(p.display())
+                            }
+                        } else {
+                            $("tbody[class=displayProcessObj]").first().empty();
+                        }
+                        $("#totalBySearch").text(data.count)
+                    }
+                })
             }
+
+            // bind events
+            // top right position , filter if projects are created by user themselves
+            $("a[data-action=topFilter]").on("click", function () {
+                let ch = this
+                $("a[data-action=topFilter]").each(function (idx, val) {
+
+                    if (val === ch) {
+                        $(this).css("background-color", "#337b8e");
+                        $(this).css("color", "#FFFFFF");
+                    } else {
+                        $(this).css("background-color", "");
+                        $(this).css("color", "#676A6C");
+                    }
+                })
+                // todo: add wait process,
+                if ($(this).data("target") === 0) {
+                    // all projects,
+                    queryData["user"] = "";
+                    let url =  genUrl()
+                    get_process_list(url)
+                } else if ($(this).data("target") === 1) {
+                    let user_is_authenticated = ("{{ user.is_authenticated }}".toLowerCase() === 'true');
+                    if (user_is_authenticated === true) {
+                        queryData["user"] = "{{ user.pk }}";
+                        let url = genUrl()
+                        get_process_list(url)
+                    } else {
+                        window.location.href = "/members/login_to_app/"
+                    }
+                }
+            })
+
             $("a[data-action=setTime]").on("click", function () {
                 const val = $(this).text()
-
-                console.log(val)
                 $("a[data-action=setTime]").each(function (idx, element) {
                     $(element).css("background-color", "")
                 })
@@ -177,7 +277,7 @@
                 })
                 $(this).text("");
                 queryData.setTime = ""
-                console.log(queryData)
+
             })
 
             $("a[data-action=setStatus]").on("click", function () {
@@ -189,8 +289,6 @@
                 $("#setStatusResult").text(val)
                 queryData.setStatus = $(this).attr("data-id");
 
-
-                console.log(queryData)
             })
             $("#setStatusResult").on("click", function () {
                 const val = $(this).text();
@@ -202,12 +300,12 @@
                 })
                 queryData.setStatus = ""
                 $(this).text("");
-                console.log(queryData)
+
             })
             $("#keywordSearch").on("change", function () {
                 const val = $(this).val()
                 queryData.keyword = $(this).val();
-                console.log(queryData)
+
                 $("#keywordResult").text(val)
 
             })
@@ -215,11 +313,11 @@
                 $("#keywordSearch").val("")
                 $(this).text("");
                 queryData.keyword = "";
-                console.log(queryData)
+
             })
 
             function genUrl() {
-                let url = "?format=json"
+                let url = "/projectSystem/processList/?format=json"
 
                 if (queryData["setTime"] !== "") {
                     let currentDate = new Date()
@@ -231,8 +329,8 @@
                         currentDate.setHours(0, 0, 0)
                         endDate.setFullYear(duration, 11, 31);
                         endDate.setHours(23, 59, 59)
-                        url += "&create_time__gte=" + currentDate.format("yyyy-MM-DD hh:mm:ss")
-                            + "&create_time__lt=" + endDate.format("yyyy-MM-DD hh:mm:ss");
+                        url += "&create_time__gte=" + currentDate.format("yyyy-MM-dd hh:mm:ss")
+                            + "&create_time__lt=" + endDate.format("yyyy-MM-dd hh:mm:ss");
                     } else {
                         let q_date = addDays(currentDate, 0 - parseInt(queryData["setTime"]));
                         url += "&create_time__gte=" + q_date.format("yyyy-MM-dd hh:mm:ss");
@@ -241,37 +339,22 @@
                 if (queryData["setStatus"] !== "") {
                     // status
                     // all - 0 - null
-                    url += "&status=" + queryData["setStatus"];
+                    if (queryData["setStatus"] !== "0") {
+                        url += "&status=" + queryData["setStatus"];
+                    }
                 }
                 if (queryData["keyword"] !== "") {
                     url += "&search_value=" + queryData["keyword"]
+                }
+                if (queryData["user"] !== "") {
+                    url += "&process_owner=" + queryData["user"]
                 }
                 return url
             }
 
             $("button[data-action=search]").on("click", function () {
-                let url = genUrl();
-                let result = {};
-                // 拼接url
-                $.ajax({
-                    url: "/projectSystem/processList/" + url,
-                    type: "get",
-                    success: function (data) {
-                        console.log(data)
-                        if (data.count > 0) {
-                            for (let k of data.results) {
-                                console.log(k)
-                                let p = ProcessObject.create(k);
-                                console.log(p)
-                                $("tbody[class=displayProcessObj]").first().append(p.display())
-
-                            }
-                        }
-
-                        result = data
-                        $("#totalBySearch").text(data.count)
-                    }
-                })
+                let url =  genUrl();
+                get_process_list(url)
             })
             $("button[data-action=refreshBtn]").on("click", function () {
                 $("a[data-action=setTime]").each(function (idx, element) {
@@ -282,8 +365,16 @@
                 });
                 $("#keywordSearch").val("");
                 for (let val in queryData) {
-                    queryData[val] = "";
+                    if (val !== "user") {
+                        queryData[val] = "";
+                    }
+
                 }
+                $(".badge").each(function () {
+                    $(this).text("")
+
+                })
+                get_process_list(genUrl())
             });
         })
 
