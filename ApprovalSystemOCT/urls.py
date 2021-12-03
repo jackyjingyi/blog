@@ -1,17 +1,21 @@
 from django.urls import path
-from django.conf.urls import url
+from django.conf.urls import url,include
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 from django.conf import settings
-from rest_framework.urlpatterns import format_suffix_patterns
 from .views import home_view, BookList, BookDetail, StepList, StepDetail, TaskStepList, ProjectRequirementList, \
     ProjectRequirementDetail, project_creation, display_all_projects, ProcessTypeList, ProcessTypeDetail, \
     project_settlement, process_creation, AttachmentList, requirement_transformation, my_projects, \
     get_process_type_list, ProcessListWithType, requirement_bulk_action, \
     set_to_annual_project, project_dispatch, finish_process, process_detail, update_attachment, \
-    get_history_log, process_pack_up, get_requirement_content, development_process
+    get_history_log, process_pack_up, get_requirement_content, development_process, UserViewSet,GroupViewSet, user_management
 from .annual_project_view import annual_project_detail, annual_projects, project_implement, project_implement_title, \
     ImplementTitleList, ImplementTitleDetail
+from rest_framework.routers import DefaultRouter
 
+router = DefaultRouter()
+router.register(r"users", UserViewSet, basename="user")
+router.register(r"groups", GroupViewSet, basename="group")
 urlpatterns = [
                   path('', home_view, name='project_home'),
                   url(r'^projectSettlement/$', project_settlement, name='project_settlement'),
@@ -53,5 +57,7 @@ urlpatterns = [
                       name="project_implement"),
                   url(r"^Project/implementTitle/create/", ImplementTitleList.as_view()),
                   url(r"Project/implementTitle/detail/(?P<pk>[0-9a-f-]+)/", ImplementTitleDetail.as_view()),
+                  url(r"userManagement/$",user_management,name="user_management"),
+                  path('', include(router.urls)),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-urlpatterns = format_suffix_patterns(urlpatterns)
+

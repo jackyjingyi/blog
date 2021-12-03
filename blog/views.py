@@ -732,7 +732,7 @@ def like_view(request, pk):
     return render(request, 'article_detail.html', {'pk': post.id})
 
 
-@login_required(login_url='/members/login_to/')
+# @login_required(login_url='/members/login_to/')
 @csrf_exempt
 def oct_get_endpoint_view(request, *args, **kwargs):
     """

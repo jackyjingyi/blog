@@ -17,7 +17,7 @@ BASE_SIDEBAR_INDEX = {
     },
     "课题管理": {
         "general": [("创建流程", "project_settlement"), ("所有课题", "display_all_projects"),
-                    ("所有立项课题", "annual_all_projects")]
+                    ("所有立项课题", "annual_all_projects"), ("用户管理", "user_management")]
     }
 }
 
@@ -65,3 +65,6 @@ PROCESS_TYPE = [
     ('0', '未选择'), ('1', '课题录入'), ('2', '课题修改'), ('3', '进度录入'), ('4', '成果录入'), ('5', '结题'), ('6', '资料上传'),
     ('7', '立项')
 ]
+
+
+

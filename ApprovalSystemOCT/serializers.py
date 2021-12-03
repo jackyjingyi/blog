@@ -1,5 +1,6 @@
 import json
 import uuid
+from django.contrib.auth.models import User, Group, Permission
 from rest_framework import serializers
 from ApprovalSystemOCT.models import Attachment, Process, Task, Step, Book, ProjectRequirement, ProcessType, \
     ProjectImplementTitle
@@ -18,7 +19,6 @@ class ProjectRequirementSerializer(serializers.ModelSerializer):
 
 
 class ProcessTypeSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = ProcessType
         fields = (
@@ -81,3 +81,32 @@ class ProjectImplementTitleSerializer(serializers.ModelSerializer):
         fields = (
             "project_base", "sponsor", "department", "progress_year", "progress_season"
         )
+class PermissionsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Permission
+        fields = "__all__"
+        depth=2
+
+class UserSerializer(serializers.ModelSerializer):
+    groups = serializers.PrimaryKeyRelatedField(many=True, queryset=Group.objects.all())
+    permissions = serializers.StringRelatedField(source="get_all_permissions")
+
+    class Meta:
+        model = User
+        fields = ("id", "first_name", "groups","permissions")
+        depth = 2
+
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        ret["permissions"] = [i.replace("'","").strip() for i in ret["permissions"].strip("{").strip("}").split(",") if "ApprovalSystemOCT" in i ]
+        return ret
+
+
+class GroupSerializer(serializers.ModelSerializer):
+    permissions = PermissionsSerializer(many=True,
+                                        read_only=True)  # serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    user_set = UserSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Group
+        fields = ("id", "name", "permissions", "user_set")

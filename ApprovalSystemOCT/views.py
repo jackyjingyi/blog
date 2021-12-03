@@ -6,7 +6,7 @@ from datetime import datetime
 
 from django.shortcuts import render
 from django.db.models import Q
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth.decorators import permission_required, login_required
 from django.http import JsonResponse
 from django.http import Http404
@@ -17,7 +17,10 @@ from django.views.decorators.csrf import csrf_exempt
 from ApprovalSystemOCT.project_statics.static_data import *
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import generics
-
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.decorators import action
 import docx
 from guardian.shortcuts import assign_perm
 
@@ -25,13 +28,24 @@ from ApprovalSystemOCT.models import Process, Task, TaskType, Step, Book, Proces
     ProjectDirection
 from ApprovalSystemOCT.project_statics.static_data import *
 from ApprovalSystemOCT.serializers import BookSerializer, StepSerializer, ProjectRequirementSerializer, \
-    ProcessTypeSerializer, AttachmentSerializer, ProcessSerializer
+    ProcessTypeSerializer, AttachmentSerializer, ProcessSerializer, UserSerializer, GroupSerializer
 from ApprovalSystemOCT.process import ProjectInputProcess
 from ApprovalSystemOCT.docx_handler import ProjectTableHandler
 from ApprovalSystemOCT.project_statics.static_function import *
+from ApprovalSystemOCT.apps import ApprovalsystemoctConfig
 
 logger = logging.getLogger(__name__)
 collect_logger = logging.getLogger("collect")
+
+
+def permissons_collection():
+    p = Permission.objects.filter(content_type__app_label=ApprovalsystemoctConfig.name,
+                                  content_type__model__in=["projectrequirement", "process", "task", "step",
+                                                           "projectimplementtitle"])
+    return [(i.id, i.codename) for i in p]
+
+
+USER_PERMISSIONS = permissons_collection()
 
 
 def input_step_init(t, a, u, ty='1', ss='3'):
@@ -226,10 +240,12 @@ def get_history(task_id):
                     before = ",".join([ProjectDirection.objects.get(pk=i).name for i in val[_k].get("before")])
                     after = ",".join([ProjectDirection.objects.get(pk=i).name for i in val[_k].get("after")])
                 history.append(
-                    (idx, datetime.strftime(val[_k].get("update_time"), "%Y年%m月%d日 %H:%M:%S"), val[_k].get("step_owner"),
-                     PROJECT_REQUIREMENT_VERBOSE[_k],
-                     before, after
-                     ))
+                    (
+                        idx, datetime.strftime(val[_k].get("update_time"), "%Y年%m月%d日 %H:%M:%S"),
+                        val[_k].get("step_owner"),
+                        PROJECT_REQUIREMENT_VERBOSE[_k],
+                        before, after
+                    ))
         except Exception as e:
             logging.warning(e)
     return history
@@ -389,12 +405,6 @@ def requirement_transformation(request):
         return JsonResponse(requirement, status=200, safe=False)
 
 
-def get_users_process(request):
-    if request.method == "POST":
-        process_queryset = Process.objects.filter(process_executor=request.user)
-        pass
-
-
 @login_required(login_url="/members/login_to_app/")
 def my_projects(request):
     def _get_processlist(user, status_id):
@@ -456,7 +466,7 @@ def update_attachment(request):
 
 
 @login_required(login_url="/members/login_to_app/")
-@permission_required('ApprovalSystemOCT.add_projectrequirement',raise_exception=True)
+@permission_required('ApprovalSystemOCT.add_projectrequirement', raise_exception=True)
 def project_creation(request):
     """
     返回所有已创建但是未关联attachment的process
@@ -474,10 +484,61 @@ def project_creation(request):
     return render(request, 'projectCreation.html', context=context)
 
 
+@login_required(login_url="/members/login_to_app/")
+def user_management(request):
+    USER_PERMISSIONS_LV0 = [
+        (Permission.objects.get(codename="view_projectrequirement_set_to_annual").id,
+         "ApprovalSystemOCT.view_projectrequirement_set_to_annual",
+         Permission.objects.get(codename="view_projectrequirement_set_to_annual").name, u"允许用户查看已经立项的课题需求。")
+    ]
+    USER_PERMISSIONS_LV1 = [
+        (Permission.objects.get(codename="add_projectrequirement").id,
+         "ApprovalSystemOCT.add_projectrequirement",
+         "新建课题需求", u"允许用户创建新的课题需求。"),(Permission.objects.get(codename="change_projectrequirement").id,
+         "ApprovalSystemOCT.change_projectrequirement",
+         "修改课题需求", u"允许用户修改自己的或指派给自己的课题需求。"),(Permission.objects.get(codename="view_projectrequirement").id,
+         "ApprovalSystemOCT.view_projectrequirement",
+         "查看课题需求", u"允许用户查看自己的或指派给自己的课题需求。"),(Permission.objects.get(codename="delete_projectrequirement").id,
+         "ApprovalSystemOCT.delete_projectrequirement",
+         "删除课题需求", u"允许用户删除自己的或指派给自己的课题需求。")
+
+    ]
+    USER_PERMISSIONS_LV2 = [
+        (Permission.objects.get(codename="delete_projectrequirement").id,
+         "ApprovalSystemOCT.delete_projectrequirement",
+         "提交立项需求", u"允许用户提交自己的或指派给自己的课题需求进行立项审批。"),
+        (Permission.objects.get(codename="delete_projectrequirement").id,
+         "ApprovalSystemOCT.delete_projectrequirement",
+         "管理立项课题", u"允许用户对分配给自己的年度立项课题进行管理，包括进度填写、结题等操作。")
+    ]
+    USER_PERMISSIONS_LV3 = [
+        (Permission.objects.get(codename="delete_projectrequirement").id,
+         "ApprovalSystemOCT.delete_projectrequirement",
+         "立项审批", u"审批课题需求，审批成功后转为立项课题。"),
+    ]
+    USER_PERMISSIONS_LV4 = [
+        (Permission.objects.get(codename="delete_projectrequirement").id,
+         "ApprovalSystemOCT.delete_projectrequirement",
+         "全局管理", u"审批课题需求，审批成功后转为立项课题。"),
+    ]
+    context = {
+        'template_name': "用户管理",
+        'sidebar_index': BASE_SIDEBAR_INDEX,
+        'project_types': PROJECT_TYPE,
+        'project_directions': PROJECT_RESEARCH_DIRECTION,
+        'groups': Group.objects.filter(id__lt=13),
+        'USER_PERMISSIONS_LV0': USER_PERMISSIONS_LV0,
+        'USER_PERMISSIONS_LV1': USER_PERMISSIONS_LV1,
+        'USER_PERMISSIONS_LV2':USER_PERMISSIONS_LV2,
+        'USER_PERMISSIONS_LV3':USER_PERMISSIONS_LV3,
+        'USER_PERMISSIONS_LV4':USER_PERMISSIONS_LV4
+    }
+    return render(request, 'userManagement.html', context=context)
+
 
 @csrf_exempt
 @login_required(login_url="/members/login_to_app/")
-@permission_required('ApprovalSystemOCT.add_projectrequirement',raise_exception=True)
+@permission_required('ApprovalSystemOCT.add_projectrequirement', raise_exception=True)
 def process_creation(request):
     """
     ajax 请求，仅为post
@@ -569,6 +630,42 @@ def finish_process(request):
         return JsonResponse({"msg": "success"}, status=200, safe=False)
 
 
+def make_action(request):
+    if request.method == "POST":
+        # check users pri
+        # process, task, action, user
+
+        pass
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+    @action(detail=True, methods=["post"])
+    def add_perm(self, request, pk=None):
+        user = self.get_object()
+        # groups = request.data.pop("groups")
+        admin = self.request.user
+        if admin.has_perm("change_user"):
+            # for i in groups:
+            #     user.groups.add(i)
+            # user.save()
+            serializer = self.get_serializer(user, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+            return Response(serializer.data)
+        else:
+            return Response({"error": "No rights"}, status=403)
+
+
+class GroupViewSet(viewsets.ModelViewSet):
+    queryset = Group.objects.filter(id__lt=13)
+    serializer_class = GroupSerializer
+    permission_classes = [IsAuthenticated]
+
+
 @csrf_exempt
 def requirement_bulk_action(request):
     if request.method == 'POST':
@@ -592,7 +689,6 @@ def requirement_bulk_action(request):
                     step_seq=seq,
                     # step_condition_type
                     # step_condition
-
                     step_owner=request.user.pk,  # 提交人
                     # step_assignee=   非指派任务无此项目
                     # step_assigner=   非指派任务无此项目
@@ -613,7 +709,6 @@ def requirement_bulk_action(request):
                 target_task.save()
                 process.save()
             except Exception as e:
-                print(e)
                 logging.warning(e)
                 continue
         return JsonResponse({"msg": f"{info.count()} process {action}"}, status=200, safe=False)

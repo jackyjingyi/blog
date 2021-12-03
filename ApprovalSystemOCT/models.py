@@ -35,7 +35,9 @@ class ProjectDirection(models.Model):
 class ProjectRequirement(models.Model):
     class Meta:
         permissions = (
-            ('patch_requirement', 'can patch requirement'),
+            ('patch_projectrequirement', u'分发'), # 分发
+            ("view_projectrequirement_submitted",u"查看课题需求"),
+            ("view_projectrequirement_set_to_annual",u"查看年度课题需求"),
         )
 
     project_name = models.CharField("研究项目", max_length=255)
@@ -228,7 +230,8 @@ class Process(models.Model):
 
     class Meta:
         permissions = (
-            ("pack_up", "Pack up"),
+            ("packup_process", u"合并流程"),
+            ("dispatch_process", u"分发流程")
         )
 
     def get_owner_name(self):

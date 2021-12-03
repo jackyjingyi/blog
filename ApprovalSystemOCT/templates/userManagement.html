@@ -1,0 +1,303 @@
+{% extends 'projectBase.html' %}
+{% load static %}
+{% load guardian_tags %}
+{% block content %}
+    <style>
+        div.rights-list {
+            border-style: solid;
+            border-width: 0.5px;
+            margin: 10px
+        }
+    </style>
+    <div class="row" id="user-management-box" style="border-style: solid; border-width: 1.5px">
+        <div class="col-md-4">
+            <table class="table">
+                <tr>
+                    <th>团组</th>
+                    <th>员工</th>
+                </tr>
+                <tr>
+                    <td>
+                        <ul class="group-list list-group" style="list-style: none" id="group_list">
+                        </ul>
+                    </td>
+                    <td>
+                        <ul class="user-list list-group" style="list-style: none" id="user-tabs">
+
+                        </ul>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div>
+            <p class="pull-left">当前查看:</p>
+        </div>
+
+        <div class="col-md-8">
+
+            <div class="rights-list row">
+                <p>第一部分: 基本查看权限，适用所有普通员工</p>
+                <div class="col-md-6">
+                    {% for item in USER_PERMISSIONS_LV0 %}
+                        <dl class="dl-horizontal">
+                            <dt>
+                                <label for="{{ item.0 }}">{{ item.2 }}</label>
+                                <input id="{{ item.0 }}" name="{{ item.1 }}" class="pull-left" type="checkbox"/>
+                            </dt>
+                            <dd class="font-italic">
+                                {{ item.3 }}
+                            </dd>
+                        </dl>
+                    {% endfor %}
+                </div>
+            </div>
+            <hr>
+            <div class="rights-list row">
+                <p>第二部分：录入权限</p>
+                <div class="col-md-6">
+                    <dl class="dl-horizontal">
+                        {% for item in USER_PERMISSIONS_LV1 %}
+                            <dt>
+                                <label for="{{ item.0 }}">{{ item.2 }}</label>
+                                <input id="{{ item.0 }}" name="{{ item.1 }}" class="pull-left" type="checkbox"/>
+                            </dt>
+                            <dd class="font-italic">
+                                {{ item.3 }}
+                            </dd>
+
+                        {% endfor %}
+                    </dl>
+                </div>
+            </div>
+            <hr>
+            <div class="rights-list row">
+                <p>第三部分：负责人</p>
+                <div class="col-md-6">
+                    <dl class="dl-horizontal">
+                        {% for item in USER_PERMISSIONS_LV2 %}
+                            <dt>
+                                <label for="{{ item.0 }}">{{ item.2 }}</label>
+                                <input id="{{ item.0 }}" name="{{ item.1 }}" class="pull-left" type="checkbox"/>
+                            </dt>
+                            <dd class="font-italic">
+                                {{ item.3 }}
+                            </dd>
+
+                        {% endfor %}
+                    </dl>
+                </div>
+            </div>
+            <hr>
+            <div class="rights-list row">
+                <p>第四部分： 课题领导</p>
+                <div class="col-md-6">
+                        <dl class="dl-horizontal">
+                            {% for item in USER_PERMISSIONS_LV4 %}
+                                <dt>
+                                    <label for="{{ item.0 }}">{{ item.2 }}</label>
+                                    <input id="{{ item.0 }}" name="{{ item.1 }}" class="pull-left" type="checkbox"/>
+                                </dt>
+                                <dd class="font-italic">
+                                    {{ item.3 }}
+                                </dd>
+
+                            {% endfor %}
+                        </dl>
+                </div>
+            </div>
+            <hr>
+            <div class="rights-list row">
+                <p>第五部分: 管理员</p>
+                <div class="col-md-6">
+                    <dl class="dl-horizontal">
+                        {% for item in USER_PERMISSIONS_LV4 %}
+                            <dt>
+                                <label for="{{ item.0 }}">{{ item.2 }}</label>
+                                <input id="{{ item.0 }}" name="{{ item.1 }}" class="pull-left" type="checkbox"/>
+                            </dt>
+                            <dd class="font-italic">
+                                {{ item.3 }}
+                            </dd>
+
+                        {% endfor %}
+                    </dl>
+                </div>
+            </div>
+            <div class="margin-bottom-15 margin-left-5">
+                <button class="btn btn-primary" id="savePermissions">保存</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            let currentUser = ""
+            let currentPermissions = []
+
+            class GroupObject {
+                constructor(id, name) {
+                    this.id = id;
+                    this.name = name;
+                    this.user_set = [];
+                }
+
+                set_users(user_set) {
+                    for (let user of user_set) {
+                        console.log("hello", user)
+                        this.user_set.push(user)
+                    }
+                }
+
+                add_user(user) {
+                    this.user_set.push(user)
+                    return this
+                }
+
+                static get_group(id) {
+                    for (let group of this.instance) {
+                        if (group.id === id) {
+                            return group
+                        }
+                    }
+                }
+
+                static instance = new Set()
+
+                static create(context) {
+                    // create instance
+                    let tmp = new GroupObject(
+                        context["id"],
+                        context["name"],
+                    )
+                    for (let z of context["user_set"]) {
+
+                        let u = UserObject.create(z)
+
+                        tmp.add_user(u)
+
+                    }
+                    this.instance.add(tmp)
+                    return tmp
+
+                }
+
+
+            }
+
+            class UserObject {
+                constructor(id, name, permissions) {
+                    this.id = id;
+                    this.name = name;
+                    this.permissions = permissions
+                }
+
+                static instance = new Set()
+
+                static create(context) {
+                    let tmp = new UserObject(
+                        context["id"],
+                        context["first_name"],
+                        context["permissions"]
+                    )
+                    this.instance.add(tmp)
+                    return tmp
+
+                }
+
+                static get_user(id) {
+                    for (let user of this.instance) {
+                        if (user.id === id) {
+                            return user
+                        }
+                    }
+                }
+
+            }
+
+            initialFrontend();
+
+            function initialFrontend() {
+                $.ajax({
+                    type: "get",
+                    url: "/projectSystem/groups/",
+                    success: function (data) {
+                        console.log(data)
+                        for (let i = 0; i < data.length; i++) {
+                            let group = GroupObject.create(data[i])
+                        }
+                        display();
+                    }
+                })
+            }
+
+            function display() {
+                let group_list = $("#group_list")
+                group_list.empty();
+
+                for (let obj of GroupObject.instance) {
+                    group_list.append(
+                        "<li class='list-group-item text-center'>" +
+                        "<a class='group-item' data-action='group-item' data-toggle='user-tabs' data-target='" + obj.id + "'>" + obj.name +
+                        "</a>" +
+                        "</li>"
+                    )
+                }
+                $("a[data-action=group-item]").on("click", function () {
+                    $("a[data-action=group-item]").each(function (idx, element) {
+
+                        if ($(element).hasClass("btn-primary")) {
+                            $(element).removeClass("btn-primary");
+                        }
+                    })
+                    $(this).addClass("btn-primary")
+                    let group_id = $(this).data("target");
+                    let toggle = $("#" + $(this).data("toggle"))
+                    let group = GroupObject.get_group(group_id)
+                    let user_tabs = $("#user-tabs");
+                    user_tabs.empty();
+                    for (let user of group.user_set) {
+                        user_tabs.append(
+                            "<li class='list-group-item text-center'>" +
+                            "<a class='group-item' data-action='user-item' data-toggle='user-rights' data-target='" + user.id + "'>" + user.name +
+                            "</a>" +
+                            "</li>"
+                        )
+                    }
+
+                    $("a[data-action=user-item]").on("click", function () {
+
+                        $("a[data-action=user-item]").each(function (idx, element) {
+
+                            if ($(element).hasClass("btn-primary")) {
+                                $(element).removeClass("btn-primary");
+                            }
+                        })
+                        $(this).addClass("btn-primary")
+                        let user = UserObject.get_user($(this).data("target"))
+                        currentUser = user
+                        $("input[type=checkbox]").each(
+                            function (idx, element) {
+                                $(element)[0].checked = !!user.permissions.includes($(element).attr("name"));
+                            }
+                        )
+                    })
+                })
+                group_list.find("a").first().trigger("click");
+
+            }
+
+            $("#savePermissions").on("click", function () {
+                $("input[type=checkbox]").each(
+                    function (idx, element) {
+
+                        if (element.checked) {
+                            console.log("hello checked")
+                            console.log($(element).attr("id"))
+                        }
+                    }
+                )
+            })
+        })
+
+    </script>
+
+{% endblock %}
