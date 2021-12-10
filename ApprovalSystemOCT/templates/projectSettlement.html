@@ -28,7 +28,7 @@
                style="background-color: whitesmoke; box-shadow: 10px 5px 5px floralwhite;padding:5px">
 
             <tbody>
-            {% for item in process_types %}
+            {% for item in task_types %}
                 <tr class="controller" value="{{ item.0 }}">
                     <td colspan="3">
                         {{ item.1 }}
@@ -39,26 +39,27 @@
                         <span class="badge badge-info">{{ item.1 }}说明:</span><br><br>
                         <p>系统应保证同一时间仅有一个进行中的{{ item.1 }}流程，</p>
                         <p>否则最右侧将无法新建新的{{ item.1 }}流程。</p>
+                        {{ item.2 }}
                     </td>
-                    <td class="processTypeInfo col-md-3">
+                    <td class="taskTypeInfo col-md-3">
                     </td>
                     <td class="col-md-12">
                         <div class="form-group" style="margin: 30px">
                             <form class="g-3 needs-validation" enctype="multipart/form-data"
-                                  id="create_process{{ item.0 }}"
+                                  id="create-task-type{{ item.0 }}"
                                   novalidate>
                                 <fieldset>
-                                    {% csrf_token %}
+
                                     <div class="row margin-top-10">
                                         <div class="col-md-3">
                                             <i class="pull-left icon iconfont icon-miaoshu">
                                             </i>&nbsp;
-                                            <label for="process_name{{ item.0 }}"
+                                            <label for="task_name{{ item.0 }}"
                                                    class="form-label d-inline-block mb-2 text-primary"><strong>
                                                 流程名称
                                             </strong></label>
-                                            <input name="process_name" type="text" class="form-control"
-                                                   id="process_name{{ item.0 }}"
+                                            <input name="task_name" type="text" class="form-control"
+                                                   id="task_name{{ item.0 }}"
                                                    maxlength="255"
                                                    placeholder="请输入流程名称"
                                                    required>
@@ -66,13 +67,13 @@
                                         <div class="col-md-3">
                                             <i class="pull-left icon iconfont icon-miaoshu">
                                             </i>&nbsp;
-                                            <label for="process_type{{ item.0 }}"
+                                            <label for="task_type{{ item.0 }}"
                                                    class="form-label d-inline-block mb-2 text-primary"><strong>
                                                 流程类型
                                             </strong></label>
-                                            <select name="process_type" class="form-control"
-                                                    id="process_type{{ item.0 }}" required>
-                                                {% for t in process_types %}
+                                            <select name="task_type" class="form-control"
+                                                    id="task_type{{ item.0 }}" required>
+                                                {% for t in task_types %}
                                                     {% if t.1 == item.1 %}
                                                         <option value="{{ t.0 }}">{{ t.1 }}</option>
                                                     {% endif %}
@@ -84,26 +85,26 @@
                                         <div class="col-md-3">
                                             <i class="pull-left icon iconfont icon-miaoshu">
                                             </i>&nbsp;
-                                            <label for="process_start_time{{ item.0 }}"
+                                            <label for="task_start_time{{ item.0 }}"
                                                    class="form-label d-inline-block mb-2 text-primary"><strong>
                                                 录入开始时间
                                             </strong></label>
-                                            <input name="process_start_time" type="text"
+                                            <input name="task_start_time" type="text"
                                                    class="start_time form-control"
-                                                   id="process_start_time{{ item.0 }}" maxlength="255"
+                                                   id="task_start_time{{ item.0 }}" maxlength="255"
                                                    placeholder="项目结束时间"
                                                    required>
                                         </div>
                                         <div class="col-md-3">
                                             <i class="pull-left icon iconfont icon-miaoshu">
                                             </i>&nbsp;
-                                            <label for="process_end_time{{ item.0 }}"
+                                            <label for="task_end_time{{ item.0 }}"
                                                    class="form-label d-inline-block mb-2 text-primary"><strong>
                                                 录入结束时间
                                             </strong></label>
-                                            <input name="process_end_time" type="text"
+                                            <input name="task_end_time" type="text"
                                                    class="end_time form-control"
-                                                   id="process_end_time{{ item.0 }}" maxlength="255"
+                                                   id="task_end_time{{ item.0 }}" maxlength="255"
                                                    placeholder="项目结束时间"
                                                    required>
                                         </div>
@@ -111,44 +112,44 @@
 
                                     </div>
                                     <div class="row margin-top-10">
+                                        {#                                        <div class="col-md-3">#}
+                                        {#                                            <i class="pull-left icon iconfont icon-miaoshu">#}
+                                        {#                                            </i>&nbsp;#}
+                                        {#                                            <label for="task_executor{{ item.0 }}"#}
+                                        {#                                                   class="form-label d-inline-block mb-2 text-primary"><strong>#}
+                                        {#                                                执行人#}
+                                        {#                                            </strong></label>#}
+                                        {#                                            <input name="task_executor" type="text" class="form-control"#}
+                                        {#                                                   id="task_executor{{ item.0 }}" maxlength="255"#}
+                                        {#                                                   placeholder="点选执行人"#}
+                                        {#                                                   required>#}
+                                        {#                                            <button id="reset{{ item.0 }}" type="button">reset</button>#}
+                                        {#                                            {% for user in users %}#}
+                                        {#                                                {% if user.first_name %}#}
+                                        {#                                                    <button class="executor{{ item.0 }} btn btn-sm btn-info"#}
+                                        {#                                                            value="{{ user.id }}"#}
+                                        {#                                                            type="button">#}
+                                        {#                                                        {{ user.first_name }}#}
+                                        {#                                                    </button>#}
+                                        {#                                                {% endif %}#}
+                                        {#                                            {% endfor %}#}
+                                        {#                                        </div>#}
                                         <div class="col-md-3">
                                             <i class="pull-left icon iconfont icon-miaoshu">
                                             </i>&nbsp;
-                                            <label for="process_executor{{ item.0 }}"
-                                                   class="form-label d-inline-block mb-2 text-primary"><strong>
-                                                执行人
-                                            </strong></label>
-                                            <input name="process_executor" type="text" class="form-control"
-                                                   id="process_executor{{ item.0 }}" maxlength="255"
-                                                   placeholder="点选执行人"
-                                                   required>
-                                            <button id="reset{{ item.0 }}" type="button">reset</button>
-                                            {% for user in users %}
-                                                {% if user.first_name %}
-                                                    <button class="executor{{ item.0 }} btn btn-sm btn-info"
-                                                            value="{{ user.id }}"
-                                                            type="button">
-                                                        {{ user.first_name }}
-                                                    </button>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </div>
-                                        <div class="col-md-3">
-                                            <i class="pull-left icon iconfont icon-miaoshu">
-                                            </i>&nbsp;
-                                            <label for="process_creator{{ item.0 }}"
+                                            <label for="task_creator{{ item.0 }}"
                                                    class="form-label d-inline-block mb-2 text-primary"><strong>
                                                 创建者
                                             </strong></label>
-                                            <input name="process_creator" type="text" class="form-control"
-                                                   id="process_creator{{ item.0 }}" maxlength="255"
+                                            <input name="task_creator" type="text" class="form-control"
+                                                   id="task_creator{{ item.0 }}" maxlength="255"
                                                    placeholder="输入流程创建者" value="{{ user.first_name }}"
                                                    required disabled>
                                         </div>
                                     </div>
                                     <div class="row margin-top-10">
                                         <div class="col-md-12 margin-top-10">
-                                            <button class="btn btn-primary" id="setProcess{{ item.0 }}">确认</button>
+                                            <button class="btn btn-primary" id="setTask{{ item.0 }}">确认</button>
                                             <a href="{% url 'project_home' %}" class="btn btn-primary"
                                                id="cancelButton{{ item.0 }}"
                                                role="button">取消</a>
@@ -173,28 +174,29 @@
         $(document).ready(function () {
 
             const csrftoken = getCookie('csrftoken');
-            var inputProcessQuerysetList = []
+            var inputTaskQuerysetList = []
 
-            var getProcessType = function (t) {
+            var getTaskType = function (t) {
+                // 根据页面的Task Type 获取数据库中已创建的tasktype
                 $.ajax({
                     url: "/projectSystem/processType/getInput/",
-                    data: {"process_type": t},
+                    data: {"task_type": t},
                     type: "post",
                     success: function (data) {
-                        inputProcessQuerysetList = data.process_type_list
-                        console.log(t)
+                        inputTaskQuerysetList = data.task_type_list
                         let tid = parseInt(t)
-                        $.each($(".processTypeInfo"), function (idx, ele) {
+                        $.each($(".taskTypeInfo"), function (idx, ele) {
 
                             if (idx + 1 === tid) {
                                 $(this).html(data.html)
                             }
                         })
-                        $.each(inputProcessQuerysetList, function (idx, ele) {
+                        $.each(inputTaskQuerysetList, function (idx, ele) {
                             if (ele.status === "1") {
                                 $("fieldset:eq(" + (tid - 1) + ")").attr("disabled", "disabled")
                             }
                         })
+
                         initForm(t)
                     },
                     error: function (error_data) {
@@ -219,7 +221,7 @@
                     _panel.addClass("in");
                     $(this).parent().addClass("active")
 
-                    getProcessType($(this).parent().attr('value'));
+                    getTaskType($(this).parent().attr('value'));
                 }
 
             })
@@ -235,63 +237,64 @@
             });
 
             var initForm = function (idx) {
-                $('#process_start_time' + idx).datetimepicker({
+                $('#task_start_time' + idx).datetimepicker({
                     format: 'Y-m-d H:i',
                     onShow: function (ct) {
                         this.setOptions({
-                            maxDate: $('#process_end_time' + idx).val() ? $('#process_end_time' + idx).val() : false
+                            maxDate: $('#task_end_time' + idx).val() ? $('#task_end_time' + idx).val() : false
                         })
                     },
 
                 });
-                $('#process_end_time' + idx).datetimepicker({
+                $('#task_end_time' + idx).datetimepicker({
                     format: 'Y-m-d H:i',
                     onShow: function (ct) {
                         this.setOptions({
-                            minDate: $('#process_start_time' + idx).val() ? $('#process_start_time' + idx).val() : false
+                            minDate: $('#task_start_time' + idx).val() ? $('#task_start_time' + idx).val() : false
                         })
                     },
 
                 });
-                var executorList = new Array();
-                Array.prototype.remove = function (val) {
-                    var index = this.indexOf(val);
-                    if (index > -1) {
-                        this.splice(index, 1);
-                    }
-                };
-
-                $(".executor" + idx).on('click', function (e) {
+                {#var executorList = [];#}
+                {#Array.prototype.remove = function (val) {#}
+                {#    var index = this.indexOf(val);#}
+                {#    if (index > -1) {#}
+                {#        this.splice(index, 1);#}
+                {#    }#}
+                {# };#}
+                {##}
+                {#$(".executor" + idx).on('click', function (e) {#}
+                {#    //  选择负责人#}
+                {#    e.preventDefault()#}
+                {#    let z = $(this)[0].innerText + ", "#}
+                {##}
+                {#    if ($(this).hasClass("btn-info")) {#}
+                {#        console.log(z)#}
+                {#        executorList.push(parseInt($(this).attr("value")));#}
+                {#        console.log(executorList)#}
+                {#        $("#task_executor" + idx).val($("#task_executor" + idx).val() + z);#}
+                {#        $(this).removeClass("btn-info").addClass("btn-success");#}
+                {#    } else {#}
+                {#        $("#task_executor" + idx).val($("#task_executor" + idx).val().replace(z, ""));#}
+                {#        $(this).removeClass("btn-success").addClass("btn-info");#}
+                {#        executorList.remove(parseInt($(this).attr("value")));#}
+                {#        console.log(executorList)#}
+                {#    }#}
+                {# });#}
+                {#$("#reset" + idx).on('click', function (e) {#}
+                {#    e.preventDefault()#}
+                {#    $("#process_executor" + idx).val('');#}
+                {#    $(".executor" + idx).each(function (idx, ele) {#}
+                {#        if ($(this).hasClass("btn-success")) {#}
+                {#            $(this).removeClass("btn-success").addClass("btn-info");#}
+                {#            executorList.remove(parseInt($(this).attr("value")))#}
+                {#            console.log(executorList)#}
+                {#        }#}
+                {#    })#}
+                {# });#}
+                $("#setTask" + idx).on('click', function (e) {
                     e.preventDefault()
-                    let z = $(this)[0].innerText + ", "
-
-                    if ($(this).hasClass("btn-info")) {
-                        console.log(z)
-                        executorList.push(parseInt($(this).attr("value")));
-                        console.log(executorList)
-                        $("#process_executor" + idx).val($("#process_executor" + idx).val() + z);
-                        $(this).removeClass("btn-info").addClass("btn-success");
-                    } else {
-                        $("#process_executor" + idx).val($("#process_executor" + idx).val().replace(z, ""));
-                        $(this).removeClass("btn-success").addClass("btn-info");
-                        executorList.remove(parseInt($(this).attr("value")));
-                        console.log(executorList)
-                    }
-                });
-                $("#reset" + idx).on('click', function (e) {
-                    e.preventDefault()
-                    $("#process_executor" + idx).val('');
-                    $(".executor" + idx).each(function (idx, ele) {
-                        if ($(this).hasClass("btn-success")) {
-                            $(this).removeClass("btn-success").addClass("btn-info");
-                            executorList.remove(parseInt($(this).attr("value")))
-                            console.log(executorList)
-                        }
-                    })
-                });
-                $("#setProcess" + idx).on('click', function (e) {
-                    e.preventDefault()
-                    var forms = $('#create_process' + idx)
+                    var forms = $('#create-task-type' + idx)
                     if (forms[0].checkValidity() === false) {
                         forms[0].reportValidity();
 
@@ -304,37 +307,29 @@
 
                         for (var key in x) {
 
-                            if (key === 'process_start_time' || key === 'process_end_time') {
+                            if (key === 'task_start_time' || key === 'task_end_time') {
                                 x[key] = x[key] + ":00.000000"
                             }
 
-                            if (key === 'process_executor') {
+                            if (key === 'task_executor') {
                                 x[key] = executorList
                             }
 
                         }
-                        x['process_creator'] = parseInt('{{ user.pk }}')
+                        x['task_creator'] = parseInt('{{ user.pk }}')
+                        console.log(x)
                         $.ajax({
-                            url: '/projectSystem/processTypes/',
+                            url: '/projectSystem/task_type/',
                             type: 'post',
                             data: JSON.stringify(x),
                             dataType: 'json',
                             contentType: "application/json; charset=utf-8",
-                            beforeSend: function (xhr, settings) {
-                                if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-                                    xhr.setRequestHeader('X-CSRFToken', csrftoken);
-                                }
-                                console.log(x)
-                            },
+                            headers: {'X-CSRFToken': csrftoken},
                             success: function (data) {
                                 console.log(data)
-
-                            },
-                            error: function (error_data) {
-                                console.log(error_data.responseText)
-
                             }
                         })
+
                     }
                 })
 

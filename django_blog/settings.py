@@ -26,7 +26,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'ApprovalSystemOCT',
     'django_crontab',
-    'guardian'
+    'guardian',
+    # 'channels'
 ]
 
 MIDDLEWARE = [
@@ -159,3 +160,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(os.path.join('static')),
 ]
+
+# ASGI_APPLICATION = "django_blog.asgi.application"
+
+RABBITMQ = {
+    "host": "172.25.118.154",
+    "port": 5672
+}

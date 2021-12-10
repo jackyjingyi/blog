@@ -11,24 +11,28 @@ from django.contrib.auth.decorators import permission_required, login_required
 from django.http import JsonResponse
 from django.http import Http404
 from django.conf import settings
+from django.db.models.query import QuerySet
 from django.db.models import Func, Value
 import django.utils.timezone as timezone
 from django.views.decorators.csrf import csrf_exempt
-from ApprovalSystemOCT.project_statics.static_data import *
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import generics
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework import status
 import docx
 from guardian.shortcuts import assign_perm
+from guardian.models import UserObjectPermission, GroupObjectPermission
 
 from ApprovalSystemOCT.models import Process, Task, TaskType, Step, Book, ProcessType, Attachment, ProjectRequirement, \
     ProjectDirection
 from ApprovalSystemOCT.project_statics.static_data import *
 from ApprovalSystemOCT.serializers import BookSerializer, StepSerializer, ProjectRequirementSerializer, \
-    ProcessTypeSerializer, AttachmentSerializer, ProcessSerializer, UserSerializer, GroupSerializer
+    ProcessTypeSerializer, AttachmentSerializer, ProcessSerializer, UserSerializer, GroupSerializer, \
+    PermissionsSerializer, TaskTypeSerializer, TaskSerializer, UserObjectPermissionSerializer, \
+    GroupObjectPermissionSerializer
 from ApprovalSystemOCT.process import ProjectInputProcess
 from ApprovalSystemOCT.docx_handler import ProjectTableHandler
 from ApprovalSystemOCT.project_statics.static_function import *
@@ -141,8 +145,8 @@ def project_settlement(request):
         'template_name': "创建录入流程",
         'sidebar_index': BASE_SIDEBAR_INDEX,
         'project_verbose_name': json.dumps(PROJECT_REQUIREMENT_VERBOSE),
-        'users': User.objects.filter(groups__in=Group.objects.filter(pk=14)),
-        'process_types': PROCESS_TYPE[1:],
+        'users': User.objects.filter(groups__in=Group.objects.filter(pk=14)),  #
+        'task_types': TASK_TYPE[1:],
     }
     return render(request, 'projectSettlement.html', context=context)
 
@@ -494,13 +498,14 @@ def user_management(request):
     USER_PERMISSIONS_LV1 = [
         (Permission.objects.get(codename="add_projectrequirement").id,
          "ApprovalSystemOCT.add_projectrequirement",
-         "新建课题需求", u"允许用户创建新的课题需求。"),(Permission.objects.get(codename="change_projectrequirement").id,
-         "ApprovalSystemOCT.change_projectrequirement",
-         "修改课题需求", u"允许用户修改自己的或指派给自己的课题需求。"),(Permission.objects.get(codename="view_projectrequirement").id,
+         "新建课题需求", u"允许用户创建新的课题需求。"), (Permission.objects.get(codename="change_projectrequirement").id,
+                                       "ApprovalSystemOCT.change_projectrequirement",
+                                       "修改课题需求", u"允许用户修改自己的或指派给自己的课题需求。"),
+        (Permission.objects.get(codename="view_projectrequirement").id,
          "ApprovalSystemOCT.view_projectrequirement",
-         "查看课题需求", u"允许用户查看自己的或指派给自己的课题需求。"),(Permission.objects.get(codename="delete_projectrequirement").id,
-         "ApprovalSystemOCT.delete_projectrequirement",
-         "删除课题需求", u"允许用户删除自己的或指派给自己的课题需求。")
+         "查看课题需求", u"允许用户查看自己的或指派给自己的课题需求。"), (Permission.objects.get(codename="delete_projectrequirement").id,
+                                               "ApprovalSystemOCT.delete_projectrequirement",
+                                               "删除课题需求", u"允许用户删除自己的或指派给自己的课题需求。")
 
     ]
     USER_PERMISSIONS_LV2 = [
@@ -529,9 +534,9 @@ def user_management(request):
         'groups': Group.objects.filter(id__lt=13),
         'USER_PERMISSIONS_LV0': USER_PERMISSIONS_LV0,
         'USER_PERMISSIONS_LV1': USER_PERMISSIONS_LV1,
-        'USER_PERMISSIONS_LV2':USER_PERMISSIONS_LV2,
-        'USER_PERMISSIONS_LV3':USER_PERMISSIONS_LV3,
-        'USER_PERMISSIONS_LV4':USER_PERMISSIONS_LV4
+        'USER_PERMISSIONS_LV2': USER_PERMISSIONS_LV2,
+        'USER_PERMISSIONS_LV3': USER_PERMISSIONS_LV3,
+        'USER_PERMISSIONS_LV4': USER_PERMISSIONS_LV4
     }
     return render(request, 'userManagement.html', context=context)
 
@@ -643,7 +648,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = [IsAuthenticated]
 
-    @action(detail=True, methods=["post"])
+    @action(detail=True, methods=["post"], url_path="add_perm")
     def add_perm(self, request, pk=None):
         user = self.get_object()
         # groups = request.data.pop("groups")
@@ -725,7 +730,8 @@ def step_creation(request):
 @csrf_exempt
 def get_process_type_list(request):
     if request.method == 'POST':
-        _z = list(ProcessType.objects.filter(process_type=request.POST.get("process_type")).values())
+        print("process_type")
+        _z = list(TaskType.objects.filter(task_type=request.POST.get("task_type")).values())
         table = tag_formatter("table")
         thead = tag_formatter("thead")
         tbody = tag_formatter("tbody")
@@ -739,19 +745,20 @@ def get_process_type_list(request):
         for i in _z:
             print(i)
             lis.append(tr(
-                td(span(i["process_name"])) +
-                td(span(datetime.strftime(i["process_start_time"], '%Y-%m-%d %H:%M:%S'))) +
-                td(span(datetime.strftime(i["process_end_time"], '%Y-%m-%d %H:%M:%S'))) +
-                td(span(User.objects.get(pk=i.get('process_creator_id')).first_name)) +
-                td(span(ProcessType.objects.get(pk=i.get("id")).get_status_display())),
+                td(span(i["task_name"])) +
+                td(span(datetime.strftime(i["task_start_time"], '%Y-%m-%d %H:%M:%S'))) +
+                td(span(datetime.strftime(i["task_end_time"], '%Y-%m-%d %H:%M:%S'))) +
+                td(span(User.objects.get(pk=i.get('task_creator_id')).first_name)) +
+                td(span(TaskType.objects.get(pk=i.get("id")).get_status_display())),
                 cls_property="processController"
             )
             )
 
         context = {
-            'process_type_list': _z,
+            'task_type_list': _z,
             'html': table(thead(tr(th1)) + tbody(("".join(lis))), cls_property="table table-bordered")
         }
+        print(context)
         return JsonResponse(context, status=200, safe=False)
 
 
@@ -864,6 +871,21 @@ class ProcessTypeDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProcessTypeSerializer
 
 
+class TaskTypeViewSet(viewsets.ModelViewSet):
+    queryset = TaskType.objects.all()
+    serializer_class = TaskTypeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        # users = User.objects.filter(groups)
+        # serializer.instance.task_executor.add()
+        headers = self.get_success_headers(serializer.data)
+        return Response(request.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
 class ProjectRequirementList(generics.ListCreateAPIView):
     queryset = ProjectRequirement.objects.all()
     serializer_class = ProjectRequirementSerializer
@@ -947,10 +969,40 @@ class TaskStepList(generics.ListAPIView):
     def get_queryset(self):
         task_id = self.kwargs.get('task')
         for i in Step.objects.filter(task_id=task_id).order_by('step_seq'):
-            print(i, i.step_attachment_snapshot, type(i.step_attachment_snapshot))
+            # print(i, i.step_attachment_snapshot, type(i.step_attachment_snapshot))
             if i.step_attachment:
                 _z = i.step_attachment.get_attachment().first()
                 _z.author = "zipper"
                 _z.save()
 
         return Step.objects.filter(task_id=task_id).order_by('step_seq')
+
+
+class PermissionViewSet(viewsets.ModelViewSet):
+    queryset = Permission.objects.all()
+    serializer_class = PermissionsSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class UserObjectPermissionViewSet(viewsets.ModelViewSet):
+    queryset = UserObjectPermission.objects.all()
+    serializer_class = UserObjectPermissionSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class UserObjectPermissionListView(generics.ListCreateAPIView):
+    queryset = UserObjectPermission.objects.all()
+    serializer_class = UserObjectPermissionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user_id = self.kwargs.get("user")
+        queryset = self.queryset
+        if isinstance(queryset, QuerySet):
+            queryset = queryset.filter(user_id=user_id)
+        return queryset
+
+
+
+
+

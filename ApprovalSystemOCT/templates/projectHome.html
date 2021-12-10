@@ -104,6 +104,7 @@
     <script>
 
         $(document).ready(function () {
+            console.log("{{ user }}")
             // csrf token
             const csrftoken = getCookie('csrftoken');
             // query data defines query params
@@ -112,6 +113,27 @@
                 'setStatus': '',
                 'keyword': '',
                 'user': '',
+            }
+            // 用户不登录无法看到操作按钮，登录后无需判断
+            class User {
+                constructor(id, username, is_authenticated) {
+                    this.id = id;
+                    this.username = username;
+                    this.is_authenticated = is_authenticated
+                }
+
+                get_object_permissions (obj) {
+                    // get user's permissions
+                    // obj -> str process id
+
+
+                }
+
+                action () {
+                    // do actions
+                }
+
+
             }
             // process objects
             // receive, display, & functional events
@@ -170,6 +192,11 @@
                         }
                     }
                 }
+
+                get_current_user_permission_against_obj () {
+
+                }
+
 
                 static check(obj) {
                     return !this.id_lists.has(obj.process_order_id);

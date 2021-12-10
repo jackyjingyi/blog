@@ -80,15 +80,15 @@
                                 <img src="{% static 'bootstrap/icons/person-circle.svg' %}"
                                      style="width: 40px; height:40px;margin-right: 5px"
                                      class="img-circle">
+                            {% endif %}
+
+                            <a class="userInfo" data-toggle="dropdown" aria-haspopup="true"
+                               aria-expanded="false" data-type="textUserName" href="javascript:void(0)">
                                 {% if user.is_authenticated %}
                                     <span>{{ user.first_name }}</span>
                                 {% else %}
                                     <span>游客</span>
                                 {% endif %}
-                            {% endif %}
-                            <a class="userInfo" data-toggle="dropdown" aria-haspopup="true"
-                               aria-expanded="false" data-type="textUserName" href="javascript:void(0)">
-                                {{ user.first_name }}
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-left dropdown-menu-new"
@@ -245,7 +245,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <form class="form-inline d-flex justify-content-center md-form "
-                                  action="{% url 'search_items' %}" method="post" >
+                                  action="{% url 'search_items' %}" method="post">
                                 {% csrf_token %}
                                 <input class="form-control form-control-sm mr-3 w-75" type="text"
                                        placeholder="Search"
@@ -272,7 +272,7 @@
         </div>
 
     </div>
-<div class="pull-right" style="bottom: 0px"><p>由大数据重点实验中心研发并提供技术支持</p></div>
+    <div class="pull-right" style="bottom: 0px"><p>由大数据重点实验中心研发并提供技术支持</p></div>
 </div>
 
 </body>

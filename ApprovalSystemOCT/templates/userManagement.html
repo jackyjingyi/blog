@@ -30,7 +30,7 @@
             </table>
         </div>
         <div>
-            <p class="pull-left">当前查看:</p>
+            <p class="pull-left">当前查看:&nbsp</p><span id="user-display-panel"></span>
         </div>
 
         <div class="col-md-8">
@@ -91,18 +91,18 @@
             <div class="rights-list row">
                 <p>第四部分： 课题领导</p>
                 <div class="col-md-6">
-                        <dl class="dl-horizontal">
-                            {% for item in USER_PERMISSIONS_LV4 %}
-                                <dt>
-                                    <label for="{{ item.0 }}">{{ item.2 }}</label>
-                                    <input id="{{ item.0 }}" name="{{ item.1 }}" class="pull-left" type="checkbox"/>
-                                </dt>
-                                <dd class="font-italic">
-                                    {{ item.3 }}
-                                </dd>
+                    <dl class="dl-horizontal">
+                        {% for item in USER_PERMISSIONS_LV4 %}
+                            <dt>
+                                <label for="{{ item.0 }}">{{ item.2 }}</label>
+                                <input id="{{ item.0 }}" name="{{ item.1 }}" class="pull-left" type="checkbox"/>
+                            </dt>
+                            <dd class="font-italic">
+                                {{ item.3 }}
+                            </dd>
 
-                            {% endfor %}
-                        </dl>
+                        {% endfor %}
+                    </dl>
                 </div>
             </div>
             <hr>
@@ -134,6 +134,7 @@
             let currentPermissions = []
 
             class GroupObject {
+                // 分组列表，小组包含用户
                 constructor(id, name) {
                     this.id = id;
                     this.name = name;
@@ -141,8 +142,9 @@
                 }
 
                 set_users(user_set) {
+                    // 存储用户集， 当给定iterabled的UserObject集合时，进行存储
                     for (let user of user_set) {
-                        console.log("hello", user)
+                        // todo：暂时不用，需要加入user 类型判断
                         this.user_set.push(user)
                     }
                 }
@@ -169,25 +171,26 @@
                         context["name"],
                     )
                     for (let z of context["user_set"]) {
-
+                        // 基于原始API创建user，并存入group的user_set
                         let u = UserObject.create(z)
-
                         tmp.add_user(u)
-
                     }
+                    // 静态func 添加刚创建的object
                     this.instance.add(tmp)
                     return tmp
-
                 }
-
-
             }
 
             class UserObject {
                 constructor(id, name, permissions) {
+                    // 从API response中提取需要的variable
                     this.id = id;
                     this.name = name;
                     this.permissions = permissions
+                }
+
+                simple_display(func) {
+                    func(this);
                 }
 
                 static instance = new Set()
@@ -200,7 +203,6 @@
                     )
                     this.instance.add(tmp)
                     return tmp
-
                 }
 
                 static get_user(id) {
@@ -210,7 +212,6 @@
                         }
                     }
                 }
-
             }
 
             initialFrontend();
@@ -229,8 +230,14 @@
                 })
             }
 
+            function displayUserPanel(user) {
+
+                $("#user-display-panel").text(user.name);
+            }
+
             function display() {
                 let group_list = $("#group_list")
+
                 group_list.empty();
 
                 for (let obj of GroupObject.instance) {
@@ -262,9 +269,7 @@
                             "</li>"
                         )
                     }
-
                     $("a[data-action=user-item]").on("click", function () {
-
                         $("a[data-action=user-item]").each(function (idx, element) {
 
                             if ($(element).hasClass("btn-primary")) {
@@ -274,27 +279,38 @@
                         $(this).addClass("btn-primary")
                         let user = UserObject.get_user($(this).data("target"))
                         currentUser = user
+                        user.simple_display(displayUserPanel)
                         $("input[type=checkbox]").each(
                             function (idx, element) {
                                 $(element)[0].checked = !!user.permissions.includes($(element).attr("name"));
                             }
                         )
                     })
+                    user_tabs.find("a").first().trigger("click");
                 })
                 group_list.find("a").first().trigger("click");
-
             }
 
             $("#savePermissions").on("click", function () {
+                let rights_update = [];
                 $("input[type=checkbox]").each(
                     function (idx, element) {
-
                         if (element.checked) {
+                            rights_update.push($(element).attr("id"))
                             console.log("hello checked")
                             console.log($(element).attr("id"))
+
+
                         }
                     }
                 )
+                console.log(rights_update)
+                // send ajax request: update user permissions
+                // { user_id:[permission_id1, permission_id2, permission_id3]}
+                $.ajax({
+                    url:"",
+                    data:""
+                })
             })
         })
 

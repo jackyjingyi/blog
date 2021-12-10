@@ -2,8 +2,9 @@ import json
 import uuid
 from django.contrib.auth.models import User, Group, Permission
 from rest_framework import serializers
-from ApprovalSystemOCT.models import Attachment, Process, Task, Step, Book, ProjectRequirement, ProcessType, \
+from ApprovalSystemOCT.models import Attachment, Process, Task, TaskType, Step, Book, ProjectRequirement, ProcessType, \
     ProjectImplementTitle
+from guardian.models import UserObjectPermission, GroupObjectPermission
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -81,11 +82,14 @@ class ProjectImplementTitleSerializer(serializers.ModelSerializer):
         fields = (
             "project_base", "sponsor", "department", "progress_year", "progress_season"
         )
+
+
 class PermissionsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Permission
         fields = "__all__"
-        depth=2
+        depth = 2
+
 
 class UserSerializer(serializers.ModelSerializer):
     groups = serializers.PrimaryKeyRelatedField(many=True, queryset=Group.objects.all())
@@ -93,12 +97,13 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "first_name", "groups","permissions")
+        fields = ("id", "first_name", "groups", "permissions")
         depth = 2
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret["permissions"] = [i.replace("'","").strip() for i in ret["permissions"].strip("{").strip("}").split(",") if "ApprovalSystemOCT" in i ]
+        ret["permissions"] = [i.replace("'", "").strip() for i in ret["permissions"].strip("{").strip("}").split(",") if
+                              "ApprovalSystemOCT" in i]
         return ret
 
 
@@ -110,3 +115,26 @@ class GroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = Group
         fields = ("id", "name", "permissions", "user_set")
+
+
+class TaskTypeSerializer(serializers.ModelSerializer):
+    # task_executor = UserSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = TaskType
+        fields = (
+            "task_name", "task_type", "task_creator", "task_executor", "task_start_time", "task_end_time", "status"
+        )
+
+
+class UserObjectPermissionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserObjectPermission
+        fields = "__all__"
+
+
+class GroupObjectPermissionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = GroupObjectPermission
+        fields = "__all__"

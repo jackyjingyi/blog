@@ -2,7 +2,7 @@
 from datetime import datetime
 
 __all__ = ["BASE_SIDEBAR_INDEX", "INTERNAL", "TIME_INTERVAL", "STATUS_LIST", "PROCESS_TYPE", "PROJECT_TYPE",
-           "PROJECT_RESEARCH_DIRECTION", "PROJECT_REQUIREMENT_VERBOSE"]
+           "PROJECT_RESEARCH_DIRECTION", "PROJECT_REQUIREMENT_VERBOSE", "TASK_TYPE"]
 
 # Left side bar menu
 BASE_SIDEBAR_INDEX = {
@@ -16,8 +16,8 @@ BASE_SIDEBAR_INDEX = {
                     ],
     },
     "课题管理": {
-        "general": [("创建流程", "project_settlement"), ("所有课题", "display_all_projects"),
-                    ("所有立项课题", "annual_all_projects"), ("用户管理", "user_management")]
+        "general": [("流程管理", "project_settlement"), ("用户管理", "user_management"), ("需求管理", "display_all_projects"),
+                    ("年度课题管理", "annual_all_projects"), ]
     }
 }
 
@@ -61,10 +61,14 @@ PROJECT_REQUIREMENT_VERBOSE = {
     "project_difficult": "研究课题的重点及难点"
 }
 
-PROCESS_TYPE = [
-    ('0', '未选择'), ('1', '课题录入'), ('2', '课题修改'), ('3', '进度录入'), ('4', '成果录入'), ('5', '结题'), ('6', '资料上传'),
-    ('7', '立项')
+TASK_TYPE = [
+    ('0', '未选择'), ('1', '课题录入', "需求录入员录入课题需求，并进行初步提交。"), ('2', '课题分发', "管理员对提交的课题进行分发，分发给各组负责人"),
+    ('3', '需求修订', "负责人与需求提出方进行沟通修改,并在指定时间内再次提交"), ('4', '需求汇总指派', "产品管理组汇总修订，增删、合并后按线下会议结果指派给相关负责人"),
+    ('5', '提交立项', "课题负责人提交立项申请，由课题负责领导审批立项"),
+    # ('6', '资料上传'),
+    # ('7', '进度管理')
 ]
 
-
-
+PROCESS_TYPE = [
+    ('0', '未选择'), ("1", "需求录入"), ("2", "年度课题管理")
+]

@@ -1,5 +1,5 @@
 from django.urls import path
-from django.conf.urls import url,include
+from django.conf.urls import url, include
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 from django.conf import settings
@@ -8,7 +8,8 @@ from .views import home_view, BookList, BookDetail, StepList, StepDetail, TaskSt
     project_settlement, process_creation, AttachmentList, requirement_transformation, my_projects, \
     get_process_type_list, ProcessListWithType, requirement_bulk_action, \
     set_to_annual_project, project_dispatch, finish_process, process_detail, update_attachment, \
-    get_history_log, process_pack_up, get_requirement_content, development_process, UserViewSet,GroupViewSet, user_management
+    get_history_log, process_pack_up, get_requirement_content, development_process, UserViewSet, GroupViewSet, \
+    user_management, PermissionViewSet, TaskTypeViewSet, UserObjectPermissionViewSet, UserObjectPermissionListView
 from .annual_project_view import annual_project_detail, annual_projects, project_implement, project_implement_title, \
     ImplementTitleList, ImplementTitleDetail
 from rest_framework.routers import DefaultRouter
@@ -16,6 +17,9 @@ from rest_framework.routers import DefaultRouter
 router = DefaultRouter()
 router.register(r"users", UserViewSet, basename="user")
 router.register(r"groups", GroupViewSet, basename="group")
+router.register(r"permissions", PermissionViewSet, basename="permission")
+router.register(r"task_type", TaskTypeViewSet, basename="task-type")
+router.register(r"user-object-permission", UserObjectPermissionViewSet, basename="user-object-permission")
 urlpatterns = [
                   path('', home_view, name='project_home'),
                   url(r'^projectSettlement/$', project_settlement, name='project_settlement'),
@@ -30,6 +34,7 @@ urlpatterns = [
                   url(r'^books/(?P<pk>[0-9]+)/$', BookDetail.as_view()),
                   url(r'^steps/$', StepList.as_view()),
                   url(r'^steps/(?P<pk>[0-9a-f-]+)/$', StepDetail.as_view()),
+                  url(r"^get-user-permission/(?P<user>[0-9a-f-]+)/$", UserObjectPermissionListView.as_view(), name="get_user_permission"),
                   url(r'^processTypes/$', ProcessTypeList.as_view()),
                   url(r'^processType/getInput/$', get_process_type_list),
                   url(r"^processList/$", ProcessListWithType.as_view()),
@@ -57,7 +62,6 @@ urlpatterns = [
                       name="project_implement"),
                   url(r"^Project/implementTitle/create/", ImplementTitleList.as_view()),
                   url(r"Project/implementTitle/detail/(?P<pk>[0-9a-f-]+)/", ImplementTitleDetail.as_view()),
-                  url(r"userManagement/$",user_management,name="user_management"),
+                  url(r"userManagement/$", user_management, name="user_management"),
                   path('', include(router.urls)),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

@@ -361,9 +361,10 @@ def group_posts_view(request, group_name):
     method: Get
     """
     if request.method == 'GET':
-        all_members = User.objects.filter(groups__name=group_name)
+        group = Group.objects.get(name=group_name)
+        all_members = User.objects.filter(groups__in=[group])
 
-        posts_list = Post.objects.filter(author__groups__name=group_name, publish=True).order_by('-publish_date')
+        posts_list = Post.objects.filter(author__groups__in=[group], publish=True).order_by('-publish_date')
         cat_menu = Category.objects.all()
         res = {i.name: posts_list.filter(category=i.name) for i in cat_menu if
                posts_list.filter(category=i.name)}
