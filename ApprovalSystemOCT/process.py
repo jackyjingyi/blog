@@ -12,7 +12,7 @@ application = get_wsgi_application()
 django.setup()
 import django.utils.timezone as timezone
 from django.contrib.contenttypes.models import ContentType
-from ApprovalSystemOCT.models import ProjectRequirement, Step, Process, Task, Attachment
+from ApprovalSystemOCT.models import ProjectRequirement, Step, Process, Task, Attachment, TaskType
 
 
 class AbstractProcessFactory(ABC):
@@ -82,7 +82,6 @@ class ProjectInputProcess(AbstractProcess):
             process_executor=kwargs.get('process_executor')
         )
         if self.process_date_validator(instance=instance):
-
             task_demo = instance.create_task(
                 task_type='录入',
                 task_seq=0,
@@ -90,8 +89,7 @@ class ProjectInputProcess(AbstractProcess):
                 task_state='',
                 task_sponsor=instance.process_executor
             )
-            return instance,task_demo
-
+            return instance, task_demo
 
     def process_date_validator(self, instance):
         current_date = timezone.now()
@@ -107,36 +105,6 @@ class ProjectInputProcess(AbstractProcess):
 
     def process_get_tasks(self):
         return Task.get_tasks(self.process_instance.id)
-
-
-class Book:
-    name = None
-    author = None
-
-    def __call__(self, *args, **kwargs):
-        self.id = uuid.uuid4()
-        self.name = kwargs.get('name')
-        self.author = kwargs.get('author')
-
-    def __str__(self):
-        return f"id :{self.id}, book name :{self.name}, author :{self.author}"
-
-
-class Order:
-    title = None
-    client = None
-    product = None
-    amount = 0
-
-    def __call__(self, *args, **kwargs):
-        self.id = uuid.uuid4()
-        self.title = kwargs.get('title')
-        self.client = kwargs.get('client')
-        self.product = kwargs.get('product')
-        self.amount = kwargs.get('amount')
-
-    def __str__(self):
-        return f"id: {self.id}, title : {self.title}, client: {self.client}, product : {self.product}, amount : {self.amount}"
 
 
 class AbstractAttachment(ABC):
@@ -203,32 +171,30 @@ def attachment_creation(attachment_class, stuff):
     return attachment
 
 
-if __name__ == '__main__':
-    a_book = Book()
-    a_book(name='python', author='jack')
-    print(a_book)
-    a_book_attachment = BookAttachment()
-    a_book_attachment = attachment_creation(a_book_attachment, a_book)
-    print(type(a_book_attachment))
-    print(a_book_attachment.get_attachment())
-    an_order = Order()
-    an_order(title="an order", client="jack", product=a_book, amount=100)
-    print(an_order)
-    an_order_attachment = OrderAttachment()
-    an_order_attachment = attachment_creation(an_order_attachment, an_order)
-    print(type(an_order_attachment))
-    print(an_order_attachment.get_attachment())
+class TaskBaseHandler:
+    # don't call base handler directly
+    type = ""
 
-    print("django test")
-    p = ProjectRequirement.objects.all()[0]
+    class Meta:
+        model = Task
 
-    a_project_attachment = ProjectRequirementAttachment()
-    a_project_attachment = attachment_creation(a_project_attachment, p)
-    print(type(a_project_attachment))
-    print(a_project_attachment.get_attachment(), type(a_project_attachment.get_attachment()))
-    z = a_project_attachment.get_attachment()
-    print(type(z.__class__), z.__class__)
-    print(ContentType.objects.get_for_model(z))
-    print(type(z._meta.app_label), type(z._meta.object_name))
-    zeta = a_project_attachment.persistence()
-    print(zeta, zeta.get_attachment())
+    def create_task(self, **kwargs):
+        param = {**self.get_param_kwargs(), **kwargs}
+        return self.Meta.model.objects.create(**param)
+
+    def get_param_kwargs(self):
+        res = {}
+        return res
+
+
+class InputTaskHandler(TaskBaseHandler):
+    type = "input"
+
+    def get_param_kwargs(self):
+        res = {
+            'state' : 1
+        }
+        pass
+
+
+

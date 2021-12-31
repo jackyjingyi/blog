@@ -35,9 +35,9 @@ class ProjectDirection(models.Model):
 class ProjectRequirement(models.Model):
     class Meta:
         permissions = (
-            ('patch_projectrequirement', u'分发'), # 分发
-            ("view_projectrequirement_submitted",u"查看课题需求"),
-            ("view_projectrequirement_set_to_annual",u"查看年度课题需求"),
+            ('patch_projectrequirement', u'分发'),  # 分发
+            ("view_projectrequirement_submitted", u"查看课题需求"),
+            ("view_projectrequirement_set_to_annual", u"查看年度课题需求"),
         )
 
     project_name = models.CharField("研究项目", max_length=255)
@@ -202,28 +202,31 @@ class TaskType(models.Model):
 
 
 class Process(models.Model):
-    status_choice = [
-        ("1", "进行中"),
-        ("2", "未开始"),
-        ("3", "已结束"),
-        ("4", "撤销"),
-        ("5", "暂停"),
-        ("6", "删除"),
-        ("7", "立项"),
-        ("8", "合并")
-    ]
+    # status_choice = [
+    #     ("1", "进行中"),
+    #     ("2", "未开始"),
+    #     ("3", "已结束"),
+    #     ("4", "撤销"),
+    #     ("5", "暂停"),
+    #     ("6", "删除"),
+    #     ("7", "立项"),
+    #     ("8", "合并")
+    # ]
     process_order_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,
                                         help_text="create an uuid for each order")
     process_pattern = models.ForeignKey(ProcessType, on_delete=models.DO_NOTHING)
-    process_executor = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    process_executor = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True)
     process_owner = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="owner")
-    process_co_worker = models.ManyToManyField(User, related_name="process_co_worker")
+    process_co_worker = models.ManyToManyField(User, related_name="process_co_worker", blank=True)
     create_time = models.DateTimeField(auto_now_add=True)
-    status = models.CharField(choices=status_choice, default="1", max_length=5)
-    prev = models.JSONField("前序", default=dict)
-    next = models.JSONField("后继", default=dict)
-    conjunction = models.JSONField("关联", default=dict)
+    status = models.CharField(default="1", max_length=5)
+    prev = models.JSONField("前序", default=dict, null=True, blank=True)
+    next = models.JSONField("后继", default=dict, null=True, blank=True)
+    conjunction = models.JSONField("关联", default=dict, null=True, blank=True)
     read_only = models.CharField(max_length=5, default='0')
+    process_leader = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="leader",
+                                       default=1)
+    process_state = models.CharField("执行情况", max_length=25, default='0')
 
     # process_readonly_sponsors = models.CharField(max_length=255)  TODO: 添加流程只读干系人（群） [pk1, pk2]
     # process_administrator = models.CharField(max_length=255)    TODO: 流程管理员（群组)
@@ -231,7 +234,8 @@ class Process(models.Model):
     class Meta:
         permissions = (
             ("packup_process", u"合并流程"),
-            ("dispatch_process", u"分发流程")
+            ("dispatch_process", u"分发流程"),
+            ("approval_process", u"审批权限")
         )
 
     def get_owner_name(self):
@@ -312,7 +316,7 @@ class Task(models.Model):
     # A move include many steps,
     # A move is defines seq oder of steps
     # 串联 step1 => step2
-    process = models.ForeignKey(Process, related_name="tasks",on_delete=models.CASCADE)
+    process = models.ForeignKey(Process, related_name="tasks", on_delete=models.CASCADE)
     task_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,
                                help_text="create an uuid for each Task")
     task_type = models.CharField("动作类型", max_length=255)
@@ -323,7 +327,7 @@ class Task(models.Model):
     task_sponsor = models.ForeignKey(User, on_delete=models.CASCADE)
     task_creat_time = models.DateTimeField(auto_now_add=True)
     task_update_time = models.DateTimeField(auto_now=True)
-    task_co_worker = models.ManyToManyField(User, related_name="co_worker")
+    task_co_worker = models.ManyToManyField(User, related_name="co_worker", blank=True)
 
     @classmethod
     def get_tasks(cls, process_id):
@@ -353,6 +357,10 @@ class Task(models.Model):
     def __str__(self):
         return f"TaskID: {self.task_id}, ProcessID: {self.process}"
 
+    def current_step_seq(self):
+        t = self.get_steps().last().step_seq
+        return t
+
 
 class Step(models.Model):
     step_id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False,
@@ -374,9 +382,11 @@ class Step(models.Model):
     step_start_time = models.DateTimeField(null=True, blank=True)
     step_duration = models.DurationField(default=timedelta(seconds=0))
     step_end_time = models.DateTimeField(null=True, blank=True)
-
-    step_status = models.CharField("执行状态", max_length=255)  # 挂起pending, 执行中processing, 等待awaiting, 完成finish, 暂存 save
-    step_state = models.CharField("步骤状态", max_length=255)  # 通过approval、驳回deny、撤回withdraw、放弃abandon、转出patch out
+    # todo Deprecate
+    step_status = models.CharField("执行状态", max_length=255,
+                                   default="1")  # 挂起pending, 执行中processing, 等待awaiting, 完成finish, 暂存 save
+    step_state = models.CharField("步骤状态",
+                                  max_length=255)  # 通过approval、驳回deny、撤回withdraw、放弃abandon、转出patch out 完成3 finish
 
     step_type = models.CharField("步骤类型",
                                  max_length=255)  # 1.录入 input  2. 提交审批 approval 3. 修订 edit 4. 合并 5. 删减 6. 新增,7.立项
@@ -449,13 +459,13 @@ class Step(models.Model):
                 except KeyError:
                     logging.warning(f"warning: {idx}- {_s.step_attachment_snapshot}")
             else:
-                logging.info(f"{idx}- {_s.step_attachment_snapshot}")
+                logging.info(f"info {idx}- {_s.step_attachment_snapshot}")
         return res
 
     @classmethod
     def get_steps(cls, task_id):
         try:
-            return cls.objects.filter(task_id=task_id).order_by('step_seq').order_by('step_create_time')
+            return cls.objects.filter(task_id=task_id).order_by('step_seq')
         except Step.DoesNotExist:
             logging.info(f"Task: {task_id} does not have steps.")
             return Step.objects.none()
@@ -506,4 +516,55 @@ class Action(models.Model):
 
 class State(models.Model):
     # recording states for an order
+    pass
+
+
+class MessageHandler(models.Model):
+    source = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="source_person"),
+    receive = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="receive_person")
+    inform = models.ManyToManyField(User, related_name="informed_people")
+    step_create_time = models.DateTimeField(auto_now_add=True)
+    step_update_time = models.DateTimeField(auto_now=True)
+    start_time = models.DateTimeField(null=True, blank=True)
+    due_time = models.DateTimeField(null=True, blank=True)
+    status = models.CharField("状态", max_length=25)  # 1. done 2. undone 不记录处理结果，只记录是否处理
+    comments = models.CharField("备注", max_length=500)
+    url = models.URLField("处理链接", max_length=255)
+
+    @classmethod
+    def need_message(cls):
+        return cls.objects.filter(status='2').order_by("-step_create_time")
+
+    @classmethod
+    def get_user_message(cls, user):
+        return cls.objects.filter(status='2', receive=user).order_by("-step_create_time")
+
+    def generate_message(self):
+        message = message_generator()
+
+
+class MessagePattern(models.Model):
+    message_choices = [
+        ('1', u'审批通知'),
+        ('2', u'抄送信息'),
+        ('3', u'通知信息'),
+    ]
+    message_type = models.CharField("消息类型", choices=message_choices, max_length=25)
+    body = models.TextField("消息主体")
+
+
+class Message(models.Model):
+    # 无需考虑是否读了消息，仅作为记录，
+    title = models.CharField("消息标题", max_length=255)
+    body = models.TextField("消息主体", )
+    pattern = models.ForeignKey(MessagePattern, on_delete=models.CASCADE, related_name="message_pattern")
+    url = models.URLField("处理链接", max_length=255)
+    create_time = models.DateTimeField(auto_now_add=True)
+
+
+def message_generator(handler=None, message=None):
+    pass
+
+
+def dingtalk_message_generator():
     pass

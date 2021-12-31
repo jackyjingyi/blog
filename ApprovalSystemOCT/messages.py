@@ -115,8 +115,11 @@ if __name__ == '__main__':
 
 
     # sender.close()
+
     def callback(ch, method, properties, body):
         print(" [x] %r:%r" % (method.routing_key, body))
+        for i in range(10):
+            print(i)
 
 
     re1 = ApprovalReceiver()

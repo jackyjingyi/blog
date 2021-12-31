@@ -59,23 +59,6 @@
 
     <div class="row" style="margin:30px">
         <h2 class="text-center"><strong>{{ template_name }}</strong></h2>
-        <table id="infoPanel" class="table table-bordered"
-               style="background-color: whitesmoke; box-shadow: 10px 5px 5px floralwhite;padding:5px">
-
-            <thead class="table table-head-wrap">
-            <tr>
-                <th scope="col">课题录入说明</th>
-            </tr>
-            </thead>
-            <tbody class="table-content">
-            <tr>
-                <td>
-                    如果课题录入未开始，展示说明内容；如果已经开始，展示下面的表单
-                </td>
-            </tr>
-            </tbody>
-
-        </table>
         <table id="processPanel" class="table table-bordered"
                style="background-color: whitesmoke; box-shadow: 10px 5px 5px floralwhite;padding:5px">
 
@@ -90,7 +73,9 @@
             <tbody>
             <tr>
                 <td>
-                    询问是否创建工作簿；如果确认，发送ajax请求创建对应流程；并展示表单
+                    <p>需求流程：</p>
+                    <img class="pt-relative " src="{% static 'images/process.png' %}" width="100%"/>
+                    <br><br>
                     <ul style="list-style: none" class="icon-list">
                         <li id="createProcess" class="ifa"
                             style="width: 100px;box-shadow: 10px 5px 5px floralwhite;padding:5px"
@@ -100,7 +85,7 @@
                         </li>
 
                     </ul>
-                    流程图
+
                 </td>
             </tr>
 
@@ -152,7 +137,7 @@
                                     id="project_research_direction" multiple
                                     required>
                                 {% for t in project_directions %}
-                                    <option value="{{ t.0 }}">{{ t.1 }}</option>
+                                    <option value="{{ t.0 }}">{{ t.0 }}-{{ t.1 }}</option>
                                 {% endfor %}
                             </select>
                         </div>

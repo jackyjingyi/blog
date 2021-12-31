@@ -1,0 +1,276 @@
+{#    #1. display project infomation #}
+{#    #2. management menus #}
+{#    #3. link to management system #}
+{% extends 'projectBase.html' %}
+{% load static %}
+{% block content %}
+    <div class="row" style="margin:30px">
+        {#      #1.  attachment, process  #}
+        <div id="informationDisplayPanel" class="col-md-12">
+            <div class="tab-pane fade in active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                <div id="inputPanel" class="table table-bordered"
+                     style="background-color: whitesmoke; box-shadow: 10px 5px 5px floralwhite;padding:5px">
+                    <div class="pull-left" style="margin-left: 30px"><a href="javascript:void (0)"
+                                                                        id="wordTransformDetail">
+                        <i class="fa fa-file-word" aria-hidden="true">下载</i>
+                    </a>
+                    </div>
+                    <div class="form-group" style="margin:30px">
+                        <div>
+                            <h3 class="text-center">{{ attachment.get_attachment.first.project_name }}
+                            </h3>
+
+                            <p class="text-center">
+                                <i>{{ process.process_executor.first_name }}</i>创建{{ process.get_tasks.last.get_steps.last.step_update_time|date:"Y年n月d日" }}
+                                {#                                <a id="updateAll">修改</a></p>#}
+                        </div>
+                        <form class="g-3 needs-validation" enctype="multipart/form-data" id="update_project" novalidate>
+
+                            <div class="row margin-top-10">
+                                <div class="col-md-12">
+                                    <i class="pull-left icon iconfont icon-miaoshu">
+                                    </i>&nbsp
+                                    <label for="project_name"
+                                           class="form-label d-inline-block mb-2 text-primary"><strong>
+                                        研究课题
+                                    </strong></label>
+                                    <input name="project_name" type="text" class="form-control" id="project_name1"
+                                           maxlength="255"
+                                           placeholder="请输入项目名称"
+                                           value="{{ attachment.get_attachment.first.project_name }}"
+                                           required disabled>
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col-md-3">
+                                    <i class="pull-left icon iconfont icon-miaoshu">
+                                    </i>&nbsp;
+                                    <label for="project_type"
+                                           class="form-label d-inline-block mb-2 text-primary"><strong>
+                                        课题类型
+                                    </strong></label>
+                                    <select name="project_type" class="form-control" id="project_type" required
+                                            value="{{ attachment.get_attachment.first.get_project_type_display }}"
+                                            disabled>
+                                        {% for t in project_types %}
+                                            {% if t.0 == attachment.get_attachment.first.project_type %}
+                                                <option value="{{ t.0 }}" selected>{{ t.1 }}</option>
+                                            {% else %}
+                                                <option value="{{ t.0 }}">{{ t.1 }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <i class="pull-left icon iconfont icon-miaoshu">
+                                    </i>
+                                    <label for="project_research_direction"
+                                           class="form-label d-inline-block mb-2 text-primary"><strong>
+                                        研究方向
+                                    </strong></label>
+                                    <select name="project_research_direction" class="form-control"
+                                            id="project_research_direction"
+                                            value="{{ attachment.get_attachment.first.get_project_research_direction_display }}"
+                                            required disabled>
+                                        {% for t in project_directions %}
+                                            {% if t.0 == attachment.get_attachment.first.project_research_direction %}
+                                                <option value="{{ t.0 }}" selected>{{ t.1 }}</option>
+                                            {% else %}
+                                                <option value="{{ t.0 }}">{{ t.1 }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <i class="pull-left icon iconfont icon-miaoshu">
+                                    </i>&nbsp;
+                                    <label for="project_department_sponsor"
+                                           class="form-label d-inline-block mb-2 text-primary"><strong>
+                                        需求单位联系人
+                                    </strong></label>
+                                    <input name="project_department_sponsor" type="text" class="form-control"
+                                           id="project_department_sponsor" maxlength="255"
+                                           placeholder="请输入联系人姓名"
+                                           value="{{ attachment.get_attachment.first.project_department_sponsor }}"
+                                           required disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <i class="pull-left icon iconfont icon-miaoshu">
+                                    </i>&nbsp;
+                                    <label for="project_department_phone"
+                                           class="form-label d-inline-block mb-2 text-primary"><strong>
+                                        联系电话
+                                    </strong></label>
+                                    <input name="project_department_phone" type="text" class="form-control"
+                                           id="project_department_phone" maxlength="255"
+                                           placeholder="请输入联系电话"
+                                           value="{{ attachment.get_attachment.first.project_department_phone }}"
+                                           required disabled>
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col-md-12">
+                                    <i class="pull-left icon iconfont icon-miaoshu">
+                                    </i>&nbsp;
+                                    <label for="project_department"
+                                           class="form-label d-inline-block mb-2 text-primary"><strong>
+                                        需求单位
+                                    </strong></label>
+
+                                    <input name="project_department" type="text" class="form-control"
+                                           id="project_department"
+                                           maxlength="255"
+                                           placeholder="请输入单位名称"
+                                           value="{{ attachment.get_attachment.first.project_department }}"
+                                           required disabled>
+
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col-md-3">
+                                    <i class="pull-left icon iconfont icon-miaoshu">
+                                    </i>&nbsp;
+                                    <label for="project_research_funding"
+                                           class="form-label d-inline-block mb-2 text-primary"><strong>
+                                        研究经费
+                                    </strong></label>
+                                    <input name="project_research_funding" type="text" class="form-control"
+                                           id="project_research_funding" maxlength="255"
+                                           placeholder="请输入研究经费"
+                                           value="{{ attachment.get_attachment.first.project_research_funding }}"
+                                           required disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <i class="pull-left icon iconfont icon-miaoshu">
+                                    </i>&nbsp;
+                                    <label for="project_outsourcing_funding"
+                                           class="form-label d-inline-block mb-2 text-primary"><strong>
+                                        外协预算
+                                    </strong></label>
+                                    <input name="project_outsourcing_funding" type="text" class="form-control"
+                                           id="project_outsourcing_funding" maxlength="255"
+                                           placeholder="外协预算"
+                                           value="{{ attachment.get_attachment.first.project_outsourcing_funding }}"
+                                           required disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <i class="pull-left icon iconfont icon-miaoshu">
+                                    </i>&nbsp;
+                                    <label for="project_start_time"
+                                           class="form-label d-inline-block mb-2 text-primary"><strong>
+                                        研究实施计划时间（起）
+                                    </strong></label>
+                                    <input name="project_start_time" type="text" class="form-control"
+                                           id="project_start_time" maxlength="255"
+                                           placeholder="项目开始时间"
+                                           value="{{ attachment.get_attachment.first.project_start_time|date:'Y-n-d H:i' }}"
+                                           required disabled>
+                                </div>
+                                <div class="col-md-3">
+                                    <i class="pull-left icon iconfont icon-miaoshu">
+                                    </i>&nbsp;
+                                    <label for="project_end_time"
+                                           class="form-label d-inline-block mb-2 text-primary"><strong>
+                                        研究实施计划时间（止）
+                                    </strong></label>
+                                    <input name="project_end_time" type="text" class="form-control"
+                                           id="project_end_time" maxlength="255"
+                                           placeholder="项目结束时间"
+                                           value="{{ attachment.get_attachment.first.project_end_time|date:'Y-n-d H:i' }}"
+                                           required disabled>
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col-md-12">
+                                    <i class="pull-left icon iconfont icon-miaoshu">
+                                    </i>&nbsp;
+                                    <label for="project_co_group"
+                                           class="form-label d-inline-block mb-2 text-primary"><strong>
+                                        联合工作小组成员及分工
+                                    </strong></label>
+                                    <textarea name="project_co_group" type="text" class="form-control"
+                                              id="project_co_group"
+                                              placeholder="" rows="15"
+                                              value="{{ attachment.get_attachment.first.project_co_group }}"
+                                              required
+                                              disabled>{{ attachment.get_attachment.first.project_co_group }}</textarea>
+                                </div>
+                            </div>
+
+                            <div class="row margin-top-10">
+                                <div class="col-md-12">
+                                    <i class="pull-left icon iconfont icon-miaoshu">
+                                    </i>&nbsp;
+                                    <label for="project_detail"
+                                           class="form-label d-inline-block mb-2 text-primary"><strong>
+                                        具体分项任务内容及安排
+                                    </strong></label>
+                                    <textarea name="project_detail" type="text" class="form-control" id="project_detail"
+                                              placeholder="" rows="15"
+                                              value="{{ attachment.get_attachment.first.project_detail }}"
+                                              required
+                                              disabled>{{ attachment.get_attachment.first.project_detail }}</textarea>
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col-md-12">
+                                    <i class="pull-left icon iconfont icon-miaoshu">
+                                    </i>&nbsp;
+                                    <label for="project_purpose"
+                                           class="form-label d-inline-block mb-2 text-primary"><strong>
+                                        主要创新研究课题内容、目标及意义
+                                    </strong></label>
+                                    <textarea name="project_purpose" type="text" class="form-control"
+                                              id="project_purpose"
+                                              placeholder="" rows="15"
+                                              value="{{ attachment.get_attachment.first.project_purpose }}"
+                                              required
+                                              disabled>{{ attachment.get_attachment.first.project_purpose }}</textarea>
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col-md-12">
+                                    <i class="pull-left icon iconfont icon-miaoshu">
+                                    </i>&nbsp;
+                                    <label for="project_preparation"
+                                           class="form-label d-inline-block mb-2 text-primary"><strong>
+                                        与课题相关的前期工作情况，现有基础条件
+                                    </strong></label>
+                                    <textarea name="project_preparation" type="text" class="form-control"
+                                              id="project_preparation"
+                                              placeholder="" rows="15"
+                                              value="{{ attachment.get_attachment.first.project_preparation }}"
+                                              required
+                                              disabled>{{ attachment.get_attachment.first.project_preparation }}</textarea>
+                                </div>
+                            </div>
+                            <div class="row margin-top-10">
+                                <div class="col-md-12">
+                                    <i class="pull-left icon iconfont icon-miaoshu">
+                                    </i>&nbsp;
+                                    <label for="project_difficult"
+                                           class="form-label d-inline-block mb-2 text-primary"><strong>
+                                        研究课题的重点及难点
+                                    </strong></label>
+                                    <textarea name="project_difficult" type="text" class="form-control"
+                                              id="project_difficult"
+                                              placeholder="" rows="15"
+                                              value="{{ attachment.get_attachment.first.project_difficult }}"
+                                              required
+                                              disabled>{{ attachment.get_attachment.first.project_difficult }}</textarea>
+                                </div>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script type="text/javascript" src="{% static 'ApprovalSystemOCT/js/updateLogProcess.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ApprovalSystemOCT/js/components.js' %}"></script>
+
+{% endblock %}

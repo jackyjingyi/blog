@@ -39,7 +39,7 @@ class ProjectTableHandler(TableHandler):
     template_map = {'^project_name$': {'pos': (0, 7, 0, 0), 'default': '', 'default_replace': '', 'selection': False},
                     '^project_type1$': {'pos': (1, 1, 0, 0), 'default': '前瞻战略研究□', 'default_replace': '前瞻战略研究⌧',
                                         'selection': True},
-                    '^project_type2$': {'pos': (1, 5, 0, 0), 'default': '产品标准化研究□', 'default_replace': '产品标准化研究⌧',
+                    '^project_type2$': {'pos': (1, 5, 0, 0), 'default': '产品管理研究□', 'default_replace': '产品管理研究⌧',
                                         'selection': True},
                     '^project_type3$': {'pos': (3, 7, 0, 0), 'default': '产品创新研究□', 'default_replace': '产品创新研究⌧',
                                         'selection': True},
@@ -124,15 +124,15 @@ class ProjectTableHandler(TableHandler):
 
         _map = {'1': '^project_type1$', '2': '^project_type2$', '3': '^project_type3$'}
         _map_rsd = {
-            '1': '^p_rsd1$',
-            '2': '^p_rsd2$',
-            '3': '^p_rsd3$',
-            '4': '^p_rsd4$',
-            '5': '^p_rsd5$',
-            '6': '^p_rsd6$',
-            '7': '^p_rsd7$',
-            '8': '^p_rsd8$',
-            '9': '^p_rsd9$'
+            '2': '^p_rsd1$',
+            '3': '^p_rsd2$',
+            '4': '^p_rsd3$',
+            '5': '^p_rsd4$',
+            '6': '^p_rsd5$',
+            '7': '^p_rsd6$',
+            '8': '^p_rsd7$',
+            '9': '^p_rsd8$',
+            '10': '^p_rsd9$'
         }
         _map_block = {
             'project_name': '^project_name$',

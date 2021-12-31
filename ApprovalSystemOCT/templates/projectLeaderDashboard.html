@@ -64,7 +64,6 @@
                             <th colspan="sorting" data-action="sort" data-code="projectNo" data-type="0">
                                 项目名称
                             </th>
-                            <th data-code="projectName" data-type="0">项目阶段</th>
                             <th data-code="projectName" data-type="0">项目状态</th>
                             <th data-code="createCompany" data-type="2">负责人
                                 <a class="icon-filter pull-right" id="filter_createCompany">
@@ -77,8 +76,7 @@
                         </tr>
                         </thead>
                         <tbody class="displayProcessObj">
-                        {% block content2 %}
-                        {% endblock %}
+
                         </tbody>
                     </table>
                     <div class="row" style="margin: 0">
@@ -103,38 +101,14 @@
 
     <script>
         const csrftoken = getCookie('csrftoken');
-        const task_dict = {
-            'type': {
-                '1': '需求录入',
-                '2': '管理员分发',
-                '3': '线上修订',
-                '4': '整理汇总',
-                '5': '立项提交',
-                '6': '领导审批'
-            },
-            'state': {
-                '0': '任务进行中',
-                '1': '成功',
-                '2': '被删除',
-                '3': '被合并',
-                '4': '被驳回',
-                '5': '技术失效,联系管理员',
-                '6': '过期',
-                '7': '审批通过',
-                '8': '暂停'
-
-
-            }
-
-        }
         {#$(document).ready(function () {#}
 
         // query data defines query params
         let queryData = {
-            'setTime': '',
-            'setStatus': '',
-            'keyword': '',
-            'user': '',
+            'setTime': '',  // same
+            'setStatus': '',  // approval processing / approved
+            'keyword': '',   // same
+            'user': '{{ user.id }}',    // process leader id
         }
         let sessionURL = ""
         get_process_list(genUrl())
@@ -143,47 +117,13 @@
         // build block
         $("#breadcrumbRightSide").append(
             "<ol class='breadcrumb' id='title-right-side'>" +
-            "<li class='backToMainButton'><a href='javascript:void(0)' data-target='0' data-action='topFilter'>所有课题</a></li>" +
-            "<li class='backToMainButton'><a href='javascript:void(0)' data-target='1' data-action='topFilter'>我的课题</a></li>" +
+            "<li class='backToMainButton'><a href='javascript:void(0)' data-target='0' data-action='topFilter'>待审批</a></li>" +   // process task 6 eq processing code
+            "<li class='backToMainButton'><a href='javascript:void(0)' data-target='1' data-action='topFilter'>已审批</a></li>" +   // process task 6 eq success code/ fail
             {#"<li class='backToMainButton'><a href='javascript:void(0)' data-target='2' data-action='topFilter'>我的审批</a></li>" +#}
             "</ol>"
         )
 
         // top right position , filter if projects are created by user themselves
-        $("a[data-action=topFilter]").on("click", function () {
-            // 用户
-            let ch = this
-            $("a[data-action=topFilter]").each(function (idx, val) {
-
-                if (val === ch) {
-                    $(this).css("background-color", "#337b8e");
-                    $(this).css("color", "#FFFFFF");
-                } else {
-                    $(this).css("background-color", "");
-                    $(this).css("color", "#676A6C");
-                }
-            })
-            // todo: add wait process,
-
-            if ($(this).data("target") === 0) {
-                // all projects,
-
-                queryData["user"] = "";
-
-                let url = genUrl()
-                // 更新全局url
-                get_process_list(url)
-            } else if ($(this).data("target") === 1) { // if ($(this).data("target") === 1)
-                queryData["user"] = "{{ user.pk }}";
-                let user_is_authenticated = ("{{ user.is_authenticated }}".toLowerCase() === 'true');
-                if (user_is_authenticated === true) {
-                    let url = genUrl()
-                    get_process_list(url)
-                } else {
-                    window.location.href = "/members/login_to_app/"
-                }
-            }
-        })
 
         $("a[data-action=setTime]").on("click", function () {
             const val = $(this).text()
@@ -243,7 +183,7 @@
         })
 
         function genUrl() {
-            let url = "/projectSystem/processList/?format=json&process_pattern_id=1"
+            let url = "/projectSystem/processList/?format=json"
 
             if (queryData["setTime"] !== "") {
                 let currentDate = new Date()
@@ -258,22 +198,23 @@
                     url += "&create_time__gte=" + currentDate.format("yyyy-MM-dd hh:mm:ss")
                         + "&create_time__lt=" + endDate.format("yyyy-MM-dd hh:mm:ss");
                 } else {
+                    // create time
                     let q_date = addDays(currentDate, 0 - parseInt(queryData["setTime"]));
                     url += "&create_time__gte=" + q_date.format("yyyy-MM-dd hh:mm:ss");
                 }
             }
             if (queryData["setStatus"] !== "") {
                 // status
-                // all - 0 - null
+                // all - 0 - null   ("0", "全部"), ("1", "已审批"), ("2", "待审批")
                 if (queryData["setStatus"] !== "0") {
-                    url += "&status=" + queryData["setStatus"];
+                    url += "&approval_status=" + queryData["setStatus"];
                 }
             }
             if (queryData["keyword"] !== "") {
                 url += "&search_value=" + queryData["keyword"]
             }
             if (queryData["user"] !== "") {
-                url += "&process_owner=" + queryData["user"]
+                url += "&process_leader_id=" + queryData["user"]
             }
             sessionURL = url
             return url
@@ -283,10 +224,11 @@
             // 搜索
             let url = genUrl();
             get_process_list(url)
-        })
+        });
+
         $("button[data-action=refreshBtn]").on("click", function () {
             // 重置
-            console.log("here reset")
+
             $("a[data-action=setTime]").each(function (idx, element) {
                 $(element).css("background-color", "")
             });
@@ -302,11 +244,11 @@
             }
             $(".badge").each(function () {
                 $(this).text("")
-
             })
+
             get_process_list(genUrl())
         });
-        {# })#}
+
 
         function getCookie(name) {
             let cookieValue = null;
@@ -363,18 +305,6 @@
                 this.is_admin = this.isAdmin();
             }
 
-            get_object_permissions(obj) {
-                // get user's permissions
-                // obj -> str process id
-
-
-            }
-
-            action() {
-                // do actions
-
-            }
-
             isAdmin() {
                 let ans = false
                 $.ajax({
@@ -391,6 +321,9 @@
                 return ans
             }
 
+            isLeader() {
+                // todo: check if user is leader
+            }
 
         }
 
@@ -462,19 +395,19 @@
                 switch (this.tasks.length) {
                     case 1:
                         // input
-                        return ["input", this.tasks[0].task_state, this.tasks[0].task_type]
+                        return ["input", this.tasks[0].task_state]
                     case 2:
                         // dispatch
-                        return ["dispatch", this.tasks[1].task_state, this.tasks[1].task_type]
+                        return ["dispatch", this.tasks[1].task_state]
                     case 3:
                         //
-                        return ["edit", this.tasks[2].task_state, this.tasks[2].task_type]
+                        return ["edit", this.tasks[2].task_state]
                     case 4:
-                        return ["re-dispatch", this.tasks[3].task_state, this.tasks[3].task_type]
+                        return ["re-dispatch", this.tasks[3].task_state]
                     case 5:
-                        return ["re-submit", this.tasks[4].task_state, this.tasks[4].task_type]
+                        return ["re-submit", this.tasks[4].task_state]
                     case 6:
-                        return ["approval", this.tasks[5].task_state, this.tasks[5].task_type]
+                        return ["approval", this.tasks[5].task_state]
                 }
             }
 
@@ -495,16 +428,14 @@
             display(user) {
                 // user = sessionuser
                 // exclude fail
-                if (this.process_status !== '3') {
+                if (this.tasks.length === 6) {
                     let actList = this.actionList(user)
                     console.log(actList)
                     let current_info = this.get_current_state()
                     let li = "<tr><td>" + this.project_name + "</td>" +
-                        "<td>" + task_dict.type[current_info[2]] + "</td>" +
-                        "<td>" + task_dict.state[current_info[1]] + "</td>" +
+                        "<td>" + current_info[0] + "</td>" +
                         "<td>" + this.process_owner.first_name + "</td>" +
-                        "<td><ul class='list-inline style='list-style: none'>" +
-                        "<li class='list-inline-item'><a href='/projectSystem/projectDetail/" + this.process_order_id + "' class='btn btn-sm btn-primary' data-action='view'  data-target='" + this.process_order_id + "'>查看</a></li>"
+                        "<td><ul class='list-inline style='list-style: none'>"
                     for (let i of actList) {
                         switch (i) {
                             case 'edit':
@@ -531,11 +462,20 @@
                             case 'submit2':
                                 li += "<li class='list-inline-item'><a class='btn btn-sm btn-primary' data-action='submit2' onclick='callAction(this)' data-target='" + this.process_order_id + "'>提交</a></li>"
                                 break;
+                            case 'approval':
+                                li += "<li class='list-inline-item'><a class='btn btn-sm btn-primary' data-action='approval' onclick='callAction(this)' data-target='" + this.process_order_id + "'>通过</a></li>"
+                                break;
+                            case 'deny':
+                                li += "<li class='list-inline-item'><a class='btn btn-sm btn-primary' data-action='deny' onclick='callAction(this)' data-target='" + this.process_order_id + "'>驳回</a></li>"
+                                break;
+                            case 'withdraw':
+                                li += "<li class='list-inline-item'><a class='btn btn-sm btn-primary' data-action='withdraw' onclick='callAction(this)' data-target='" + this.process_order_id + "'>撤回</a></li>"
+                                break;
                         }
                     }
-                    {#if (actList.length === 0) {#}
-                    {#    li += "<li class='list-inline-item'></li>";#}
-                    {# }#}
+                    if (actList.length === 0) {
+                        li += "<li class='list-inline-item'>无需操作</li>";
+                    }
                     li += "</ul></td></tr>";
                     return li
                 }
@@ -738,7 +678,6 @@
                 let project_name = this.project_name;
                 let process_owner = this.process_owner;
                 let leader = this.process_leader
-                console.log(leader)
                 let tik = 1
                 if (user.id == this.process_owner.id) {
                     $.ajax({
@@ -761,8 +700,7 @@
                                             return obj;
                                         }, {})
                                         x["process_id"] = process_id
-                                        x["project_sponsor"] = $("#project_sponsor").val()
-                                        x["project_head_master"] = $("#project_head_master").val()
+
                                         console.log(x)
                                         $.ajax({
                                             url: "/projectSystem/re-submit/",
@@ -770,16 +708,8 @@
                                             headers: {'X-CSRFToken': csrftoken},
                                             data: x,
                                             success: function (data) {
-
-                                                $($(layro[0]).children()[1]).empty();
-                                                $($(layro[0]).children()[1]).append("<p style='margin: 30px;margin-bottom:-15px'>" + project_name + "<strong>提交成功</strong>" + "</p>"
-                                                );
-                                                setTimeout(function () {
-                                                    layer.close(index);
-                                                }, 2000);
-                                                location.reload();
+                                                console.log(data)
                                             }
-
 
                                         })
 
@@ -790,10 +720,8 @@
                             function init_owner() {
                                 let project_sponsor = $("#project_sponsor");
                                 let project_leader = $("#project_head_master");
-                                {#project_sponsor.val(process_owner.id).change();#}
-                                $("select[name=project_sponsor] option[value=" + process_owner.id + "]").attr("selected", "selected");
-                                $("select[name=project_head_master] option[value=" + leader + "]").attr("selected", "selected");
-                                console.log(project_leader.val())
+                                project_sponsor.val(process_owner.id).change();
+                                project_leader.val(leader).change();
                                 project_sponsor.attr("disabled", "disabled");
                                 project_leader.attr("disabled", "disabled");
                             }
@@ -826,6 +754,163 @@
                 }
 
 
+            }
+
+            approval(user) {
+                let process_id = this.process_order_id
+                let project_name = this.project_name
+                if (user.id == this.process_leader) {
+                    // current login user has the authority to dispatch project
+                    // 1. call layer
+                    layer.ready(
+                        layer.open({
+                            type: 1,
+                            area: ['780px', '500px'],
+                            shadeClose: true, //点击遮罩关闭
+                            title: '课题提交确认',
+                            content: "<div><div class='row' style='margin: 0'>" +
+                                "<p style='margin-left: 30px'>是否批准《" + project_name + "》立项？</p>" +
+                                "</div>" +
+                                "<div class='row' style='margin-left: 30px;margin-top:30px;margin-right: 30px'><div class='col-md-6'>" +
+                                "<textarea name='comments' rows=12 cols=110 type='text' id='commentsid' placeholder='请输入审批记录'></textarea>" +
+                                "</div></div></div>",
+                            btn: ['确认', '取消'],
+                            yes: function (index, layro) {
+                                let comments = $(layro).find(".layui-layer-content").find("textarea").val()
+                                console.log(comments)
+                                $.ajax({
+                                    url: "/projectSystem/approval-to-annual/",  // todo 后端
+                                    data: {
+                                        'process_id': process_id,
+                                        'comments': comments,
+                                        'move': "approval",
+
+                                    },
+                                    type: "post",
+                                    headers: {'X-CSRFToken': csrftoken},
+                                    success: function (data) {
+                                        $(layro).find(".layui-layer-content").empty();
+                                        $(layro).find(".layui-layer-content").append(
+                                            "<p>审批成功！</p>"
+                                        )
+                                    }
+                                })
+                                setTimeout(function () {
+                                    layer.close(index)
+                                    location.reload();
+                                }, 1500);
+                            }
+                        })
+                    );
+
+                } else {
+                    this.no_rights_display_layer('审批');
+                }
+
+            }
+
+            deny(user) {
+                let process_id = this.process_order_id
+                let project_name = this.project_name
+                if (user.id == this.process_leader) {
+                    // current login user has the authority to dispatch project
+                    // 1. call layer
+                    layer.ready(
+                        layer.open({
+                            type: 1,
+                            area: ['780px', '500px'],
+                            shadeClose: true, //点击遮罩关闭
+                            title: '课题提交确认',
+                            content: "<div><div class='row' style='margin: 0'>" +
+                                "<p style='margin-left: 30px'>是否驳回《" + project_name + "》立项？</p>" +
+                                "</div>" +
+                                "<div class='row' style='margin-left: 30px;margin-top:30px;margin-right: 30px'><div class='col-md-6'>" +
+                                "<textarea name='comments' rows=12 cols=110 type='text' id='commentsid' placeholder='请输入记录'></textarea>" +
+                                "</div></div></div>",
+                            btn: ['确认', '取消'],
+                            yes: function (index, layro) {
+                                let comments = $(layro).find(".layui-layer-content").find("textarea").val()
+                                console.log(comments)
+                                $.ajax({
+                                    url: "/projectSystem/approval-to-annual/",  // todo 后端
+                                    data: {
+                                        'process_id': process_id,
+                                        'comments': comments,
+                                        'move': "deny",
+
+                                    },
+                                    type: "post",
+                                    headers: {'X-CSRFToken': csrftoken},
+                                    success: function (data) {
+                                        $(layro).find(".layui-layer-content").empty();
+                                        $(layro).find(".layui-layer-content").append(
+                                            "<p>驳回成功！</p>"
+                                        )
+                                    }
+                                })
+                                setTimeout(function () {
+                                    layer.close(index)
+                                    location.reload();
+                                }, 1500);
+                            }
+                        })
+                    );
+
+                } else {
+                    this.no_rights_display_layer('审批');
+                }
+            }
+
+            withdraw (user) {
+                let process_id = this.process_order_id
+                let project_name = this.project_name
+                if (user.id == this.process_leader) {
+                    // current login user has the authority to dispatch project
+                    // 1. call layer
+                    layer.ready(
+                        layer.open({
+                            type: 1,
+                            area: ['780px', '500px'],
+                            shadeClose: true, //点击遮罩关闭
+                            title: '课题提交确认',
+                            content: "<div><div class='row' style='margin: 0'>" +
+                                "<p style='margin-left: 30px'>是否撤销有关《" + project_name + "》立项的命令？</p>" +
+                                "</div>" +
+                                "<div class='row' style='margin-left: 30px;margin-top:30px;margin-right: 30px'><div class='col-md-6'>" +
+                                "<textarea name='comments' rows=12 cols=110 type='text' id='commentsid' placeholder='请输入记录'></textarea>" +
+                                "</div></div></div>",
+                            btn: ['确认', '取消'],
+                            yes: function (index, layro) {
+                                let comments = $(layro).find(".layui-layer-content").find("textarea").val()
+                                console.log(comments)
+                                $.ajax({
+                                    url: "/projectSystem/approval-to-annual/",  // todo 后端
+                                    data: {
+                                        'process_id': process_id,
+                                        'comments': comments,
+                                        'move': "withdraw",
+
+                                    },
+                                    type: "post",
+                                    headers: {'X-CSRFToken': csrftoken},
+                                    success: function (data) {
+                                        $(layro).find(".layui-layer-content").empty();
+                                        $(layro).find(".layui-layer-content").append(
+                                            "<p>撤销成功！</p>"
+                                        )
+                                    }
+                                })
+                                setTimeout(function () {
+                                    layer.close(index)
+                                    location.reload();
+                                }, 1500);
+                            }
+                        })
+                    );
+
+                } else {
+                    this.no_rights_display_layer('审批');
+                }
             }
 
             actionList(user) {
@@ -866,16 +951,18 @@
                             ans.push('edit')
                             break;
                         case 6:
+                            ans.push("withdraw")
                             break
                     }
 
                 }
+
                 return ans
             }
 
 
             selfActions(user) {
-                if (user.id == this.process_owner.id) {
+                if (user.id == this.process_leader) {
 
                     switch (this.tasks.length) {
                         // task0 : input
@@ -914,11 +1001,12 @@
                                 return []
                             }
                         case 6:
-                            if (this.tasks[5].task_state == '8') {
-                                // deny
-                                return ['edit', 're-submit',]
+                            if (this.tasks[5].task_state == "0") {
+                                // 未审批
+                                return ['approval', 'deny']
                             } else {
-                                return []
+                                // 已审批 可撤回
+                                return ['withdraw']
                             }
                     }
                 } else {
@@ -937,7 +1025,7 @@
                 url: link,
                 type: "get",
                 success: function (data) {
-                    console.log(data)
+                    console.log(data, link)
                     total_pages = data.total_pages;
                     // page item number
                     if (data.results.length > 0) {
@@ -946,27 +1034,20 @@
                         for (let k of data.results) {
                             // add page number
                             k['page'] = data.current;
-                            if ((sessionUser.is_authenticated === "True" && k.process_owner.id == sessionUser.id) || (sessionUser.is_admin)) {
+                            if ((sessionUser.is_authenticated === "True" && (k.process_owner.id == sessionUser.id || k.process_leader == sessionUser.id)) || (sessionUser.is_admin)) {
 
                                 let p = ProcessObject.create(k);
                                 $("tbody[class=displayProcessObj]").first().append(p.display(sessionUser))
                             } else {
                                 if (!queryData.user == "") {
 
-                                    if (k.tasks[0].task_state === '1' && queryData.user == k.process_owner.id) {
+                                    if (k.tasks[0].task_state != '2' && queryData.user == k.process_leader) {
                                         // only display first task success process
                                         let p = ProcessObject.create(k);
-                                        $("tbody[class=displayProcessObj]").first().append(p.display(sessionUser))
-                                    }
-                                } else {
-
-                                    if (k.tasks[0].task_state === '1') {
-                                        // only display first task success process
-                                        let p = ProcessObject.create(k);
+                                        console.log(p)
                                         $("tbody[class=displayProcessObj]").first().append(p.display(sessionUser))
                                     }
                                 }
-
                             }
                         }
                     } else {
@@ -975,7 +1056,7 @@
                     // todo need consider the page issue
                     let psize = 0
                     for (let p of ProcessObject.instance) {
-                        if (p.process_status !== '3') {
+                        if (p.process_state !== '2' && p.get_current_state()[0] === "approval") {
                             psize += 1;
                         }
                     }
@@ -1063,6 +1144,15 @@
                     break;
                 case 'submit2':
                     process.firstSubmit(sessionUser, "edit");
+                    break;
+                case 'approval':
+                    process.approval(sessionUser)
+                    break;
+                case 'deny':
+                    process.deny(sessionUser)
+                    break;
+                case 'withdraw':
+                    process.withdraw(sessionUser)
                     break;
             }
             console.log("process finish ")
@@ -1160,137 +1250,7 @@
             return _content
         }
 
-        function get_group_leader_todo(user) {
-            let check_dict = {
-                'status': {
-                    '1': '成功',
-                    '2': '进行中',
-                },
-                'state': {
-                    '1': '完成',
-                },
-                'type': {
-                    '1': '创建',
-                    '2': '编辑',
-                    '3': '提交',
-                    '4': '审批通过',
-                    '5': '删除',
-                    '6': '撤回',
-                    '7': '驳回',
-                    '8': '分发',  //占位
-                    '9': '合并',
-                    '10': '分发/指派',
-                    '11': '提交立项',
-                    '12': '占位',
-                }
-            }
-            if (user.is_authenticated) {
-                $.ajax({
-                    url: "/projectSystem/check_information_for_group_leader/",
-                    type: "get",
-                    success: function (data) {
-                        console.log(data)
-                        let content_init = "<div class='table table-bordered'><table class='table table-bordered table-striped'><thead><tr>" +
-                            "<th scope='col'>课题名称</th>" +
-                            "<th scope='col'>状态</th>" +
-                            "<th scope='col'>提交日期</th>" +
-                            "<th scope='col'>备注</th>" +
-                            "</tr></thead><tbody>"
-                        for (let item of data.steps) {
-                            // step.fields
-                            let step_type = check_dict.type[item.fields.step_type];
-                            let step_create_time = item.fields.step_create_time.slice(0, 10);
-                            let comments = item.fields.comments;
-                            let project_name = item.fields.step_attachment_snapshot[0].fields.project_name;
-                            content_init += "<tr><td>" + project_name + "</td>" +
-                                "<td>" + step_type + "</td>" +
-                                "<td>" + step_create_time + "</td>" +
-                                "<td>" + comments + "</td></tr>"
-                        }
-                        content_init += "</tbody></table></div>"
-                        layer.ready(
-                            layer.open({
-                                type: 1,
-                                area: ['780px', '500px'],
-                                shadeClose: true, //点击遮罩关闭
-                                title: '代办事项',
-                                content: content_init,
-                                btn: ['确认', '取消'],
-                                yes: function (index, layro) {
-                                    layer.close(index)
-
-                                }
-                            })
-                        )
-
-                    },
-                    error: function (error_data) {
-                        console.log(error_data)
-                    }
-                })
-            }
-        }
-
-        get_group_leader_todo(sessionUser)
-
-        function get_user_todo(user) {
-            if (user.is_authenticated) {
-
-                $.ajax({
-                    url: "/projectSystem/task_info/get-leader-todos/",
-                    type: "get",
-                    success: function (data) {
-
-                        if (data.length > 0) {
-                            let content_init = "<div class='table table-bordered'><table class='table table-bordered table-striped'><thead><tr>" +
-                                "<th scope='col'>课题名称</th>" +
-                                "<th scope='col'>提交人</th>" +
-                                "<th scope='col'>提交日期</th>" +
-                                "<th scope='col'>状态</th>" +
-                                "</tr></thead><tbody>"
-                            for (let t of data) {
-                                let name = ""
-                                // todo name
-                                $.ajax({
-                                    url: "/projectSystem/processList/?format=json&process_order_id=" + t.process,
-                                    type: "get",
-                                    async: false,
-                                    success: function (pd) {
-
-                                        name = pd.results[0].process_owner.first_name;
-                                    }
-                                })
-                                content_init += "<tr>" +
-                                    "<td><a href='/projectSystem/project_leader_dashboard/'>" + t.steps[t.steps.length - 1].step_attachment_snapshot[0].fields.project_name + "</a></td>" +
-                                    "<td>" + name + "</td>" +
-                                    "<td>" + t.task_creat_time.slice(0, 10) + "</td>" +
-                                    "<td>待审批</td></tr>"
-                            }
-                            content_init += "</tbody></table></div>"
-
-                            layer.ready(
-                                layer.open({
-                                    type: 1,
-                                    area: ['780px', '500px'],
-                                    shadeClose: true, //点击遮罩关闭
-                                    title: '代办事项',
-                                    content: content_init,
-                                    btn: ['确认', '取消'],
-                                    yes: function (index, layro) {
-                                        layer.close(index)
-
-                                    }
-                                })
-                            )
-                        }
-                    }
-                })
-
-
-            }
-        }
-
-        get_user_todo(sessionUser);
 
     </script>
+
 {% endblock %}

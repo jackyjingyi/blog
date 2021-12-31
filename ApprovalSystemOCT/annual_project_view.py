@@ -19,6 +19,7 @@ from rest_framework import generics
 from ApprovalSystemOCT.models import Process, Task, Step, Attachment, ProjectImplement,ProjectImplementTitle
 from ApprovalSystemOCT.project_statics.static_data import *
 from ApprovalSystemOCT.serializers import ProjectImplementTitleSerializer
+from ApprovalSystemOCT.views import get_attr_from_status_state
 
 def _iter_get_attachment(process, **kwargs):
     app_name = kwargs.get('app_name')
@@ -33,14 +34,12 @@ def _iter_get_attachment(process, **kwargs):
 
 def annual_projects(request, user=None):
     if user and request.user.is_authenticated:
-        query_set = Process.objects.filter(process_pattern__process_type='7', status='3', process_executor=request.user)
+        print(user)
+        query_set = Process.objects.filter(process_pattern__process_type=get_attr_from_status_state("process","type","annual"), process_owner=request.user).exclude(process_state=get_attr_from_status_state("process","state","delete"))
     else:
-        query_set = Process.objects.filter(process_pattern__process_type='7', status='3')
+        query_set = Process.objects.filter(process_pattern__process_type=get_attr_from_status_state("process","type","annual")).exclude(process_state=get_attr_from_status_state("process","state","delete"))
     res = {}
-    for p in query_set:
-        if p.prev:
-            for i in p.get_prev():
-                res[i] = Process.objects.get(pk=i)
+    print(query_set)
 
     context = {
         'template_name': "我的课题",

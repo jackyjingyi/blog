@@ -2,12 +2,13 @@
 from datetime import datetime
 
 __all__ = ["BASE_SIDEBAR_INDEX", "INTERNAL", "TIME_INTERVAL", "STATUS_LIST", "PROCESS_TYPE", "PROJECT_TYPE",
-           "PROJECT_RESEARCH_DIRECTION", "PROJECT_REQUIREMENT_VERBOSE", "TASK_TYPE"]
+           "PROJECT_RESEARCH_DIRECTION", "PROJECT_REQUIREMENT_VERBOSE", "TASK_TYPE","APPROVAL_STATUS_LIST"]
 
 # Left side bar menu
 BASE_SIDEBAR_INDEX = {
     "课题需求": {
-        "general": [("课题录入", "project_creation"), ("我的课题", "my_projects"), ("所有课题", "display_all_projects"), ]
+        "general": [("课题录入", "project_creation"), ("我的审批", "project_leader_dashboard")]
+        # ("我的课题", "my_projects"), ("所有课题", "display_all_projects"),
         # ("我的流程", "my_projects")],
     },
     "立项课题": {
@@ -36,8 +37,12 @@ STATUS_LIST = [
     ("0", "全部"), ("1", "申报中"), ("2", "待审批"), ("3", "已立项"), ("4", "已终止")
 ]
 
+APPROVAL_STATUS_LIST = [
+    ("0", "全部"), ("1", "已审批"), ("2", "待审批")
+]
+
 PROJECT_TYPE = [
-    ('0', '未选择'), ('1', '前瞻战略研究'), ('2', '产品标准化研究'), ('3', '产品创新研究')  # 前瞻战略研究
+    ('0', '未选择'), ('1', '前瞻战略研究'), ('2', '产品管理究'), ('3', '产品创新研究')  # 前瞻战略研究
 ]
 PROJECT_RESEARCH_DIRECTION = [
     ('2', '新型城镇化'), ('3', '文化&品牌'), ('4', '主题公园&新场景'), ('5', '新商业'), ('6', '产品管理'), ('7', '旅游大数据'),

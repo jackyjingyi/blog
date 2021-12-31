@@ -27,6 +27,8 @@ class ProcessTypeSerializer(serializers.ModelSerializer):
             "process_creator", "process_executor")
 
 
+
+
 class AttachmentSerializer(serializers.ModelSerializer):
     attrs = serializers.StringRelatedField(source="get_attachment", read_only=True)
 
@@ -42,7 +44,7 @@ class StepSerializer(serializers.ModelSerializer):
         model = Step
         fields = (
             "step_id", "task", "step_seq", "step_owner", "step_attachment_snapshot", "step_attachment", "step_status",
-
+            "step_assigner","step_assignee"
         )
 
 
@@ -58,22 +60,6 @@ class TaskSerializer(serializers.ModelSerializer):
         response["steps"] = sorted(response["steps"], key=lambda x: x["step_seq"])
         return response
 
-
-class ProcessSerializer(serializers.ModelSerializer):
-    tasks = TaskSerializer(many=True, read_only=True)
-    process_owner = serializers.StringRelatedField(source="get_owner_name", read_only=True)
-    current_status = serializers.StringRelatedField(source="get_current_status", read_only=True)
-    target_detail = serializers.HyperlinkedIdentityField(view_name="project_detail")
-
-    class Meta:
-        model = Process
-        fields = "__all__"
-        # depth = 1
-
-    def to_representation(self, instance):
-        response = super().to_representation(instance)
-        response["tasks"] = sorted(response["tasks"], key=lambda x: x["task_seq"])
-        return response
 
 
 class ProjectImplementTitleSerializer(serializers.ModelSerializer):
@@ -138,3 +124,21 @@ class GroupObjectPermissionSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroupObjectPermission
         fields = "__all__"
+
+
+class ProcessSerializer(serializers.ModelSerializer):
+    tasks = TaskSerializer(many=True, read_only=True)
+    process_owner = UserSerializer(read_only=True)
+    current_status = serializers.StringRelatedField(source="get_current_status", read_only=True)
+    target_detail = serializers.HyperlinkedIdentityField(view_name="project_detail")
+
+    class Meta:
+        model = Process
+        fields = "__all__"
+        # depth = 1
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response["tasks"] = sorted(response["tasks"], key=lambda x: x["task_seq"])
+        return response
+
