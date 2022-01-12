@@ -202,8 +202,11 @@ STATUS_STATE = {
                 # admin to re-dispatch/packup/create  allow admin re-dispatch, create packup delete
                 're-submit': '5',  # to annualproject allow user edit submit, allow leader approval deny
                 'approval': '6',
-                'implement': '7',
-                'annual_init': '8'
+                'annual_implement': '7',
+                'annual_init': '8',  # process 2 first task type
+                'outcome_upload': '9',
+                'project_finish': '10',
+                'files_upload': '11',
 
             },
             'status': {

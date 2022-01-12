@@ -24,7 +24,7 @@
                                 </h3>
 
                                 <p class="text-center">
-                                    <i>{{ process.process_executor.first_name }}</i>创建于{{ process.create_time|date:"Y年n月d日" }}
+                                    <i>{{ process.process_owner.first_name }}</i>创建于{{ process.create_time|date:"Y年n月d日" }}
                                     {#                                <a id="updateAll">修改</a></p>#}
                             </div>
                             <form class="g-3 needs-validation" enctype="multipart/form-data" id="update_project"
@@ -353,6 +353,9 @@
             const requirementID = "{{ obj.pk }}"
             const companies = JSON.parse("{{ obj.project_outsourcing_companies }}".replace(/&quot;/g, '"'))
             const com_info = JSON.parse("{{ obj.project_outsourcing_info }}".replace(/&quot;/g, '"'))
+            const user = "{{ user.id }}"
+            const process_owner_id = "{{ process.process_owner.id }}"
+
             function addcompanies() {
                 let context = ""
                 for (let i = 0; i < companies.length; i++) {
@@ -360,17 +363,17 @@
                         context += "<div class='row margin-top-10'>" +
                             "<div class='col-md-6'>" +
                             "<i class='pull-left icon iconfont icon-miaoshu'></i>&nbsp;" +
-                            "<label for='project_outsourcing_companies_" + (i+1).toString() + "' class='form-label d-inline-block mb-2 text-primary'>" +
-                            "<strong>外部合作单位" + (i+1).toString() +
+                            "<label for='project_outsourcing_companies_" + (i + 1).toString() + "' class='form-label d-inline-block mb-2 text-primary'>" +
+                            "<strong>外部合作单位" + (i + 1).toString() +
                             "</strong></label>" +
-                            "<input name='project_outsourcing_companies_" + (i+1).toString() + "' type='text' class='form-control' id='project_outsourcing_companies_" + toString(i) + "'" +
+                            "<input name='project_outsourcing_companies_" + (i + 1).toString() + "' type='text' class='form-control' id='project_outsourcing_companies_" + toString(i) + "'" +
                             "maxlength='255'value='" + companies[i] + "' required disabled></div>" +
                             "<div class='col-md-6'>" +
                             "<i class='pull-left icon iconfont icon-miaoshu'></i>&nbsp;" +
-                            "<label for='project_outsourcing_info" + (i+1).toString() + "' class='form-label d-inline-block mb-2 text-primary'>" +
-                            "<strong>外部合作单位" + (i+1).toString() +
+                            "<label for='project_outsourcing_info" + (i + 1).toString() + "' class='form-label d-inline-block mb-2 text-primary'>" +
+                            "<strong>外部合作单位" + (i + 1).toString() +
                             "</strong></label>" +
-                            "<input name='project_outsourcing_info_" + (i+1).toString() + "' type='text' class='form-control' id='project_outsourcing_info_" + toString(i) + "'" +
+                            "<input name='project_outsourcing_info_" + (i + 1).toString() + "' type='text' class='form-control' id='project_outsourcing_info_" + toString(i) + "'" +
                             "maxlength='255'value='" + com_info[i] + "' required disabled></div></div>"
 
                     }
@@ -380,15 +383,31 @@
             }
 
             addcompanies()
-            let leftSideBarSelector = $("#annual_all_projects");
-            // adds second level menu onto left sidebar
-            leftSideBarSelector.empty();
-            leftSideBarFunc(leftSideBarSelector, "课题详情", '', 'active');
-            leftSideBarFunc(leftSideBarSelector, "进度管理", '/projectSystem/Project/implement/' + processID + '/progress/', '');  // 进度管理，href待更新
-            leftSideBarFunc(leftSideBarSelector, "成果上传", '', '');
-            leftSideBarFunc(leftSideBarSelector, "结题详情", '', '');
-            leftSideBarFunc(leftSideBarSelector, "资料上传", '', '');
-            // todo etc second level menus
+            console.log(user,process_owner_id)
+            if (user === process_owner_id) {
+                let leftSideBarSelector = $("#annual_user_projects");
+                // adds second level menu onto left sidebar
+                leftSideBarSelector.empty();
+                leftSideBarSelector.append(
+                    "<span style='margin-left:20%' value>我的立项课题</span>"
+                )
+                leftSideBarFunc(leftSideBarSelector, "课题详情", '', 'active');
+                leftSideBarFunc(leftSideBarSelector, "进度管理", '/projectSystem/Project/implement/' + processID + '/progress/', '');  // 进度管理，href待更新
+                leftSideBarFunc(leftSideBarSelector, "成果上传", '', '');
+                leftSideBarFunc(leftSideBarSelector, "结题详情", '', '');
+                leftSideBarFunc(leftSideBarSelector, "资料上传", '', '');
+            } else {
+                let leftSideBarSelector = $("#annual_all_projects");
+                // adds second level menu onto left sidebar
+                leftSideBarSelector.empty();
+                leftSideBarSelector.append(
+                    "<span style='margin-left:20%' value>所有立项课题</span>")
+                leftSideBarFunc(leftSideBarSelector, "课题详情", '', 'active');
+                leftSideBarFunc(leftSideBarSelector, "进度管理", '/projectSystem/Project/implement/' + processID + '/progress/', '');  // 进度管理，href待更新
+                leftSideBarFunc(leftSideBarSelector, "成果上传", '', '');
+                leftSideBarFunc(leftSideBarSelector, "结题详情", '', '');
+                leftSideBarFunc(leftSideBarSelector, "资料上传", '', '');
+            }
 
         })
     </script>

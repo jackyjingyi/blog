@@ -8,6 +8,7 @@ from django.shortcuts import render, get_object_or_404
 from django.db.models import Q
 from django.core import serializers
 from django.contrib.auth.models import User, Group, Permission
+from django.contrib.contenttypes.models import ContentType, ContentTypeManager
 from django.contrib.auth.decorators import permission_required, login_required
 from django.http import JsonResponse
 from django.http import Http404
@@ -24,7 +25,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import status
 import docx
-from guardian.shortcuts import assign_perm
+from guardian.shortcuts import assign_perm, get_users_with_perms, get_groups_with_perms
 from guardian.models import UserObjectPermission, GroupObjectPermission
 
 from ApprovalSystemOCT.models import Process, Task, TaskType, Step, Book, ProcessType, Attachment, ProjectRequirement, \
@@ -754,7 +755,7 @@ def update_attachment(request):
 
 
 @login_required(login_url="/members/login_to_app/")
-@permission_required('ApprovalSystemOCT.add_projectrequirement', raise_exception=True)
+@permission_required('ApprovalSystemOCT.add_process1', raise_exception=True)
 def project_creation(request):
     """
     返回所有已创建但是未关联attachment的process
@@ -773,42 +774,86 @@ def project_creation(request):
 
 
 @login_required(login_url="/members/login_to_app/")
+@permission_required('ApprovalSystemOCT.manage_process', raise_exception=True)  # 仅系统管理员
 def user_management(request):
+    # 普通员工
     USER_PERMISSIONS_LV0 = [
-        (Permission.objects.get(codename="view_projectrequirement_set_to_annual").id,
-         "ApprovalSystemOCT.view_projectrequirement_set_to_annual",
-         Permission.objects.get(codename="view_projectrequirement_set_to_annual").name, u"允许用户查看已经立项的课题需求。")
+        (Permission.objects.get(codename="view_submitted_process").id,
+         "ApprovalSystemOCT.view_submitted_process",
+         u"查看课题需求", u"允许用户查看已经提交的课题需求。"),
     ]
+    # 录入员
     USER_PERMISSIONS_LV1 = [
-        (Permission.objects.get(codename="add_projectrequirement").id,
-         "ApprovalSystemOCT.add_projectrequirement",
-         "新建课题需求", u"允许用户创建新的课题需求。"), (Permission.objects.get(codename="change_projectrequirement").id,
-                                       "ApprovalSystemOCT.change_projectrequirement",
-                                       "修改课题需求", u"允许用户修改自己的或指派给自己的课题需求。"),
-        (Permission.objects.get(codename="view_projectrequirement").id,
-         "ApprovalSystemOCT.view_projectrequirement",
-         "查看课题需求", u"允许用户查看自己的或指派给自己的课题需求。"), (Permission.objects.get(codename="delete_projectrequirement").id,
-                                               "ApprovalSystemOCT.delete_projectrequirement",
-                                               "删除课题需求", u"允许用户删除自己的或指派给自己的课题需求。")
+        (Permission.objects.get(codename="add_process1").id,
+         "ApprovalSystemOCT.add_process",
+         "新建课题需求", u"允许用户创建新的课题需求。"),
+        (Permission.objects.get(codename="edit_process1").id,
+         "ApprovalSystemOCT.edit_process1",
+         "修改课题需求", u"允许用户修改自己的或指派给自己的课题需求。"),
+        (Permission.objects.get(codename="view_unsubmitted_process").id,
+         "ApprovalSystemOCT.view_unsubmitted_process",
+         "查看未提交课题", u"需求录入第一阶段查看自己创建的尚未提交的需求。"),
+        (Permission.objects.get(codename="submit_process1").id,
+         "ApprovalSystemOCT.submit_process1",
+         "需求初次提交", u"允许用户提交课题需求。"),
+        (Permission.objects.get(codename="delete_process1").id,
+         "ApprovalSystemOCT.delete_process1",
+         "删除课题需求", u"允许用户在需求录入第一阶段删除自己的或指派给自己的课题需求。")
+    ]
+    # 负责人
+    USER_PERMISSIONS_LV2 = [
+        (Permission.objects.get(codename="edit_process3").id,
+         "ApprovalSystemOCT.edit_process3",
+         "线上修订编辑", u"允许用户在线上修订期间编辑课题需求。"),
+        (Permission.objects.get(codename="submit_process2").id,
+         "ApprovalSystemOCT.submit_process2",
+         "立项课题提交", u"允许用户线上修订阶段提交课题需求。"),
+        (Permission.objects.get(codename="edit_process5").id,
+         "ApprovalSystemOCT.edit_process5",
+         "立项编辑", u"允许用户立项审批阶段修改课题需求。"),
+        (Permission.objects.get(codename="submit_process3").id,
+         "ApprovalSystemOCT.submit_process3",
+         "立项提交", u"允许用户提交课题需求进行立项。")
+    ]
+    # 负责领导
+    USER_PERMISSIONS_LV3 = [
+        (Permission.objects.get(codename="approval_process").id,
+         "ApprovalSystemOCT.approval_process",
+         "立项审批", u"审批课题需求，审批成功后转为立项课题。"),
+        (Permission.objects.get(codename="deny_process").id,
+         "ApprovalSystemOCT.deny_process",
+         "立项驳回", u"驳回立项审批申请。"),
+        (Permission.objects.get(codename="withdraw_process").id,
+         "ApprovalSystemOCT.withdraw_process",
+         "撤销", u"撤销立项审批通过或驳回的操作。"),
 
     ]
-    USER_PERMISSIONS_LV2 = [
-        (Permission.objects.get(codename="delete_projectrequirement").id,
-         "ApprovalSystemOCT.delete_projectrequirement",
-         "提交立项需求", u"允许用户提交自己的或指派给自己的课题需求进行立项审批。"),
-        (Permission.objects.get(codename="delete_projectrequirement").id,
-         "ApprovalSystemOCT.delete_projectrequirement",
-         "管理立项课题", u"允许用户对分配给自己的年度立项课题进行管理，包括进度填写、结题等操作。")
-    ]
-    USER_PERMISSIONS_LV3 = [
-        (Permission.objects.get(codename="delete_projectrequirement").id,
-         "ApprovalSystemOCT.delete_projectrequirement",
-         "立项审批", u"审批课题需求，审批成功后转为立项课题。"),
-    ]
+    # 管理员
     USER_PERMISSIONS_LV4 = [
-        (Permission.objects.get(codename="delete_projectrequirement").id,
-         "ApprovalSystemOCT.delete_projectrequirement",
-         "全局管理", u"审批课题需求，审批成功后转为立项课题。"),
+        (Permission.objects.get(codename="edit_process2").id,
+         "ApprovalSystemOCT.edit_process2",
+         "修改课题", u"需求分发阶段，修改需求。"),
+        (Permission.objects.get(codename="dispatch_process").id,
+         "ApprovalSystemOCT.dispatch_process",
+         "分发课题", u"需求分发阶段，分发需求给相关课题负责人。"),
+        (Permission.objects.get(codename="delete_process2").id,
+         "ApprovalSystemOCT.delete_process2",
+         "删除课题", u"需求分发阶段，删除课题。"),
+        (Permission.objects.get(codename="edit_process4").id,
+         "ApprovalSystemOCT.edit_process4",
+         "修改课题", u"整理汇总阶段，修改提交的课题需求。"),
+        (Permission.objects.get(codename="edit_process4").id,
+         "ApprovalSystemOCT.edit_process4",
+         "修改课题", u"整理汇总阶段，修改提交的课题需求。"),
+        (Permission.objects.get(codename="packup_process").id,
+         "ApprovalSystemOCT.packup_process",
+         "合并课题", u"整理汇总阶段，合并提交的课题需求。"),
+        (Permission.objects.get(codename="re_dispatch_process").id,
+         "ApprovalSystemOCT.re_dispatch_process",
+         "指派课题", u"整理汇总阶段，指派提交的课题需求。"),
+        (Permission.objects.get(codename="delete_process4").id,
+         "ApprovalSystemOCT.delete_process4",
+         "删除课题", u"整理汇总阶段，删除提交的课题需求。"),
     ]
     context = {
         'template_name': "用户管理",
@@ -825,9 +870,43 @@ def user_management(request):
     return render(request, 'userManagement.html', context=context)
 
 
+@login_required(login_url="/members/login_to_app/")
+@permission_required('ApprovalSystemOCT.manage_process', raise_exception=True)
+def user_management_update_permission(request):
+    req_data = json.loads(request.body)
+    print(req_data)
+    # cannot change stuff
+
+    if User.objects.filter(pk=req_data.get('user_id')).exists():
+        user = User.objects.get(pk=req_data.get('user_id'))
+    else:
+        return JsonResponse({'msg':'user does not exists!'}, status=404, safe=False)
+    # all permission should within this app
+    update_permissions = req_data.get("permissions").get('update')
+    all_process_permissions = Permission.objects.filter(content_type__app_label=ApprovalsystemoctConfig.name,
+                                                        content_type__model="Process")
+    if update_permissions:
+        # remove current
+        update_permissions = Permission.objects.filter(id__in=update_permissions)
+        # 之前已有的权限
+        exclude_permissions = all_process_permissions.exclude(id__in=[i.id for i in update_permissions])
+        print(exclude_permissions)
+        if exclude_permissions:
+            for i in exclude_permissions:
+                user.user_permissions.remove(i)
+            user.save()
+        for i in update_permissions:
+            user.user_permissions.add(i)
+    else:
+        for i in all_process_permissions:
+            user.user_permissions.remove(i)
+    # confirm user's current auth
+    return JsonResponse({"msg": "success"}, status=200, safe=False)
+
+
 @csrf_exempt
 @login_required(login_url="/members/login_to_app/")
-@permission_required('ApprovalSystemOCT.add_projectrequirement', raise_exception=True)
+@permission_required('ApprovalSystemOCT.add_process1', raise_exception=True)  # todo  change to add_process1
 def process_creation(request):
     """
     ajax 请求，仅为post
@@ -860,6 +939,7 @@ def process_creation(request):
                     status=get_attr_from_status_state('process', 'status', 'processing'),
                     process_state=get_attr_from_status_state('process', 'state', 'processing')
                 )
+
                 t = Task.objects.create(
                     process=p,
                     task_type=get_attr_from_status_state('task', 'type', 'input'),
@@ -1825,7 +1905,8 @@ def approval_process(request):
             "deny": "驳回",
             "withdraw": "撤销"
         }
-        dingding_todo(process_id=process_id, creator=User.objects.get(username="18835168547"), move=move_dict[move],comments=comments)  # 已测试
+        dingding_todo(process_id=process_id, creator=User.objects.get(username="18835168547"), move=move_dict[move],
+                      comments=comments)  # 已测试
         return JsonResponse({"msg": move + "success"}, status=200, safe=False)
 
 

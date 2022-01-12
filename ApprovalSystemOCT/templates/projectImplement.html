@@ -76,6 +76,33 @@
         }
     </style>
     <div style="background-color: whitesmoke;box-shadow: 10px 5px 5px floralwhite;padding:5px;margin-top: 30px">
+        <div class="row" id="topfilter" style="margin:5px 35px 5px 35px">
+            <form class="g-3 needs-validation" enctype="multipart/form-data" id="topFilter">
+                <div class="form-group z-index-1">
+                    <label class="inline" for="progress_year">切&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;换：</label>
+                    <select name="progress_year" id="progress_year0">
+                        {% for y in years %}
+                            {% if y == cy %}
+                                <option value="{{ y }}" selected>{{ y }}</option>
+                            {% else %}
+                                <option value="{{ y }}">{{ y }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <label class="inline" for="progress_season"> </label>
+                    <select name="progress_season" id="progress_season0">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                    <button class="btn btn-primary btn-sm" id="top-filter-submit">切换</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <div style="background-color: whitesmoke;box-shadow: 10px 5px 5px floralwhite;padding:5px;margin-top: 30px">
         <div class="row" style="margin:5px 35px 5px 35px">
             <h2 class="text-center" style="margin:5px 35px 5px 35px"><strong>创新研究课题推进情况季度报表</strong></h2>
         </div>
@@ -99,10 +126,10 @@
                         <div class="col-md-3">
                             <label class="inline v-middle m-b-none" for="progress_year"
                                    style="margin-left: 5px">编报季度: </label>
-                            <input class="form-control inline input-sm v-middle width-100" id="progress_year"
+                            <input class="form-control inline input-sm v-middle width-100" id="progress_year1"
                                    name="progress_year"/>年
                             <label class="inline v-middle m-b-none" for="progress_season"></label>
-                            <input class="form-control inline input-sm v-middle width-60" id="progress_season"
+                            <input class="form-control inline input-sm v-middle width-60" id="progress_season1"
                                    name="progress_season"/>季度
                         </div>
                         <div class="col-md-3">
@@ -152,7 +179,7 @@
                     </tr>
                     </thead>
                     <tbody id="implementTbody">
-                    <tr>
+                    <tr id="addrow">
                         <td></td>
                         <td class="text-center">
                             <a id="addIssue">
@@ -173,41 +200,13 @@
             </div>
         </div>
     </div>
+
     <script type="text/javascript" src="{% static 'ApprovalSystemOCT/js/updateLogProcess.js' %}"></script>
     <script type="text/javascript" src="{% static 'ApprovalSystemOCT/js/components.js' %}"></script>
+
     <script>
         $(document).ready(function () {
-            const csrftoken = getCookie('csrftoken');
-            const processID = "{{ process.pk }}"
-            let leftSideBarSelector = $("#annual_all_projects");
-            let titleForm = $("#create_title");
-            // adds second level menu onto left sidebar
-            leftSideBarSelector.empty();
-            leftSideBarFunc(leftSideBarSelector, "课题详情", '/projectSystem/annualProjectDetail/' + processID + "/", '');
-            leftSideBarFunc(leftSideBarSelector, "进度管理", '/projectSystem/Project/implement/' + processID + '/progress/', 'active');  // 进度管理，href待更新
-            leftSideBarFunc(leftSideBarSelector, "成果上传", '', '');
-            leftSideBarFunc(leftSideBarSelector, "结题详情", '', '');
-            leftSideBarFunc(leftSideBarSelector, "资料上传", '', '');
-
-            $('a[data-action=title_submit]').on('click', function () {
-                let newTitle = {}
-                let create_url = "/projectSystem/Project/implementTitle/create/"
-                assignValue(titleForm, newTitle);
-                console.log(JSON.stringify(newTitle));
-                $.ajax({
-                    url: create_url,
-                    data: newTitle,
-                    headers: {'X-CSRFToken': csrftoken},
-                    type: 'post',
-                    success: function (data) {
-                        console.log(data)
-                    },
-                    error:function (edata){
-                        console.log(edata)
-                    }
-                })
-            })
-
+            // 最初加载
             $('#secondaryMenu').append(
                 "<li class='fa fa-angle-right'>" + "课题需求" + "</li>" + "<li class='fa fa-angle-right active fw-bold'>" + "{{ template_name }}" + "</li>"
             )
@@ -219,88 +218,641 @@
                     $(opt).removeClass('active');
                 }
             });
-            var saveInit = function () {
+            if (user === process_owner_id) {
+                let leftSideBarSelector = $("#annual_user_projects");
+                // adds second level menu onto left sidebar
+                leftSideBarSelector.empty();
+                leftSideBarSelector.append(
+                    "<span style='margin-left:20%' value>我的立项课题</span>"
+                )
+                leftSideBarFunc(leftSideBarSelector, "课题详情", '/projectSystem/annualProjectDetail/' + processID, '');
+                leftSideBarFunc(leftSideBarSelector, "进度管理", '/projectSystem/Project/implement/' + processID + '/progress/', 'active');  // 进度管理，href待更新
+                leftSideBarFunc(leftSideBarSelector, "成果上传", '', '');
+                leftSideBarFunc(leftSideBarSelector, "结题详情", '', '');
+                leftSideBarFunc(leftSideBarSelector, "资料上传", '', '');
+            } else {
+                let leftSideBarSelector = $("#annual_all_projects");
+                // adds second level menu onto left sidebar
+                leftSideBarSelector.empty();
+                leftSideBarSelector.append(
+                    "<span style='margin-left:20%' value>所有立项课题</span>")
+                leftSideBarFunc(leftSideBarSelector, "课题详情", '/projectSystem/annualProjectDetail/' + processID, '');
+                leftSideBarFunc(leftSideBarSelector, "进度管理", '/projectSystem/Project/implement/' + processID + '/progress/', 'active');  // 进度管理，href待更新
+                leftSideBarFunc(leftSideBarSelector, "成果上传", '', '');
+                leftSideBarFunc(leftSideBarSelector, "结题详情", '', '');
+                leftSideBarFunc(leftSideBarSelector, "资料上传", '', '');
+            }
 
-                $(".saveImplement").on('click', function () {
 
-                    let x = $($(this).parent().parent().find("input,textarea")).serializeArray();
-                    console.log(x)
+        })
+        $(window).ready(function () {
+            $('select').selectpicker();
+
+        })
+        const csrftoken = getCookie('csrftoken');
+        const processID = "{{ process.pk }}"
+        const user = "{{ user.id }}"
+        const objPr = "{{ obj_pr.pk }}"
+        const process_owner_id = "{{ process.process_owner.id }}"
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function csrfSafeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        class Title {
+            constructor(obj) {
+                this.department = obj.department;
+                this.id = obj.id;
+                this.implements = [];
+                this.progress_year = obj.progress_year;
+                this.progress_season = obj.progress_season;
+                this.project_base = obj.project_base;
+                this.sponsor = obj.sponsor;
+            }
+
+            update(obj) {
+                this.department = obj.department;
+                this.id = obj.id;
+                this.implements = [];
+                this.progress_year = obj.progress_year;
+                this.progress_season = obj.progress_season;
+                this.project_base = obj.project_base;
+                this.sponsor = obj.sponsor;
+            }
+
+            static get_instance(id) {
+                for (let i of this.instances) {
+                    if (i.id === id) {
+                        return i
+                    }
+                }
+            }
+
+            create_implement(implments) {
+                if (implments.length > 0) {
+                    for (let i of implments) {
+
+                        let _tmp = Implement.create(i)
+                        this.implements.push(_tmp)
+                    }
+                }
+            }
+
+            static instances = new Set();
+            static instances_id = new Set();
+
+            static create(obj) {
+
+                if (this.instances_id.has(obj.id)) {
+                    let z = Title.get_instance(obj.id);
+                    z.update(obj)
+                    z.create_implement(obj.implements);
+                    return z
+                } else {
+                    let tmp = new Title(obj)
+                    this.instances_id.add(tmp.id);
+                    this.instances.add(tmp);
+                    tmp.create_implement(obj.implements);
+                    return tmp
+                }
+            }
+        }
+
+        class DisplayPanel {
+            static hasObj = false
+            static titleForm = $("#create_title");
+            static titleComponents = {
+                'department': $("#department"),
+                'progress_year': $("#progress_year1"),
+                'progress_season': $("#progress_season1"),
+                'sponsor': $("#sponsor")
+            }
+
+            static titleInformation = {
+                'base_id': objPr,
+                'id': null,
+                'department': null,
+                'progress_year': null,
+                'progress_season': null,
+                'sponsor': null,
+            }
+            static implementIssueNumber = new Set()
+            static implementInformations = {
+                'issues_number': DisplayPanel.implementIssueNumber,
+            }
+
+            static implementComponents = {
+                //
+                'add_issue': $('#addIssue'),
+                'add_task': $('#addTask'),
+                'implementTbody': $("#implementTbody")
+            }
+
+            static retrieve(obj) {
+                this.titleComponents.department.val(obj.department);
+                this.titleComponents.progress_year.val(obj.progress_year);
+                this.titleComponents.progress_season.val(obj.progress_season);
+                this.titleComponents.sponsor.val(obj.sponsor);
+                this.titleInformation.id = obj.id;
+                this.titleInformation.department = obj.department;
+                this.titleInformation.progress_year = obj.progress_year;
+                this.titleInformation.progress_season = obj.progress_season;
+                this.titleInformation.sponsor = obj.sponsor;
+                this.titleComponents.department.attr("disabled", "disabled");
+                this.titleComponents.progress_year.attr("disabled", "disabled");
+                this.titleComponents.progress_season.attr("disabled", "disabled");
+                this.titleComponents.sponsor.attr("disabled", "disabled");
+
+                // implements
+                if (obj.implements.length > 0) {
+                    for (let i of obj.implements) {
+                        let _tik = tik
+                        i.set_row_id(_tik)
+                        if (DisplayPanel.implementIssueNumber.has(i.project_important_issue_number)) {
+                            DisplayPanel.implementComponents.add_task.click()
+                        } else {
+                            DisplayPanel.implementComponents.add_issue.click()
+                            DisplayPanel.implementIssueNumber.add(i.project_important_issue_number)
+                            $("#project_important_issue" + _tik.toString()).val(i.project_important_issue);
+
+                        }
+                        $("#project_task" + _tik.toString()).val(i.project_task);
+                        $("#project_task_start_time" + _tik.toString()).val(i.project_task_start_time);
+                        $("#project_task_end_time" + _tik.toString()).val(i.project_task_end_time);
+                        $("#season_implement_progress" + _tik.toString()).val(i.season_implement_progress);
+                        $("#season_implement_delay_explanation" + _tik.toString()).val(i.season_implement_delay_explanation);
+                        $("#add_ups" + _tik.toString()).val(i.add_ups);
+                        i.before_post_put();
+                    }
+                } else {
+                    alert(" implements empty")
+                }
+
+
+            }
+
+            static init() {
+                if (!this.hasObj) {
+                    this.titleComponents.progress_year.val($("#progress_year0").val())
+                    this.titleComponents.progress_season.val($("#progress_season0").val())
+                    this.titleInformation.id = null;
+                    this.titleInformation.department = null;
+                    this.titleInformation.progress_year = this.titleComponents.progress_year.val();
+                    this.titleInformation.progress_season = this.titleComponents.progress_year.val();
+                    this.titleInformation.sponsor = null;
+                }
+            }
+
+            static update() {
+
+                if (this.titleForm[0].checkValidity() === false) {
+                    this.titleForm[0].reportValidity();
+                } else {
+                    let newTitle = {}
+                    assignValue(this.titleForm, newTitle);
+                    let create_url = "/projectSystem/Project/implementTitle/detail/" + this.titleInformation.id + "/"
+                    $.ajax({
+                        url: create_url,
+                        data: newTitle,
+                        headers: {'X-CSRFToken': csrftoken},
+                        type: 'patch',
+                        success: function (data) {
+                            let tmp = Title.create(data)
+                            DisplayPanel.reset()
+                            DisplayPanel.retrieve(tmp)
+
+                        },
+                        error: function (edata) {
+                            console.log(edata)
+                        }
+                    })
+                }
+
+            }
+
+            static create() {
+                // todo click save => ()
+                // 1 check if obj exists
+                if (this.hasObj) {
+                    // update
+                    this.update()
+                } else {
+                    // create
+                    // do not call create here, call title.create()
+
+                    if (this.titleForm[0].checkValidity() === false) {
+                        this.titleForm[0].reportValidity();
+                    } else {
+                        let newTitle = {}
+                        assignValue(this.titleForm, newTitle);
+                        let create_url = "/projectSystem/Project/implementTitle/"
+                        $.ajax({
+                            url: create_url,
+                            data: newTitle,
+                            headers: {'X-CSRFToken': csrftoken},
+                            type: 'post',
+                            success: function (data) {
+                                let tmp = Title.create(data)
+                                DisplayPanel.reset()
+                                DisplayPanel.retrieve(tmp)
+                                // todo create success
+                            },
+                            error: function (edata) {
+                                console.log(edata)
+                            }
+                        })
+                    }
+
+                }
+
+            }
+
+            static reset() {
+                this.titleComponents.department.val('');
+                this.titleComponents.sponsor.val('');
+                this.init();
+                this.titleComponents.department.attr("disabled", false);
+                this.titleComponents.progress_year.attr("disabled", "disabled");
+                this.titleComponents.progress_season.attr("disabled", "disabled");
+                this.titleComponents.sponsor.attr("disabled", false);
+                this.implementComponents.implementTbody.find("tr").each(function (idx, ele) {
+                    if ($(ele).attr('id') === undefined) {
+                        $(ele).remove();
+                    }
+                })
+                DisplayPanel.implementIssueNumber = new Set()
+                tik = 0
+
+            }
+
+            static change() {
+                for (let k in this.titleComponents) {
+                    this.titleComponents[k].attr("disabled", false)
+
+                }
+            }
+        }
+
+        class Implement {
+            constructor(obj) {
+                this.project_important_issue = obj.project_important_issue;
+                this.project_task = obj.project_task;
+                this.project_task_start_time = obj.project_task_start_time;
+                this.project_task_end_time = obj.project_task_end_time;
+                this.season_implement_progress = obj.season_implement_progress;
+                this.season_implement_delay_explanation = obj.season_implement_delay_explanation;
+                this.add_ups = obj.add_ups;
+                this.project_important_issue_number = obj.project_important_issue_number;
+                this.id = obj.id
+
+            }
+
+            set_id(id) {
+                this.id = id;
+            }
+
+            set_row_id(rowid) {
+                this.row_id = rowid;
+            }
+
+            set_project_base_id(base_id) {
+                this.project_base = base_id
+            }
+
+
+            static instances = new Set();
+
+            static instance_id = new Set();
+
+            static get_instance(id) {
+                for (let i of Implement.instances) {
+                    if (i.id === id) {
+                        return i
+                    }
+                }
+            }
+
+            static get_instance_by_row_id(rid){
+                for (let i of Implement.instances) {
+                    if (i.row_id === rid) {
+                        return i
+                    }
+                }
+                return null
+            }
+
+            update(obj) {
+                this.project_important_issue = obj.project_important_issue;
+                this.project_task = obj.project_task;
+                this.project_task_start_time = obj.project_task_start_time;
+                this.project_task_end_time = obj.project_task_end_time;
+                this.season_implement_progress = obj.season_implement_progress;
+                this.season_implement_delay_explanation = obj.season_implement_delay_explanation;
+                this.add_ups = obj.add_ups;
+                this.id = obj.id;
+                this.project_base = obj.project_base;
+
+            }
+
+            static create(obj) {
+
+                if ('id' in obj) {
+                    // if id find => update
+                    if (Implement.instance_id.has(obj.id)) {
+                        let tmp = Implement.get_instance(obj.id);
+                        tmp.update(obj)
+                        return tmp
+                    } else {
+
+                        let tmp = new Implement(obj);
+                        Implement.instance_id.add(tmp.id)
+                        Implement.instances.add(tmp)
+                        return tmp
+                    }
+                } else {
+                    let tmp = new Implement(obj);
+
+                    return tmp
+                }
+
+            }
+
+            implement_post() {
+                // create new instance
+
+                if (this.id != null) {
+                    let url = "/projectSystem/Project/implement/detail/" + this.id + "/"
+                    let tmp = null
+                    console.log(this)
+                    $.ajax({
+                        url: url,
+                        data: this,
+                        type: "patch",
+                        async: false,
+                        headers: {'X-CSRFToken': csrftoken},
+                        success: function (success_data) {
+                            // set id
+                            tmp = Implement.create(success_data)
+                        },
+                        error: function (error_data) {
+                            console.log(error_data)
+                        }
+                    })
+                } else {
+                    let url = "/projectSystem/Project/implement/"
+                    let tmp = null
+
+                    $.ajax({
+                        url: url,
+                        data: this,
+                        type: "post",
+                        async: false,
+                        headers: {'X-CSRFToken': csrftoken},
+                        success: function (success_data) {
+                            // set id
+                            tmp = Implement.create(success_data)
+                        },
+                        error: function (error_data) {
+                            console.log(error_data)
+
+                        }
+                    })
+                    return tmp
+                }
+
+            }
+
+            before_post_put() {
+
+                let _tr = $("#index" + this.row_id.toString()).parents("tr")
+
+                _tr.find('input,textarea,select').each(function () {
+
+                    $(this).attr("disabled", "disabled");
                 })
 
             }
-            $("#addIssue").on("click", function () {
-                // add an issue
 
-                let p = $(this).parent().parent();
-                p.before("<tr>" +
-                    "<th scope='row'>+</th>" +
-                    "<td><input type='hidden' name='id' value='row1'/><input class='form-control' name='project_important_issue' type='text' value='' style='width: 100%;height: 100%'/></td>" +
-                    "<td><input  class='form-control' name='project_task' type='text' value='' style='width: 100%;height: 100%'/></td>" +
-                    "<td>" +
-                    "<label>开始时间： </label>" +
-                    "<input class='form-control' name='project_task_start_time' type='text' value='' style='width: 100%;height: 100%'/>" +
-                    "<label>结束时间： </label>" +
-                    "<input class='form-control' name='project_task_end_time' type='text' value='' style='width: 100%;height: 100%'/>" +
-                    "</td>" +
-                    "<td style='padding: 0'><textarea rows=8 class='form-control' name='season_implement_progress' type='text' value='' style='width: 100%;height: 100%'></textarea></td>" +
-                    "<td style='padding: 0'><textarea rows=8 class='form-control' name='season_implement_delay_explanation' type='text' value='' style='width: 100%;height: 100%'></textarea></td>" +
-                    "<td style='padding: 0'><textarea rows=8 class='form-control' name='add_ups' type='text' value='' style='width: 100%;height: 100%'></textarea></td>" +
-                    "<td><a class='saveImplement'>保存</a><a class='updateImplement'>更新 </a><a class='deleteImplement'>删除</a></td>" +
-                    "</tr>"
-                )
-                saveInit();
+        }
+
+        $("#top-filter-submit").on("click", function (e) {
+            e.preventDefault();
+
+            const year = $("#progress_year0").val();
+            const season = $("#progress_season0").val();
+            let url = '/projectSystem/Project/implementTitle/?project_base_id=' + objPr + '&progress_year=' + year + "&progress_season=" + season;
+            let topFilterForm = $("#topFilter");
+            topFilterForm.find("select").each(function () {
+                url += "&" + $(this).attr("name") + "=" + $(this).val()
             })
-            $("#addTask").on('click', function () {
-                let p = $(this).parent().parent();
+            if (topFilterForm[0].checkValidity() === false) {
+                topFilterForm[0].reportValidity();
+            } else {
+                // get process year and season
+                // send ajax
 
-                if (p.prevAll().length > 0) {
-                    let current = p.prev()
-                    let z = false
+                $.ajax({
+                    // todo : wait backend
+                    url: url,
+                    type: 'get',
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function (success_data) {
 
-                    while (z === false) {
-
-                        if (current.children('td').length === 7) {
-
-                            if ($(current.children('td')[0]).attr('rowspan') === undefined) {
-                                $(current.children('td')[0]).attr('rowspan', "2");
-                            } else {
-                                $(current.children('td')[0]).attr('rowspan', (parseInt($(current.children('td')[0]).attr('rowspan')) + 1).toString());
-                            }
-                            z = true
+                        if (success_data.length > 0) {
+                            // assign values into title field
+                            let title = Title.create(success_data[0]);
+                            DisplayPanel.reset()
+                            DisplayPanel.retrieve(title)
+                            DisplayPanel.hasObj = true;
                         } else {
-                            current = current.prev()
+                            DisplayPanel.reset();
+                            DisplayPanel.hasObj = false;
                         }
-                    }
 
-                    p.before("<tr>" +
-                        "<th scope='row'>+</th>" +
-                        "<td><input  class='form-control' name='project_task' type='text' value='' style='width: 100%;height: 100%'/></td>" +
-                        "<td>" +
-                        "<label>开始时间： </label>" +
-                        "<input class='form-control' name='project_task_start_time' type='text' value='' style='width: 100%;height: 100%'/>" +
-                        "<label>结束时间： </label>" +
-                        "<input class='form-control' name='project_task_end_time' type='text' value='' style='width: 100%;height: 100%'/>" +
-                        "</td>" +
-                        "<td style='padding: 0'><textarea rows=8 class='form-control' name='season_implement_progress' type='text' value='' style='width: 100%;height: 100%'></textarea></td>" +
-                        "<td style='padding: 0'><textarea rows=8 class='form-control' name='season_implement_delay_explanation' type='text' value='' style='width: 100%;height: 100%'></textarea></td>" +
-                        "<td style='padding: 0'><textarea rows=8 class='form-control' name='add_ups' type='text' value='' style='width: 100%;height: 100%'></textarea></td>" +
-                        "<td><a class='saveImplement'>保存</a><a class='updateImplement'>更新 </a><a class='deleteImplement'>删除</a></td>" +
-                        "</tr>"
-                    )
-                    saveInit();
+                    }
+                })
+
+
+            }
+
+        })
+        $("#top-filter-submit").click();
+
+        $('a[data-action=title_submit]').on('click', function (e) {
+            // check if the obj exists
+            e.preventDefault();
+            DisplayPanel.create()
+        })
+        $("a[data-action=title_edit]").on('click', function (e) {
+            e.preventDefault();
+            DisplayPanel.change();
+        })
+
+        var saveInit = function () {
+            $(".datetimepicker").datetimepicker({
+                format: 'Y-m-d H:i',
+            });
+
+        }
+        let tik = 0
+
+        $("#addIssue").on("click", function () {
+            // add an issue
+
+            let p = $(this).parent().parent();
+            p.before("<tr>" +
+                "<th scope='row' value='main' id='index" + tik.toString() + "' data-target=" + tik + ">+</th>" +
+                "<td><input class='form-control' name='project_important_issue' id='project_important_issue" + tik.toString() + "' type='text' value='' style='width: 100%;height: 100%'/></td>" +
+                "<td><input  class='form-control' name='project_task' id='project_task" + tik.toString() + "' type='text' value='' style='width: 100%;height: 100%'/></td>" +
+                "<td>" +
+                "<label>开始时间： </label>" +
+                "<input class='form-control datetimepicker' name='project_task_start_time' id='project_task_start_time" + tik.toString() + "' type='text' value='' style='width: 100%;height: 100%'/>" +
+                "<label>结束时间： </label>" +
+                "<input class='form-control datetimepicker' name='project_task_end_time' id='project_task_end_time" + tik.toString() + "' type='text' value='' style='width: 100%;height: 100%'/>" +
+                "</td>" +
+                "<td style='padding: 0'><textarea rows=8 class='form-control' name='season_implement_progress' id='season_implement_progress" + tik.toString() + "' type='text' value='' style='width: 100%;height: 100%'></textarea></td>" +
+                "<td style='padding: 0'><textarea rows=8 class='form-control' name='season_implement_delay_explanation' id='season_implement_delay_explanation" + tik.toString() + "' type='text' value='' style='width: 100%;height: 100%'></textarea></td>" +
+                "<td style='padding: 0'><textarea rows=8 class='form-control' name='add_ups' id='add_ups" + tik.toString() + "' type='text' value='' style='width: 100%;height: 100%'></textarea></td>" +
+                "<td><a class='saveImplement' id='saveImplement" + tik.toString() + "' onclick='saveImplement(this)' data-target=" + tik + ">保存</a>" +
+                "<a class='updateImplement' id='updateImplement" + tik.toString() + "' onclick='changeImplement(this)' data-target=" + tik + ">更新 </a>" +
+                "<a class='deleteImplement' id='deleteImplement" + tik.toString() + "' onclick='deleteImplement(this)' data-target=" + tik + ">删除</a></td>" +
+                "</tr>"
+            )
+            saveInit();
+            tik += 1
+        })
+
+        $("#addTask").on('click', function () {
+            let p = $(this).parent().parent(); // tr
+
+            // p之前有数据
+            if (p.prevAll().length > 0) {
+                let current = p.prev() // 前一行
+                let z = false
+
+                while (z === false) {
+
+                    if (current.children('td').length === 7) { // 是一个主行
+                        // 但是未做rowspan
+                        if ($(current.children('td')[0]).attr('rowspan') === undefined) {
+                            $(current.children('td')[0]).attr('rowspan', "2");
+                        } else {
+                            // 已做rowspan =》 rowspan+1
+                            $(current.children('td')[0]).attr('rowspan', (parseInt($(current.children('td')[0]).attr('rowspan')) + 1).toString());
+                        }
+                        z = true
+                    } else {
+                        current = current.prev()
+                    }
                 }
 
-            })
-            $(".submit").on("click", function (event) {
-                event.preventDefault();
-                var url = ($(this).data("action") === "undefined" ? "/" : $(this).data("action"));
-                var row = $(this).parents("tr").first();
-                var data = row.find("input, select, radio").serialize();
-                $.post(url, data, function (result) {
-                    console.log(result);
-                });
-            });
+                p.before("<tr>" +
+                    "<th scope='row' value='aux' id='index" + tik.toString() + "' data-target=" + tik + ">+</th>" +
+                    "<td><input  class='form-control' name='project_task' id='project_task" + tik.toString() + "' type='text' value='' style='width: 100%;height: 100%'/></td>" +
+                    "<td>" +
+                    "<label>开始时间： </label>" +
+                    "<input class='form-control datetimepicker' name='project_task_start_time' id='project_task_start_time" + tik.toString() + "' type='text' value='' style='width: 100%;height: 100%'/>" +
+                    "<label>结束时间： </label>" +
+                    "<input class='form-control datetimepicker' name='project_task_end_time' id='project_task_end_time" + tik.toString() + "' type='text' value='' style='width: 100%;height: 100%'/>" +
+                    "</td>" +
+                    "<td style='padding: 0'><textarea rows=8 class='form-control' name='season_implement_progress' id='season_implement_progress" + tik.toString() + "' type='text' value='' style='width: 100%;height: 100%'></textarea></td>" +
+                    "<td style='padding: 0'><textarea rows=8 class='form-control' name='season_implement_delay_explanation' id='season_implement_delay_explanation" + tik.toString() + "' type='text' value='' style='width: 100%;height: 100%'></textarea></td>" +
+                    "<td style='padding: 0'><textarea rows=8 class='form-control' name='add_ups' id='add_ups" + tik.toString() + "' type='text' value='' style='width: 100%;height: 100%'></textarea></td>" +
+                    "<td><a class='saveImplement' id='saveImplement" + tik.toString() + "' onclick='saveImplement(this)' data-target=" + tik + ">保存</a>" +
+                    "<a class='updateImplement' id='updateImplement" + tik.toString() + "' onclick='changeImplement(this)' data-target=" + tik + ">更新 </a>" +
+                    "<a class='deleteImplement' id='deleteImplement" + tik.toString() + "' onclick='deleteImplement(this)' data-target=" + tik + ">删除</a></td>" +
+                    "</tr>"
+                )
+
+                saveInit();
+                tik += 1
+            }
+
         })
+
+        function saveImplement(e) {
+
+            // create implement object
+            let newImplement = {}
+            let _tik = $(e).data("target")
+            let _tr = $(e).parents("tr")
+            let _z = Implement.get_instance_by_row_id(_tik)
+
+            _tr.find("input,textarea")
+            _tr.find('input,textarea,select').each(function () {
+                    if (($(this).attr("name") === 'project_task_start_time' || $(this).attr("name") === 'project_task_end_time') && $(this).val().length < 21) {
+
+                        newImplement[$(this).attr("name")] = $(this).val() + ":00.000000";
+                    } else {
+                        newImplement[$(this).attr("name")] = $(this).val();
+                    }
+                }
+            )
+            // 如果是rowspan 找到源头
+            if (!('project_important_issue' in newImplement)) {
+                let _find = false
+                let _ctik = _tik
+                while (_find === false || _ctik > 0) {
+                    let _ctr = $("th[data-target=" + _ctik.toString() + "]").parents("tr");
+
+                    if (_ctr.children('th').first().attr("value") === "main") {
+                        newImplement["project_important_issue"] = $("#project_important_issue" + _ctik.toString()).val();
+                        _find = true
+                    }
+                    _ctik -= 1
+                }
+            }
+
+            let imp_base_id = DisplayPanel.titleInformation.id;
+            if (_z){
+                newImplement['id'] = _z.id
+            }
+            let z = Implement.create(newImplement);
+            z.set_project_base_id(imp_base_id)
+            z.set_row_id(_tik)
+            z.implement_post();
+            z.before_post_put();
+        }
+
+        function changeImplement(e) {
+            let _tr = $(e).parents("tr")
+            _tr.find("input,textarea").each(function () {
+                $(this).attr("disabled", false)
+            })
+        }
+
+        function deleteImplement(e) {
+
+        }
+
+        $(".submit").on("click", function (event) {
+            event.preventDefault();
+            var url = ($(this).data("action") === "undefined" ? "/" : $(this).data("action"));
+            var row = $(this).parents("tr").first();
+            var data = row.find("input, select, radio").serialize();
+            $.post(url, data, function (result) {
+                console.log(result);
+            });
+        });
+
+
     </script>
 
 {% endblock %}

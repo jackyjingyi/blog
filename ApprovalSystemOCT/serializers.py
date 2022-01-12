@@ -3,7 +3,7 @@ import uuid
 from django.contrib.auth.models import User, Group, Permission
 from rest_framework import serializers
 from ApprovalSystemOCT.models import Attachment, Process, Task, TaskType, Step, Book, ProjectRequirement, ProcessType, \
-    ProjectImplementTitle
+    ProjectImplementTitle, ProjectImplement
 from guardian.models import UserObjectPermission, GroupObjectPermission
 
 
@@ -27,8 +27,6 @@ class ProcessTypeSerializer(serializers.ModelSerializer):
             "process_creator", "process_executor")
 
 
-
-
 class AttachmentSerializer(serializers.ModelSerializer):
     attrs = serializers.StringRelatedField(source="get_attachment", read_only=True)
 
@@ -44,7 +42,7 @@ class StepSerializer(serializers.ModelSerializer):
         model = Step
         fields = (
             "step_id", "task", "step_seq", "step_owner", "step_attachment_snapshot", "step_attachment", "step_status",
-            "step_assigner","step_assignee"
+            "step_assigner", "step_assignee"
         )
 
 
@@ -61,14 +59,30 @@ class TaskSerializer(serializers.ModelSerializer):
         return response
 
 
+class ProjectImplementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectImplement
+        fields = (
+            "id", "project_base", "project_important_issue_number", "project_important_issue", "project_task",
+            "project_task_start_time",
+            "project_task_end_time", "season_implement_progress",
+            "season_implement_delay_explanation", "add_ups"
+        )
+
 
 class ProjectImplementTitleSerializer(serializers.ModelSerializer):
+    implements = ProjectImplementSerializer(read_only=True, many=True)
+
     class Meta:
         model = ProjectImplementTitle
         fields = (
-            "project_base", "sponsor", "department", "progress_year", "progress_season"
+            "id", "project_base", "sponsor", "department", "progress_year", "progress_season", "implements",
         )
 
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response["implements"] = sorted(response["implements"], key=lambda x: x["project_important_issue_number"])
+        return response
 
 class PermissionsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -120,7 +134,6 @@ class UserObjectPermissionSerializer(serializers.ModelSerializer):
 
 
 class GroupObjectPermissionSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = GroupObjectPermission
         fields = "__all__"
@@ -141,4 +154,3 @@ class ProcessSerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
         response["tasks"] = sorted(response["tasks"], key=lambda x: x["task_seq"])
         return response
-

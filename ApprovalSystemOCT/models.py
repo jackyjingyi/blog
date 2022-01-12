@@ -10,6 +10,7 @@ from django.core import serializers
 import django.utils.timezone as timezone
 from datetime import datetime, date, timedelta
 from ApprovalSystemOCT.project_statics.static_data import *
+from django.db.models.query import QuerySet
 
 
 def snapshot_default():
@@ -94,9 +95,28 @@ class ProjectImplementTitle(models.Model):
     update_time = models.DateTimeField("更新时间", auto_now=True)
 
 
+class ImplementMainTask(models.Model):
+    base = models.ForeignKey(ProjectImplementTitle, on_delete=models.CASCADE)
+    issue = models.CharField(u"重点工作事项", max_length=500)
+    create_time = models.DateTimeField("创建时间", auto_now_add=True)
+    update_time = models.DateTimeField("更新时间", auto_now=True)
+
+
+class ImplementSubTask(models.Model):
+    base = models.ForeignKey(ImplementMainTask, on_delete=models.CASCADE)
+    project_task = models.CharField("分项任务", max_length=255)
+    project_task_start_time = models.DateTimeField("分项任务开展时间", null=True, blank=True)
+    project_task_end_time = models.DateTimeField("分项任务完成时间", null=True, blank=True)
+    season_implement_progress = models.TextField("本季度工作推进情况", null=True, blank=True)
+    season_implement_delay_explanation = models.TextField("未能按计划进度完成的原因", null=True, default="无")
+    add_ups = models.TextField("相关说明", null=True, blank=True)
+    create_time = models.DateTimeField("创建时间", auto_now_add=True)
+    update_time = models.DateTimeField("更新时间", auto_now=True)
+
+
 class ProjectImplement(models.Model):
     title = "创新研究课题推进情况季度报表"
-    project_base = models.ForeignKey(ProjectImplementTitle, on_delete=models.CASCADE)
+    project_base = models.ForeignKey(ProjectImplementTitle, on_delete=models.CASCADE, related_name="implements")
     project_important_issue = models.CharField("重点工作事项", max_length=500)
     project_important_issue_number = models.IntegerField("重点工作事项编号", default=0)
     project_task = models.CharField("分项任务", max_length=255)
@@ -115,9 +135,36 @@ class ProjectImplement(models.Model):
             "project_task_seq")
 
     @classmethod
+    def get_current_max_issue_number(cls, queryset=None):
+        if cls.objects.all().count() == 0:
+            return 0
+        if queryset and isinstance(queryset, QuerySet):
+            # 返回某个组下最大的number
+            return queryset.order_by('project_important_issue_number').last().project_important_issue_number
+        return cls.objects.all().order_by('project_important_issue_number').last().project_important_issue_number
+
+    @classmethod
+    def get_issue_number_by_issue(cls, project_base_id, issue):
+        queryset = cls.objects.filter(project_base_id=project_base_id, project_important_issue=issue).order_by(
+            'project_important_issue_number')
+
+        if queryset:
+            # should be in same issue number, => distinct len should = 1
+            p = queryset.values('project_important_issue_number').distinct()
+            if p.count() == 1:
+                return p[0]['project_important_issue_number']
+            else:
+                logging.warning(
+                    f"should not contain more than one issue number with same issue  project_base_id: {project_base_id}; issue: {issue}")
+                return p.last().get('project_important_issue_number')
+        else:
+            # no such number => return largest issue number for all queryset
+            return 0 if cls.objects.all().count() == 0 else cls.get_current_max_issue_number() + 1
+
+    @classmethod
     def group_by_base(cls, base_id):
         q = cls.objects.filter(project_base_id=base_id).values('project_important_issue_number').distinct()
-        print(q)
+
         res = []
         if q:
             for i in q:
@@ -235,7 +282,28 @@ class Process(models.Model):
         permissions = (
             ("packup_process", u"合并流程"),
             ("dispatch_process", u"分发流程"),
-            ("approval_process", u"审批权限")
+            ("approval_process", u"审批权限"),
+            ("view_submitted_process", u"查看已提交课题需求"),
+            ("view_unsubmitted_process", u"查看未提交课题需求"),
+            ("add_process1", u"创建课题1"),
+            ("edit_process1", u"编辑课题1"),
+            ("delete_process1", u"删除课题1"),
+            ("submit_process1", u"提交课题1"),
+            ("edit_process2", u"编辑课题2"),
+            ("dispatch_process1", u"分发课题"),
+            ("delete_process2", u"删除课题2"),
+            ("edit_process3", u"编辑课题3"),
+            ("delete_process3", u"删除课题3"),
+            ("submit_process2", u"提交课题2"),
+            ("edit_process4", u"编辑课题4"),
+            ("add_process2", u"创建课题2"),
+            ("re_dispatch_process", u"指派课题"),
+            ("delete_process4", u"删除课题4"),
+            ("edit_process5", u"编辑课题5"),
+            ("submit_process3", u"提交课题3"),
+            ("deny_process", u"驳回课题"),
+            ("withdraw_process", u"撤回课题"),
+            ("manage_process", u"管理课题"),
         )
 
     def get_owner_name(self):

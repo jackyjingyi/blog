@@ -69,20 +69,13 @@
                     <tr>
                         <td value="{{ item.pk }}">{{ forloop.counter }}</td>
                         <td>
-                            <span class="piu">
-                            {{ item.get_tasks.last.get_steps.last.step_attachment.get_attachment.first.project_name }}
-                            </span>
+                            <a href="{% url 'annual_project_detail' item.pk %}">{{ item.get_tasks.last.get_steps.last.step_attachment.get_attachment.first.project_name }}</a>
+
+
                         </td>
                         <td>{{ item.process_executor.first_name }}</td>
                         <td>{{ item.process_executor.groups.first.name }}</td>
                         <td>{{ item.creat_time|date:"Y年n月d日" }}</td>
-                    </tr>
-                    <tr class="collapse">
-                        <td colspan="5">
-                            {{ item.get_tasks.last.get_steps.last.step_attachment.get_attachment.first|safe }}
-                            <a href="{% url 'annual_project_detail' item.pk %}">查看详情</a>
-                            <a>进度管理</a>
-                        </td>
                     </tr>
                 {% endfor %}
 
