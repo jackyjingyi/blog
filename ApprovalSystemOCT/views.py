@@ -751,6 +751,7 @@ def update_attachment(request):
             'new_history': history,
             'new_step_snapshot': _s.step_attachment_snapshot
         }
+        print(context)
         return JsonResponse(context, status=200, safe=False)
 
 
@@ -880,7 +881,7 @@ def user_management_update_permission(request):
     if User.objects.filter(pk=req_data.get('user_id')).exists():
         user = User.objects.get(pk=req_data.get('user_id'))
     else:
-        return JsonResponse({'msg':'user does not exists!'}, status=404, safe=False)
+        return JsonResponse({'msg': 'user does not exists!'}, status=404, safe=False)
     # all permission should within this app
     update_permissions = req_data.get("permissions").get('update')
     all_process_permissions = Permission.objects.filter(content_type__app_label=ApprovalsystemoctConfig.name,
@@ -1024,7 +1025,19 @@ def make_action(request):
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        try:
+            other_param = json.loads(self.request.body)
+        except json.decoder.JSONDecodeError:
+            other_param = None
+        queryset = self.queryset
+        if isinstance(queryset, QuerySet):
+            if other_param:
+                queryset = queryset.filter(**other_param)
+            else:
+                queryset = queryset.all()
+        return queryset
 
     @action(detail=True, methods=["post"], url_path="add_perm")
     def add_perm(self, request, pk=None):
@@ -1041,6 +1054,35 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         else:
             return Response({"error": "No rights"}, status=403)
+
+
+class UserListView(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    def get_queryset(self):
+        try:
+            other_param = self.request.query_params.dict()
+
+            if "format" in other_param.keys():
+                other_param.pop("format")
+        except json.decoder.JSONDecodeError:
+            other_param = None
+        print(other_param)
+        queryset = self.queryset
+        if isinstance(queryset, QuerySet):
+
+            if other_param:
+                queryset = queryset.filter(**other_param)
+                print(queryset)
+            else:
+                queryset = queryset.all()
+        return queryset
+
+
+class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -1252,7 +1294,6 @@ class ProcessListWithType(generics.ListAPIView):
         if "process_order_id" in data.keys():
             pid = data["process_order_id"]
             data.pop("process_order_id")
-            print(pid)
             return Process.objects.filter(pk=uuid.UUID(pid))
 
         query_set = Process.objects.filter(**data).filter(process_state__in=['0', '1', '3', '4', '5'])

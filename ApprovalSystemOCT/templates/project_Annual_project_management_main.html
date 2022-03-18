@@ -343,73 +343,115 @@
         </div>
     </div>
 
+    <script type="module">
+        const processID = "{{ process.pk }}"
+        const requirementID = "{{ obj.pk }}"
+        const companies = JSON.parse("{{ obj.project_outsourcing_companies }}".replace(/&quot;/g, '"'))
+        const com_info = JSON.parse("{{ obj.project_outsourcing_info }}".replace(/&quot;/g, '"'))
+        const user = "{{ user.id }}"
+        const process_owner_id = "{{ process.process_owner.id }}"
 
+        function leftSideBarFunc(element, info, herf, active) {
+            element.append(
+                "<ul class='nav nav-third-level collapse in project-second-menu'>" +
+                "<li class=" + active + ">" +
+                "<a id='basicInfo' href=" + herf + ">" +
+                "<span style='margin-left: 30%'>" + info + "</span></a></li>"
+            )
+        }
 
-    <script type="text/javascript" src="{% static 'ApprovalSystemOCT/js/updateLogProcess.js' %}"></script>
-    <script type="text/javascript" src="{% static 'ApprovalSystemOCT/js/components.js' %}"></script>
-    <script>
-        $(document).ready(function () {
-            const processID = "{{ process.pk }}"
-            const requirementID = "{{ obj.pk }}"
-            const companies = JSON.parse("{{ obj.project_outsourcing_companies }}".replace(/&quot;/g, '"'))
-            const com_info = JSON.parse("{{ obj.project_outsourcing_info }}".replace(/&quot;/g, '"'))
-            const user = "{{ user.id }}"
-            const process_owner_id = "{{ process.process_owner.id }}"
+        function resignValue(ele, vl) {
+            ele.find('input,textarea,select').each(function () {
+                    $(this).val(vl[$(this).attr("name")]);
+                }
+            )
+            return vl
+        }
 
-            function addcompanies() {
-                let context = ""
-                for (let i = 0; i < companies.length; i++) {
-                    if (companies[i] && com_info[i]) {
-                        context += "<div class='row margin-top-10'>" +
-                            "<div class='col-md-6'>" +
-                            "<i class='pull-left icon iconfont icon-miaoshu'></i>&nbsp;" +
-                            "<label for='project_outsourcing_companies_" + (i + 1).toString() + "' class='form-label d-inline-block mb-2 text-primary'>" +
-                            "<strong>外部合作单位" + (i + 1).toString() +
-                            "</strong></label>" +
-                            "<input name='project_outsourcing_companies_" + (i + 1).toString() + "' type='text' class='form-control' id='project_outsourcing_companies_" + toString(i) + "'" +
-                            "maxlength='255'value='" + companies[i] + "' required disabled></div>" +
-                            "<div class='col-md-6'>" +
-                            "<i class='pull-left icon iconfont icon-miaoshu'></i>&nbsp;" +
-                            "<label for='project_outsourcing_info" + (i + 1).toString() + "' class='form-label d-inline-block mb-2 text-primary'>" +
-                            "<strong>外部合作单位" + (i + 1).toString() +
-                            "</strong></label>" +
-                            "<input name='project_outsourcing_info_" + (i + 1).toString() + "' type='text' class='form-control' id='project_outsourcing_info_" + toString(i) + "'" +
-                            "maxlength='255'value='" + com_info[i] + "' required disabled></div></div>"
-
+        function assignValue(ele, vl) {
+            console.log(ele, vl)
+            ele.find('input,textarea,select').each(function () {
+                    if ($(this).attr("name") === 'project_start_time' || $(this).attr("name") === 'project_end_time') {
+                        vl[$(this).attr("name")] = $(this).val() + ":00.000000";
+                    } else {
+                        vl[$(this).attr("name")] = $(this).val();
                     }
                 }
-                $("#companies").append(context
-                );
-            }
+            )
+            return vl
+        }
 
-            addcompanies()
-            console.log(user,process_owner_id)
-            if (user === process_owner_id) {
-                let leftSideBarSelector = $("#annual_user_projects");
-                // adds second level menu onto left sidebar
-                leftSideBarSelector.empty();
-                leftSideBarSelector.append(
-                    "<span style='margin-left:20%' value>我的立项课题</span>"
-                )
-                leftSideBarFunc(leftSideBarSelector, "课题详情", '', 'active');
-                leftSideBarFunc(leftSideBarSelector, "进度管理", '/projectSystem/Project/implement/' + processID + '/progress/', '');  // 进度管理，href待更新
-                leftSideBarFunc(leftSideBarSelector, "成果上传", '', '');
-                leftSideBarFunc(leftSideBarSelector, "结题详情", '', '');
-                leftSideBarFunc(leftSideBarSelector, "资料上传", '', '');
-            } else {
-                let leftSideBarSelector = $("#annual_all_projects");
-                // adds second level menu onto left sidebar
-                leftSideBarSelector.empty();
-                leftSideBarSelector.append(
-                    "<span style='margin-left:20%' value>所有立项课题</span>")
-                leftSideBarFunc(leftSideBarSelector, "课题详情", '', 'active');
-                leftSideBarFunc(leftSideBarSelector, "进度管理", '/projectSystem/Project/implement/' + processID + '/progress/', '');  // 进度管理，href待更新
-                leftSideBarFunc(leftSideBarSelector, "成果上传", '', '');
-                leftSideBarFunc(leftSideBarSelector, "结题详情", '', '');
-                leftSideBarFunc(leftSideBarSelector, "资料上传", '', '');
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
             }
+            return cookieValue;
+        }
 
-        })
+        function csrfSafeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE|PATCH|PUT)$/.test(method));
+        }
+
+        function addcompanies() {
+            let context = ""
+            for (let i = 0; i < companies.length; i++) {
+                if (companies[i] && com_info[i]) {
+                    context += "<div class='row margin-top-10'>" +
+                        "<div class='col-md-6'>" +
+                        "<i class='pull-left icon iconfont icon-miaoshu'></i>&nbsp;" +
+                        "<label for='project_outsourcing_companies_" + (i + 1).toString() + "' class='form-label d-inline-block mb-2 text-primary'>" +
+                        "<strong>外部合作单位" + (i + 1).toString() +
+                        "</strong></label>" +
+                        "<input name='project_outsourcing_companies_" + (i + 1).toString() + "' type='text' class='form-control' id='project_outsourcing_companies_" + toString(i) + "'" +
+                        "maxlength='255'value='" + companies[i] + "' required disabled></div>" +
+                        "<div class='col-md-6'>" +
+                        "<i class='pull-left icon iconfont icon-miaoshu'></i>&nbsp;" +
+                        "<label for='project_outsourcing_info" + (i + 1).toString() + "' class='form-label d-inline-block mb-2 text-primary'>" +
+                        "<strong>外部合作单位" + (i + 1).toString() +
+                        "</strong></label>" +
+                        "<input name='project_outsourcing_info_" + (i + 1).toString() + "' type='text' class='form-control' id='project_outsourcing_info_" + toString(i) + "'" +
+                        "maxlength='255'value='" + com_info[i] + "' required disabled></div></div>"
+
+                }
+            }
+            $("#companies").append(context
+            );
+        }
+
+        addcompanies()
+        console.log(user, process_owner_id)
+        if (user === process_owner_id) {
+            let leftSideBarSelector = $("#annual_user_projects");
+            // adds second level menu onto left sidebar
+            leftSideBarSelector.empty();
+            leftSideBarSelector.append(
+                "<span style='margin-left:20%' value>我的立项课题</span>"
+            )
+            leftSideBarFunc(leftSideBarSelector, "课题详情", '', 'active');
+            leftSideBarFunc(leftSideBarSelector, "进度管理", '/projectSystem/Project/implement_tasks/' + processID + '/progress/', '');
+            leftSideBarFunc(leftSideBarSelector, "成果上传", '/projectSystem/Project/outcome/main/'+processID+'/', '');
+            leftSideBarFunc(leftSideBarSelector, "结题申请", '/projectSystem/Project/closure/main/'+processID+'/', '');
+        } else {
+            let leftSideBarSelector = $("#annual_all_projects");
+            // adds second level menu onto left sidebar
+            leftSideBarSelector.empty();
+            leftSideBarSelector.append(
+                "<span style='margin-left:20%' value>所有立项课题</span>")
+            leftSideBarFunc(leftSideBarSelector, "课题详情", '', 'active');
+            leftSideBarFunc(leftSideBarSelector, "进度管理", '/projectSystem/Project/implement_tasks/' + processID + '/progress/', '');
+            leftSideBarFunc(leftSideBarSelector, "成果上传", '/projectSystem/Project/outcome/main/'+processID+'/', '');
+            leftSideBarFunc(leftSideBarSelector, "结题申请", '/projectSystem/Project/closure/main/'+processID+'/', '');
+        }
+
     </script>
 
 {% endblock %}

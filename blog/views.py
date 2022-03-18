@@ -19,13 +19,14 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from django_blog.settings import MEDIA_ROOT
 from django.db.models.functions import TruncMonth
 from django.db.models import Count
-
-from django.core.serializers.json import DjangoJSONEncoder
-
+from django.views.decorators.csrf import csrf_exempt
+from .serializers import PostSerializer, PostEndProcessSerializer
+from rest_framework import generics
+from django.db.models.query import QuerySet
 from .forms import EditForm, PostFormV2
 from .models import Post, Category, Source, Profile, Subcategory
 
-GROUP_NAME = ['旅游大数据', '产品管理', '主题公园&新场景', '康旅度假', '文化&品牌', '新商业', '新型城镇化', '统筹管理', '综合管理', '联盟管理', '华东分院'
+GROUP_NAME = ['大数据重点实验中心', '产品管理', '主题公园&新场景', '康旅度假', '文化&品牌', '新商业', '新型城镇化', '统筹管理', '综合管理', '联盟管理', '华东分院'
               ]
 MONTH = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'
          ]
@@ -776,6 +777,31 @@ def oct_get_endpoint_view(request, *args, **kwargs):
         body = request.body
         print(json.loads(body))
         return JsonResponse({'status': 200}, status=200)
+
+
+class PostListView(generics.ListCreateAPIView):
+    queryset = Post.objects.filter(lv4_approval_status='2', oa_status='0')
+    serializer_class = PostSerializer
+
+    def get_queryset(self):
+        try:
+            other_param = self.request.query_params.dict()
+            if "format" in other_param.keys():
+                other_param.pop("format")
+        except json.decoder.JSONDecodeError:
+            other_param = None
+        queryset = self.queryset
+        if isinstance(queryset, QuerySet):
+            if other_param:
+                queryset = queryset.filter(**other_param)
+            else:
+                queryset = queryset.all()
+        return queryset
+
+
+class PostCallBackView(generics.UpdateAPIView):
+    queryset = Post.objects.filter(lv4_approval_status='2')
+    serializer_class = PostEndProcessSerializer
 
 
 @login_required(login_url='/members/login_to/')

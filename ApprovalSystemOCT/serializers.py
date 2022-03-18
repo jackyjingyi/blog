@@ -3,8 +3,10 @@ import uuid
 from django.contrib.auth.models import User, Group, Permission
 from rest_framework import serializers
 from ApprovalSystemOCT.models import Attachment, Process, Task, TaskType, Step, Book, ProjectRequirement, ProcessType, \
-    ProjectImplementTitle, ProjectImplement
+    ProjectImplementTitle, ProjectImplement, ImplementMainTask, ImplementSubTask, RequirementOutcomes, ProjectClosure, \
+    ApprovalLog, RequirementFiles
 from guardian.models import UserObjectPermission, GroupObjectPermission
+from django.db.models import Deferrable, UniqueConstraint
 
 
 class BookSerializer(serializers.ModelSerializer):
@@ -58,31 +60,6 @@ class TaskSerializer(serializers.ModelSerializer):
         response["steps"] = sorted(response["steps"], key=lambda x: x["step_seq"])
         return response
 
-
-class ProjectImplementSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProjectImplement
-        fields = (
-            "id", "project_base", "project_important_issue_number", "project_important_issue", "project_task",
-            "project_task_start_time",
-            "project_task_end_time", "season_implement_progress",
-            "season_implement_delay_explanation", "add_ups"
-        )
-
-
-class ProjectImplementTitleSerializer(serializers.ModelSerializer):
-    implements = ProjectImplementSerializer(read_only=True, many=True)
-
-    class Meta:
-        model = ProjectImplementTitle
-        fields = (
-            "id", "project_base", "sponsor", "department", "progress_year", "progress_season", "implements",
-        )
-
-    def to_representation(self, instance):
-        response = super().to_representation(instance)
-        response["implements"] = sorted(response["implements"], key=lambda x: x["project_important_issue_number"])
-        return response
 
 class PermissionsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -154,3 +131,102 @@ class ProcessSerializer(serializers.ModelSerializer):
         response = super().to_representation(instance)
         response["tasks"] = sorted(response["tasks"], key=lambda x: x["task_seq"])
         return response
+
+
+class ImplementSubTaskSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImplementSubTask
+        fields = (
+            'id', 'base', 'project_task', 'project_task_start_time', 'project_task_end_time',
+            'season_implement_progress',
+            'season_implement_delay_explanation',
+            'add_ups'
+        )
+
+
+class ImplementMainTaskSerializer(serializers.ModelSerializer):
+    subtasks = ImplementSubTaskSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ImplementMainTask
+        fields = ('id', 'base', 'issue', 'subtasks')
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response["subtasks"] = sorted(response["subtasks"], key=lambda x: x["id"])
+        return response
+
+
+class ProjectImplementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProjectImplement
+        fields = (
+            "id", "project_base", "project_important_issue_number", "project_important_issue", "project_task",
+            "project_task_start_time",
+            "project_task_end_time", "season_implement_progress",
+            "season_implement_delay_explanation", "add_ups"
+        )
+
+
+class ProjectImplementTitleSerializer(serializers.ModelSerializer):
+    implements = ProjectImplementSerializer(read_only=True, many=True)
+    main_tasks = ImplementMainTaskSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = ProjectImplementTitle
+        fields = (
+            "id", "project_base", "sponsor", "department", "progress_year", "progress_season", "implements",
+            "main_tasks"
+        )
+        # depth = 2
+
+    def to_representation(self, instance):
+        response = super().to_representation(instance)
+        response["implements"] = sorted(response["implements"], key=lambda x: x["project_important_issue_number"])
+        response["main_tasks"] = sorted(response["main_tasks"], key=lambda x: x["id"])
+        return response
+
+
+class RequirementOutcomesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RequirementOutcomes
+        fields = "__all__"
+
+
+class RequirementFilesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RequirementFiles
+        fields = "__all__"
+
+
+class ApprovalLogSerializer(serializers.ModelSerializer):
+    person_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ApprovalLog
+        fields = "__all__"
+
+    def get_person_name(self, obj):
+        return User.objects.get(id=obj.person_id).first_name
+
+
+class LogsRelatedField(serializers.RelatedField):
+
+    def to_representation(self, value):
+        # print(type(value))
+        # if isinstance(value, ApprovalLog):
+        #     serializer = ApprovalLogSerializer(value)
+        # else:
+        #     raise Exception('Unexpected type of logs')
+        res = value.all().values()
+        for i in res:
+            i['person_name'] = User.objects.get(id=i['person_id']).first_name
+        return res
+
+
+class ProjectClosureSerializer(serializers.ModelSerializer):
+    logs = LogsRelatedField(read_only=True)
+
+    class Meta:
+        model = ProjectClosure
+        fields = "__all__"

@@ -1,4 +1,4 @@
-var leftSideBarFunc = function (element, info, herf, active) {
+function leftSideBarFunc(element, info, herf, active) {
     element.append(
         "<ul class='nav nav-third-level collapse in project-second-menu'>" +
         "<li class=" + active + ">" +
@@ -7,7 +7,7 @@ var leftSideBarFunc = function (element, info, herf, active) {
     )
 }
 
-var resignValue = function (ele, vl) {
+function resignValue(ele, vl) {
     ele.find('input,textarea,select').each(function () {
             $(this).val(vl[$(this).attr("name")]);
         }
@@ -15,7 +15,7 @@ var resignValue = function (ele, vl) {
     return vl
 }
 
-var assignValue = function (ele, vl) {
+function assignValue(ele, vl) {
     console.log(ele, vl)
     ele.find('input,textarea,select').each(function () {
             if ($(this).attr("name") === 'project_start_time' || $(this).attr("name") === 'project_end_time') {
@@ -46,4 +46,4 @@ function getCookie(name) {
 
 function csrfSafeMethod(method) {
     return (/^(GET|HEAD|OPTIONS|TRACE|PATCH|PUT)$/.test(method));
-} 
+}

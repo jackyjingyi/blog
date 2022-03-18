@@ -1,0 +1,1122 @@
+{% extends 'projectBase.html' %}
+{% load static %}
+{% block content %}
+
+    <style>
+
+        .icon-list {
+            cursor: pointer;
+            text-align: center;
+            color: #757575;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .icon-list li {
+            width: 12.5%;
+        }
+
+        .icon-list li {
+            float: left;
+            width: 12.5%;
+            height: 100px;
+            padding: 10px;
+            line-height: 1.4;
+            text-align: center;
+            background-color: #f9f9f9;
+            border: 1px solid #fff;
+        }
+
+        .icon-list li:hover {
+            color: #FFFFFF;
+            background-color: #ff7e00;
+        }
+
+        .icon-list .caption {
+            display: block;
+            text-align: center;
+            word-wrap: break-word;
+            font-size: 12px;
+        }
+
+        .icon-category-header {
+            padding-bottom: 9px;
+            margin: 40px 0 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        @media (max-width: 768px) {
+            .icon-list li {
+                width: 25%;
+            }
+        }
+
+        .if {
+            font-size: 36px;
+        }
+
+        #implementTbody input textarea {
+            width: 100%;
+            height: 100%;
+        }
+
+        input, select, textarea {
+            border: none;
+            box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+        }
+
+        textarea {
+            resize: none;
+            overflow: auto;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+        }
+    </style>
+    <div style="background-color: whitesmoke;box-shadow: 10px 5px 5px floralwhite;padding:5px;margin-top: 30px">
+        <div class="row" id="topfilter" style="margin:5px 35px 5px 35px">
+            <form class="g-3 needs-validation" enctype="multipart/form-data" id="topFilter">
+                <div class="form-group z-index-1">
+                    <label class="inline" for="progress_year">切&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;换：</label>
+                    <select name="progress_year" id="progress_year0">
+                        {% for y in years %}
+                            {% if y == cy %}
+                                <option value="{{ y }}" selected>{{ y }}</option>
+                            {% else %}
+                                <option value="{{ y }}">{{ y }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    <label class="inline" for="progress_season"> </label>
+                    <select name="progress_season" id="progress_season0">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                    <button class="btn btn-primary btn-sm" id="top-filter-submit">切换</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <div style="background-color: whitesmoke;box-shadow: 10px 5px 5px floralwhite;padding:5px;margin-top: 30px">
+        <div class="row" style="margin:5px 35px 5px 35px">
+            <h2 class="text-center" style="margin:5px 35px 5px 35px"><strong>创新研究课题推进情况季度报表</strong></h2>
+        </div>
+
+        <div class="row" style="margin:5px 35px 5px 35px">
+            <div class="col-md-12">
+                <p class="text-left">
+                    <strong>课题名称: <span class="text-info">{{ obj_pr.project_name }}</span></strong>
+                </p>
+                <form class="g-3 needs-validation" enctype="multipart/form-data" id="create_title" novalidate>
+                    <div class="form-group">
+                        <div class="col-md-4 margin-left-0 text-left" style="padding-left: 0">
+
+                            <input class="form-control inline input-sm v-middle" name="project_base"
+                                   value="{{ obj_pr.pk }}" type="hidden"/>
+                            <label class="inline v-middle m-b-none"
+                                   for="department">责任单位/部门:</label>
+                            <input class="form-control inline input-sm v-middle width-200" placeholder="请输入部门名称"
+                                   id="department" name="department"/>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="inline v-middle m-b-none" for="progress_year"
+                                   style="margin-left: 5px">编报季度: </label>
+                            <input class="form-control inline input-sm v-middle width-100" id="progress_year1"
+                                   name="progress_year"/>年
+                            <label class="inline v-middle m-b-none" for="progress_season"></label>
+                            <input class="form-control inline input-sm v-middle width-60" id="progress_season1"
+                                   name="progress_season"/>季度
+                        </div>
+                        <div class="col-md-3">
+                            <label class="inline v-middle m-b-none" style="margin-left: 5px"
+                                   for="sponsor">负责人:</label>
+                            <input class="form-control inline input-sm v-middle width-200"
+                                   id="sponsor" name="sponsor"/>
+                        </div>
+                        <div class="col-md-1 pull-right">
+                            <a data-action="title_submit"><i class="icon iconfont icon-gou"></i></a>
+                            <a data-action="title_edit"><i class="icon iconfont icon-bianji"></i></a>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+        <div class="ibox m-production" style="margin:5px 35px 5px 35px">
+            <div class="ibox-content dp-flex">
+                <div class="col-sm-3 no-padding product-left-tab">
+                    <div class="m-product-left-tab border full-height">
+                        <div class="task-box">
+                            <div class="p-xs bg-v5-grey">
+                                <div class="row">
+                                    <div class="col-sm-8 task-name">重点事项</div>
+                                </div>
+                            </div>
+                            <div class="m-xs border" id="issueAppendBefore">
+                                <button value="create-issue" onclick="MainTask.mainTaskLoader()">创建</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-9">
+                    <div id="tabList" class="list-box">
+
+                        <div class="panel panel-default no-border" data-id="" data-i="0" data-company-id="">
+                            <div class="panel-heading border border-v1-grey">
+                                <div class="row">
+                                    <div class="col-sm-3 p-l-none" id="task-title">
+                                        重点事项名称
+                                    </div>
+                                    <div class="col-sm-7" id="task-title-func">
+                                        <span>删除、修改</span>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body no-padding no-borders of-auto min-h-300"
+                                 style="display: block">
+                                <table class="tree table table-bordered no-borders m-b-none"
+                                       style="table-layout: fixed">
+                                    <thead>
+                                    <tr>
+                                        <th style="word-wrap: break-word;">分项任务</th>
+                                        <th style="word-wrap: break-word;">开始时间</th>
+                                        <th style="word-wrap: break-word;">完成时间</th>
+                                        <th style="word-wrap: break-word;">推进情况</th>
+                                        <th style="word-wrap: break-word;">推迟原因</th>
+                                        <th style="word-wrap: break-word;">说明</th>
+                                        <th style="word-wrap: break-word;">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="subTaskPanel">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script src="{% static 'lib/bootstrap-select/dist/js/bootstrap-select.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'lib/bootstrap-select/dist/js/i18n/defaults-zh_CN.min.js' %}"
+            type="text/javascript"></script>
+    <script src="{% static 'lib/laydate/laydate.js' %}" type="text/javascript"></script>
+
+    <script defer>
+
+
+        const processID = "{{ process.pk }}"
+        const csrftoken = getCookie('csrftoken');
+        const user = "{{ user.id }}"
+        const objPr = "{{ obj_pr.pk }}"   // obj project pk
+        const process_owner_id = "{{ process.process_owner.id }}"
+
+        $('#secondaryMenu').append(
+            "<li class='fa fa-angle-right'>" + "课题需求" + "</li>" + "<li class='fa fa-angle-right active fw-bold'>" + "{{ template_name }}" + "</li>"
+        )
+        $.each($(".liGroupList"), function (idx, opt) {
+            let urlPath = "{{ template_name }}"
+            if (opt.innerText === urlPath) {
+                $(opt).addClass('active');
+            } else {
+                $(opt).removeClass('active');
+            }
+        });
+
+        $(window).ready(function () {
+            $('select').selectpicker();
+            if (user === process_owner_id) {
+                let leftSideBarSelector = $("#annual_user_projects");
+                // adds second level menu onto left sidebar
+                leftSideBarSelector.empty();
+                leftSideBarSelector.append(
+                    "<span style='margin-left:20%' value>我的立项课题</span>"
+                )
+                leftSideBarFunc(leftSideBarSelector, "课题详情", '/projectSystem/annualProjectDetail/' + processID, '');
+                leftSideBarFunc(leftSideBarSelector, "进度管理", '/projectSystem/Project/implement_tasks/' + processID + '/progress/', 'active');  // 进度管理，href待更新
+                leftSideBarFunc(leftSideBarSelector, "成果上传", '/projectSystem/Project/outcome/main/' + processID + '/', '');
+                leftSideBarFunc(leftSideBarSelector, "结题申请", '/projectSystem/Project/closure/main/' + processID + '/', '');
+            } else {
+                let leftSideBarSelector = $("#annual_all_projects");
+                // adds second level menu onto left sidebar
+                leftSideBarSelector.empty();
+                leftSideBarSelector.append(
+                    "<span style='margin-left:20%' value>所有立项课题</span>")
+                leftSideBarFunc(leftSideBarSelector, "课题详情", '/projectSystem/annualProjectDetail/' + processID, '');
+                leftSideBarFunc(leftSideBarSelector, "进度管理", '/projectSystem/Project/implement_tasks/' + processID + '/progress/', 'active');  // 进度管理，href待更新
+                leftSideBarFunc(leftSideBarSelector, "成果上传", '/projectSystem/Project/outcome/main/' + processID + '/', '');
+                leftSideBarFunc(leftSideBarSelector, "结题申请", '/projectSystem/Project/closure/main/' + processID + '/', '');
+            }
+            $("#top-filter-submit").click();
+        })
+
+        function leftSideBarFunc(element, info, herf, active) {
+            element.append(
+                "<ul class='nav nav-third-level collapse in project-second-menu'>" +
+                "<li class=" + active + ">" +
+                "<a id='basicInfo' href=" + herf + ">" +
+                "<span style='margin-left: 30%'>" + info + "</span></a></li>"
+            )
+        }
+
+        function resignValue(ele, vl) {
+            ele.find('input,textarea,select').each(function () {
+                    $(this).val(vl[$(this).attr("name")]);
+                }
+            )
+            return vl
+        }
+
+        function assignValue(ele, vl) {
+            console.log(ele, vl)
+            ele.find('input,textarea,select').each(function () {
+                    if ($(this).attr("name") === 'project_start_time' || $(this).attr("name") === 'project_end_time') {
+                        vl[$(this).attr("name")] = $(this).val() + ":00.000000";
+                    } else {
+                        vl[$(this).attr("name")] = $(this).val();
+                    }
+                }
+            )
+            return vl
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function csrfSafeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        $("#top-filter-submit").on("click", function (e) {
+            e.preventDefault();
+
+            let year = $("#progress_year0").val();
+            let season = $("#progress_season0").val();
+            console.log(year, season)
+            let theurl = '/projectSystem/Project/implementTitle/?project_base=' + objPr + '&progress_year=' + year + "&progress_season=" + season;
+            let topFilterForm = $("#topFilter");
+            console.log(theurl)
+            if (topFilterForm[0].checkValidity() === false) {
+                topFilterForm[0].reportValidity();
+            } else {
+                // get process year and season
+                // send ajax
+                console.log(theurl)
+                $.ajax({
+                    // todo : wait backend
+                    url: theurl,
+                    type: 'get',
+                    dataType: "json",
+                    contentType: "application/json",
+                    success: function (success_data) {
+                        console.log(success_data)
+                        if (success_data.length > 0) {
+                            // assign values into title field
+                            let title = Title.create(success_data[0]);
+                            DisplayPanel.reset()
+                            DisplayPanel.retrieve(title)
+                            DisplayPanel.hasObj = true;
+                            DisplayPanel.getMainTasks()
+                        } else {
+                            DisplayPanel.hasObj = false;
+                            DisplayPanel.reset();
+
+                        }
+                    },
+                    error: function (error_data) {
+                        console.log(error_data)
+                    }
+                })
+            }
+        })
+
+
+        $('a[data-action=title_submit]').on('click', function (e) {
+            // check if the obj exists
+            e.preventDefault();
+            DisplayPanel.create()
+        })
+        $("a[data-action=title_edit]").on('click', function (e) {
+            e.preventDefault();
+            DisplayPanel.change();
+        })
+
+        var saveInit = function () {
+            $(".datetimepicker").datetimepicker({
+                format: 'Y-m-d H:i',
+            });
+
+        }
+
+        class Title {
+            constructor(obj) {
+                this.department = obj.department;
+                this.id = obj.id;
+                this.implements = [];
+                this.progress_year = obj.progress_year;
+                this.progress_season = obj.progress_season;
+                this.project_base = obj.project_base;
+                this.sponsor = obj.sponsor;
+                this.main_tasks = obj.main_tasks; // change model structure
+            }
+
+            update(obj) {
+                this.department = obj.department;
+                this.id = obj.id;
+                this.implements = [];
+                this.progress_year = obj.progress_year;
+                this.progress_season = obj.progress_season;
+                this.project_base = obj.project_base;
+                this.sponsor = obj.sponsor;
+                this.main_tasks = obj.main_tasks; // change model structure
+            }
+
+            static get_instance(id) {
+                for (let i of this.instances) {
+                    if (i.id === id) {
+                        return i
+                    }
+                }
+            }
+
+            create_implement(implments) {
+                if (implments.length > 0) {
+                    for (let i of implments) {
+
+                        let _tmp = Implement.create(i)
+                        this.implements.push(_tmp)
+                    }
+                }
+            }
+
+
+            static instances = new Set();
+            static instances_id = new Set();
+
+            static create(obj) {
+                console.log(obj)
+                if (this.instances_id.has(obj.id)) {
+                    let z = Title.get_instance(obj.id);
+                    z.update(obj)
+                    return z
+                } else {
+                    let tmp = new Title(obj)
+                    this.instances_id.add(tmp.id);
+                    this.instances.add(tmp);
+                    return tmp
+                }
+            }
+        }
+
+        class DisplayPanel {
+            static hasObj = false
+            static titleForm = $("#create_title");
+            static titleComponents = {
+                'department': $("#department"),
+                'progress_year': $("#progress_year1"),
+                'progress_season': $("#progress_season1"),
+                'sponsor': $("#sponsor")
+            }
+
+            static tableComponents = {}
+
+            static titleInformation = {
+                'base_id': objPr,
+                'id': null,
+                'department': null,
+                'progress_year': null,
+                'progress_season': null,
+                'sponsor': null,
+            }
+
+
+            static retrieve(obj) {
+                this.titleComponents.department.val(obj.department);
+                this.titleComponents.progress_year.val(obj.progress_year);
+                this.titleComponents.progress_season.val(obj.progress_season);
+                this.titleComponents.sponsor.val(obj.sponsor);
+                this.titleInformation.id = obj.id;
+                this.titleInformation.department = obj.department;
+                this.titleInformation.progress_year = obj.progress_year;
+                this.titleInformation.progress_season = obj.progress_season;
+                this.titleInformation.sponsor = obj.sponsor;
+                this.titleComponents.department.attr("disabled", "disabled");
+                this.titleComponents.progress_year.attr("disabled", "disabled");
+                this.titleComponents.progress_season.attr("disabled", "disabled");
+                this.titleComponents.sponsor.attr("disabled", "disabled");
+            }
+
+            static init() {
+                if (!this.hasObj) {
+                    this.titleComponents.progress_year.val($("#progress_year0").val())
+                    this.titleComponents.progress_season.val($("#progress_season0").val())
+                    this.titleInformation.id = null;
+                    this.titleInformation.department = null;
+                    this.titleInformation.progress_year = this.titleComponents.progress_year.val();
+                    this.titleInformation.progress_season = this.titleComponents.progress_year.val();
+                    this.titleInformation.sponsor = null;
+                }
+            }
+
+            static update() {
+
+                if (this.titleForm[0].checkValidity() === false) {
+                    this.titleForm[0].reportValidity();
+                } else {
+                    let newTitle = {}
+                    assignValue(this.titleForm, newTitle);
+                    let create_url = "/projectSystem/Project/implementTitle/detail/" + this.titleInformation.id + "/"
+                    $.ajax({
+                        url: create_url,
+                        data: newTitle,
+                        headers: {'X-CSRFToken': csrftoken},
+                        type: 'patch',
+                        success: function (data) {
+                            console.log(data)
+                            let tmp = Title.create(data)
+                            DisplayPanel.reset()
+                            DisplayPanel.retrieve(tmp)
+                            DisplayPanel.getMainTasks()
+                        },
+                        error: function (edata) {
+                            console.log(edata)
+                        }
+                    })
+                }
+
+            }
+
+            static getTitle(baseid, year, season) {
+                let get_url = "/projectSystem/Project/implementTitle/?project_base=" + baseid + "&progress_year=" + year + "&progress_season=" + season + "/"
+                console.log(get_url)
+                $.ajax({
+                    url: get_url,
+                    type: 'get',
+                    success: function (success_data) {
+                        console.log(success_data)
+                        if (success_data.length > 0) {
+                            // assign values into title field
+                            console.log(success_data)
+                            let title = Title.create(success_data[0]);
+                            DisplayPanel.reset()
+                            DisplayPanel.retrieve(title)
+                            DisplayPanel.hasObj = true;
+                        } else {
+                            DisplayPanel.reset();
+                            DisplayPanel.hasObj = false;
+                        }
+                    },
+                    error: function (error_data) {
+                        console.log(error_data)
+                    }
+
+
+                })
+
+            }
+
+            static create() {
+                let displayPanel = this
+                // todo click save => ()
+                // 1 check if obj exists
+                if (this.hasObj) {
+                    // update
+                    this.update()
+                } else {
+                    // create
+                    // do not call create here, call title.create()
+                    if (this.titleForm[0].checkValidity() === false) {
+                        this.titleForm[0].reportValidity();
+                    } else {
+                        let newTitle = {}
+                        assignValue(this.titleForm, newTitle);
+                        let create_url = "/projectSystem/Project/implementTitle/"     // create implement title
+                        $.ajax({
+                            url: create_url,
+                            data: newTitle,
+                            headers: {'X-CSRFToken': csrftoken},
+                            type: 'post',
+                            success: function (data) {
+                                console.log(data)
+                                let tmp = Title.create(data)
+                                displayPanel.reset()
+                                displayPanel.retrieve(tmp)
+                                displayPanel.getMainTasks()
+                                // todo create success
+                            },
+                            error: function (edata) {
+                                console.log(edata)
+                            }
+                        })
+                    }
+
+                }
+
+            }
+
+            static reset() {
+                this.titleComponents.department.val('');
+                this.titleComponents.sponsor.val('');
+                this.init();
+                this.titleComponents.department.attr("disabled", false);
+                this.titleComponents.progress_year.attr("disabled", "disabled");
+                this.titleComponents.progress_season.attr("disabled", "disabled");
+                this.titleComponents.sponsor.attr("disabled", false);
+                $(".main-issue").remove()
+                $(".subtask-line").remove()
+                $('#task-title').empty();
+                $('#task-title-func').empty();
+
+            }
+
+            static change() {
+                for (let k in this.titleComponents) {
+                    if (k !== 'progress_year' && k !== 'progress_season') {
+                        this.titleComponents[k].attr("disabled", false)
+                    }
+                }
+            }
+
+            static getMainTasks() {
+
+                const title = Title.get_instance(this.titleInformation.id)
+                console.log(title)
+
+                if (title.main_tasks.length > 0) {
+                    for (let i = 0; i < title.main_tasks.length; i++) {
+                        $("#issueAppendBefore").before(
+                            "<div class='m-xs border main-issue' data-related-name='" + title.main_tasks[i].issue + "' onclick='DisplayPanel.triggerMainTaskButton(this)' data-related-id='" + title.main_tasks[i].id + "'>" +
+                            "<ul class='list-group'>" +
+                            "<li class='list-group-item'>" +
+                            "<div class='profession dp-flex'>" +
+                            "<div class='profession-left'><span class='label label-info label-circle dp-inline-block-1 pull-right m-t-xs' title='" + title.main_tasks[i].issue + "'>" + title.main_tasks[i].issue.toString().slice(0, 2) + "</span>" +
+                            "</div>" +
+                            "<div class='profession-right m-l-xs of-hidden'>" +
+                            "<div class='row m-l-none'>" +
+                            "<div class='col-sm-8 p-h-xxs'>" +
+                            "<span class='full-width' title='" + title.main_tasks[i].issue + "'>" + title.main_tasks[i].issue + "</span>" +
+                            "</div></div></div><div class='clearfix'></div></div></li></ul></div>"
+                        )
+                    }
+                }
+            }
+
+            static triggerMainTaskButton(e) {
+
+                const subid = $(e).data('related-id')
+                const taskTitle = $('#task-title')
+                const taskTitleFunc = $('#task-title-func')
+                $('.main-issue li').each(function (index) {
+                    if ($(this).hasClass('active')) {
+                        $(this).removeClass('active')
+                    }
+                })
+                $(e).find('li').first().addClass('active')
+                // add to task title
+                taskTitle.empty();
+                taskTitle.append('<span>' + $(e).data('related-name') +
+                    '</span>')
+                taskTitleFunc.empty();
+                taskTitleFunc.append(
+                    "<button data-related-name='" + $(e).data('related-name') + "' data-related-id='" + subid + "' onclick='MainTask.triggerChange(this)'>修改</button>" +
+                    "<span>&nbsp;</span>" +
+                    "<button data-related-name='" + $(e).data('related-name') + "' data-related-id='" + subid + "' onclick='MainTask.triggerDelete(this)'>删除</button>"
+                )
+                return this.getSubTasks(subid)
+            }
+
+            static getSubTasks(i) {
+                // i = base id
+                const requireList = ['project_task', 'project_task_start_time', 'project_task_end_time', 'season_implement_progress', 'season_implement_delay_explanation', 'add_ups']
+                const subid = i
+                let tb = $("#subTaskPanel")
+                tb.empty()
+
+                console.log(typeof subid, subid)
+                $.ajax({
+                    url: '/projectSystem/Project/implement/task/sub?base=' + subid,
+                    type: 'get',
+                    success: function (success_data) {
+                        console.log(success_data)
+                        if (success_data.length > 0) {
+                            for (let i in success_data) {
+                                let tmpsub = new SubTasks(success_data[i])
+                                let tmpdisplay = tmpsub.display(requireList)
+                                tb.append(tmpdisplay)
+                            }
+                        }
+                        tb.append(
+                            "<tr class='subtask-line'><td colspan='7'><button onclick='SubTasks.createNew(this)' data-base='" + subid + "'>新增</button></td></tr>"
+                        )
+
+                    }
+                })
+
+            }
+        }
+
+        class MainTask {
+            constructor(obj) {
+                //
+                this.id = obj.id;
+                this.base = obj.base;
+                this.issue = obj.issue;
+                this.subtasks = obj.subtasks
+            }
+
+            static create(i) {
+                return new MainTask(i)
+            }
+
+            static triggerChange(e) {
+                const mID = $(e).data('related-id')
+                const name = $(e).data('related-name')
+                const y = $("#progress_year1").val()
+                const s = $("#progress_season1").val()
+
+                layer.ready(
+                    layer.open({
+                        type: 1,
+                        area: ['780px', '500px'],
+                        shadeClose: true, //点击遮罩关闭
+                        title: '修改重点工作事项',
+                        content:
+                            "<div class='col-md-8 margin-top-15'>" +
+                            "<p>修改课题《" + '{{ obj_pr.project_name }}' + "》 " + y + "年" + s + "季度重点工作事项</p>" +
+                            "<form>" +
+                            "<label>重点工作事项名称</label>" +
+                            "<input class='form-control' value='" + name + "' id='issuePost'/>" +
+                            "</form>" +
+                            "</div>" +
+                            "<div class='col-md-8 margin margin-top-15 margin-left-5' id='infoBack'>" +
+                            "</div>",
+                        btn: ['确认', '取消'],
+                        yes: function (index, layro) {
+                            layer.close(index)
+                            $.ajax({
+                                url: "/projectSystem/Project/implement/task/main/detail/" + mID + "/",
+                                type: "patch",
+                                data: {'issue': $("#issuePost").val()},
+                                headers: {'X-CSRFToken': csrftoken},
+                                success: function (success_data) {
+                                    console.log(success_data)
+                                    let content = $($(layro).children()[1])
+
+                                    content.empty()
+                                    content.append('<p>修改成功！</p>')
+                                    $('#top-filter-submit').click()
+                                    setTimeout(function () {
+                                        layer.close(index)
+                                    }, 1500)
+                                },
+                                error: function (error_data) {
+                                    console.log(error_data)
+                                }
+                            })
+
+                        }
+                    })
+                );
+
+            }
+
+            static triggerDelete(e) {
+                // 删除子任务  as well
+                const mID = $(e).data('related-id')
+                const name = $(e).data('related-name')
+                const y = $("#progress_year1").val()
+                const s = $("#progress_season1").val()
+                layer.ready(
+                    layer.open({
+                        type: 1,
+                        area: ['580px', '300px'],
+                        shadeClose: true, //点击遮罩关闭
+                        title: '删除重点工作事项',
+                        content:
+                            "<div class='col-md-8 margin-top-15'>" +
+                            "<p>确认删除" + '{{ obj_pr.project_name }}' + "》 " + y + "年" + s + "季度重点工作事项</p>" +
+                            "<span class='text-danger'>" + name + "&nbsp;</span>吗?" +
+                            "<div class='margin-top-15'><p class='text-sm' style='font-style: italic'>注意： 所有的分项任务会一并删除！</p></div>" +
+                            "<div class='clearfix'></div></div>",
+                        btn: ['确认', '取消'],
+                        yes: function (index, layro) {
+
+                            $.ajax({
+                                url: "/projectSystem/Project/implement/task/main/detail/" + mID + "/",
+                                type: "delete",
+                                headers: {'X-CSRFToken': csrftoken},
+                                success: function (success_data) {
+                                    let _content = $($(layro).children()[1])
+                                    console.log(_content)
+                                    _content.empty()
+                                    _content.append('<p>删除成功！</p>')
+                                    setTimeout(function () {
+                                        layer.close(index)
+                                        $('#top-filter-submit').click()
+                                    }, 1500)
+
+                                },
+                                error: function (error_data) {
+                                    console.log(error_data)
+                                }
+                            })
+
+                        }
+                    })
+                );
+
+            }
+
+            static mainTaskLoader() {
+                const pid = DisplayPanel.titleInformation.id
+                const y = $("#progress_year1").val()
+                const s = $("#progress_season1").val()
+                if (DisplayPanel.hasObj) {
+                    return layer.ready(
+                        layer.open({
+                            type: 1,
+                            area: ['780px', '500px'],
+                            shadeClose: true, //点击遮罩关闭
+                            title: '创建重点工作事项',
+                            content:
+                                "<div class='col-md-8 margin-top-15'>" +
+                                "<p>创建课题《" + '{{ obj_pr.project_name }}' + "》 " + y + "年" + s + "季度重点工作事项</p>" +
+                                "<form>" +
+                                "<label>重点工作事项名称</label>" +
+                                "<input class='form-control' value='' id='issuePost'/>" +
+                                "</form>" +
+                                "</div>" +
+                                "<div class='col-md-8 margin margin-top-15 margin-left-5' id='infoBack'>" +
+                                "</div>",
+                            btn: ['确认', '取消'],
+                            yes: function (index, layro) {
+                                layer.close(index)
+                                $.ajax({
+                                    url: "/projectSystem/Project/implement/task/main",
+                                    type: "post",
+                                    data: {'base': pid, 'issue': $("#issuePost").val()},
+                                    headers: {'X-CSRFToken': csrftoken},
+                                    success: function (success_data) {
+                                        console.log(success_data)
+                                        $("#top-filter-submit").click();
+                                    },
+                                    error: function (error_data) {
+                                        console.log(error_data)
+                                        if (error_data.status === 500) {
+                                            console.log(layro)
+                                        }
+
+                                    }
+                                })
+                            }
+                        })
+                    );
+                } else {
+                    return layer.ready(
+                        layer.open({
+                            type: 1,
+                            area: ['780px', '500px'],
+                            shadeClose: true, //点击遮罩关闭
+                            title: '创建重点工作事项',
+                            content:
+                                "<p>需要先创建标题</p>"
+                        })
+                    );
+                }
+
+
+            }
+
+        }
+
+        class SubTasks {
+            constructor(obj) {
+                this.id = obj.id;
+                this.base = obj.base;
+                this.project_task = obj.project_task;
+                this.project_task_start_time = new Date(obj.project_task_start_time);
+                this.project_task_end_time = new Date(obj.project_task_end_time);
+                this.season_implement_progress = obj.season_implement_progress;
+                this.season_implement_delay_explanation = obj.season_implement_delay_explanation;
+                this.add_ups = obj.add_ups;
+            }
+
+            static createNew(e) {
+                const baseID = $(e).data('base')
+                console.log($(e), baseID)
+                this.subTaskLoader(baseID)
+                laydate.render({
+                    elem: '#project_task_start_time'
+                })
+                laydate.render({
+                    elem: '#project_task_end_time'
+                })
+
+            }
+
+            display(rl) {
+
+                let dis = '<tr class="subtask-line">'
+
+                for (let key in this) {
+
+                    if (rl.includes(key)) {
+                        if (this[key] instanceof Date) {
+                            dis += '<td>' + this[key].Format("yyyy-MM-dd") + '</td>'
+                        } else {
+                            dis += '<td>' + this[key] + '</td>'
+                        }
+
+                    }
+
+                }
+                dis += "<td><button data-parent-id='" + this.base + "' data-related-id='" + this.id + "' onclick='SubTasks.triggerChange(this)'>修改</button><span>&nbsp</span><button data-parent-id='" + this.base + "' data-related-id='" + this.id + "' onclick='SubTasks.triggerDelete(this)'>删除</button></td>" +
+                    "</tr>"
+                return dis
+            }
+
+            static triggerDelete(e) {
+                const subID = $(e).data('related-id')
+                const baseID = $(e).data('parent-id')
+                // call layer confirm func
+                // delete by id
+                layer.open({
+                    type: 1,
+                    area: ['680px', '400px'],
+                    shadeClose: true, //点击遮罩关闭
+                    title: '删除分项任务',
+                    content: '<p>确认删除吗？</p>',
+                    btn: ['确认', '取消'],
+                    yes: function (index, layro) {
+                        $.ajax({
+                            url: "/projectSystem/Project/implement/task/sub/detail/" + subID + "/",
+                            type: "delete",
+                            headers: {'X-CSRFToken': csrftoken},
+                            success: function (success_data) {
+                                let content = $($(layro).children()[1])
+
+                                content.empty()
+                                content.append('<p>删除成功！</p>')
+                                DisplayPanel.getSubTasks(baseID)
+                                setTimeout(function () {
+                                    layer.close(index)
+                                }, 1000)
+                            },
+                            error: function (error_data) {
+                                console.log(error_data)
+                                if (error_data.status === 500) {
+                                    console.log(layro)
+                                }
+                            }
+                        })
+
+                    }
+                });
+            }
+
+
+            static triggerChange(e) {
+                // change specific id
+                const subID = $(e).data('related-id')
+                // request sub
+                $.ajax({
+                    url: '/projectSystem/Project/implement/task/sub/detail/' + subID,
+                    type: 'get',
+                    success: function (success_data) {
+                        console.log(success_data)
+                        let tmpsub = new SubTasks(success_data)
+                        console.log(tmpsub)
+                        tmpsub.change()
+                        laydate.render({
+                            elem: '#project_task_start_time'
+                        })
+                        laydate.render({
+                            elem: '#project_task_end_time'
+                        })
+                    }
+                })
+
+            }
+
+            change() {
+                let sub = this
+                return layer.ready(
+                    layer.open({
+                        type: 1,
+                        area: ['780px', '700px'],
+                        shadeClose: true, //点击遮罩关闭
+                        title: '修改分项任务',
+                        content: SubTasks.layerContent(sub),
+                        btn: ['确认', '取消'],
+                        yes: function (index, layro) {
+                            let subform = $(layro).find('form')
+                            let newSub = {}
+
+                            subform.find('input,textarea,select').each(function () {
+                                    if (($(this).attr("name") === 'project_task_start_time' || $(this).attr("name") === 'project_task_end_time') && $(this).val().length < 21) {
+                                        let tmpDate = new Date($(this).val())
+                                        newSub[$(this).attr("name")] = tmpDate.toISOString();
+                                    } else {
+                                        newSub[$(this).attr("name")] = $(this).val();
+                                    }
+                                }
+                            )
+                            newSub['base'] = sub.base
+                            $.ajax({
+                                url: "/projectSystem/Project/implement/task/sub/detail/" + sub.id + "/",
+                                type: "patch",
+                                data: newSub,
+                                headers: {'X-CSRFToken': csrftoken},
+                                success: function (success_data) {
+                                    layer.close(index)
+                                    DisplayPanel.getSubTasks(sub.base)
+                                },
+                                error: function (error_data) {
+                                    console.log(error_data)
+                                    if (error_data.status === 500) {
+                                        console.log(layro)
+                                    }
+                                }
+                            })
+
+                        }
+                    })
+                );
+            }
+
+            static layerContent(obj) {
+                let content;
+                if (obj instanceof SubTasks) {
+                    content = "<div class='col-md-8 margin-top-15'>" +
+                        "<form>" +
+                        "<label>分项任务</label>" +
+                        "<input class='form-control' name='project_task' id='project_important_issue' type='text' value='" + obj.project_task + "' style='width: 100%;height: 100%'/>" +
+                        "<label>开始时间： </label>" +
+                        "<input class='form-control' name='project_task_start_time' id='project_task_start_time' type='text' value='" + obj.project_task_start_time.Format("yyyy-MM-dd") + "' style='width: 100%;height: 100%'/>" +
+                        "<label>结束时间： </label>" +
+                        "<input class='form-control' name='project_task_end_time' id='project_task_end_time' type='text' value='" + obj.project_task_end_time.Format("yyyy-MM-dd") + "' style='width: 100%;height: 100%'/>" +
+                        "<label>推进情况： </label>" +
+                        "<textarea rows=8 class='form-control' name='season_implement_progress' id='season_implement_progress' type='text' style='width: 100%;height: 100%'>" + obj.season_implement_progress + "</textarea>" +
+                        "<label>推迟原因： </label>" +
+                        "<textarea rows=8 class='form-control' name='season_implement_delay_explanation' id='season_implement_delay_explanation' type='text' style='width: 100%;height: 100%'>" + obj.season_implement_delay_explanation + "</textarea>" +
+                        "<label>说明： </label>" +
+                        "<textarea rows=8 class='form-control' name='add_ups' id='add_ups' type='text' style='width: 100%;height: 100%'>" + obj.add_ups + "</textarea>" +
+                        "</form>" +
+                        "</div>"
+
+                } else {
+                    content = "<div class='col-md-8 margin-top-15'>" +
+                        "<form>" +
+                        "<label>分项任务</label>" +
+                        "<input class='form-control' name='project_task' id='project_important_issue' type='text' value='' style='width: 100%;height: 100%'/>" +
+                        "<label>开始时间： </label>" +
+                        "<input class='form-control' name='project_task_start_time' id='project_task_start_time' type='text' value='' style='width: 100%;height: 100%'/>" +
+                        "<label>结束时间： </label>" +
+                        "<input class='form-control' name='project_task_end_time' id='project_task_end_time' type='text' value='' style='width: 100%;height: 100%'/>" +
+                        "<label>推进情况： </label>" +
+                        "<textarea rows=8 class='form-control' name='season_implement_progress' id='season_implement_progress' type='text' value='' style='width: 100%;height: 100%'></textarea>" +
+                        "<label>推迟原因： </label>" +
+                        "<textarea rows=8 class='form-control' name='season_implement_delay_explanation' id='season_implement_delay_explanation' type='text' value='' style='width: 100%;height: 100%'></textarea>" +
+                        "<label>说明： </label>" +
+                        "<textarea rows=8 class='form-control' name='add_ups' id='add_ups' type='text' value='' style='width: 100%;height: 100%'></textarea>" +
+                        "</form>" +
+                        "</div>"
+                }
+                return content
+            }
+
+            static subTaskLoader(baseID) {
+                // base id create
+                return layer.ready(
+                    layer.open({
+                        type: 1,
+                        area: ['780px', '700px'],
+                        shadeClose: true, //点击遮罩关闭
+                        title: '创建分项任务',
+                        content: SubTasks.layerContent(null),
+                        btn: ['确认', '取消'],
+                        yes: function (index, layro) {
+                            let subform = $(layro).find('form')
+                            let newSub = {}
+
+                            subform.find('input,textarea,select').each(function () {
+                                    if (($(this).attr("name") === 'project_task_start_time' || $(this).attr("name") === 'project_task_end_time') && $(this).val().length < 21) {
+                                        let tmpDate = new Date($(this).val())
+                                        newSub[$(this).attr("name")] = tmpDate.toISOString();
+                                    } else {
+                                        newSub[$(this).attr("name")] = $(this).val();
+                                    }
+                                }
+                            )
+                            newSub['base'] = baseID
+                            $.ajax({
+                                url: "/projectSystem/Project/implement/task/sub",
+                                type: "post",
+                                data: newSub,
+                                headers: {'X-CSRFToken': csrftoken},
+                                success: function (success_data) {
+                                    layer.close(index)
+                                    DisplayPanel.getSubTasks(baseID)
+                                },
+                                error: function (error_data) {
+                                    console.log(error_data)
+                                    let content = $($(layro).children()[1])
+                                    if (error_data.status === 500) {
+                                        content.empty()
+                                        content.append('<p>创建失败，请检查分项任务是否重名！</p>')
+                                        setTimeout(function () {
+                                            layer.close(index)
+                                        }, 1500)
+                                    }
+                                }
+                            })
+
+                        }
+                    })
+                );
+            }
+        }
+
+        Date.prototype.Format = function (fmt) { //author: meizz
+            var o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        }
+
+    </script>
+
+{% endblock %}

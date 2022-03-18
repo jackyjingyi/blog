@@ -73,9 +73,9 @@
 
 
                         </td>
-                        <td>{{ item.process_executor.first_name }}</td>
-                        <td>{{ item.process_executor.groups.first.name }}</td>
-                        <td>{{ item.creat_time|date:"Y年n月d日" }}</td>
+                        <td>{{ item.process_owner.first_name }}</td>
+                        <td>{{ item.process_owner.groups.first.name }}</td>
+                        <td>{{ item.create_time |date:'Y年n月d日' }}</td>
                     </tr>
                 {% endfor %}
 

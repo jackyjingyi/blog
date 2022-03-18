@@ -1,0 +1,777 @@
+{% extends 'projectBase.html' %}
+{% load static %}
+{% block content %}
+    <div class="container-fluid"
+         style="background-color: whitesmoke;box-shadow: 10px 5px 5px floralwhite;padding:5px;margin-top: 30px">
+        <div class="r-title text-center">
+            <h2>创新研究课题成果结题信息</h2>
+        </div>
+        <hr>
+        <form id="closure-form">
+            <div class="col-md-10 border">
+
+                <div class="row">
+                    <h3 class="text-center">
+                        课题信息
+                    </h3>
+                    <hr>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="fw-bold" for="project_name">
+                            课题名称
+                        </label>
+                    </div>
+                    <div class="col-md-5">
+                        <input class="form-control" id="project_name" value="{{ obj_pr.project_name }}" disabled/>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="fw-bold" for="project_type">
+                            课题类型
+                        </label>
+                    </div>
+                    <div class="col-md-5">
+                        <input class="form-control" id="project_type" value="{{ obj_pr.get_project_type_display }}"
+                               disabled/>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="fw-bold" for="sponsor">
+                            课题负责人
+                        </label>
+                    </div>
+                    <div class="col-md-5">
+                        <input class="form-control" id="sponsor" value="{{ obj_pr.project_sponsor }}" disabled/>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="fw-bold" for="teams">
+                            课题参与团队
+                        </label>
+                    </div>
+                    <div class="col-md-5">
+                        <input class="form-control" id="teams" value="{{ department }}" disabled/>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="fw-bold" for="start_time">
+                            开始时间
+                        </label>
+                    </div>
+                    <div class="col-md-5">
+                        {% if closure %}
+                            <input name="start_time" type="text" class="form-control"
+                                   id="start_time" maxlength="255"
+                                   placeholder="项目开始时间" value="{{ closure.end_time|date:'Y-n-d H:i' }}"
+                                   required>
+                        {% else %}
+                            <input name="start_time" type="text" class="form-control"
+                                   id="start_time" maxlength="255"
+                                   placeholder="项目开始时间"
+                                   required>
+                        {% endif %}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="fw-bold" for="end_time">
+                            结束时间
+                        </label>
+                    </div>
+                    <div class="col-md-5">
+                        {% if closure %}
+                            <input name="end_time" type="text" class="form-control"
+                                   id="end_time" maxlength="255"
+                                   placeholder="项目结束时间" value="{{ closure.end_time|date:'Y-n-d H:i' }}"
+                                   required>
+                        {% else %}
+                            <input name="end_time" type="text" class="form-control"
+                                   id="end_time" maxlength="255"
+                                   placeholder="项目结束时间"
+                                   required>
+                        {% endif %}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="fw-bold" for="founding_usage">
+                            经费使用情况
+                        </label>
+                    </div>
+                    <div class="col-md-5">
+                        {% if closure %}
+                            <input name="founding_usage" type="text" class="form-control"
+                                   id="founding_usage" maxlength="255"
+                                   placeholder="本页面填写" value="{{ closure.founding_usage }}"
+                                   required>
+                        {% else %}
+                            <input name="founding_usage" type="text" class="form-control"
+                                   id="founding_usage" maxlength="255"
+                                   placeholder="本页面填写"
+                                   required>
+                        {% endif %}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="fw-bold" for="outcomes">
+                            结题成果
+                        </label>
+                    </div>
+                    <div class="col-md-5">
+                        {% if outcome %}
+                            <ul class="list-group">
+                                {% for obj in outcome %}
+                                    <li class="list-group-item">
+                                        <a href="{{ obj.file.url }}" target="_blank">
+                                            {{ obj.get_file_name }}
+                                        </a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="fw-bold" for="project_closure_info">
+                            课题完成情况
+                        </label>
+                    </div>
+                    <div class="col-md-5">
+                        {% if closure %}
+                            <textarea name="project_closure_info" class="form-control text-left"
+                                      id="project_closure_info" placeholder="本页面填写"
+                                      rows="10">
+                        {{ closure.project_closure_info }}
+                        </textarea>
+                        {% else %}
+                            <textarea name="project_closure_info" class="form-control text-left"
+                                      id="project_closure_info" placeholder="本页面填写"
+                                      rows="10">
+                        </textarea>
+                        {% endif %}
+                    </div>
+                </div>
+                <hr>
+            </div>
+        </form>
+
+        <div class="col-md-2 border">
+            <div class="row">
+                <h3 class="text-center">
+                    审批信息
+                </h3>
+                <hr>
+            </div>
+            <div class="row previous-action-panel">
+                <div id="infoPanel-1">
+
+                </div>
+            </div>
+            <hr>
+            <div class="row status-panel">
+                <div>
+                    <label for="lastApprovalLog">
+                        最近审批意见
+                    </label>
+                    <textarea id="lastApprovalLog" name="lastApprovalLog" style="width: 100%" rows="5" disabled>
+
+                    </textarea>
+                </div>
+            </div>
+            <hr>
+            <div class="row current-status" id="currentStatus">
+
+            </div>
+            <hr>
+            <div class="row action-panel" id="action-panel">
+                <textarea id="submitLog" name="submitLog" style="width: 100%" rows="5">
+
+                </textarea>
+
+                {% if closure %}
+                    <button id="updateClosure" data-target="update" data-type="requester_submit">提交</button>
+                {% else %}
+                    <button id="createClosure" data-target="create" data-type="requester_submit">提交</button>
+                {% endif %}
+                <button id="approval" data-type="approval">通过</button>
+                <button id="deny" data-type="deny">驳回</button>
+                <button id="withdraw" data-type="withdraw">撤销</button>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'lib/datepicker/jquery.datetimepicker.full.min.js' %}" type="text/javascript"></script>
+    <script defer>
+        const processID = "{{ process.pk }}"
+        const closure = "{{ closure }}"
+        const csrftoken = getCookie('csrftoken');
+        const project_base_id = '{{ obj_pr.id }}'
+        const req_user = '{{ obj_pr.project_sponsor }}'
+        const receiver = '{{ obj_pr.project_head_master }}'
+        const closureForm = $("#closure-form")
+        const user = "{{ user.id }}"
+        const process_owner_id = "{{ process.process_owner.id }}"
+        const formLabels = ['start_time', 'end_time', 'founding_usage', 'project_closure_info', 'submitLog']
+        var closureID;
+        var closureObj;
+        var pageUser;
+        const actionDict = {
+            '1': '提交',
+            '2': '通过',
+            '3': '驳回',
+            '4': '撤回',
+        }
+        const statusDict = {
+            '0': '等待负责人提交结题申请',
+            '1': '等待分管院长审批结题申请',
+            '2': '结题申请通过，课题已结题',
+            '3': '结题申请未通过。',
+            '4': '结题申请已撤销，请重新编辑后提交',
+        }
+
+        // 左侧menubar
+
+        function leftSideBarFunc(element, info, herf, active) {
+            element.append(
+                "<ul class='nav nav-third-level collapse in project-second-menu'>" +
+                "<li class=" + active + ">" +
+                "<a id='basicInfo' href=" + herf + ">" +
+                "<span style='margin-left: 30%'>" + info + "</span></a></li>"
+            )
+        }
+
+        if (user === process_owner_id) {
+            let leftSideBarSelector = $("#annual_user_projects");
+            // adds second level menu onto left sidebar
+            leftSideBarSelector.empty();
+            leftSideBarSelector.append(
+                "<span style='margin-left:20%' value>我的立项课题</span>"
+            )
+            leftSideBarFunc(leftSideBarSelector, "课题详情", '/projectSystem/annualProjectDetail/' + processID, '');
+            leftSideBarFunc(leftSideBarSelector, "进度管理", '/projectSystem/Project/implement_tasks/' + processID + '/progress/', '');  // 进度管理，href待更新
+            leftSideBarFunc(leftSideBarSelector, "成果上传", '/projectSystem/Project/outcome/main/' + processID + '/', '');
+            leftSideBarFunc(leftSideBarSelector, "结题申请", '/projectSystem/Project/closure/main/' + processID + '/', 'active');
+        } else {
+            let leftSideBarSelector = $("#annual_all_projects");
+            // adds second level menu onto left sidebar
+            leftSideBarSelector.empty();
+            leftSideBarSelector.append(
+                "<span style='margin-left:20%' value>所有立项课题</span>")
+            leftSideBarFunc(leftSideBarSelector, "课题详情", '/projectSystem/annualProjectDetail/' + processID, '');
+            leftSideBarFunc(leftSideBarSelector, "进度管理", '/projectSystem/Project/implement_tasks/' + processID + '/progress/', '');  // 进度管理，href待更新
+            leftSideBarFunc(leftSideBarSelector, "成果上传", '/projectSystem/Project/outcome/main/' + processID + '/', '');
+            leftSideBarFunc(leftSideBarSelector, "结题申请", '/projectSystem/Project/closure/main/' + processID + '/', 'active');
+        }
+        // date picker
+        $('#start_time').datetimepicker({
+            format: 'Y-m-d H:i',
+            onShow: function (ct) {
+                this.setOptions({
+                    maxDate: $('#end_time').val() ? $('#end_time').val() : false
+                })
+            },
+
+        });
+        $('#end_time').datetimepicker({
+            format: 'Y-m-d H:i',
+            onShow: function (ct) {
+                this.setOptions({
+                    minDate: $('#start_time').val() ? $('#start_time').val() : false
+                })
+            },
+
+        });
+
+        class User {
+            constructor(id, recid, reqid) {
+                this.id = parseInt(id)
+                this.isReceiver = recid === parseInt(id)
+                this.isRequester = reqid === parseInt(id)
+            }
+
+            handleRefresh(status) {
+                if (this.isRequester) {
+                    this.requestFormRefresh(status)
+                    this.requestButtonsRefresh(status)
+                } else if (this.isReceiver) {
+                    this.receiverFormRefresh(status)
+                    this.receiverButtonsRefresh(status)
+                } else {
+                    this.normalRefresh()
+                }
+                if (!closureObj) {
+                    $("#currentStatus").empty().append(
+                        '<span>' + statusDict[status] + '</span>'
+                    )
+                    $("#infoPanel-1").empty().append(
+                        '<span>暂无记录</span>'
+                    )
+                }
+
+            }
+
+            requestButtonsRefresh(status) {
+                hideButtons();
+                if (status === '0' || status === '4') {
+                    $("button[data-type='requester_submit']").show();
+                }
+                // hide 通过、驳回按钮
+                if (status === '1' || status === '3') {
+                    $("#submitLog").attr('disabled', false)
+                    $("button[data-type='withdraw']").show();
+                }
+            }
+
+            requestFormRefresh(status) {
+                if (status === '0' || status === '4') {
+                    showForms();
+                } else {
+                    blockForms();
+                }
+            }
+
+            receiverFormRefresh(status) {
+                blockForms();
+                // 仅提交状态可以填写、审批
+                if (status === '1') {
+                    $('#submitLog').attr('disabled', false)
+                }
+            }
+
+            receiverButtonsRefresh(status) {
+                hideButtons();
+                // 仅提交状态可以填写、审批
+                if (status === '1') {
+                    $("button[data-type='approval'],[data-type='deny']").show();
+
+                }
+            }
+
+            subLog(closure, status) {
+                // 当为审批人角色时
+                const url = '/projectSystem/ApprovalLogs/'
+                // note action person
+                // person_id = this.id
+                // action = '1'
+                const reqdata = {
+                    'content_type': 40,
+                    'person': this.id,
+                    'object_id': closure.id,
+                    'action': status,
+                    'note': getNote()
+                }
+                return $.ajax({
+                    url: url,
+                    type: 'post',
+                    data: reqdata,
+                    headers: {'X-CSRFToken': csrftoken},
+                })
+
+            }
+
+            normalRefresh() {
+                // all block
+                blockForms();
+                hideButtons();
+            }
+        }
+
+        let initReq = new Promise(function (resolve, reject) {
+            getUserIdByName(req_user).then(
+                (res) => {
+                    resolve(res)
+                }
+            ).catch((err) => {
+                reject(err)
+            })
+        })
+        let initRec = new Promise(function (resolve, reject) {
+            getUserIdByName(receiver).then(
+                (res) => {
+                    resolve(res)
+                }
+            ).catch((err) => {
+                reject(err)
+            })
+        })
+        let initClosure = new Promise(function (resolve, reject) {
+            return getClosureByID(('{{ closure.id }}')).then((res) => {
+                    resolve(res)
+                }
+            ).catch((err) => {
+                console.log(err)
+                reject(err)
+            })
+        })
+        if (closure !== 'None') {
+            console.log("here,main")
+            Promise.all([initRec, initReq, initClosure]).then((result) => {
+                console.log(result)
+                pageUser = new User(user, result[0], result[1])
+                console.log(result[2])
+                closureObj = new Closure(result[2])
+                closureObj.assign_id(result[2].id)
+                closureObj.assign_request(result[2].request_from)
+                closureObj.assign_receiver(result[2].receiver)
+                closureObj.assign_status(result[2].status)
+                closureObj.assign_logs(result[2].logs)
+                closureObj.refresh()
+                console.log(closureObj);
+            })
+        } else {
+            Promise.all([initRec, initReq]).then((result) => {
+                pageUser = new User(user, result[0], result[1])
+                pageUser.handleRefresh('0')
+            })
+        }
+
+
+        function hideButtons() {
+            $('#action-panel').find('button').each(function (index, element) {
+                $(element).hide()
+            })
+        }
+
+        function blockForms() {
+            for (let i = 0; i < formLabels.length; i++) {
+                $('#' + formLabels[i]).attr('disabled', true)
+            }
+        }
+
+        function showForms() {
+            for (let i = 0; i < formLabels.length; i++) {
+                $('#' + formLabels[i]).attr('disabled', false)
+            }
+        }
+
+        class Closure {
+            constructor(obj) {
+                this.project_base = obj.project_base;
+                this.start_time = obj.start_time;
+                this.end_time = obj.end_time;
+                this.founding_usage = obj.founding_usage;
+                this.project_closure_info = obj.project_closure_info;
+            }
+
+            get_page_info() {
+                this.start_time = $("#start_time").val();
+                this.end_time = $("#end_time").val();
+                this.project_base = project_base_id;
+                this.founding_usage = $("#founding_usage").val();
+                this.project_closure_info = $("#project_closure_info").val();
+            }
+
+            assign_id(id) {
+                this.id = id
+            }
+
+            assign_request(user_id) {
+                this.request_from = user_id
+            }
+
+            assign_receiver(user_id) {
+                this.receiver = user_id
+            }
+
+            assign_status(status) {
+                this.status = status
+            }
+
+            assign_create_time(createTime) {
+                this.createTime = createTime
+            }
+
+            change_status(newStatus) {
+                this.status = newStatus
+            }
+
+            assign_logs(logs) {
+                this.logs = logs
+            }
+
+            displayLogs() {
+                if (this.logs) {
+                    if (this.logs.length > 0) {
+                        const lineInfo = $("#infoPanel-1")
+                        const lastLog = this.logs[this.logs.length - 1]
+                        const personName = lastLog['person_name']
+                        const action = actionDict[lastLog['action']]
+                        const create_time = new Date(lastLog['create_time'])
+                        const note = lastLog['note']
+                        const info = '<span>由' + personName + '于' + create_time.Format("yyyy-MM-dd") + action + '结题申请' +
+                            '</span>'
+                        lineInfo.empty();
+                        lineInfo.append(info);
+                        $("#lastApprovalLog").val(note)
+                    } else {
+                        console.log('无记录0')
+                    }
+                } else {
+                    console.log('无记录')
+                }
+                $("#currentStatus").empty().append(
+                    '<span>' + statusDict[this.status] + '</span>'
+                )
+            }
+
+            synData() {
+                // 当已有instance 撤回后，需要重新编辑再提交
+                // syndata => update
+
+                const currentForm = getFormInfo()
+                if (currentForm) {
+                    console.log(currentForm)
+                    this.end_time = currentForm.end_time
+                    this.start_time = currentForm.start_time
+                    this.founding_usage = currentForm.founding_usage
+                    this.project_closure_info = currentForm.project_closure_info
+                    return true
+                }
+                return false
+            }
+
+            refresh() {
+                // 刷新页面
+                if (pageUser) {
+                    this.displayLogs()
+                    pageUser.handleRefresh(this.status)
+                }
+            }
+
+            async create() {
+                // 创建新提交
+                this.change_status('1') // 变为提交状态
+                let cl = this
+                cl['note'] = getNote()
+                console.log(cl)
+                return $.ajax({
+                    url: '/projectSystem/Project/closure/list/',  // create
+                    type: 'post',
+                    data: cl,
+                    headers: {'X-CSRFToken': csrftoken},
+                });
+            }
+
+            updateInfoPanel() {
+
+
+            }
+
+            async update() {
+                const url = '/projectSystem/Project/closure/instance/' + this.id + '/'
+                const cl = this
+                return $.ajax({
+                    url: url,
+                    type: 'patch',
+                    data: cl,
+                    headers: {'X-CSRFToken': csrftoken},
+                })
+            }
+        }
+
+        function getNote() {
+            return $('#submitLog').val()
+        }
+
+        function resetNote() {
+            $('#submitLog').val('')
+        }
+
+        async function getClosureByID(id) {
+            return $.ajax({
+                url: '/projectSystem/Project/closure/instance/' + id + '/',
+                type: 'get'
+            })
+        }
+
+        function getFormInfo() {
+            let vl = {}
+            if (closureForm[0].checkValidity() === false) {
+                closureForm[0].reportValidity();
+                return null
+            } else {
+                console.log(closureForm)
+                $(closureForm).find('input,textarea,select').each(function () {
+                        if ($(this).attr("name")) {
+                            if ($(this).attr("name") === 'start_time' || $(this).attr("name") === 'end_time') {
+                                vl[$(this).attr("name")] = $(this).val() + ":00.000000";
+                            } else {
+                                vl[$(this).attr("name")] = $(this).val();
+                            }
+                        }
+                    }
+                )
+            }
+            return vl
+        }
+
+        async function getUserIdByName(name) {
+            let user_id;
+            const user_url = '/projectSystem/GetUserlist/?first_name=' + name
+            const get_user_data = await $.ajax({
+                url: user_url,
+                type: 'get',
+            })
+            const user_data = await get_user_data
+            user_id = user_data[0].id
+            return user_id
+        }
+
+
+        function createClosureInstance() {
+            // post
+            const newFormData = getFormInfo()
+            if (newFormData) {
+                newFormData['project_base'] = project_base_id;
+                newFormData['status'] = '1';
+                closureObj = new Closure(newFormData)
+                getUserIdByName(req_user).then((res1) => {
+                    closureObj.assign_request(res1)
+                    return getUserIdByName(receiver)
+                }).then((res2) => {
+                    closureObj.assign_receiver(res2)
+                    return closureObj.create()   // 提交新申请
+                }).then((res3) => {
+                    // 成功
+                    closureObj.status = res3.status;
+                    closureObj.id = res3.id;
+                    closureObj.start_time = res3.start_time;
+                    closureObj.end_time = res3.end_time;
+                    closureObj.project_base = res3.project_base;
+                    closureObj.founding_usage = res3.founding_usage;
+                    closureObj.project_closure_info = res3.project_closure_info;
+                    closureObj.assign_create_time(res3.create_time);
+                    closureObj.assign_logs(res3.logs)
+                    // reload
+                    closureObj.refresh()
+                })
+            }
+        }
+
+        function updateClosureInstance() {
+            // put 提交时需要同步表单数据
+            const synRes = closureObj.synData();
+            if (synRes && pageUser.isRequester) {
+                changeStatus('1')  // 变为提交
+            }
+        }
+
+        $('#approval').on('click', function () {
+            if (pageUser.isReceiver) {
+                changeStatus('2')  // 变为通过
+            }
+        })
+
+        $('#deny').on('click', function () {
+            if (pageUser.isReceiver) {
+                changeStatus('3')  //变为驳回
+            }
+        })
+
+        $('#withdraw').on('click', function () {
+            console.log("withdraw")
+            if (pageUser.isRequester) {
+                changeStatus('4')  //变为撤销
+            }
+        })
+
+
+        function changeStatus(newStatus) {
+            // 2,3,4
+            console.log(pageUser, closureObj)
+            if (pageUser && closureObj) {
+                closureObj.change_status(newStatus)
+                let appr = new Promise(function (resolve, reject) {
+                    return pageUser.subLog(closureObj, newStatus).then((res) => {
+                        resolve(res)
+                    }).catch((err) => {
+                        reject(err)
+                    });
+                })
+                let updateStatus = new Promise(function (resolve, reject) {
+                    return closureObj.update().then((res) => {
+                        resolve(res)
+                    }).catch((err) => {
+                        reject(err)
+                    })
+                })
+                Promise.all([appr, updateStatus]).then((result) => {
+                    // 完成， 调用完成通知
+                    resetNote()
+                    closureObj.status = result[1].status;
+                    closureObj.id = result[1].id;
+                    closureObj.start_time = result[1].start_time;
+                    closureObj.end_time = result[1].end_time;
+                    closureObj.project_base = result[1].project_base;
+                    closureObj.founding_usage = result[1].founding_usage;
+                    closureObj.project_closure_info = result[1].project_closure_info;
+                    closureObj.assign_create_time(result[1].create_time);
+                    closureObj.assign_logs(result[1].logs)
+                    closureObj.refresh()
+                    // 刷新状态
+                }).catch((err) => {
+                    console.log(err)
+                })
+            }
+        }
+
+        $("#updateClosure").on('click', function () {
+            // update => put
+            updateClosureInstance();
+        })
+
+        $("#createClosure").on('click', function () {
+            createClosureInstance();
+        })
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        function csrfSafeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE|PATCH|PUT)$/.test(method));
+        }
+
+        Date.prototype.Format = function (fmt) { //author: meizz
+            var o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        }
+    </script>
+{% endblock %}

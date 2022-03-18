@@ -1,4 +1,4 @@
-import json
+import json, os
 import uuid
 import logging
 import copy
@@ -11,6 +11,13 @@ import django.utils.timezone as timezone
 from datetime import datetime, date, timedelta
 from ApprovalSystemOCT.project_statics.static_data import *
 from django.db.models.query import QuerySet
+from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
+from django.contrib.contenttypes.models import ContentType
+
+
+def get_absolute_upload_path():
+    _datetime = date.today()
+    return os.path.join('', 'projectSystem/{}/{}/'.format(_datetime.year, _datetime.month))
 
 
 def snapshot_default():
@@ -94,16 +101,24 @@ class ProjectImplementTitle(models.Model):
     create_time = models.DateTimeField("创建时间", auto_now_add=True)
     update_time = models.DateTimeField("更新时间", auto_now=True)
 
+    class Meta:
+        # 一个requirement在一个季度只有一个title
+        constraints = [models.UniqueConstraint(fields=['project_base', 'progress_year', 'progress_season'],
+                                               name='unique_progress')]
+
 
 class ImplementMainTask(models.Model):
-    base = models.ForeignKey(ProjectImplementTitle, on_delete=models.CASCADE)
+    base = models.ForeignKey(ProjectImplementTitle, on_delete=models.CASCADE, related_name='main_tasks')
     issue = models.CharField(u"重点工作事项", max_length=500)
     create_time = models.DateTimeField("创建时间", auto_now_add=True)
     update_time = models.DateTimeField("更新时间", auto_now=True)
 
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['base', 'issue'], name='unique_main_task')]
+
 
 class ImplementSubTask(models.Model):
-    base = models.ForeignKey(ImplementMainTask, on_delete=models.CASCADE)
+    base = models.ForeignKey(ImplementMainTask, on_delete=models.CASCADE, related_name='subtasks')
     project_task = models.CharField("分项任务", max_length=255)
     project_task_start_time = models.DateTimeField("分项任务开展时间", null=True, blank=True)
     project_task_end_time = models.DateTimeField("分项任务完成时间", null=True, blank=True)
@@ -112,6 +127,77 @@ class ImplementSubTask(models.Model):
     add_ups = models.TextField("相关说明", null=True, blank=True)
     create_time = models.DateTimeField("创建时间", auto_now_add=True)
     update_time = models.DateTimeField("更新时间", auto_now=True)
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['base', 'project_task'], name='unique_sub_task')]
+
+
+class RequirementOutcomes(models.Model):
+    # 成果
+    project_base = models.ForeignKey(ProjectRequirement, on_delete=models.CASCADE)
+    file = models.FileField(verbose_name="上传文件", upload_to=get_absolute_upload_path())
+    create_time = models.DateTimeField("创建时间", auto_now_add=True)
+    update_time = models.DateTimeField("更新时间", auto_now=True)
+
+    def get_file_name(self):
+        return self.file.name.split("/").pop()
+
+
+class RequirementFiles(models.Model):
+    # 资料
+    project_base = models.ForeignKey(ProjectRequirement, on_delete=models.CASCADE)
+    file = models.FileField(verbose_name="上传文件", upload_to=get_absolute_upload_path())
+    create_time = models.DateTimeField("创建时间", auto_now_add=True)
+    update_time = models.DateTimeField("更新时间", auto_now=True)
+
+    def get_file_name(self):
+        return self.file.name.split("/").pop()
+
+
+class ApprovalLog(models.Model):
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
+    related_model = GenericForeignKey('content_type', 'object_id')
+    create_time = models.DateTimeField(u"创建时间", auto_now_add=True)
+    person = models.ForeignKey(User, on_delete=models.CASCADE)
+    action = models.CharField(u"动作", max_length=10)
+    note = models.CharField(u"信息", max_length=255, default='')  # 可为空
+
+    def get_action_verbose(self):
+        status_dict = {
+            '1': '提交',
+            '2': '通过',
+            '3': '驳回',
+            '4': '撤回',
+        }
+        return status_dict[self.action]
+
+
+class ProjectClosure(models.Model):
+    project_base = models.ForeignKey(ProjectRequirement, on_delete=models.CASCADE, related_name="project_base")
+    start_time = models.DateTimeField("开始时间", null=True, blank=True)
+    end_time = models.DateTimeField("完成时间", null=True, blank=True)
+    founding_usage = models.CharField(u"经费试用情况", max_length=255)
+    project_closure_info = models.TextField(u"课题完成情况")
+    status = models.CharField(u'状态', default='0', help_text="0：未提交； 1：已提交；2：已通过；3：已驳回；4：撤回", max_length=10)
+    request_from = models.ForeignKey(User, on_delete=models.CASCADE, related_name="request_user")
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name="receiver")
+    create_time = models.DateTimeField(u'创建时间', auto_now_add=True)
+    update_time = models.DateTimeField(u'更新时间', auto_now=True)
+    logs = GenericRelation(ApprovalLog,related_query_name='closure')
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=['project_base'], name='unique_project_name')]
+
+    def get_status_verbose(self):
+        status_dict = {
+            '0': '未提交',  # 提交
+            '1': '已提交',  # 撤回, 通过|驳回
+            '2': '已通过',  # end
+            '3': '已驳回',  # 撤回
+            '4': '已撤回',  # 提交
+        }
+        return status_dict[self.status]
 
 
 class ProjectImplement(models.Model):

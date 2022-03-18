@@ -3,9 +3,10 @@ from .views import HomeView, ArticleDetailView, UpdatePostView, DeletePostView, 
     category_view, author_posts_view, source_posts_view, ApprovalPosts, ApprovalSuccessDetailView, \
     ApprovalDenyDetailView, SubmitPostDetailView, search_item, bulk_submit, like_view, oct_get_endpoint_view, \
     creat_post, get_subcategory, group_posts_view, group_author_posts_view, statics_and_charts, \
-    statics_and_charts_get_data, approval_article_detail, my_tasks
+    statics_and_charts_get_data, approval_article_detail, my_tasks, PostListView, PostCallBackView
 from django.conf.urls.static import static
 from django.conf import settings
+from django.conf.urls import url, include
 
 urlpatterns = [
                   path('', HomeView.as_view(), name='home'),
@@ -35,4 +36,6 @@ urlpatterns = [
                   path('approval_article_detail/<int:approver>/<int:pk>/', approval_article_detail,
                        name='approval_articel_detail'),
                   path('mytasks/', my_tasks),
+                  url(r'^get-iri-posts/$', PostListView.as_view(), name='get-iri-posts'),
+                  url(r"^oct-group-callback/(?P<pk>[0-9a-f-]+)/$", PostCallBackView.as_view()),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

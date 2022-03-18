@@ -395,12 +395,13 @@
         </div>
     </div>
     <script src="{% static 'lib/datepicker/jquery.datetimepicker.full.min.js' %}" type="text/javascript"></script>
+    <script defer>
 
-    <script>
-        $("a[data-action='upload']").attr("hidden", true);
-        $("#updateAll").attr("hidden", true);
-
-        // initial user and process
+        const processID = "{{ process.pk }}"
+        const attachmentTargetID = "{{ attachment.get_attachment.first.pk }}"
+        const attachURL = '/projectSystem/projectRequirements/' + attachmentTargetID + "/detail/"
+        const attachmentUUID = "{{ attachment.pk }}";
+        const currentTaskTypeID = "{{ process.get_tasks.last.task_pattern.task_type }}"
 
         class User {
             constructor(id, username, is_authenticated) {
@@ -428,12 +429,18 @@
 
         }
 
-        // user must a registered user
-        let sessionUser = new User(
+        const sessionUser = new User(
             id = "{{ user.pk }}",
             username = "{{ user.first_name }}",
             is_authenticated = "{{ user.is_authenticated }}",
         )
+        const process_id = "{{ process.pk }}"
+        $("a[data-action='upload']").attr("hidden", true);
+        $("#updateAll").attr("hidden", true);
+
+        // initial user and process
+
+        // user must a registered user
 
 
         function callAction(e) {
@@ -595,7 +602,6 @@
                                             })
                                         }
                                         $("a[data-action=uploadSubmit]").on('click', function () {
-                                            {#let inputTag = $(this).parent().siblings().last();#}
                                             let attachmentRequirementKey = inputTag.attr("name");
                                             let attachmentRequirementVal = inputTag.val();
                                             if (prepVal !== attachmentRequirementVal) {
@@ -907,10 +913,10 @@
                             function init_owner() {
                                 let project_sponsor = $("#project_sponsor");
                                 let project_leader = $("#project_head_master");
-                                {#project_sponsor.val(process_owner.id).change();#}
+
                                 $("select[name=project_sponsor] option[value=" + process_owner.id + "]").attr("selected", "selected");
                                 $("select[name=project_head_master] option[value=" + leader + "]").attr("selected", "selected");
-                                console.log(project_leader.val())
+
                                 project_sponsor.attr("disabled", "disabled");
                                 project_leader.attr("disabled", "disabled");
                             }
@@ -1044,7 +1050,7 @@
         }
 
         // init process
-        const process_id = "{{ process.pk }}"
+
         // this page
         const url = "/projectSystem/processList/?format=json&process_order_id=" + process_id
 
@@ -1184,14 +1190,9 @@
             return _content
         }
 
-
         const csrftoken = getCookie('csrftoken');
-        const processID = "{{ process.pk }}"
-        const attachmentTargetID = "{{ attachment.get_attachment.first.pk }}"
-        const attachURL = '/projectSystem/projectRequirements/' + attachmentTargetID + "/"
-        const attachmentUUID = "{{ attachment.pk }}";
         // todo: if currentTaskTypeID is approval => assign to re-sub part | not critical yet
-        const currentTaskTypeID = "{{ process.get_tasks.last.task_pattern.task_type }}"
+
         let updateForm = $("#update_project");
         let formStatusChange = function (form, action) {
             form.find('input,textarea,select').each(function () {
@@ -1277,70 +1278,7 @@
                 $(this).find('a').first().attr('style', 'visibility: hidden');
             });
         });
-        {#$("a[data-action='upload']").on('click', function () {#}
-        {#    // use siblings not next ,cause a div tag will insert in#}
-        {#    let inputTag = $(this).parent().parent().find("input,textarea,select");#}
-        {#    let prepVal = inputTag.val()#}
-        {##}
-        {#    // if disabled === true#}
-        {#    if (inputTag.attr('disabled')) {#}
-        {#        let t = $(this).attr("data-target")#}
-        {##}
-        {#        inputTag.attr('disabled', false);#}
-        {#        if (inputTag.hasClass("selectpicker")) {#}
-        {#            inputTag.selectpicker('refresh')#}
-        {#        }#}
-        {#        if ($(this).parent().parent().find("a[data-action~='upload']").length <= 1) {#}
-        {#            $(this).parent().after(#}
-        {#                "<div class='pull-right'>" +#}
-        {#                "<a class='text-right' data-action='uploadSubmit' data-target=" + t + " href='javascript:void(0)' style='visibility: visible;'><small> 修改 </small></a>" +#}
-        {#                "<a class='text-right' data-action='uploadCancel' data-target=" + t + " href='javascript:void(0)' style='visibility: visible;'><small> 取消 </small></a>" +#}
-        {#                "</div>"#}
-        {#            );#}
-        {#        } else {#}
-        {#            $(this).parent().next().find('a').each(function () {#}
-        {#                $(this).attr('style', 'visibility: visible');#}
-        {#            })#}
-        {#        }#}
-        {#        $("a[data-action=uploadSubmit]").on('click', function () {#}
-        {#let inputTag = $(this).parent().siblings().last();#}
-        {#            let attachmentRequirementKey = inputTag.attr("name");#}
-        {#            let attachmentRequirementVal = inputTag.val();#}
-        {#            if (prepVal !== attachmentRequirementVal) {#}
-        {#                let data = {};#}
-        {#                data[attachmentRequirementKey] = attachmentRequirementVal#}
-        {#                // patch method#}
-        {#                $.ajax({#}
-        {#                    url: attachURL,#}
-        {#                    type: 'patch',#}
-        {#                    contentType: 'application/json',#}
-        {#                    data: JSON.stringify(data),#}
-        {#                    headers: {'X-CSRFToken': csrftoken},#}
-        {#                    success: function (new_data) {#}
-        {#                        inputTag.val(data[attachmentRequirementKey]);#}
-        {#                        setUpdateStep(processID, attachmentUUID);#}
-        {#                    }#}
-        {#                })#}
-        {#            }#}
-        {##}
-        {#            inputTag.attr('disabled', true);#}
-        {#            if (inputTag.hasClass("selectpicker")) {#}
-        {#                inputTag.selectpicker('refresh')#}
-        {#            }#}
-        {#            $(this).attr('style', 'visibility: hidden');#}
-        {#            $(this).next().attr('style', 'visibility: hidden');#}
-        {#        });#}
-        {#        $("a[data-action=uploadCancel]").on('click', function () {#}
-        {#            inputTag.val(prepVal);#}
-        {#            inputTag.attr('disabled', true);#}
-        {#            if (inputTag.hasClass("selectpicker")) {#}
-        {#                inputTag.selectpicker('refresh')#}
-        {#            }#}
-        {#            $(this).attr('style', 'visibility: hidden');#}
-        {#            $(this).prev().attr('style', 'visibility: hidden');#}
-        {#        });#}
-        {#    }#}
-        {# });#}
+
 
         let resignValue = function (ele, vl) {
             ele.find('input,textarea,select').each(function () {

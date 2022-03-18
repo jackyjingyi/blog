@@ -82,7 +82,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.PROTECT)
     body = models.TextField(verbose_name="摘要", blank=True, null=True)
     post_date = models.DateTimeField(auto_now_add=True)
-    post_file = models.FileField(verbose_name="上传文件", upload_to=get_absolute_upload_path)
+    post_file = models.FileField(verbose_name="上传文件", upload_to=get_absolute_upload_path())
     category = models.CharField(max_length=255, default='旅游', verbose_name="分类")
     subcategory = models.CharField(max_length=255, default='旅游', verbose_name="二级分类")
     source = models.CharField(max_length=255, default='大数据组', verbose_name="组别")
@@ -125,7 +125,7 @@ class Post(models.Model):
     # send to OA system
     # 0 未报送（内部审批未完成时为该状态） 1（报送审批中，副院长审批）2（审批通过）3（审批驳回） 4：未进入报送流程 5：报送中 6：集团已接收通过 7.集团已发布
     oa_status = models.CharField(max_length=5, default='0',
-                                 help_text="报送状态，0 未报送（内部审批未完成时为该状态） 1（报送审批中，副院长审批）2（审批通过,报送中）3（审批驳回,未报送）4：集团已接收通过 5.集团已发布")
+                                 help_text="报送状态，0 未报送（内部审批未完成时为该状态） 1报送成功")  #
 
     # time when put into pipe
     send_submit_time = models.DateTimeField(null=True, blank=True, help_text="集团发起get请求时间戳")

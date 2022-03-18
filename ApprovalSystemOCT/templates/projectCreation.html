@@ -375,8 +375,6 @@
                 } else {
                     businessData['business'] = assignValue(forms, {})
                     businessData['status'] = status
-                    console.log(businessData)
-                    console.log(status)
                     $.ajax({
                         url: '/projectSystem/process/creation/',
                         type: 'post',
