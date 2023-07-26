@@ -1,4 +1,5 @@
 # blog
+user management | file management | workflow in python | chartJS | old style jquery
 ![image](https://github.com/jackyjingyi/blog/assets/35633139/2b9359e2-32bc-4539-9a9a-ec8e58ae1fdf)
 
 ![image](https://github.com/jackyjingyi/blog/assets/35633139/adf93d5f-4d85-460b-b2e4-08915b9df15e)
